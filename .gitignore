@@ -1,0 +1,3 @@
+*.tsbuildinfo
+*.lnk
+node_modules

@@ -1,0 +1,76 @@
+{
+  "Graph|2023-02-28T17:54:44.072Z|20688": {
+    "ƒ.Graph": {
+      "name": "Root",
+      "active": true,
+      "components": {},
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Child",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshCube|2023-02-28T17:55:42.383Z|74338",
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[1, 1, 1, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2023-02-28T17:56:04.622Z|70385"
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2023-02-28T17:54:44.072Z|20688",
+      "type": "Graph"
+    }
+  },
+  "MeshCube|2023-02-28T17:55:42.383Z|74338": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2023-02-28T17:55:42.383Z|74338",
+      "name": "MeshCube",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2023-02-28T17:56:04.622Z|70385": {
+    "ƒ.Material": {
+      "name": "ShaderFlat",
+      "idResource": "Material|2023-02-28T17:56:04.622Z|70385",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[0.3607843137254902, 0.1411764705882353, 0.1411764705882353, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  }
+}
