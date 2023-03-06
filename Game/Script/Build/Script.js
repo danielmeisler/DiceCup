@@ -57,7 +57,7 @@ var DiceCup;
     ƒ.Debug.info("Dice Cup is running!");
     let viewport;
     window.addEventListener("load", start);
-    // document.addEventListener("interactiveViewportStarted", <EventListener>start);
+    //document.addEventListener("interactiveViewportStarted", <EventListener>start);
     // function start(_event: CustomEvent): void {
     let dices = [];
     DiceCup.highscore = 0;
@@ -67,6 +67,7 @@ var DiceCup;
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         document.getElementById("play").addEventListener("click", () => {
             document.getElementById("mainMenu").style.display = "none";
+            //document.getElementById("game").style.display = "none"; 
             game();
         });
     }

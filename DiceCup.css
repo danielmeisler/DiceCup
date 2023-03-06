@@ -4,6 +4,9 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background: linear-gradient(#5BB8BC, #5071A7);
+  display: flex;
+  align-items: center;
 }
 
 dialog { 
@@ -11,17 +14,17 @@ dialog {
 }
 
 canvas.fullscreen { 
-  height: 428px;
-  width: 926px;
-  background: linear-gradient(#5BB8BC 0%, #5071A7 100%);
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 
 #mainMenu {
-  height: 428px;
-  width: 926px;
+  height: 100%;
+  width: 100%;
   position: absolute;
-  top: 0;
-  background: linear-gradient(#5BB8BC 0%, #5071A7 100%);
+
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,64 +40,70 @@ canvas.fullscreen {
 
 #buttonContainer {
   width: 50%;
-  height: 80%;
+  height: calc(100vw - 65vw);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
 }
 
 #logo {
   width: 80%;
 }
 
-button {
-  width: 350px;
-  height: 70px;
+.menuButtons {
+  width: 100%;
+  margin-left: 20%;
+  height: 20%;
   background: #313131;
   color: white;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.25);
   border-radius: 60px;
   border-width: 0;
-  font-size: 40px;
+  font-size: 4.5vi;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   cursor: pointer;
 }
 
 #game {
-  height: 428px;
-  width: 926px;
+  height: 100%;
+  width: 100%;
   position: absolute;
-  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  overflow: hidden;
 }
 
 #gameDiv1, #gameDiv2 {
   height: 50%;
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
+  gap: 6%;
 }
 
 .diceDiv {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
-  width: 50px;
-  font-size: 40px;
+  width: 10%;
+  aspect-ratio: 1/1;
+  font-size: 3vi;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   color: gray;
 }
 
 .valuationDiv {
-  width: 50px;
-  height: 50px;
-  font-size: 10px;
+  width: 10%;
+  aspect-ratio: 1/1;
+  font-size: 2vi;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
+  background-color: #313131;
+  border-width: 0;
+  border-radius: 60px;
 }

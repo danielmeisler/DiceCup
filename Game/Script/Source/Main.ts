@@ -5,7 +5,7 @@ namespace DiceCup {
   let viewport: ƒ.Viewport;
   window.addEventListener("load", start);
 
-  // document.addEventListener("interactiveViewportStarted", <EventListener>start);
+  //document.addEventListener("interactiveViewportStarted", <EventListener>start);
   // function start(_event: CustomEvent): void {
   let dices: Dice[] = [];
   export let highscore: number = 0;
@@ -18,6 +18,7 @@ namespace DiceCup {
 
     document.getElementById("play").addEventListener("click", () => {
       document.getElementById("mainMenu").style.display = "none"; 
+      //document.getElementById("game").style.display = "none"; 
       game();
     });
 
