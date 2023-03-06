@@ -16,6 +16,7 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    let highscore: number;
 }
 declare namespace DiceCup {
     class Valuation {

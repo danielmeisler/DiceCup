@@ -69,6 +69,7 @@ namespace DiceCup {
                 console.log(_number + ": " + value);
             }
 
+            highscore += value;
             return value;
         }
 
@@ -81,7 +82,8 @@ namespace DiceCup {
                 }
             }
 
-            console.log(_color + " color: " + value);
+            highscore += value;
+            console.log(DiceColor[_color] + " color: " + value);
             return value;
         }
         
@@ -94,6 +96,7 @@ namespace DiceCup {
                 }
             }
 
+            highscore += value;
             console.log("Doubles: " + value);
             return value;
         }
@@ -105,6 +108,7 @@ namespace DiceCup {
                 value += this.dices[i].value;
             }
 
+            highscore += value;
             console.log("DiceCup: " + value);
             return value;
         }

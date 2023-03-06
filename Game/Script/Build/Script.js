@@ -54,21 +54,70 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
-    ƒ.Debug.info("Main Program Template running!");
+    ƒ.Debug.info("Dice Cup is running!");
     let viewport;
-    document.addEventListener("interactiveViewportStarted", start);
+    window.addEventListener("load", start);
+    // document.addEventListener("interactiveViewportStarted", <EventListener>start);
+    // function start(_event: CustomEvent): void {
+    let dices = [];
+    DiceCup.highscore = 0;
     function start(_event) {
-        viewport = _event.detail;
+        //viewport = _event.detail;
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-        let dices = [];
-        for (let i = 0; i < 6; i++) {
-            dices.push(new DiceCup.Dice(i));
-            dices.push(new DiceCup.Dice(i));
+        document.getElementById("play").addEventListener("click", () => {
+            document.getElementById("mainMenu").style.display = "none";
+            game();
+        });
+    }
+    function game() {
+        console.clear();
+        dices = [];
+        if (document.getElementById("gameDiv2")) {
+            document.getElementById("gameDiv2").style.visibility = "hidden";
         }
-        console.log(dices);
-        for (let i = 0; i < 12; i++) {
-            new DiceCup.Valuation(i, dices);
+        if (!document.getElementById("gameDiv1")) {
+            let gameDiv = document.createElement("div");
+            gameDiv.id = "gameDiv1";
+            document.getElementById("game").appendChild(gameDiv);
+            for (let i = 0; i < 6; i++) {
+                dices.push(new DiceCup.Dice(i));
+                dices.push(new DiceCup.Dice(i));
+            }
+            for (let i = 0; i < 12; i++) {
+                let diceDiv = document.createElement("div");
+                diceDiv.classList.add("diceDiv");
+                diceDiv.id = "diceContainer" + i;
+                diceDiv.innerHTML = dices[i].value.toString();
+                diceDiv.style.background = DiceCup.DiceColor[dices[i].color].toString();
+                document.getElementById("gameDiv1").appendChild(diceDiv);
+            }
+            console.log("Augen auf ...");
+            ƒ.Time.game.setTimer(3000, 1, gameValidate);
+        }
+    }
+    function gameValidate() {
+        document.getElementById("gameDiv1").remove();
+        console.log("Becher drauf!");
+        if (document.getElementById("gameDiv2")) {
+            document.getElementById("gameDiv2").style.visibility = "visible";
+            for (let i = 0; i < 12; i++) {
+                let valuationDiv = document.getElementById("valuationContainer" + i);
+                valuationDiv.addEventListener("click", () => { new DiceCup.Valuation(i, dices), game(), console.log("Total: " + DiceCup.highscore), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"; });
+            }
+        }
+        else {
+            let gameDiv2 = document.createElement("div");
+            gameDiv2.id = "gameDiv2";
+            document.getElementById("game").appendChild(gameDiv2);
+            for (let i = 0; i < 12; i++) {
+                let valuationDiv = document.createElement("button");
+                valuationDiv.classList.add("valuationDiv");
+                valuationDiv.id = "valuationContainer" + i;
+                valuationDiv.innerHTML = DiceCup.ScoringCategory[i];
+                document.getElementById("gameDiv2").appendChild(valuationDiv);
+                valuationDiv.addEventListener("click", () => { new DiceCup.Valuation(i, dices), game(), console.log("Total: " + DiceCup.highscore), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"; });
+            }
         }
     }
     function update(_event) {
@@ -140,6 +189,7 @@ var DiceCup;
             else {
                 console.log(_number + ": " + value);
             }
+            DiceCup.highscore += value;
             return value;
         }
         calculateColor(_color) {
@@ -149,7 +199,8 @@ var DiceCup;
                     value += this.dices[i].value;
                 }
             }
-            console.log(_color + " color: " + value);
+            DiceCup.highscore += value;
+            console.log(DiceCup.DiceColor[_color] + " color: " + value);
             return value;
         }
         calculateDoubles() {
@@ -159,6 +210,7 @@ var DiceCup;
                     value += 10;
                 }
             }
+            DiceCup.highscore += value;
             console.log("Doubles: " + value);
             return value;
         }
@@ -167,6 +219,7 @@ var DiceCup;
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;
             }
+            DiceCup.highscore += value;
             console.log("DiceCup: " + value);
             return value;
         }
