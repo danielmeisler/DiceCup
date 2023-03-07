@@ -62,6 +62,9 @@ var DiceCup;
     let dices = [];
     DiceCup.highscore = 0;
     function start(_event) {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("../../serviceWorker.js");
+        }
         //viewport = _event.detail;
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a

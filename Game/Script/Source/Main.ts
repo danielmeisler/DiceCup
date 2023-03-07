@@ -11,6 +11,10 @@ namespace DiceCup {
   export let highscore: number = 0;
 
   function start(_event: Event): void {
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("../../serviceWorker.js")
+    }
+
     //viewport = _event.detail;
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
