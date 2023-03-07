@@ -102,7 +102,20 @@ canvas.fullscreen {
   border-radius: 60px;
   display: flex;
   flex-direction: column;
+  margin-top: 10%;
 }
+
+.valuationHidden {
+  margin-top: 10%;
+  visibility: hidden;
+  transition: margin-top 1s linear, visibility 1s linear;
+}
+
+.valuationShow {
+  margin-top: 0%;
+  transition: margin-top 1s linear;
+}
+
 
 .valuationIcon, .valuationScore {
   height: 50%;

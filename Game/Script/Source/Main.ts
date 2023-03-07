@@ -64,7 +64,8 @@ namespace DiceCup {
 
     for (let i: number = 0; i < 12; i++) {
       let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation" + i);
-      valuationDiv.addEventListener("click", () => { console.clear(), new Valuation(i, dices), new Bot(BotDifficulty.easy, dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"});
+      valuationDiv.classList.add("valuationShow");
+      valuationDiv.addEventListener("click", () => { console.clear(), new Valuation(i, dices), new Bot(BotDifficulty.easy, dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray", valuationDiv.classList.remove("valuationShow"), valuationDiv.classList.add("valuationHidden")});
     }
 
   }

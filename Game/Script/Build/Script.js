@@ -152,7 +152,8 @@ var DiceCup;
         console.log("Becher drauf!");
         for (let i = 0; i < 12; i++) {
             let valuationDiv = document.getElementById("valuation" + i);
-            valuationDiv.addEventListener("click", () => { console.clear(), new DiceCup.Valuation(i, DiceCup.dices), new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"; });
+            valuationDiv.classList.add("valuationShow");
+            valuationDiv.addEventListener("click", () => { console.clear(), new DiceCup.Valuation(i, DiceCup.dices), new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray", valuationDiv.classList.remove("valuationShow"), valuationDiv.classList.add("valuationHidden"); });
         }
     }
     function update(_event) {
