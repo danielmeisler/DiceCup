@@ -9,6 +9,14 @@ html, body {
   align-items: center;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:active {
+  background: #0000009c;
+}
+
 dialog { 
   text-align: center; 
 }
@@ -63,47 +71,67 @@ canvas.fullscreen {
   border-width: 0;
   font-size: 4.5vi;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  cursor: pointer;
 }
 
-#game {
+#hud {
+  position: absolute;
   height: 100%;
   width: 100%;
+}
+
+
+
+#valuationContainer {
+  width: 100%;
+  height: 20%;
   position: absolute;
+  bottom: -10%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-around;
   overflow: hidden;
 }
 
-#gameDiv1, #gameDiv2 {
-  height: 50%;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
-  gap: 6%;
-}
-
-.diceDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 10%;
-  aspect-ratio: 1/1;
-  font-size: 3vi;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  color: gray;
-}
-
-.valuationDiv {
-  width: 10%;
-  aspect-ratio: 1/1;
+.valuationButton {
+  width: 5%;
+  height: 100%;
   font-size: 2vi;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
   background-color: #313131;
   border-width: 0;
   border-radius: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+.valuationIcon, .valuationScore {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#game {
+  height: 100%;
+  width: 100%;
+}
+
+#rollingDiv {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.diceDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5%;
+  aspect-ratio: 1/1;
+  font-size: 3vi;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: gray;
 }

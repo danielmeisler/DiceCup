@@ -1,4 +1,12 @@
 declare namespace DiceCup {
+    class Bot {
+        difficulty: BotDifficulty;
+        dices: Dice[];
+        constructor(_difficulty: BotDifficulty, _dices: Dice[]);
+        chooseDifficulty(_difficulty: BotDifficulty): void;
+    }
+}
+declare namespace DiceCup {
     import ƒ = FudgeCore;
     class CustomComponentScript extends ƒ.ComponentScript {
         static readonly iSubclass: number;
@@ -16,6 +24,12 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    class Hud {
+        static initHud(): Promise<void>;
+    }
+}
+declare namespace DiceCup {
+    let dices: Dice[];
     let highscore: number;
 }
 declare namespace DiceCup {
@@ -28,6 +42,13 @@ declare namespace DiceCup {
         calculateColor(_color: DiceColor): number;
         calculateDoubles(): number;
         calculateDiceCup(): number;
+    }
+}
+declare namespace DiceCup {
+    enum BotDifficulty {
+        easy = 0,
+        medium = 1,
+        hard = 2
     }
 }
 declare namespace DiceCup {

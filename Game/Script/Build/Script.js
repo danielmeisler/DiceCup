@@ -1,6 +1,31 @@
 "use strict";
 var DiceCup;
 (function (DiceCup) {
+    class Bot {
+        difficulty;
+        dices;
+        constructor(_difficulty, _dices) {
+            this.difficulty = _difficulty;
+            this.dices = _dices;
+            this.chooseDifficulty(this.difficulty);
+        }
+        chooseDifficulty(_difficulty) {
+            switch (_difficulty) {
+                case DiceCup.BotDifficulty.easy:
+                    let randomCategory = Math.floor((Math.random() * 12) + 1);
+                    new DiceCup.Valuation(randomCategory, DiceCup.dices);
+                    break;
+                case DiceCup.BotDifficulty.medium:
+                    break;
+                case DiceCup.BotDifficulty.hard:
+                    break;
+            }
+        }
+    }
+    DiceCup.Bot = Bot;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     var ƒ = FudgeCore;
     ƒ.Project.registerScriptNamespace(DiceCup); // Register the namespace to FUDGE for serialization
     class CustomComponentScript extends ƒ.ComponentScript {
@@ -53,13 +78,38 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    class Hud {
+        static async initHud() {
+            let domHud = document.querySelector("div#hud");
+            let valuationContainer = document.createElement("div");
+            valuationContainer.id = "valuationContainer";
+            domHud.appendChild(valuationContainer);
+            for (let i = 0; i < 12; i++) {
+                let valuationButton = document.createElement("button");
+                valuationButton.classList.add("valuationButton");
+                valuationButton.id = "valuation" + i;
+                valuationContainer.appendChild(valuationButton);
+                let icon = document.createElement("div");
+                icon.classList.add("valuationIcon");
+                valuationButton.appendChild(icon);
+                icon.innerHTML = DiceCup.ScoringCategory[i];
+                let score = document.createElement("div");
+                score.classList.add("valuationScore");
+                valuationButton.appendChild(score);
+            }
+        }
+    }
+    DiceCup.Hud = Hud;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
     let viewport;
     window.addEventListener("load", start);
     //document.addEventListener("interactiveViewportStarted", <EventListener>start);
     // function start(_event: CustomEvent): void {
-    let dices = [];
+    DiceCup.dices = [];
     DiceCup.highscore = 0;
     function start(_event) {
         if ("serviceWorker" in navigator) {
@@ -71,57 +121,38 @@ var DiceCup;
         document.getElementById("play").addEventListener("click", () => {
             document.getElementById("mainMenu").style.display = "none";
             //document.getElementById("game").style.display = "none"; 
+            DiceCup.Hud.initHud();
             game();
         });
     }
     function game() {
-        console.clear();
-        dices = [];
-        if (document.getElementById("gameDiv2")) {
-            document.getElementById("gameDiv2").style.visibility = "hidden";
-        }
-        if (!document.getElementById("gameDiv1")) {
+        DiceCup.dices = [];
+        if (!document.getElementById("rollingDiv")) {
             let gameDiv = document.createElement("div");
-            gameDiv.id = "gameDiv1";
+            gameDiv.id = "rollingDiv";
             document.getElementById("game").appendChild(gameDiv);
             for (let i = 0; i < 6; i++) {
-                dices.push(new DiceCup.Dice(i));
-                dices.push(new DiceCup.Dice(i));
+                DiceCup.dices.push(new DiceCup.Dice(i));
+                DiceCup.dices.push(new DiceCup.Dice(i));
             }
             for (let i = 0; i < 12; i++) {
                 let diceDiv = document.createElement("div");
                 diceDiv.classList.add("diceDiv");
                 diceDiv.id = "diceContainer" + i;
-                diceDiv.innerHTML = dices[i].value.toString();
-                diceDiv.style.background = DiceCup.DiceColor[dices[i].color].toString();
-                document.getElementById("gameDiv1").appendChild(diceDiv);
+                diceDiv.innerHTML = DiceCup.dices[i].value.toString();
+                diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
+                document.getElementById("rollingDiv").appendChild(diceDiv);
             }
             console.log("Augen auf ...");
             ƒ.Time.game.setTimer(3000, 1, gameValidate);
         }
     }
     function gameValidate() {
-        document.getElementById("gameDiv1").remove();
+        document.getElementById("rollingDiv").remove();
         console.log("Becher drauf!");
-        if (document.getElementById("gameDiv2")) {
-            document.getElementById("gameDiv2").style.visibility = "visible";
-            for (let i = 0; i < 12; i++) {
-                let valuationDiv = document.getElementById("valuationContainer" + i);
-                valuationDiv.addEventListener("click", () => { new DiceCup.Valuation(i, dices), game(), console.log("Total: " + DiceCup.highscore), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"; });
-            }
-        }
-        else {
-            let gameDiv2 = document.createElement("div");
-            gameDiv2.id = "gameDiv2";
-            document.getElementById("game").appendChild(gameDiv2);
-            for (let i = 0; i < 12; i++) {
-                let valuationDiv = document.createElement("button");
-                valuationDiv.classList.add("valuationDiv");
-                valuationDiv.id = "valuationContainer" + i;
-                valuationDiv.innerHTML = DiceCup.ScoringCategory[i];
-                document.getElementById("gameDiv2").appendChild(valuationDiv);
-                valuationDiv.addEventListener("click", () => { new DiceCup.Valuation(i, dices), game(), console.log("Total: " + DiceCup.highscore), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"; });
-            }
+        for (let i = 0; i < 12; i++) {
+            let valuationDiv = document.getElementById("valuation" + i);
+            valuationDiv.addEventListener("click", () => { console.clear(), new DiceCup.Valuation(i, DiceCup.dices), new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"; });
         }
     }
     function update(_event) {
@@ -229,6 +260,15 @@ var DiceCup;
         }
     }
     DiceCup.Valuation = Valuation;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    let BotDifficulty;
+    (function (BotDifficulty) {
+        BotDifficulty[BotDifficulty["easy"] = 0] = "easy";
+        BotDifficulty[BotDifficulty["medium"] = 1] = "medium";
+        BotDifficulty[BotDifficulty["hard"] = 2] = "hard";
+    })(BotDifficulty = DiceCup.BotDifficulty || (DiceCup.BotDifficulty = {}));
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {

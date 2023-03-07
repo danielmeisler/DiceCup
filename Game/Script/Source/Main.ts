@@ -7,7 +7,7 @@ namespace DiceCup {
 
   //document.addEventListener("interactiveViewportStarted", <EventListener>start);
   // function start(_event: CustomEvent): void {
-  let dices: Dice[] = [];
+  export let dices: Dice[] = [];
   export let highscore: number = 0;
 
   function start(_event: Event): void {
@@ -23,23 +23,18 @@ namespace DiceCup {
     document.getElementById("play").addEventListener("click", () => {
       document.getElementById("mainMenu").style.display = "none"; 
       //document.getElementById("game").style.display = "none"; 
+      Hud.initHud();
       game();
     });
 
   }
 
-
   function game(): void {
-    console.clear();
     dices = [];
 
-    if (document.getElementById("gameDiv2")) {
-      document.getElementById("gameDiv2").style.visibility = "hidden";
-    }
-
-    if (!document.getElementById("gameDiv1")) {
+    if (!document.getElementById("rollingDiv")) {
       let gameDiv: HTMLDivElement = document.createElement("div");
-      gameDiv.id = "gameDiv1";
+      gameDiv.id = "rollingDiv";
       document.getElementById("game").appendChild(gameDiv);
   
       for (let i: number = 0; i < 6; i++) {
@@ -53,7 +48,7 @@ namespace DiceCup {
         diceDiv.id = "diceContainer" + i;
         diceDiv.innerHTML = dices[i].value.toString();
         diceDiv.style.background = DiceColor[dices[i].color].toString();
-        document.getElementById("gameDiv1").appendChild(diceDiv);
+        document.getElementById("rollingDiv").appendChild(diceDiv);
       }
   
       console.log("Augen auf ...");
@@ -63,34 +58,14 @@ namespace DiceCup {
   }
 
   function gameValidate(): void {
-    document.getElementById("gameDiv1").remove();
+    document.getElementById("rollingDiv").remove();
+
     console.log("Becher drauf!");
 
-    if (document.getElementById("gameDiv2")) {
-      document.getElementById("gameDiv2").style.visibility = "visible";
-
     for (let i: number = 0; i < 12; i++) {
-      let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuationContainer" + i);
-      valuationDiv.addEventListener("click", () => { new Valuation(i, dices), game(), console.log("Total: " + highscore), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"});
+      let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation" + i);
+      valuationDiv.addEventListener("click", () => { console.clear(), new Valuation(i, dices), new Bot(BotDifficulty.easy, dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"});
     }
-
-    } else {
-      let gameDiv2: HTMLDivElement = document.createElement("div");
-      gameDiv2.id = "gameDiv2";
-      document.getElementById("game").appendChild(gameDiv2);
-
-      for (let i: number = 0; i < 12; i++) {
-        let valuationDiv: HTMLButtonElement = document.createElement("button");
-        valuationDiv.classList.add("valuationDiv");
-        valuationDiv.id = "valuationContainer" + i;
-        valuationDiv.innerHTML = ScoringCategory[i];
-        document.getElementById("gameDiv2").appendChild(valuationDiv);
-        valuationDiv.addEventListener("click", () => { new Valuation(i, dices), game(), console.log("Total: " + highscore), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray"});
-      }
-
-    }
-
-
 
   }
 

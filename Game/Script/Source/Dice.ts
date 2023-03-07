@@ -1,5 +1,4 @@
 namespace DiceCup{
-
     export class Dice {
 
         public color: DiceColor;
