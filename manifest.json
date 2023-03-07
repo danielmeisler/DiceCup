@@ -5,39 +5,39 @@
     "display": "fullscreen",
     "background_color": "#fdfdfd",
     "theme_color": "#db4938",
-    "orientation": "portrait",
+    "orientation": "landscape",
     "icons": {
         "icons": [
           {
-            "src": "Game/Assets/images/icons//windows11/SmallTile.scale-100.png",
+            "src": "Game/Assets/images/icons/windows11/SmallTile.scale-100.png",
             "sizes": "71x71"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/SmallTile.scale-125.png",
+            "src": "Game/Assets/images/icons/windows11/SmallTile.scale-125.png",
             "sizes": "89x89"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/SmallTile.scale-150.png",
+            "src": "Game/Assets/images/icons/windows11/SmallTile.scale-150.png",
             "sizes": "107x107"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/SmallTile.scale-200.png",
+            "src": "Game/Assets/images/icons/windows11/SmallTile.scale-200.png",
             "sizes": "142x142"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/SmallTile.scale-400.png",
+            "src": "Game/Assets/images/icons/windows11/SmallTile.scale-400.png",
             "sizes": "284x284"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/Square150x150Logo.scale-100.png",
+            "src": "Game/Assets/images/icons/windows11/Square150x150Logo.scale-100.png",
             "sizes": "150x150"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/Square150x150Logo.scale-125.png",
+            "src": "Game/Assets/images/icons/windows11/Square150x150Logo.scale-125.png",
             "sizes": "188x188"
           },
           {
-            "src": "Game/Assets/images/icons//windows11/Square150x150Logo.scale-150.png",
+            "src": "Game/Assets/images/icons/windows11/Square150x150Logo.scale-150.png",
             "sizes": "225x225"
           },
           {
