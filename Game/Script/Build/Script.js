@@ -122,39 +122,70 @@ var DiceCup;
             document.getElementById("mainMenu").style.display = "none";
             //document.getElementById("game").style.display = "none"; 
             DiceCup.Hud.initHud();
-            game();
+            initGame();
         });
     }
-    function game() {
+    function initGame() {
         DiceCup.dices = [];
-        if (!document.getElementById("rollingDiv")) {
-            let gameDiv = document.createElement("div");
-            gameDiv.id = "rollingDiv";
-            document.getElementById("game").appendChild(gameDiv);
-            for (let i = 0; i < 6; i++) {
-                DiceCup.dices.push(new DiceCup.Dice(i));
-                DiceCup.dices.push(new DiceCup.Dice(i));
-            }
-            for (let i = 0; i < 12; i++) {
-                let diceDiv = document.createElement("div");
-                diceDiv.classList.add("diceDiv");
-                diceDiv.id = "diceContainer" + i;
-                diceDiv.innerHTML = DiceCup.dices[i].value.toString();
-                diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-                document.getElementById("rollingDiv").appendChild(diceDiv);
-            }
-            console.log("Augen auf ...");
-            ƒ.Time.game.setTimer(3000, 1, gameValidate);
+        let gameDiv = document.createElement("div");
+        gameDiv.id = "rollingDiv";
+        document.getElementById("game").appendChild(gameDiv);
+        for (let i = 0; i < 6; i++) {
+            DiceCup.dices.push(new DiceCup.Dice(i));
+            DiceCup.dices.push(new DiceCup.Dice(i));
+            console.log("befüllen");
         }
+        for (let i = 0; i < 12; i++) {
+            let diceDiv = document.createElement("div");
+            diceDiv.classList.add("diceDiv");
+            diceDiv.id = "diceContainer" + i;
+            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
+            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
+            document.getElementById("rollingDiv").appendChild(diceDiv);
+        }
+        console.log("Augen auf ...");
+        ƒ.Time.game.setTimer(3000, 1, () => { gameValidate(); });
+    }
+    function rollDices() {
+        DiceCup.dices = [];
+        for (let i = 0; i < 6; i++) {
+            DiceCup.dices.push(new DiceCup.Dice(i));
+            DiceCup.dices.push(new DiceCup.Dice(i));
+        }
+        for (let i = 0; i < 12; i++) {
+            let diceDiv = document.createElement("div");
+            diceDiv.classList.add("diceDiv");
+            diceDiv.id = "diceContainer" + i;
+            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
+            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
+            document.getElementById("rollingDiv").appendChild(diceDiv);
+        }
+        console.log("Augen auf ...");
+        ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
     function gameValidate() {
-        document.getElementById("rollingDiv").remove();
+        for (let i = 0; i < 12; i++)
+            document.getElementById("diceContainer" + i).remove();
+        document.getElementById("valuation0").classList.add("valuationShow");
+        document.getElementById("valuation0").addEventListener("click", handleValidate);
         console.log("Becher drauf!");
         for (let i = 0; i < 12; i++) {
             let valuationDiv = document.getElementById("valuation" + i);
+            valuationDiv.setAttribute("index", i.toString());
             valuationDiv.classList.add("valuationShow");
-            valuationDiv.addEventListener("click", () => { console.clear(), new DiceCup.Valuation(i, DiceCup.dices), new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices), game(), valuationDiv.disabled = true, valuationDiv.style.backgroundColor = "black", valuationDiv.style.color = "gray", valuationDiv.classList.remove("valuationShow"), valuationDiv.classList.add("valuationHidden"); });
+            valuationDiv.addEventListener("click", handleValidate);
         }
+    }
+    function handleValidate(_event) {
+        new DiceCup.Valuation(parseInt(_event.currentTarget.getAttribute("index")), DiceCup.dices);
+        new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices);
+        this.disabled = true;
+        this.style.backgroundColor = "black";
+        this.style.color = "gray";
+        this.classList.remove("valuationShow");
+        this.classList.add("valuationHidden");
+        console.log("Total: " + DiceCup.highscore);
+        rollDices();
     }
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
