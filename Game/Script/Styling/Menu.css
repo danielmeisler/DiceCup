@@ -1,0 +1,53 @@
+#mainMenu {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+  
+#logoContainer {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#logo {
+    width: 80%;
+}
+
+#buttonContainer {
+    height: calc(100vw - 65vw);
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.menuButtons {
+    width: 45%;
+    height: 45%;
+    margin: 2.5%;
+    background: #2F4260;
+    color: white;
+    box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border-width: 0;
+    font-size: 4.5vi;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menuButtonsIcons {
+    width: 70%;
+    aspect-ratio: 1/1;
+}

@@ -1,0 +1,72 @@
+#hud {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+  
+#valuationContainer {
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  bottom: -10%;
+  display: flex;
+  justify-content: space-around;
+  overflow: hidden;
+}
+
+.valuationButton {
+  width: 5%;
+  height: 100%;
+  font-size: 2vi;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  background-color: #313131;
+  border-width: 0;
+  border-radius: 60px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10%;
+}
+
+.valuationHidden {
+  margin-top: 10%;
+  visibility: hidden;
+  transition: margin-top 1s linear, visibility 1s linear;
+}
+
+.valuationShow {
+  margin-top: 0%;
+  transition: margin-top 1s linear;
+}
+
+.valuationIcon, .valuationScore {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#game {
+  height: 100%;
+  width: 100%;
+}
+
+#rollingDiv {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.diceDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5%;
+  aspect-ratio: 1/1;
+  font-size: 3vi;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: gray;
+}

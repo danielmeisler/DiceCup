@@ -1,0 +1,37 @@
+html, body {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(#5BB8BC, #5071A7);
+  display: flex;
+  align-items: center;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+canvas.fullscreen { 
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+img {
+  pointer-events: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:active {
+  filter: brightness(80%);
+  transform: scale(0.9);
+}
+
+
