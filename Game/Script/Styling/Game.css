@@ -22,7 +22,7 @@
   color: white;
   background-color: #313131;
   border-width: 0;
-  border-radius: 60px;
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
   margin-top: 10%;
@@ -47,9 +47,15 @@
   align-items: center;
 }
 
+.valuationImage {
+  width: 80%;
+  aspect-ratio: 1/1;
+}
+
 #game {
   height: 100%;
   width: 100%;
+  background: linear-gradient(#5BB8BC, #5071A7);
 }
 
 #rollingDiv {

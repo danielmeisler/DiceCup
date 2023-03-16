@@ -6,6 +6,7 @@ const assets = [
   "Game/Styling/Menu.css",
   "Game/Styling/Game.css",
   "Game/Script/Build/Script.js",
+  "Game/Script/Source/data/scoringCategories.json",
 ]
 
 self.addEventListener("install", installEvent => {

@@ -47,7 +47,12 @@
     justify-content: center;
 }
 
+.menuButtons:active {
+    transform: scale(0.9);
+}
+
 .menuButtonsIcons {
     width: 70%;
     aspect-ratio: 1/1;
 }
+

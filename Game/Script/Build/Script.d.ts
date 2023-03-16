@@ -24,6 +24,10 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    function init(): Promise<void>;
+    function initGame(): void;
+}
+declare namespace DiceCup {
     class Hud {
         static initHud(): Promise<void>;
     }
@@ -75,5 +79,11 @@ declare namespace DiceCup {
         doubles = 9,
         oneToThree = 10,
         diceCup = 11
+    }
+}
+declare namespace DiceCup {
+    interface ScoringCategoryDao {
+        image: string;
+        category: ScoringCategory;
     }
 }
