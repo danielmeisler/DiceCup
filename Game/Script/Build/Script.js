@@ -2,24 +2,41 @@
 var DiceCup;
 (function (DiceCup) {
     class Bot {
-        difficulty;
         dices;
+        usedCategories = new Array(12);
+        usedCategoryIndex = 0;
+        difficulty;
         constructor(_difficulty, _dices) {
             this.difficulty = _difficulty;
             this.dices = _dices;
-            this.chooseDifficulty(this.difficulty);
         }
         chooseDifficulty(_difficulty) {
             switch (_difficulty) {
                 case DiceCup.BotDifficulty.easy:
-                    let randomCategory = Math.floor((Math.random() * 12) + 1);
-                    new DiceCup.Valuation(randomCategory, DiceCup.dices);
+                    this.botEasy();
                     break;
                 case DiceCup.BotDifficulty.medium:
                     break;
                 case DiceCup.BotDifficulty.hard:
                     break;
             }
+        }
+        botEasy() {
+            let randomCategory = Math.floor((Math.random() * 12) + 1);
+            let categoryValid = false;
+            if (this.usedCategories.includes(randomCategory)) {
+                this.botEasy();
+                categoryValid = false;
+            }
+            else {
+                this.usedCategories[this.usedCategoryIndex] = randomCategory;
+                this.usedCategoryIndex++;
+                console.log(this.usedCategories);
+                this.botValuation(randomCategory);
+            }
+        }
+        botValuation(_category) {
+            new DiceCup.Valuation(_category, DiceCup.dices);
         }
     }
     DiceCup.Bot = Bot;
@@ -79,19 +96,20 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
-    async function init() {
-        await ƒ.Project.loadResourcesFromHTML();
-        let graphId /* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView");
-        //let graph/* : ƒ.Graph */ = ƒ.Project.resources[graphId];
-        let cmpCamera /* : ƒ.ComponentCamera */ = new ƒ.ComponentCamera();
-        let canvas /* : HTMLCanvasElement */ = document.querySelector("canvas");
-        let viewport /* : ƒ.Viewport */ = new ƒ.Viewport();
-        let resource = ƒ.Project.resources[graphId];
-        this.root = resource;
-        viewport.initialize("Viewport", this.root, cmpCamera, canvas);
+    async function initViewport(_event) {
+        DiceCup.viewport = _event.detail;
+        DiceCup.viewport.camera.mtxPivot.translateZ(10);
+        DiceCup.viewport.camera.mtxPivot.rotateY(180);
+        DiceCup.viewport.camera.mtxPivot.translateX(1);
+        DiceCup.viewport.camera.mtxPivot.translateY(1);
+        let graph = DiceCup.viewport.getBranch();
+        let dice = graph.getChildrenByName("Dice")[0];
+        console.log(dice.mtxLocal.translation);
     }
-    DiceCup.init = init;
+    DiceCup.initViewport = initViewport;
     function initGame() {
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
+        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         DiceCup.dices = [];
         let gameDiv = document.createElement("div");
         gameDiv.id = "rollingDiv";
@@ -108,6 +126,8 @@ var DiceCup;
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
             document.getElementById("rollingDiv").appendChild(diceDiv);
         }
+        DiceCup.bot = new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices);
+        DiceCup.bot2 = new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices);
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, () => { gameValidate(); });
     }
@@ -144,7 +164,8 @@ var DiceCup;
     }
     function handleValidate(_event) {
         new DiceCup.Valuation(parseInt(_event.currentTarget.getAttribute("index")), DiceCup.dices);
-        new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices);
+        DiceCup.bot.botEasy();
+        DiceCup.bot2.botEasy();
         this.disabled = true;
         this.style.backgroundColor = "black";
         this.style.color = "gray";
@@ -153,6 +174,11 @@ var DiceCup;
         console.log("Total: " + DiceCup.highscore);
         rollDices();
     }
+    function update(_event) {
+        // ƒ.Physics.simulate();  // if physics is included and used
+        DiceCup.viewport.draw();
+        //ƒ.AudioManager.default.update();
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -160,7 +186,6 @@ var DiceCup;
         static async initHud() {
             let response = await fetch("Game/Script/Source/data/scoringCategories.json");
             let categories = await response.json();
-            console.log(categories);
             let domHud = document.querySelector("div#hud");
             let valuationContainer = document.createElement("div");
             valuationContainer.id = "valuationContainer";
@@ -169,6 +194,7 @@ var DiceCup;
                 let valuationButton = document.createElement("button");
                 valuationButton.classList.add("valuationButton");
                 valuationButton.id = "valuation" + i;
+                valuationButton.style.zIndex = "2";
                 valuationContainer.appendChild(valuationButton);
                 let icon = document.createElement("div");
                 icon.classList.add("valuationIcon");
@@ -190,30 +216,20 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
-    let viewport;
-    window.addEventListener("load", start);
-    //document.addEventListener("interactiveViewportStarted", <EventListener>start);
-    // function start(_event: CustomEvent): void {
+    //window.addEventListener("load", start);
+    document.addEventListener("interactiveViewportStarted", start);
     DiceCup.dices = [];
     DiceCup.highscore = 0;
     function start(_event) {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("../../serviceWorker.js");
         }
-        //viewport = _event.detail;
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         document.getElementById("play").addEventListener("click", () => {
             document.getElementById("mainMenu").style.display = "none";
-            //document.getElementById("game").style.display = "none"; 
             DiceCup.Hud.initHud();
+            DiceCup.initViewport(_event);
             DiceCup.initGame();
         });
-    }
-    function update(_event) {
-        // ƒ.Physics.simulate();  // if physics is included and used
-        viewport.draw();
-        ƒ.AudioManager.default.update();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;

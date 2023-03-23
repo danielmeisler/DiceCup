@@ -1,9 +1,13 @@
 declare namespace DiceCup {
     class Bot {
-        difficulty: BotDifficulty;
         dices: Dice[];
+        private usedCategories;
+        private usedCategoryIndex;
+        difficulty: BotDifficulty;
         constructor(_difficulty: BotDifficulty, _dices: Dice[]);
         chooseDifficulty(_difficulty: BotDifficulty): void;
+        botEasy(): void;
+        private botValuation;
     }
 }
 declare namespace DiceCup {
@@ -24,7 +28,9 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
-    function init(): Promise<void>;
+    function initViewport(_event: CustomEvent): Promise<void>;
+    let bot: Bot;
+    let bot2: Bot;
     function initGame(): void;
 }
 declare namespace DiceCup {
@@ -33,6 +39,8 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    import ƒ = FudgeCore;
+    let viewport: ƒ.Viewport;
     let dices: Dice[];
     let highscore: number;
 }

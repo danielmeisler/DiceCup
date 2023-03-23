@@ -1,9 +1,87 @@
 {
+  "MeshCube|2023-03-02T15:53:30.662Z|68685": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2023-03-02T15:53:30.662Z|68685",
+      "name": "MeshCube",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2023-03-02T15:54:17.997Z|78756": {
+    "ƒ.Material": {
+      "name": "ShaderFlat",
+      "idResource": "Material|2023-03-02T15:54:17.997Z|78756",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[0.8941176470588236, 0.3058823529411765, 0.3058823529411765, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "MeshQuad|2023-03-02T16:00:54.374Z|22201": {
+    "ƒ.MeshQuad": {
+      "idResource": "MeshQuad|2023-03-02T16:00:54.374Z|22201",
+      "name": "MeshQuad"
+    }
+  },
+  "Material|2023-03-02T16:01:38.876Z|83021": {
+    "ƒ.Material": {
+      "name": "ShaderFlat",
+      "idResource": "Material|2023-03-02T16:01:38.876Z|83021",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
   "Graph|2023-03-02T15:52:53.709Z|69363": {
     "ƒ.Graph": {
       "name": "Root",
       "active": true,
-      "components": {},
+      "components": {
+        "ComponentLight": [
+          {
+            "ƒ.ComponentLight": {
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "light": {
+                "ƒ.LightAmbient": {
+                  "color": "[1, 1, 1, 1]"
+                }
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          },
+          {
+            "ƒ.ComponentLight": {
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "light": {
+                "ƒ.LightSpot": {
+                  "color": "[1, 1, 1, 1]"
+                }
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
       "children": [
         {
           "ƒ.Node": {
@@ -40,6 +118,20 @@
                       "active": true
                     },
                     "idMaterial": "Material|2023-03-02T15:54:17.997Z|78756"
+                  }
+                }
+              ],
+              "ComponentTransform": [
+                {
+                  "ƒ.ComponentTransform": {
+                    "local": {
+                      "translation": "[2, 1, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[1, 1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
                   }
                 }
               ]
@@ -987,47 +1079,6 @@
       ],
       "idResource": "Graph|2023-03-02T15:52:53.709Z|69363",
       "type": "Graph"
-    }
-  },
-  "MeshCube|2023-03-02T15:53:30.662Z|68685": {
-    "ƒ.MeshCube": {
-      "idResource": "MeshCube|2023-03-02T15:53:30.662Z|68685",
-      "name": "MeshCube",
-      "type": "MeshCube"
-    }
-  },
-  "Material|2023-03-02T15:54:17.997Z|78756": {
-    "ƒ.Material": {
-      "name": "ShaderFlat",
-      "idResource": "Material|2023-03-02T15:54:17.997Z|78756",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[0.8941176470588236, 0.3058823529411765, 0.3058823529411765, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "MeshQuad|2023-03-02T16:00:54.374Z|22201": {
-    "ƒ.MeshQuad": {
-      "idResource": "MeshQuad|2023-03-02T16:00:54.374Z|22201",
-      "name": "MeshQuad"
-    }
-  },
-  "Material|2023-03-02T16:01:38.876Z|83021": {
-    "ƒ.Material": {
-      "name": "ShaderFlat",
-      "idResource": "Material|2023-03-02T16:01:38.876Z|83021",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
     }
   }
 }

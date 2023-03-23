@@ -2,8 +2,7 @@
     height: 100%;
     width: 100%;
     position: absolute;
-  
-  
+    background: linear-gradient(#5BB8BC, #5071A7);
     display: flex;
     align-items: center;
     justify-content: center;

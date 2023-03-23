@@ -1,20 +1,27 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
-    export async function init() {
-        await ƒ.Project.loadResourcesFromHTML();
-        let graphId/* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView")
-        //let graph/* : ƒ.Graph */ = ƒ.Project.resources[graphId];
-        let cmpCamera/* : ƒ.ComponentCamera */ = new ƒ.ComponentCamera();
-        let canvas/* : HTMLCanvasElement */ = document.querySelector("canvas");
-        let viewport/* : ƒ.Viewport */ = new ƒ.Viewport();
-        let resource: ƒ.SerializableResource = ƒ.Project.resources[graphId];
-        this.root = <ƒ.Graph>resource;
-        viewport.initialize("Viewport", this.root, cmpCamera, canvas);
+    export async function initViewport(_event: CustomEvent) {
+        viewport = _event.detail;
+
+        viewport.camera.mtxPivot.translateZ(10);
+        viewport.camera.mtxPivot.rotateY(180);
+        viewport.camera.mtxPivot.translateX(1);
+        viewport.camera.mtxPivot.translateY(1);
+        let graph: ƒ.Node = viewport.getBranch();
+    
+        let dice: ƒ.Node = graph.getChildrenByName("Dice")[0];
+        console.log(dice.mtxLocal.translation);
 
     }
 
+    export let bot: Bot;
+    export let bot2: Bot;
+
     export function initGame(): void {
+        ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
+        ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+
         dices = [];
 
         let gameDiv: HTMLDivElement = document.createElement("div");
@@ -34,6 +41,9 @@ namespace DiceCup {
             diceDiv.style.background = DiceColor[dices[i].color].toString();
             document.getElementById("rollingDiv").appendChild(diceDiv);
         }
+
+        bot = new Bot(BotDifficulty.easy, dices);
+        bot2 = new Bot(BotDifficulty.easy, dices);
     
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, () => { gameValidate()  });
@@ -75,7 +85,8 @@ namespace DiceCup {
 
     function handleValidate(_event: Event): void {
         new Valuation(parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index")), dices);
-        new Bot(BotDifficulty.easy, dices);
+        bot.botEasy();
+        bot2.botEasy();
         this.disabled = true;
         this.style.backgroundColor = "black";
         this.style.color = "gray";
@@ -84,4 +95,10 @@ namespace DiceCup {
         console.log("Total: " + highscore);
         rollDices();
     }
+
+    function update(_event: Event): void {
+        // ƒ.Physics.simulate();  // if physics is included and used
+        viewport.draw();
+        //ƒ.AudioManager.default.update();
+      }
 }
