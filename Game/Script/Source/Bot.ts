@@ -5,8 +5,10 @@ namespace DiceCup {
         private usedCategories: number[] = new Array(12);
         private usedCategoryIndex: number = 0;
         difficulty: BotDifficulty;
+        name: string;
 
-        constructor(_difficulty: BotDifficulty, _dices: Dice[]) {
+        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[]) {
+            this.name = _name;
             this.difficulty = _difficulty;
             this.dices = _dices;
         }
@@ -27,21 +29,15 @@ namespace DiceCup {
 
         public botEasy(): void{
             let randomCategory: number = Math.floor((Math.random() * 12) + 1);
-            let categoryValid: boolean = false;
-
 
             if (this.usedCategories.includes(randomCategory)) {
                 this.botEasy();
-                categoryValid = false;
             } else {
                 this.usedCategories[this.usedCategoryIndex] = randomCategory;
                 this.usedCategoryIndex++;
                 console.log(this.usedCategories);
                 this.botValuation(randomCategory);
             }
-
-        
-
         }
 
         private botValuation(_category: number): void {

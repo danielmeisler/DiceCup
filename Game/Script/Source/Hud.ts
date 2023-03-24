@@ -6,15 +6,18 @@ namespace DiceCup {
           let response: Response = await fetch("Game/Script/Source/data/scoringCategories.json");
           let categories: ScoringCategoryDao[] = await response.json();
 
-          let domHud: HTMLDivElement = document.querySelector("div#hud");
+          let domHud: HTMLDivElement = document.createElement("div");
+          domHud.id = "hud_id";
+          document.querySelector("body").appendChild(domHud);
+
           let valuationContainer: HTMLDivElement = document.createElement("div");
-          valuationContainer.id = "valuationContainer";
+          valuationContainer.id = "valuationContainer_id";
           domHud.appendChild(valuationContainer);
 
           for (let i: number = 0; i < 12; i++) {
             let valuationButton: HTMLButtonElement = document.createElement("button");
             valuationButton.classList.add("valuationButton");
-            valuationButton.id = "valuation" + i;
+            valuationButton.id = "valuation_id_" + i;
             valuationButton.style.zIndex = "2";
             valuationContainer.appendChild(valuationButton);
 
@@ -25,7 +28,7 @@ namespace DiceCup {
             let valuationImage: HTMLImageElement = document.createElement("img");
             valuationImage.src = categories[i].image;
             valuationImage.classList.add("valuationImage");
-            valuationImage.id = "valuationImage" + i;
+            valuationImage.id = "valuationImage_i_" + i;
             icon.appendChild(valuationImage);
 
             let score: HTMLElement = document.createElement("div");

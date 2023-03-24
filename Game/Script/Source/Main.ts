@@ -4,8 +4,6 @@ namespace DiceCup {
   
   export let viewport: ƒ.Viewport;
 
-  //window.addEventListener("load", start);
-
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
   export let dices: Dice[] = [];
   export let highscore: number = 0;
@@ -14,12 +12,7 @@ namespace DiceCup {
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("../../serviceWorker.js")
     }
-    
-    document.getElementById("play").addEventListener("click", () => {
-      document.getElementById("mainMenu").style.display = "none"; 
-      Hud.initHud();
-      initViewport(_event);
-      initGame();
-    });
+    viewport = _event.detail;
+    mainMenu();
   }
 }

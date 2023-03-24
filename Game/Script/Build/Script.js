@@ -6,7 +6,9 @@ var DiceCup;
         usedCategories = new Array(12);
         usedCategoryIndex = 0;
         difficulty;
-        constructor(_difficulty, _dices) {
+        name;
+        constructor(_name, _difficulty, _dices) {
+            this.name = _name;
             this.difficulty = _difficulty;
             this.dices = _dices;
         }
@@ -23,10 +25,8 @@ var DiceCup;
         }
         botEasy() {
             let randomCategory = Math.floor((Math.random() * 12) + 1);
-            let categoryValid = false;
             if (this.usedCategories.includes(randomCategory)) {
                 this.botEasy();
-                categoryValid = false;
             }
             else {
                 this.usedCategories[this.usedCategoryIndex] = randomCategory;
@@ -96,8 +96,7 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
-    async function initViewport(_event) {
-        DiceCup.viewport = _event.detail;
+    async function initViewport() {
         DiceCup.viewport.camera.mtxPivot.translateZ(10);
         DiceCup.viewport.camera.mtxPivot.rotateY(180);
         DiceCup.viewport.camera.mtxPivot.translateX(1);
@@ -112,7 +111,7 @@ var DiceCup;
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         DiceCup.dices = [];
         let gameDiv = document.createElement("div");
-        gameDiv.id = "rollingDiv";
+        gameDiv.id = "rollingDiv_id";
         document.getElementById("game").appendChild(gameDiv);
         for (let i = 0; i < 6; i++) {
             DiceCup.dices.push(new DiceCup.Dice(i));
@@ -121,13 +120,13 @@ var DiceCup;
         for (let i = 0; i < 12; i++) {
             let diceDiv = document.createElement("div");
             diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer" + i;
+            diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
             document.getElementById("rollingDiv").appendChild(diceDiv);
         }
-        DiceCup.bot = new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices);
-        DiceCup.bot2 = new DiceCup.Bot(DiceCup.BotDifficulty.easy, DiceCup.dices);
+        DiceCup.bot = new DiceCup.Bot("Agent", DiceCup.BotDifficulty.easy, DiceCup.dices);
+        DiceCup.bot2 = new DiceCup.Bot("Spion", DiceCup.BotDifficulty.easy, DiceCup.dices);
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, () => { gameValidate(); });
     }
@@ -141,7 +140,7 @@ var DiceCup;
         for (let i = 0; i < 12; i++) {
             let diceDiv = document.createElement("div");
             diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer" + i;
+            diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
             document.getElementById("rollingDiv").appendChild(diceDiv);
@@ -186,14 +185,16 @@ var DiceCup;
         static async initHud() {
             let response = await fetch("Game/Script/Source/data/scoringCategories.json");
             let categories = await response.json();
-            let domHud = document.querySelector("div#hud");
+            let domHud = document.createElement("div");
+            domHud.id = "hud_id";
+            document.querySelector("body").appendChild(domHud);
             let valuationContainer = document.createElement("div");
-            valuationContainer.id = "valuationContainer";
+            valuationContainer.id = "valuationContainer_id";
             domHud.appendChild(valuationContainer);
             for (let i = 0; i < 12; i++) {
                 let valuationButton = document.createElement("button");
                 valuationButton.classList.add("valuationButton");
-                valuationButton.id = "valuation" + i;
+                valuationButton.id = "valuation_id_" + i;
                 valuationButton.style.zIndex = "2";
                 valuationContainer.appendChild(valuationButton);
                 let icon = document.createElement("div");
@@ -202,7 +203,7 @@ var DiceCup;
                 let valuationImage = document.createElement("img");
                 valuationImage.src = categories[i].image;
                 valuationImage.classList.add("valuationImage");
-                valuationImage.id = "valuationImage" + i;
+                valuationImage.id = "valuationImage_i_" + i;
                 icon.appendChild(valuationImage);
                 let score = document.createElement("div");
                 score.classList.add("valuationScore");
@@ -216,7 +217,6 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
-    //window.addEventListener("load", start);
     document.addEventListener("interactiveViewportStarted", start);
     DiceCup.dices = [];
     DiceCup.highscore = 0;
@@ -224,12 +224,198 @@ var DiceCup;
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("../../serviceWorker.js");
         }
-        document.getElementById("play").addEventListener("click", () => {
-            document.getElementById("mainMenu").style.display = "none";
-            DiceCup.Hud.initHud();
-            DiceCup.initViewport(_event);
-            DiceCup.initGame();
+        DiceCup.viewport = _event.detail;
+        DiceCup.mainMenu();
+    }
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function mainMenu() {
+        let menuDiv = document.createElement("div");
+        menuDiv.id = "mainMenu_id";
+        menuDiv.classList.add("gameMenus");
+        document.querySelector("body").appendChild(menuDiv);
+        let logoDiv = document.createElement("div");
+        logoDiv.id = "logoContainer_id";
+        menuDiv.appendChild(logoDiv);
+        let logoImage = document.createElement("img");
+        logoImage.id = "logo_id";
+        logoImage.src = "Game/Assets/images/temp_logo.png";
+        logoDiv.appendChild(logoImage);
+        let buttonDiv = document.createElement("div");
+        buttonDiv.id = "buttonContainer_id";
+        menuDiv.appendChild(buttonDiv);
+        let menuButtonIds = ["play_id", "help_id", "shop_id", "options_id"];
+        let menuButtonIconPaths = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/shop.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
+        for (let i = 0; i < 4; i++) {
+            let menuButtons = document.createElement("button");
+            menuButtons.classList.add("menuButtons");
+            menuButtons.id = menuButtonIds[i];
+            buttonDiv.appendChild(menuButtons);
+            let menuIcons = document.createElement("img");
+            menuIcons.classList.add("menuButtonsIcons");
+            menuIcons.src = menuButtonIconPaths[i];
+            menuButtons.appendChild(menuIcons);
+        }
+        document.getElementById("play_id").addEventListener("click", () => {
+            hideMenu("mainMenu_id");
+            // Hud.initHud();
+            // initViewport();
+            // initGame();
+            DiceCup.playMenu();
         });
+        document.getElementById("shop_id").addEventListener("click", () => {
+            hideMenu("mainMenu_id");
+        });
+        document.getElementById("help_id").addEventListener("click", () => {
+            hideMenu("mainMenu_id");
+        });
+        document.getElementById("options_id").addEventListener("click", () => {
+            hideMenu("mainMenu_id");
+        });
+    }
+    DiceCup.mainMenu = mainMenu;
+    function hideMenu(_menuID) {
+        document.getElementById(_menuID).style.display = "none";
+    }
+    function showMenu(_menuID) {
+        document.getElementById(_menuID).style.display = "visible";
+    }
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function playMenu() {
+        let spMenu = document.createElement("div");
+        spMenu.id = "singleplayerMenu_id";
+        spMenu.classList.add("gameMenus");
+        document.querySelector("body").appendChild(spMenu);
+        let spMenuTitle = document.createElement("div");
+        spMenuTitle.id = "singlePlayerMenuTitle_id";
+        spMenuTitle.innerHTML = "SINGLEPLAYER";
+        spMenu.appendChild(spMenuTitle);
+        let lobbyPortraits = document.createElement("div");
+        lobbyPortraits.id = "lobbyPortraits_id";
+        spMenu.appendChild(lobbyPortraits);
+        createPlayerPortrait();
+        createBotPortrait();
+        for (let index = 0; index < 4; index++) {
+            createAddPortrait();
+        }
+    }
+    DiceCup.playMenu = playMenu;
+    function createPlayerPortrait() {
+        let playerContainer = document.createElement("div");
+        playerContainer.id = "playerContainer_id";
+        playerContainer.classList.add("lobbyContainer");
+        playerContainer.style.order = "0";
+        document.getElementById("lobbyPortraits_id").appendChild(playerContainer);
+        let playerDiv = document.createElement("button");
+        playerDiv.id = "playerPortrait_id";
+        playerDiv.classList.add("lobbyPortrait");
+        playerDiv.classList.add("lobbyPortrait_active");
+        playerContainer.appendChild(playerDiv);
+        let playerIcons = document.createElement("img");
+        playerIcons.classList.add("lobbyPortraitIcons");
+        playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
+        playerDiv.appendChild(playerIcons);
+        let playerName = document.createElement("input");
+        playerName.id = "playerName_id";
+        playerName.classList.add("nameInputs");
+        playerName.placeholder = "Player";
+        playerContainer.appendChild(playerName);
+        let difficultySwitchHidden = document.createElement("div");
+        difficultySwitchHidden.classList.add("difficultySwitch");
+        difficultySwitchHidden.style.visibility = "hidden";
+        playerContainer.appendChild(difficultySwitchHidden);
+    }
+    function createBotPortrait() {
+        let botContainer = document.createElement("div");
+        botContainer.id = "botContainer_id";
+        botContainer.classList.add("lobbyContainer");
+        botContainer.style.order = "1";
+        document.getElementById("lobbyPortraits_id").appendChild(botContainer);
+        let botDiv = document.createElement("button");
+        botDiv.id = "botPortrait_id";
+        botDiv.classList.add("lobbyPortrait");
+        botDiv.classList.add("lobbyPortrait_active");
+        botDiv.disabled = true;
+        botContainer.appendChild(botDiv);
+        let botRemove = document.createElement("button");
+        botRemove.id = "botRemove_id";
+        botRemove.classList.add("botRemove");
+        botDiv.appendChild(botRemove);
+        botRemove.addEventListener("click", handleRemovePlayer);
+        let botRemoveIcon = document.createElement("img");
+        botRemoveIcon.classList.add("botRemoveIcons");
+        botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
+        botRemove.appendChild(botRemoveIcon);
+        let botIcons = document.createElement("img");
+        botIcons.classList.add("lobbyPortraitIcons");
+        botIcons.src = "Game/Assets/images/menuButtons/bot.svg";
+        botDiv.appendChild(botIcons);
+        let botName = document.createElement("input");
+        botName.id = "botName_id";
+        botName.placeholder = "Agent";
+        botName.classList.add("nameInputs");
+        botContainer.appendChild(botName);
+        let difficultySwitch = document.createElement("div");
+        difficultySwitch.classList.add("difficultySwitch");
+        botContainer.appendChild(difficultySwitch);
+        let switchButtonLeft = document.createElement("button");
+        switchButtonLeft.classList.add("switchDifficulty");
+        switchButtonLeft.innerHTML = "◄";
+        difficultySwitch.appendChild(switchButtonLeft);
+        let chosenDifficulty = 0;
+        let difficultySwitchText = document.createElement("div");
+        difficultySwitchText.classList.add("switchDifficultyText");
+        difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+        difficultySwitch.appendChild(difficultySwitchText);
+        let switchButtonRight = document.createElement("button");
+        switchButtonRight.classList.add("switchDifficulty");
+        switchButtonRight.innerHTML = "►";
+        difficultySwitch.appendChild(switchButtonRight);
+        switchButtonRight.addEventListener("click", () => {
+            if (chosenDifficulty < 2) {
+                chosenDifficulty++;
+            }
+            else {
+                chosenDifficulty = 0;
+            }
+            difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+        });
+        switchButtonLeft.addEventListener("click", () => {
+            if (chosenDifficulty > 0) {
+                chosenDifficulty--;
+            }
+            else {
+                chosenDifficulty = 2;
+            }
+            difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+        });
+    }
+    function createAddPortrait() {
+        let addContainer = document.createElement("div");
+        addContainer.id = "addContainer_id";
+        addContainer.classList.add("lobbyContainer");
+        addContainer.style.order = "2";
+        document.getElementById("lobbyPortraits_id").appendChild(addContainer);
+        let addPlayerDiv = document.createElement("button");
+        addPlayerDiv.classList.add("lobbyPortrait");
+        addPlayerDiv.classList.add("lobbyPortrait_inactive");
+        addContainer.appendChild(addPlayerDiv);
+        let addIcons = document.createElement("img");
+        addIcons.classList.add("lobbyPortraitIcons");
+        addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
+        addPlayerDiv.appendChild(addIcons);
+        addPlayerDiv.addEventListener("click", handleAddPlayer);
+    }
+    function handleAddPlayer(_event) {
+        this.parentElement.remove();
+        createBotPortrait();
+    }
+    function handleRemovePlayer(_event) {
+        this.parentElement.parentElement.remove();
+        createAddPortrait();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;

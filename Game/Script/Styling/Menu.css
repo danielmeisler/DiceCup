@@ -1,14 +1,17 @@
-#mainMenu {
+.gameMenus {
     height: 100%;
     width: 100%;
     position: absolute;
     background: linear-gradient(#5BB8BC, #5071A7);
     display: flex;
+}
+
+#mainMenu_id {
     align-items: center;
     justify-content: center;
 }
   
-#logoContainer {
+#logoContainer_id {
     width: 50%;
     height: 100%;
     display: flex;
@@ -16,11 +19,11 @@
     justify-content: center;
 }
 
-#logo {
+#logo_id {
     width: 80%;
 }
 
-#buttonContainer {
+#buttonContainer_id {
     height: calc(100vw - 65vw);
     aspect-ratio: 1/1;
     display: flex;
@@ -55,3 +58,123 @@
     aspect-ratio: 1/1;
 }
 
+#singleplayerMenu_id {
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+#singlePlayerMenuTitle_id {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 6vi;
+    color: white;
+    margin: 2vh 0 2vh 0;
+}
+
+#lobbyPortraits_id {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.lobbyPortrait {
+    width: 10vw;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    border-width: 0;
+}
+
+.lobbyPortrait:active {
+    transform: scale(0.9);
+}
+
+.lobbyPortrait_active {
+    background: #2F4260;
+    border-radius: 20px;
+    position: relative;
+}
+
+.lobbyPortrait_inactive {
+    background: rgba(47, 66, 96, 0.5);
+    border-radius: 20px;
+}
+
+#lobbyPortraits_id {
+    height: 17vw;
+}
+
+.lobbyPortraitIcons {
+    width: 70%;
+    aspect-ratio: 1/1;
+}
+
+.lobbyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nameInputs, .difficultySwitch {
+    width: 9.5vw;
+    border-width: 0;
+    aspect-ratio: 1/0.25;
+    border-radius: 20px;
+    background: #2F4260;
+    color: white;
+    text-align: center;
+    font-size: 1.5vi;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.nameInputs::placeholder {
+    color: gray;
+}
+
+.difficultySwitch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.switchDifficulty {
+    border-width: 0;
+    background: transparent;
+    color: white;
+}
+
+.switchDifficultyText {
+    margin-top: -2%;
+}
+
+#botPortrait_id {
+    transform: scale(1);
+    filter: brightness(100%);
+}
+
+.botRemove {
+    position: absolute;
+    width: 2vw;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    border-width: 0;
+    background-color: red;
+    right: 0;
+    top: 0;
+    margin-right: -0.8vw;
+    margin-top: -0.8vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.botRemove:active {
+    transform: scale(0.9);
+}
+
+.botRemoveIcons {
+    height: 60%;
+    aspect-ratio: 1/1;
+}

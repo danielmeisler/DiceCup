@@ -1,9 +1,7 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
-    export async function initViewport(_event: CustomEvent) {
-        viewport = _event.detail;
-
+    export async function initViewport() {
         viewport.camera.mtxPivot.translateZ(10);
         viewport.camera.mtxPivot.rotateY(180);
         viewport.camera.mtxPivot.translateX(1);
@@ -12,7 +10,6 @@ namespace DiceCup {
     
         let dice: ƒ.Node = graph.getChildrenByName("Dice")[0];
         console.log(dice.mtxLocal.translation);
-
     }
 
     export let bot: Bot;
@@ -25,7 +22,7 @@ namespace DiceCup {
         dices = [];
 
         let gameDiv: HTMLDivElement = document.createElement("div");
-        gameDiv.id = "rollingDiv";
+        gameDiv.id = "rollingDiv_id";
         document.getElementById("game").appendChild(gameDiv);
     
         for (let i: number = 0; i < 6; i++) {
@@ -36,14 +33,14 @@ namespace DiceCup {
         for (let i: number = 0; i < 12; i++) {
             let diceDiv: HTMLDivElement = document.createElement("div");
             diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer" + i;
+            diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = dices[i].value.toString();
             diceDiv.style.background = DiceColor[dices[i].color].toString();
             document.getElementById("rollingDiv").appendChild(diceDiv);
         }
 
-        bot = new Bot(BotDifficulty.easy, dices);
-        bot2 = new Bot(BotDifficulty.easy, dices);
+        bot = new Bot("Agent", BotDifficulty.easy, dices);
+        bot2 = new Bot("Spion", BotDifficulty.easy, dices);
     
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, () => { gameValidate()  });
@@ -59,7 +56,7 @@ namespace DiceCup {
         for (let i: number = 0; i < 12; i++) {
         let diceDiv: HTMLDivElement = document.createElement("div");
         diceDiv.classList.add("diceDiv");
-        diceDiv.id = "diceContainer" + i;
+        diceDiv.id = "diceContainer_id_" + i;
         diceDiv.innerHTML = dices[i].value.toString();
         diceDiv.style.background = DiceColor[dices[i].color].toString();
         document.getElementById("rollingDiv").appendChild(diceDiv);
@@ -80,7 +77,7 @@ namespace DiceCup {
             valuationDiv.classList.add("valuationShow");
             valuationDiv.addEventListener("click", handleValidate);
         }
-
+        
     }
 
     function handleValidate(_event: Event): void {
