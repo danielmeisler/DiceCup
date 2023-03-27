@@ -138,7 +138,7 @@ var DiceCup;
             diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-            document.getElementById("rollingDiv").appendChild(diceDiv);
+            document.getElementById("rollingDiv_id").appendChild(diceDiv);
         }
         DiceCup.bot = new DiceCup.Bot("Agent", DiceCup.BotDifficulty.easy, DiceCup.dices);
         DiceCup.bot2 = new DiceCup.Bot("Spion", DiceCup.BotDifficulty.easy, DiceCup.dices);
@@ -158,19 +158,20 @@ var DiceCup;
             diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-            document.getElementById("rollingDiv").appendChild(diceDiv);
+            document.getElementById("rollingDiv_id").appendChild(diceDiv);
         }
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
     function gameValidate() {
-        for (let i = 0; i < 12; i++)
-            document.getElementById("diceContainer" + i).remove();
-        document.getElementById("valuation0").classList.add("valuationShow");
-        document.getElementById("valuation0").addEventListener("click", handleValidate);
+        for (let i = 0; i < 12; i++) {
+            document.getElementById("diceContainer_id_" + i).remove();
+            document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+            document.getElementById("valuation_id_" + i).addEventListener("click", handleValidate);
+        }
         console.log("Becher drauf!");
         for (let i = 0; i < 12; i++) {
-            let valuationDiv = document.getElementById("valuation" + i);
+            let valuationDiv = document.getElementById("valuation_id_" + i);
             valuationDiv.setAttribute("index", i.toString());
             valuationDiv.classList.add("valuationShow");
             valuationDiv.addEventListener("click", handleValidate);

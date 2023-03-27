@@ -36,7 +36,7 @@ namespace DiceCup {
             diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = dices[i].value.toString();
             diceDiv.style.background = DiceColor[dices[i].color].toString();
-            document.getElementById("rollingDiv").appendChild(diceDiv);
+            document.getElementById("rollingDiv_id").appendChild(diceDiv);
         }
 
         bot = new Bot("Agent", BotDifficulty.easy, dices);
@@ -59,20 +59,21 @@ namespace DiceCup {
         diceDiv.id = "diceContainer_id_" + i;
         diceDiv.innerHTML = dices[i].value.toString();
         diceDiv.style.background = DiceColor[dices[i].color].toString();
-        document.getElementById("rollingDiv").appendChild(diceDiv);
+        document.getElementById("rollingDiv_id").appendChild(diceDiv);
         }
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
 
     function gameValidate(): void {
-        for (let i: number = 0; i < 12; i++) 
-            document.getElementById("diceContainer" + i).remove();
-            document.getElementById("valuation0").classList.add("valuationShow");
-            document.getElementById("valuation0").addEventListener("click", handleValidate);
+        for (let i: number = 0; i < 12; i++) {
+            document.getElementById("diceContainer_id_" + i).remove();
+            document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+            document.getElementById("valuation_id_" + i).addEventListener("click", handleValidate);
+        }
         console.log("Becher drauf!");
         for (let i: number = 0; i < 12; i++) {
-            let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation" + i);
+            let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation_id_" + i);
             valuationDiv.setAttribute("index", i.toString());
             valuationDiv.classList.add("valuationShow");
             valuationDiv.addEventListener("click", handleValidate);
