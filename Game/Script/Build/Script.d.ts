@@ -1,4 +1,19 @@
 declare namespace DiceCup {
+    import ƒ = FudgeCore;
+    class CustomComponentScript extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        message: string;
+        constructor();
+        hndEvent: (_event: Event) => void;
+    }
+}
+declare namespace DiceCup {
+    import ƒ = FudgeCore;
+    let viewport: ƒ.Viewport;
+    let dices: Dice[];
+    let highscore: number;
+}
+declare namespace DiceCup {
     class Bot {
         dices: Dice[];
         private usedCategories;
@@ -9,15 +24,6 @@ declare namespace DiceCup {
         chooseDifficulty(_difficulty: BotDifficulty): void;
         botEasy(): void;
         private botValuation;
-    }
-}
-declare namespace DiceCup {
-    import ƒ = FudgeCore;
-    class CustomComponentScript extends ƒ.ComponentScript {
-        static readonly iSubclass: number;
-        message: string;
-        constructor();
-        hndEvent: (_event: Event) => void;
     }
 }
 declare namespace DiceCup {
@@ -38,18 +44,6 @@ declare namespace DiceCup {
     class Hud {
         static initHud(): Promise<void>;
     }
-}
-declare namespace DiceCup {
-    import ƒ = FudgeCore;
-    let viewport: ƒ.Viewport;
-    let dices: Dice[];
-    let highscore: number;
-}
-declare namespace DiceCup {
-    function mainMenu(): void;
-}
-declare namespace DiceCup {
-    function playMenu(): void;
 }
 declare namespace DiceCup {
     class Valuation {
@@ -81,6 +75,16 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    enum MenuPages {
+        main = "mainMenu_id",
+        singleplayer = "singleplayerMenu_id",
+        multiplayer = "multiplayerMenu_id",
+        shop = "shopMenu_id",
+        help = "helpMenu_id",
+        options = "optionsMenu_id"
+    }
+}
+declare namespace DiceCup {
     enum ScoringCategory {
         fours = 0,
         fives = 1,
@@ -95,6 +99,16 @@ declare namespace DiceCup {
         oneToThree = 10,
         diceCup = 11
     }
+}
+declare namespace DiceCup {
+    function gameMenu(): void;
+}
+declare namespace DiceCup {
+    function mainMenu(): void;
+    function switchMenu(_thisMenuID: MenuPages, _toMenuID: MenuPages): void;
+}
+declare namespace DiceCup {
+    function playMenu(): void;
 }
 declare namespace DiceCup {
     interface ScoringCategoryDao {

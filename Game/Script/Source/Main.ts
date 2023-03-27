@@ -13,6 +13,6 @@ namespace DiceCup {
         navigator.serviceWorker.register("../../serviceWorker.js")
     }
     viewport = _event.detail;
-    mainMenu();
+    gameMenu();
   }
 }

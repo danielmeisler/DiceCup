@@ -4,9 +4,10 @@ namespace DiceCup {
         let spMenu: HTMLDivElement = document.createElement("div");
         spMenu.id = "singleplayerMenu_id";
         spMenu.classList.add("gameMenus");
-        document.querySelector("body").appendChild(spMenu);
+        spMenu.style.visibility = "hidden";
+        document.getElementById("gameMenu_id").appendChild(spMenu);
 
-        let spMenuTitle: HTMLDivElement = document.createElement("div");
+        let spMenuTitle: HTMLSpanElement = document.createElement("span");
         spMenuTitle.id = "singlePlayerMenuTitle_id";
         spMenuTitle.innerHTML = "SINGLEPLAYER";
         spMenu.appendChild(spMenuTitle);
@@ -20,6 +21,57 @@ namespace DiceCup {
         for (let index = 0; index < 4; index++) {
             createAddPortrait();
         }
+
+        let buttonArea: HTMLDivElement = document.createElement("div");
+        buttonArea.id = "buttonArea_id";
+        spMenu.appendChild(buttonArea);
+
+        let leftButtonArea: HTMLDivElement = document.createElement("div");
+        leftButtonArea.id = "leftButtonArea_id";
+        buttonArea.appendChild(leftButtonArea);
+
+        let rightButtonArea: HTMLDivElement = document.createElement("div");
+        rightButtonArea.id = "rightButtonArea_id";
+        buttonArea.appendChild(rightButtonArea);
+        
+        let returnButton: HTMLButtonElement = document.createElement("button");
+        returnButton.id = "returnButton_id";
+        returnButton.classList.add("buttonArea");
+        returnButton.classList.add("diceCupButtons");
+        leftButtonArea.appendChild(returnButton);
+
+        let returnIcon: HTMLImageElement = document.createElement("img");
+        returnIcon.classList.add("buttonAreaIcons");
+        returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
+        returnButton.appendChild(returnIcon);
+        returnButton.addEventListener("click", () => {
+            switchMenu(MenuPages.singleplayer, MenuPages.main);
+        });
+
+        let settingsButton: HTMLButtonElement = document.createElement("button");
+        settingsButton.id = "settingsButton_id";
+        settingsButton.classList.add("buttonArea");
+        settingsButton.classList.add("diceCupButtons");
+        leftButtonArea.appendChild(settingsButton);
+
+        let settingsIcon: HTMLImageElement = document.createElement("img");
+        settingsIcon.classList.add("buttonAreaIcons");
+        settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
+        settingsButton.appendChild(settingsIcon);
+
+        let startButton: HTMLButtonElement = document.createElement("button");
+        startButton.id = "startButton_id";
+        startButton.classList.add("buttonArea");
+        startButton.classList.add("diceCupButtons");
+        startButton.innerHTML = "START";
+        rightButtonArea.appendChild(startButton);
+
+        startButton.addEventListener("click", () => {
+            document.getElementById("gameMenu_id").style.display = "none";
+            Hud.initHud();
+            initViewport();
+            initGame();
+        });
     }
 
     function createPlayerPortrait(): void {
@@ -33,6 +85,7 @@ namespace DiceCup {
         playerDiv.id = "playerPortrait_id";
         playerDiv.classList.add("lobbyPortrait");
         playerDiv.classList.add("lobbyPortrait_active");
+        playerDiv.classList.add("diceCupButtons");
         playerContainer.appendChild(playerDiv);
 
         let playerIcons: HTMLImageElement = document.createElement("img");
@@ -62,7 +115,8 @@ namespace DiceCup {
         let botDiv: HTMLButtonElement = document.createElement("button");
         botDiv.id = "botPortrait_id";
         botDiv.classList.add("lobbyPortrait");
-        botDiv.classList.add("lobbyPortrait_active");  
+        botDiv.classList.add("lobbyPortrait_active");
+        botDiv.classList.add("diceCupButtons");
         botDiv.disabled = true;
         botContainer.appendChild(botDiv);
 
@@ -94,8 +148,12 @@ namespace DiceCup {
 
         let switchButtonLeft: HTMLButtonElement = document.createElement("button");
         switchButtonLeft.classList.add("switchDifficulty");
-        switchButtonLeft.innerHTML = "◄";
         difficultySwitch.appendChild(switchButtonLeft);
+
+        let switchButtonLeftIcon: HTMLImageElement = document.createElement("img");
+        switchButtonLeftIcon.classList.add("switchButtonIcons");
+        switchButtonLeftIcon.src = "Game/Assets/images/menuButtons/left.svg";
+        switchButtonLeft.appendChild(switchButtonLeftIcon);
 
         let chosenDifficulty: number = 0;
 
@@ -106,8 +164,12 @@ namespace DiceCup {
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");
         switchButtonRight.classList.add("switchDifficulty");
-        switchButtonRight.innerHTML = "►";
         difficultySwitch.appendChild(switchButtonRight);
+
+        let switchButtonRightIcon: HTMLImageElement = document.createElement("img");
+        switchButtonRightIcon.classList.add("switchButtonIcons");
+        switchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
+        switchButtonRight.appendChild(switchButtonRightIcon);
 
         switchButtonRight.addEventListener("click", () => {
             if (chosenDifficulty < 2) {
@@ -127,7 +189,6 @@ namespace DiceCup {
         });
     }
 
-
     function createAddPortrait(): void {
         let addContainer: HTMLDivElement = document.createElement("div");
         addContainer.id = "addContainer_id";
@@ -138,6 +199,7 @@ namespace DiceCup {
         let addPlayerDiv: HTMLButtonElement = document.createElement("button");
         addPlayerDiv.classList.add("lobbyPortrait");
         addPlayerDiv.classList.add("lobbyPortrait_inactive");
+        addPlayerDiv.classList.add("diceCupButtons");
         addContainer.appendChild(addPlayerDiv);
 
         let addIcons: HTMLImageElement = document.createElement("img");

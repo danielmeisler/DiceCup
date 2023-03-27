@@ -39,18 +39,10 @@
     margin: 2.5%;
     background: #2F4260;
     color: white;
-    box-shadow: 0 0.1em 0.1em rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    border-width: 0;
     font-size: 4.5vi;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.menuButtons:active {
-    transform: scale(0.9);
 }
 
 .menuButtonsIcons {
@@ -58,50 +50,49 @@
     aspect-ratio: 1/1;
 }
 
+
+
+
 #singleplayerMenu_id {
     flex-direction: column;
     align-items: center;
     height: 100%;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 #singlePlayerMenuTitle_id {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 6vi;
+    height: 10vw;
+    line-height: 10vw;
+    font-size: 5vw;
     color: white;
-    margin: 2vh 0 2vh 0;
+    font-family: "Bungee";
+    text-shadow: 0 0.5vw 0.5vw rgba(0, 0, 0, 0.25);
 }
 
 #lobbyPortraits_id {
-    width: 100%;
+    width: 96vw;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .lobbyPortrait {
-    width: 10vw;
+    width: 12vw;
     aspect-ratio: 1/1;
-    border-radius: 20px;
-    border-width: 0;
-}
-
-.lobbyPortrait:active {
-    transform: scale(0.9);
 }
 
 .lobbyPortrait_active {
     background: #2F4260;
-    border-radius: 20px;
     position: relative;
 }
 
 .lobbyPortrait_inactive {
     background: rgba(47, 66, 96, 0.5);
-    border-radius: 20px;
 }
 
 #lobbyPortraits_id {
-    height: 17vw;
+    height: 100%;
 }
 
 .lobbyPortraitIcons {
@@ -110,6 +101,7 @@
 }
 
 .lobbyContainer {
+    height: 23vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -117,20 +109,21 @@
 }
 
 .nameInputs, .difficultySwitch {
-    width: 9.5vw;
+    width: 12vw;
     border-width: 0;
     aspect-ratio: 1/0.25;
-    border-radius: 20px;
-    background: #2F4260;
+    border-radius: 3vh;
+    background: #3E5373;
     color: white;
     text-align: center;
-    font-size: 1.5vi;
+    font-size: 2vi;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
+    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
 }
 
 .nameInputs::placeholder {
-    color: gray;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .difficultySwitch {
@@ -142,11 +135,18 @@
 .switchDifficulty {
     border-width: 0;
     background: transparent;
-    color: white;
+    color: rgba(255, 255, 255, 0.5);
+    height: 100%;
+}
+
+.switchButtonIcons {
+    height: 50%;
+    width: 1vw;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .switchDifficultyText {
-    margin-top: -2%;
+    margin-top: -1%;
 }
 
 #botPortrait_id {
@@ -156,11 +156,11 @@
 
 .botRemove {
     position: absolute;
-    width: 2vw;
+    width: 2.5vw;
     aspect-ratio: 1/1;
     border-radius: 50%;
     border-width: 0;
-    background-color: red;
+    background: #CF4C4C;
     right: 0;
     top: 0;
     margin-right: -0.8vw;
@@ -176,5 +176,55 @@
 
 .botRemoveIcons {
     height: 60%;
+    aspect-ratio: 1/1;
+}
+
+#buttonArea_id {
+    width: 100%;
+    height: 20vw;
+    display: flex;
+}
+
+#leftButtonArea_id, #rightButtonArea_id {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+
+#leftButtonArea_id {
+    padding-left: 2vw;
+    justify-content: left;
+}
+
+#rightButtonArea_id {
+    padding-right: 2vw;
+    justify-content: right;
+}
+
+.buttonArea {
+    height: 9vw;
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #2F4260;
+    color: white;
+}
+
+#startButton_id {
+    width: 50%;
+    background: #2A3546;
+    font-family: "Bungee";
+    font-size: 5vi;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonAreaIcons {
+    width: 80%;
     aspect-ratio: 1/1;
 }

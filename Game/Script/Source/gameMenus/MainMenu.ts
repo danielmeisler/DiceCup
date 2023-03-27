@@ -1,10 +1,15 @@
 namespace DiceCup {
 
     export function mainMenu(): void {
+        let gameMenuDiv: HTMLDivElement = document.createElement("div");
+        gameMenuDiv.id = "gameMenu_id";
+        gameMenuDiv.classList.add("gameMenus");
+        document.querySelector("body").appendChild(gameMenuDiv);
+
         let menuDiv: HTMLDivElement = document.createElement("div");
         menuDiv.id = "mainMenu_id";
         menuDiv.classList.add("gameMenus");
-        document.querySelector("body").appendChild(menuDiv);
+        gameMenuDiv.appendChild(menuDiv);
 
         let logoDiv: HTMLDivElement = document.createElement("div");
         logoDiv.id = "logoContainer_id";
@@ -25,6 +30,7 @@ namespace DiceCup {
         for (let i = 0; i < 4; i++) {
             let menuButtons: HTMLButtonElement = document.createElement("button");
             menuButtons.classList.add("menuButtons");
+            menuButtons.classList.add("diceCupButtons");
             menuButtons.id = menuButtonIds[i];
             buttonDiv.appendChild(menuButtons);
 
@@ -35,34 +41,26 @@ namespace DiceCup {
         }
 
         document.getElementById("play_id").addEventListener("click", () => {
-            hideMenu("mainMenu_id");
-            // Hud.initHud();
-            // initViewport();
-            // initGame();
-            playMenu();
+            switchMenu(MenuPages.main, MenuPages.singleplayer);
         });
 
         document.getElementById("shop_id").addEventListener("click", () => {
-            hideMenu("mainMenu_id");
+            switchMenu(MenuPages.main, MenuPages.shop);
 
         });
 
         document.getElementById("help_id").addEventListener("click", () => {
-            hideMenu("mainMenu_id");
+            switchMenu(MenuPages.main, MenuPages.help);
         });
 
         document.getElementById("options_id").addEventListener("click", () => {
-            hideMenu("mainMenu_id");
-
+            switchMenu(MenuPages.main, MenuPages.options);
         });
 
     }
 
-    function hideMenu(_menuID: string): void {
-        document.getElementById(_menuID).style.display = "none"; 
-    }
-    
-    function showMenu(_menuID: string): void {
-        document.getElementById(_menuID).style.display = "visible"; 
+    export function switchMenu(_thisMenuID: MenuPages, _toMenuID: MenuPages ): void {
+        document.getElementById(_thisMenuID).style.visibility = "hidden"; 
+        document.getElementById(_toMenuID).style.visibility = "visible"; 
     }
 }

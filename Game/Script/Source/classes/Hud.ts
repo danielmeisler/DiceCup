@@ -3,7 +3,7 @@ namespace DiceCup {
     export class Hud {
 
         public static async initHud(): Promise<void> {
-          let response: Response = await fetch("Game/Script/Source/data/scoringCategories.json");
+          let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
           let categories: ScoringCategoryDao[] = await response.json();
 
           let domHud: HTMLDivElement = document.createElement("div");
@@ -18,7 +18,6 @@ namespace DiceCup {
             let valuationButton: HTMLButtonElement = document.createElement("button");
             valuationButton.classList.add("valuationButton");
             valuationButton.id = "valuation_id_" + i;
-            valuationButton.style.zIndex = "2";
             valuationContainer.appendChild(valuationButton);
 
             let icon: HTMLElement = document.createElement("div");
