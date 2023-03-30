@@ -27,6 +27,11 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    class Categories {
+        initCategories(): Promise<void>;
+    }
+}
+declare namespace DiceCup {
     class Dice {
         color: DiceColor;
         value: number;
@@ -72,6 +77,16 @@ declare namespace DiceCup {
         blue = 3,
         green = 4,
         yellow = 5
+    }
+}
+declare namespace DiceCup {
+    enum GameState {
+        menu = 0,
+        ready = 1,
+        counting = 2,
+        choosing = 3,
+        validating = 4,
+        summary = 5
     }
 }
 declare namespace DiceCup {

@@ -95,6 +95,50 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    class Categories {
+        async initCategories() {
+            let response = await fetch("Game/Script/Data/scoringCategories.json");
+            let categories = await response.json();
+            let background = document.createElement("div");
+            background.id = "categoryBackground_id";
+            document.querySelector("body").appendChild(background);
+            let container = document.createElement("div");
+            container.id = "categoryContainer_id";
+            background.appendChild(container);
+            let header = document.createElement("div");
+            header.id = "categoryHeader_id";
+            container.appendChild(header);
+            let title = document.createElement("span");
+            title.id = "categoryTitle_id";
+            title.innerHTML = "Choose a category";
+            header.appendChild(title);
+            let timer = document.createElement("div");
+            timer.id = "categoryTimer_id";
+            header.appendChild(timer);
+            let content = document.createElement("div");
+            content.id = "categoryContent_id";
+            container.appendChild(content);
+            for (let i = 0; i < 12; i++) {
+                let button = document.createElement("button");
+                button.classList.add("categoryButtons");
+                button.classList.add("diceCupButtons");
+                button.id = "categoryButtons_id_" + i;
+                content.appendChild(button);
+                let img = document.createElement("img");
+                img.src = categories[i].image;
+                img.classList.add("categoryImages");
+                img.id = "categoryImage_i_" + i;
+                button.appendChild(img);
+                let points = document.createElement("span");
+                points.classList.add("categoryPoints");
+                button.appendChild(points);
+            }
+        }
+    }
+    DiceCup.Categories = Categories;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     class Dice {
         color;
         value;
@@ -123,7 +167,7 @@ var DiceCup;
     DiceCup.initViewport = initViewport;
     function initGame() {
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         DiceCup.dices = [];
         let gameDiv = document.createElement("div");
         gameDiv.id = "rollingDiv_id";
@@ -164,6 +208,8 @@ var DiceCup;
         ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
     function gameValidate() {
+        let category = new DiceCup.Categories();
+        category.initCategories();
         for (let i = 0; i < 12; i++) {
             document.getElementById("diceContainer_id_" + i).remove();
             document.getElementById("valuation_id_" + i).classList.add("valuationShow");
@@ -208,8 +254,8 @@ var DiceCup;
             valuationContainer.id = "valuationContainer_id";
             domHud.appendChild(valuationContainer);
             for (let i = 0; i < 12; i++) {
-                let valuationButton = document.createElement("button");
-                valuationButton.classList.add("valuationButton");
+                let valuationButton = document.createElement("div");
+                valuationButton.classList.add("valuation");
                 valuationButton.id = "valuation_id_" + i;
                 valuationContainer.appendChild(valuationButton);
                 let icon = document.createElement("div");
@@ -348,6 +394,18 @@ var DiceCup;
         DiceColor[DiceColor["green"] = 4] = "green";
         DiceColor[DiceColor["yellow"] = 5] = "yellow";
     })(DiceColor = DiceCup.DiceColor || (DiceCup.DiceColor = {}));
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    let GameState;
+    (function (GameState) {
+        GameState[GameState["menu"] = 0] = "menu";
+        GameState[GameState["ready"] = 1] = "ready";
+        GameState[GameState["counting"] = 2] = "counting";
+        GameState[GameState["choosing"] = 3] = "choosing";
+        GameState[GameState["validating"] = 4] = "validating";
+        GameState[GameState["summary"] = 5] = "summary";
+    })(GameState = DiceCup.GameState || (DiceCup.GameState = {}));
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {

@@ -15,8 +15,8 @@ namespace DiceCup {
           domHud.appendChild(valuationContainer);
 
           for (let i: number = 0; i < 12; i++) {
-            let valuationButton: HTMLButtonElement = document.createElement("button");
-            valuationButton.classList.add("valuationButton");
+            let valuationButton: HTMLDivElement = document.createElement("div");
+            valuationButton.classList.add("valuation");
             valuationButton.id = "valuation_id_" + i;
             valuationContainer.appendChild(valuationButton);
 

@@ -1,0 +1,49 @@
+#hud_id {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+  
+#valuationContainer_id {
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  bottom: -10%;
+  display: flex;
+  justify-content: space-around;
+  overflow: hidden;
+}
+
+.valuation {
+  width: 5%;
+  height: 100%;
+  background-color: #313131;
+  border-radius: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10%;
+}
+
+.valuationHidden {
+  margin-top: 10%;
+  visibility: hidden;
+  transition: margin-top 1s linear, visibility 1s linear;
+}
+
+.valuationShow {
+  margin-top: 0%;
+  transition: margin-top 1s linear;
+}
+
+.valuationIcon, .valuationScore {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.valuationImage {
+  height: 75%;
+  aspect-ratio: 1/1;
+}
