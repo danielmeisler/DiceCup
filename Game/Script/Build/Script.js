@@ -140,6 +140,7 @@ var DiceCup;
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
             document.getElementById("rollingDiv_id").appendChild(diceDiv);
+            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
         }
         DiceCup.bot = new DiceCup.Bot("Agent", DiceCup.BotDifficulty.easy, DiceCup.dices);
         DiceCup.bot2 = new DiceCup.Bot("Spion", DiceCup.BotDifficulty.easy, DiceCup.dices);
@@ -164,34 +165,20 @@ var DiceCup;
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
+    DiceCup.rollDices = rollDices;
     function gameValidate() {
+        console.log("Becher drauf!");
         DiceCup.showCategories();
         for (let i = 0; i < 12; i++) {
             document.getElementById("diceContainer_id_" + i).remove();
-            document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-            document.getElementById("valuation_id_" + i).addEventListener("click", handleValidate);
         }
-        console.log("Becher drauf!");
-        for (let i = 0; i < 12; i++) {
-            let valuationDiv = document.getElementById("valuation_id_" + i);
-            valuationDiv.setAttribute("index", i.toString());
-            valuationDiv.classList.add("valuationShow");
-            valuationDiv.addEventListener("click", handleValidate);
-        }
+        // for (let i: number = 0; i < 12; i++) {
+        //     let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation_id_" + i);
+        //     valuationDiv.setAttribute("index", i.toString());
+        //     valuationDiv.classList.add("valuationShow");
+        // }
     }
-    function handleValidate(_event) {
-        DiceCup.showCategories();
-        new DiceCup.Valuation(parseInt(_event.currentTarget.getAttribute("index")), DiceCup.dices);
-        DiceCup.bot.botEasy();
-        DiceCup.bot2.botEasy();
-        this.disabled = true;
-        this.style.backgroundColor = "black";
-        this.style.color = "gray";
-        this.classList.remove("valuationShow");
-        this.classList.add("valuationHidden");
-        console.log("Total: " + DiceCup.highscore);
-        rollDices();
-    }
+    DiceCup.gameValidate = gameValidate;
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
         DiceCup.viewport.draw();
@@ -303,6 +290,7 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    var ƒ = FudgeCore;
     async function initCategories() {
         let response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories = await response.json();
@@ -332,7 +320,7 @@ var DiceCup;
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            button.addEventListener("click", handleValidate);
+            button.addEventListener("click", handleCategory);
             content.appendChild(button);
             let img = document.createElement("img");
             img.src = categories[i].image;
@@ -346,27 +334,34 @@ var DiceCup;
         }
     }
     DiceCup.initCategories = initCategories;
-    function handleValidate(_event) {
+    function handleCategory(_event) {
         let index = parseInt(_event.currentTarget.getAttribute("index"));
         let valuation = new DiceCup.Valuation(index, DiceCup.dices);
         let value = valuation.chooseScoringCategory(index);
         document.getElementById("categoryPoints_id_" + index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + index).classList.add("categoryImagesTransparent");
-        hideCategories();
         this.disabled = true;
+        hideCategories();
+        new DiceCup.Valuation(parseInt(_event.currentTarget.getAttribute("index")), DiceCup.dices);
+        //HIER KOMMT DIE VALUATION PHASE... MACH SIE NACH DEN GAMESTATES
     }
     function showCategories() {
         document.getElementById("categoryContainer_id").classList.add("categoriesShown");
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
     }
     DiceCup.showCategories = showCategories;
     function hideCategories() {
         document.getElementById("categoryContainer_id").classList.remove("categoriesShown");
         document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
     }
     DiceCup.hideCategories = hideCategories;
+    function visibility(_visibility) {
+        document.getElementById("categoryBackground_id").style.visibility = _visibility;
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -398,6 +393,59 @@ var DiceCup;
         }
     }
     DiceCup.initHud = initHud;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    let firstPhrase = ["G", "a", "m", "e", "&nbsp", "S", "t", "a", "r", "t", "s"];
+    let countDown = ["&nbsp3", "&nbsp2", "&nbsp1", "&nbspGO!"];
+    let transitionCounter = -1;
+    function initTransition() {
+        let container = document.createElement("div");
+        container.classList.add("startTransitionContainer");
+        container.id = "startTransitionContainer";
+        document.querySelector("body").appendChild(container);
+        transition();
+    }
+    DiceCup.initTransition = initTransition;
+    function transition() {
+        if (transitionCounter == -1) {
+            for (let i = 0; i < firstPhrase.length; i++) {
+                let text = document.createElement("span");
+                text.id = "startTransitionText_id_" + i;
+                text.style.setProperty("--i", i.toString());
+                text.innerHTML = firstPhrase[i];
+                document.getElementById("startTransitionContainer").appendChild(text);
+            }
+            transitionCounter++;
+            console.log(transitionCounter);
+            ƒ.Time.game.setTimer(3000, 1, () => { transition(); });
+        }
+        else {
+            if (transitionCounter == 0) {
+                for (let i = 0; i < firstPhrase.length; i++) {
+                    document.getElementById("startTransitionText_id_" + i).remove();
+                }
+            }
+            let text = document.createElement("span");
+            text.id = "startTransitionText_id_" + firstPhrase.length + transitionCounter;
+            text.style.setProperty("--i", transitionCounter.toString());
+            text.innerHTML = countDown[transitionCounter];
+            document.getElementById("startTransitionContainer").appendChild(text);
+            transitionCounter++;
+            console.log(transitionCounter);
+            console.log(countDown.length);
+            if (transitionCounter == countDown.length + 1) {
+                document.getElementById("startTransitionContainer").remove();
+                DiceCup.initHud();
+                DiceCup.initViewport();
+                DiceCup.initGame();
+            }
+            else {
+                ƒ.Time.game.setTimer(1000, 1, () => { transition(); });
+            }
+        }
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -582,9 +630,7 @@ var DiceCup;
         rightButtonArea.appendChild(startButton);
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
-            DiceCup.initHud();
-            DiceCup.initViewport();
-            DiceCup.initGame();
+            DiceCup.initTransition();
         });
     }
     DiceCup.playMenu = playMenu;

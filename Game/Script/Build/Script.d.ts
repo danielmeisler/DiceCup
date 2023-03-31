@@ -39,6 +39,8 @@ declare namespace DiceCup {
     let bot: Bot;
     let bot2: Bot;
     function initGame(): void;
+    function rollDices(): void;
+    function gameValidate(): void;
 }
 declare namespace DiceCup {
     class Valuation {
@@ -59,6 +61,9 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function initHud(): Promise<void>;
+}
+declare namespace DiceCup {
+    function initTransition(): void;
 }
 declare namespace DiceCup {
     enum BotDifficulty {

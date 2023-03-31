@@ -37,6 +37,7 @@ namespace DiceCup {
             diceDiv.innerHTML = dices[i].value.toString();
             diceDiv.style.background = DiceColor[dices[i].color].toString();
             document.getElementById("rollingDiv_id").appendChild(diceDiv);
+            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
         }
 
         bot = new Bot("Agent", BotDifficulty.easy, dices);
@@ -47,53 +48,36 @@ namespace DiceCup {
 
     }
 
-    function rollDices(): void {
+    export function rollDices(): void {
         dices = [];
         for (let i: number = 0; i < 6; i++) {
-        dices.push(new Dice(i));
-        dices.push(new Dice(i));
+            dices.push(new Dice(i));
+            dices.push(new Dice(i));
         }
         for (let i: number = 0; i < 12; i++) {
-        let diceDiv: HTMLDivElement = document.createElement("div");
-        diceDiv.classList.add("diceDiv");
-        diceDiv.id = "diceContainer_id_" + i;
-        diceDiv.innerHTML = dices[i].value.toString();
-        diceDiv.style.background = DiceColor[dices[i].color].toString();
-        document.getElementById("rollingDiv_id").appendChild(diceDiv);
+            let diceDiv: HTMLDivElement = document.createElement("div");
+            diceDiv.classList.add("diceDiv");
+            diceDiv.id = "diceContainer_id_" + i;
+            diceDiv.innerHTML = dices[i].value.toString();
+            diceDiv.style.background = DiceColor[dices[i].color].toString();
+            document.getElementById("rollingDiv_id").appendChild(diceDiv);
         }
         console.log("Augen auf ...");
         ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
 
-    function gameValidate(): void {
+    export function gameValidate(): void {
+        console.log("Becher drauf!");
         showCategories();
         for (let i: number = 0; i < 12; i++) {
             document.getElementById("diceContainer_id_" + i).remove();
-            document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-            document.getElementById("valuation_id_" + i).addEventListener("click", handleValidate);
         }
-        console.log("Becher drauf!");
-        for (let i: number = 0; i < 12; i++) {
-            let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation_id_" + i);
-            valuationDiv.setAttribute("index", i.toString());
-            valuationDiv.classList.add("valuationShow");
-            valuationDiv.addEventListener("click", handleValidate);
-        }
+        // for (let i: number = 0; i < 12; i++) {
+        //     let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation_id_" + i);
+        //     valuationDiv.setAttribute("index", i.toString());
+        //     valuationDiv.classList.add("valuationShow");
+        // }
         
-    }
-
-    function handleValidate(_event: Event): void {
-        showCategories();
-        new Valuation(parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index")), dices);
-        bot.botEasy();
-        bot2.botEasy();
-        this.disabled = true;
-        this.style.backgroundColor = "black";
-        this.style.color = "gray";
-        this.classList.remove("valuationShow");
-        this.classList.add("valuationHidden");
-        console.log("Total: " + highscore);
-        rollDices();
     }
 
     function update(_event: Event): void {
