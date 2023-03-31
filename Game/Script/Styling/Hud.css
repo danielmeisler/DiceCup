@@ -26,7 +26,6 @@
 
 .valuationHidden {
   margin-top: 10%;
-  visibility: hidden;
   transition: margin-top 1s linear, visibility 1s linear;
 }
 
@@ -44,6 +43,6 @@
 }
 
 .valuationImage {
-  height: 75%;
+  width: 75%;
   aspect-ratio: 1/1;
 }

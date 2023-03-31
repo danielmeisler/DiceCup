@@ -27,11 +27,6 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
-    class Categories {
-        initCategories(): Promise<void>;
-    }
-}
-declare namespace DiceCup {
     class Dice {
         color: DiceColor;
         value: number;
@@ -46,21 +41,24 @@ declare namespace DiceCup {
     function initGame(): void;
 }
 declare namespace DiceCup {
-    class Hud {
-        static initHud(): Promise<void>;
-    }
-}
-declare namespace DiceCup {
     class Valuation {
         scoringCategory: ScoringCategory;
         dices: Dice[];
         constructor(_category: ScoringCategory, _dices: Dice[]);
-        chooseScoringCategory(_scoringCategory: ScoringCategory): void;
+        chooseScoringCategory(_scoringCategory: ScoringCategory): number;
         calculateNumber(_number: number, _number2?: number, _number3?: number): number;
         calculateColor(_color: DiceColor): number;
         calculateDoubles(): number;
         calculateDiceCup(): number;
     }
+}
+declare namespace DiceCup {
+    function initCategories(): Promise<void>;
+    function showCategories(): void;
+    function hideCategories(): void;
+}
+declare namespace DiceCup {
+    function initHud(): Promise<void>;
 }
 declare namespace DiceCup {
     enum BotDifficulty {

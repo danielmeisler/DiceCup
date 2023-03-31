@@ -5,7 +5,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(#5BB8BC, #5071A7);
 }
 
 #categoryContainer_id {
@@ -18,6 +17,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.categoriesHidden {
+    transition: margin-top 2s linear;
+    margin-top: 200%;
+}
+
+.categoriesShown {
+    transition: margin-top 2s linear;
+    margin-top: 0%;
 }
 
 #categoryHeader_id {
@@ -62,11 +71,15 @@
 .categoryImages {
     width: 90%;
     aspect-ratio: 1/1;
-
 }
 
 .categoryImagesTransparent {
     opacity: 0.2;
+}
+
+.categoryButtons:active {
+    filter: brightness(100%);
+    transform: scale(1);
 }
 
 .categoryPoints {

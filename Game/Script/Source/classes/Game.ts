@@ -18,7 +18,7 @@ namespace DiceCup {
     export function initGame(): void {
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-
+        initCategories();
         dices = [];
 
         let gameDiv: HTMLDivElement = document.createElement("div");
@@ -66,8 +66,7 @@ namespace DiceCup {
     }
 
     function gameValidate(): void {
-        let category = new Categories();
-        category.initCategories();
+        showCategories();
         for (let i: number = 0; i < 12; i++) {
             document.getElementById("diceContainer_id_" + i).remove();
             document.getElementById("valuation_id_" + i).classList.add("valuationShow");
@@ -84,6 +83,7 @@ namespace DiceCup {
     }
 
     function handleValidate(_event: Event): void {
+        showCategories();
         new Valuation(parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index")), dices);
         bot.botEasy();
         bot2.botEasy();

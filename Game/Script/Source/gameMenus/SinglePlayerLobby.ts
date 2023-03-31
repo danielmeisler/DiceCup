@@ -68,7 +68,7 @@ namespace DiceCup {
 
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
-            Hud.initHud();
+            initHud();
             initViewport();
             initGame();
         });

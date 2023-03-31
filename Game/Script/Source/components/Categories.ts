@@ -1,7 +1,6 @@
 namespace DiceCup {
-    export class Categories {
 
-        public async initCategories() {
+        export async function initCategories() {
             let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
             let categories: ScoringCategoryDao[] = await response.json();
 
@@ -10,6 +9,7 @@ namespace DiceCup {
             document.querySelector("body").appendChild(background);
 
             let container: HTMLDivElement = document.createElement("div");
+            container.classList.add("categoriesHidden");
             container.id = "categoryContainer_id";
             background.appendChild(container);
 
@@ -35,6 +35,8 @@ namespace DiceCup {
                 button.classList.add("categoryButtons");
                 button.classList.add("diceCupButtons");
                 button.id = "categoryButtons_id_" + i;
+                button.setAttribute("index", i.toString());
+                button.addEventListener("click", handleValidate);
                 content.appendChild(button);
 
                 let img: HTMLImageElement = document.createElement("img");
@@ -44,9 +46,31 @@ namespace DiceCup {
                 button.appendChild(img);
                 
                 let points: HTMLSpanElement = document.createElement("span");
+                points.id = "categoryPoints_id_" + i;
                 points.classList.add("categoryPoints");
                 button.appendChild(points);
             }
         }
-    }
+
+        function handleValidate(_event: Event): void {
+            let index: number = parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index"));
+            let valuation: Valuation = new Valuation(index, dices);
+            let value: number = valuation.chooseScoringCategory(index);
+            document.getElementById("categoryPoints_id_" + index).innerHTML = value.toString();
+            document.getElementById("categoryImage_i_" + index).classList.add("categoryImagesTransparent");
+            hideCategories();
+            this.disabled = true;
+        }
+
+        export function showCategories() {
+            document.getElementById("categoryContainer_id").classList.add("categoriesShown");
+            document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
+            document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+        }
+
+        export function hideCategories() {
+            document.getElementById("categoryContainer_id").classList.remove("categoriesShown");
+            document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
+            document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
+        }
 }

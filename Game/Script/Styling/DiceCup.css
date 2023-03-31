@@ -28,10 +28,6 @@ button {
   cursor: pointer;
 }
 
-button:active {
-  filter: brightness(80%);
-}
-
 .diceCupButtons {
   box-shadow: 0 0.5vw 0.5vw 0 rgba(0, 0, 0, 0.25);
   border-width: 0;
@@ -40,4 +36,9 @@ button:active {
 
 .diceCupButtons:active {
   transform: scale(0.9);
+  filter: brightness(80%);
+}
+
+.emptyBackground {
+  background: linear-gradient(#5BB8BC, #5071A7);
 }

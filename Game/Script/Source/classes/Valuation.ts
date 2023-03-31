@@ -7,50 +7,53 @@ namespace DiceCup {
         constructor(_category: ScoringCategory, _dices: Dice[]) {
             this.dices = _dices;
             this.scoringCategory = _category;
-            this.chooseScoringCategory(this.scoringCategory);
+            // this.chooseScoringCategory(this.scoringCategory);
         }
 
-        public chooseScoringCategory(_scoringCategory: ScoringCategory): void {
+        public chooseScoringCategory(_scoringCategory: ScoringCategory): number {
+            let value: number;
             switch (_scoringCategory) {
                 case ScoringCategory.fours:
-                    this.calculateNumber(4);
+                    value = this.calculateNumber(4);
+                    console.log("scoring: " + value);
                     break;
                 case ScoringCategory.fives:
-                    this.calculateNumber(5);
+                    value = this.calculateNumber(5);
                     break;
                 case ScoringCategory.sixes:
-                    this.calculateNumber(6);
+                    value = this.calculateNumber(6);
                     break;
 
                 case ScoringCategory.white:
-                    this.calculateColor(DiceColor.white);
+                    value = this.calculateColor(DiceColor.white);
                     break;
                 case ScoringCategory.black:
-                    this.calculateColor(DiceColor.black);
+                    value = this.calculateColor(DiceColor.black);
                     break;  
                 case ScoringCategory.red:
-                    this.calculateColor(DiceColor.red);
+                    value = this.calculateColor(DiceColor.red);
                     break;
                 case ScoringCategory.blue:
-                    this.calculateColor(DiceColor.blue);
+                    value = this.calculateColor(DiceColor.blue);
                     break;
                 case ScoringCategory.green:
-                    this.calculateColor(DiceColor.green);
+                    value = this.calculateColor(DiceColor.green);
                     break;
                 case ScoringCategory.yellow:
-                    this.calculateColor(DiceColor.yellow);
+                    value = this.calculateColor(DiceColor.yellow);
                     break;
 
                 case ScoringCategory.doubles:
-                    this.calculateDoubles();
+                    value = this.calculateDoubles();
                     break;
                 case ScoringCategory.oneToThree:
-                    this.calculateNumber(1, 2, 3);
+                    value = this.calculateNumber(1, 2, 3);
                     break;
                 case ScoringCategory.diceCup:
-                    this.calculateDiceCup();
+                    value = this.calculateDiceCup();
                     break;
             }
+            return value;
         }
 
 

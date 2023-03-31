@@ -95,50 +95,6 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    class Categories {
-        async initCategories() {
-            let response = await fetch("Game/Script/Data/scoringCategories.json");
-            let categories = await response.json();
-            let background = document.createElement("div");
-            background.id = "categoryBackground_id";
-            document.querySelector("body").appendChild(background);
-            let container = document.createElement("div");
-            container.id = "categoryContainer_id";
-            background.appendChild(container);
-            let header = document.createElement("div");
-            header.id = "categoryHeader_id";
-            container.appendChild(header);
-            let title = document.createElement("span");
-            title.id = "categoryTitle_id";
-            title.innerHTML = "Choose a category";
-            header.appendChild(title);
-            let timer = document.createElement("div");
-            timer.id = "categoryTimer_id";
-            header.appendChild(timer);
-            let content = document.createElement("div");
-            content.id = "categoryContent_id";
-            container.appendChild(content);
-            for (let i = 0; i < 12; i++) {
-                let button = document.createElement("button");
-                button.classList.add("categoryButtons");
-                button.classList.add("diceCupButtons");
-                button.id = "categoryButtons_id_" + i;
-                content.appendChild(button);
-                let img = document.createElement("img");
-                img.src = categories[i].image;
-                img.classList.add("categoryImages");
-                img.id = "categoryImage_i_" + i;
-                button.appendChild(img);
-                let points = document.createElement("span");
-                points.classList.add("categoryPoints");
-                button.appendChild(points);
-            }
-        }
-    }
-    DiceCup.Categories = Categories;
-})(DiceCup || (DiceCup = {}));
-var DiceCup;
-(function (DiceCup) {
     class Dice {
         color;
         value;
@@ -168,6 +124,7 @@ var DiceCup;
     function initGame() {
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        DiceCup.initCategories();
         DiceCup.dices = [];
         let gameDiv = document.createElement("div");
         gameDiv.id = "rollingDiv_id";
@@ -208,8 +165,7 @@ var DiceCup;
         ƒ.Time.game.setTimer(3000, 1, gameValidate);
     }
     function gameValidate() {
-        let category = new DiceCup.Categories();
-        category.initCategories();
+        DiceCup.showCategories();
         for (let i = 0; i < 12; i++) {
             document.getElementById("diceContainer_id_" + i).remove();
             document.getElementById("valuation_id_" + i).classList.add("valuationShow");
@@ -224,6 +180,7 @@ var DiceCup;
         }
     }
     function handleValidate(_event) {
+        DiceCup.showCategories();
         new DiceCup.Valuation(parseInt(_event.currentTarget.getAttribute("index")), DiceCup.dices);
         DiceCup.bot.botEasy();
         DiceCup.bot2.botEasy();
@@ -243,86 +200,56 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    class Hud {
-        static async initHud() {
-            let response = await fetch("Game/Script/Data/scoringCategories.json");
-            let categories = await response.json();
-            let domHud = document.createElement("div");
-            domHud.id = "hud_id";
-            document.querySelector("body").appendChild(domHud);
-            let valuationContainer = document.createElement("div");
-            valuationContainer.id = "valuationContainer_id";
-            domHud.appendChild(valuationContainer);
-            for (let i = 0; i < 12; i++) {
-                let valuationButton = document.createElement("div");
-                valuationButton.classList.add("valuation");
-                valuationButton.id = "valuation_id_" + i;
-                valuationContainer.appendChild(valuationButton);
-                let icon = document.createElement("div");
-                icon.classList.add("valuationIcon");
-                valuationButton.appendChild(icon);
-                let valuationImage = document.createElement("img");
-                valuationImage.src = categories[i].image;
-                valuationImage.classList.add("valuationImage");
-                valuationImage.id = "valuationImage_i_" + i;
-                icon.appendChild(valuationImage);
-                let score = document.createElement("div");
-                score.classList.add("valuationScore");
-                valuationButton.appendChild(score);
-            }
-        }
-    }
-    DiceCup.Hud = Hud;
-})(DiceCup || (DiceCup = {}));
-var DiceCup;
-(function (DiceCup) {
     class Valuation {
         scoringCategory;
         dices;
         constructor(_category, _dices) {
             this.dices = _dices;
             this.scoringCategory = _category;
-            this.chooseScoringCategory(this.scoringCategory);
+            // this.chooseScoringCategory(this.scoringCategory);
         }
         chooseScoringCategory(_scoringCategory) {
+            let value;
             switch (_scoringCategory) {
                 case DiceCup.ScoringCategory.fours:
-                    this.calculateNumber(4);
+                    value = this.calculateNumber(4);
+                    console.log("scoring: " + value);
                     break;
                 case DiceCup.ScoringCategory.fives:
-                    this.calculateNumber(5);
+                    value = this.calculateNumber(5);
                     break;
                 case DiceCup.ScoringCategory.sixes:
-                    this.calculateNumber(6);
+                    value = this.calculateNumber(6);
                     break;
                 case DiceCup.ScoringCategory.white:
-                    this.calculateColor(DiceCup.DiceColor.white);
+                    value = this.calculateColor(DiceCup.DiceColor.white);
                     break;
                 case DiceCup.ScoringCategory.black:
-                    this.calculateColor(DiceCup.DiceColor.black);
+                    value = this.calculateColor(DiceCup.DiceColor.black);
                     break;
                 case DiceCup.ScoringCategory.red:
-                    this.calculateColor(DiceCup.DiceColor.red);
+                    value = this.calculateColor(DiceCup.DiceColor.red);
                     break;
                 case DiceCup.ScoringCategory.blue:
-                    this.calculateColor(DiceCup.DiceColor.blue);
+                    value = this.calculateColor(DiceCup.DiceColor.blue);
                     break;
                 case DiceCup.ScoringCategory.green:
-                    this.calculateColor(DiceCup.DiceColor.green);
+                    value = this.calculateColor(DiceCup.DiceColor.green);
                     break;
                 case DiceCup.ScoringCategory.yellow:
-                    this.calculateColor(DiceCup.DiceColor.yellow);
+                    value = this.calculateColor(DiceCup.DiceColor.yellow);
                     break;
                 case DiceCup.ScoringCategory.doubles:
-                    this.calculateDoubles();
+                    value = this.calculateDoubles();
                     break;
                 case DiceCup.ScoringCategory.oneToThree:
-                    this.calculateNumber(1, 2, 3);
+                    value = this.calculateNumber(1, 2, 3);
                     break;
                 case DiceCup.ScoringCategory.diceCup:
-                    this.calculateDiceCup();
+                    value = this.calculateDiceCup();
                     break;
             }
+            return value;
         }
         calculateNumber(_number, _number2, _number3) {
             let value = 0;
@@ -373,6 +300,104 @@ var DiceCup;
         }
     }
     DiceCup.Valuation = Valuation;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    async function initCategories() {
+        let response = await fetch("Game/Script/Data/scoringCategories.json");
+        let categories = await response.json();
+        let background = document.createElement("div");
+        background.id = "categoryBackground_id";
+        document.querySelector("body").appendChild(background);
+        let container = document.createElement("div");
+        container.classList.add("categoriesHidden");
+        container.id = "categoryContainer_id";
+        background.appendChild(container);
+        let header = document.createElement("div");
+        header.id = "categoryHeader_id";
+        container.appendChild(header);
+        let title = document.createElement("span");
+        title.id = "categoryTitle_id";
+        title.innerHTML = "Choose a category";
+        header.appendChild(title);
+        let timer = document.createElement("div");
+        timer.id = "categoryTimer_id";
+        header.appendChild(timer);
+        let content = document.createElement("div");
+        content.id = "categoryContent_id";
+        container.appendChild(content);
+        for (let i = 0; i < 12; i++) {
+            let button = document.createElement("button");
+            button.classList.add("categoryButtons");
+            button.classList.add("diceCupButtons");
+            button.id = "categoryButtons_id_" + i;
+            button.setAttribute("index", i.toString());
+            button.addEventListener("click", handleValidate);
+            content.appendChild(button);
+            let img = document.createElement("img");
+            img.src = categories[i].image;
+            img.classList.add("categoryImages");
+            img.id = "categoryImage_i_" + i;
+            button.appendChild(img);
+            let points = document.createElement("span");
+            points.id = "categoryPoints_id_" + i;
+            points.classList.add("categoryPoints");
+            button.appendChild(points);
+        }
+    }
+    DiceCup.initCategories = initCategories;
+    function handleValidate(_event) {
+        let index = parseInt(_event.currentTarget.getAttribute("index"));
+        let valuation = new DiceCup.Valuation(index, DiceCup.dices);
+        let value = valuation.chooseScoringCategory(index);
+        document.getElementById("categoryPoints_id_" + index).innerHTML = value.toString();
+        document.getElementById("categoryImage_i_" + index).classList.add("categoryImagesTransparent");
+        hideCategories();
+        this.disabled = true;
+    }
+    function showCategories() {
+        document.getElementById("categoryContainer_id").classList.add("categoriesShown");
+        document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
+        document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+    }
+    DiceCup.showCategories = showCategories;
+    function hideCategories() {
+        document.getElementById("categoryContainer_id").classList.remove("categoriesShown");
+        document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
+        document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
+    }
+    DiceCup.hideCategories = hideCategories;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    async function initHud() {
+        let response = await fetch("Game/Script/Data/scoringCategories.json");
+        let categories = await response.json();
+        let domHud = document.createElement("div");
+        domHud.id = "hud_id";
+        document.querySelector("body").appendChild(domHud);
+        let valuationContainer = document.createElement("div");
+        valuationContainer.id = "valuationContainer_id";
+        domHud.appendChild(valuationContainer);
+        for (let i = 0; i < 12; i++) {
+            let valuationButton = document.createElement("div");
+            valuationButton.classList.add("valuation");
+            valuationButton.id = "valuation_id_" + i;
+            valuationContainer.appendChild(valuationButton);
+            let icon = document.createElement("div");
+            icon.classList.add("valuationIcon");
+            valuationButton.appendChild(icon);
+            let valuationImage = document.createElement("img");
+            valuationImage.src = categories[i].image;
+            valuationImage.classList.add("valuationImage");
+            valuationImage.id = "valuationImage_i_" + i;
+            icon.appendChild(valuationImage);
+            let score = document.createElement("div");
+            score.classList.add("valuationScore");
+            valuationButton.appendChild(score);
+        }
+    }
+    DiceCup.initHud = initHud;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -557,7 +582,7 @@ var DiceCup;
         rightButtonArea.appendChild(startButton);
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
-            DiceCup.Hud.initHud();
+            DiceCup.initHud();
             DiceCup.initViewport();
             DiceCup.initGame();
         });

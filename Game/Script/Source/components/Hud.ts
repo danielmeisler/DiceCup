@@ -1,8 +1,6 @@
 namespace DiceCup {
 
-    export class Hud {
-
-        public static async initHud(): Promise<void> {
+        export async function initHud(): Promise<void> {
           let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
           let categories: ScoringCategoryDao[] = await response.json();
 
@@ -37,5 +35,4 @@ namespace DiceCup {
     
         }
 
-    }
 }
