@@ -10,6 +10,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
+    let gameState: GameState;
     let dices: Dice[];
     let highscore: number;
 }
@@ -36,11 +37,10 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function initViewport(): Promise<void>;
-    let bot: Bot;
-    let bot2: Bot;
     function initGame(): void;
     function rollDices(): void;
     function gameValidate(): void;
+    function changeGameState(): void;
 }
 declare namespace DiceCup {
     class Valuation {

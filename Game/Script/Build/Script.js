@@ -48,7 +48,10 @@ var DiceCup;
             navigator.serviceWorker.register("../../serviceWorker.js");
         }
         DiceCup.viewport = _event.detail;
-        DiceCup.gameMenu();
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
+        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        DiceCup.gameState = DiceCup.GameState.menu;
+        DiceCup.changeGameState();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -124,28 +127,26 @@ var DiceCup;
     function initGame() {
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-        DiceCup.initCategories();
-        DiceCup.dices = [];
-        let gameDiv = document.createElement("div");
-        gameDiv.id = "rollingDiv_id";
-        document.getElementById("game").appendChild(gameDiv);
-        for (let i = 0; i < 6; i++) {
-            DiceCup.dices.push(new DiceCup.Dice(i));
-            DiceCup.dices.push(new DiceCup.Dice(i));
-        }
-        for (let i = 0; i < 12; i++) {
-            let diceDiv = document.createElement("div");
-            diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer_id_" + i;
-            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
-            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-            document.getElementById("rollingDiv_id").appendChild(diceDiv);
-            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        }
-        DiceCup.bot = new DiceCup.Bot("Agent", DiceCup.BotDifficulty.easy, DiceCup.dices);
-        DiceCup.bot2 = new DiceCup.Bot("Spion", DiceCup.BotDifficulty.easy, DiceCup.dices);
-        console.log("Augen auf ...");
-        ƒ.Time.game.setTimer(3000, 1, () => { gameValidate(); });
+        // initCategories();
+        // dices = [];
+        // let gameDiv: HTMLDivElement = document.createElement("div");
+        // gameDiv.id = "rollingDiv_id";
+        // document.getElementById("game").appendChild(gameDiv);
+        // for (let i: number = 0; i < 6; i++) {
+        //     dices.push(new Dice(i));
+        //     dices.push(new Dice(i));
+        // }
+        // for (let i: number = 0; i < 12; i++) {
+        //     let diceDiv: HTMLDivElement = document.createElement("div");
+        //     diceDiv.classList.add("diceDiv");
+        //     diceDiv.id = "diceContainer_id_" + i;
+        //     diceDiv.innerHTML = dices[i].value.toString();
+        //     diceDiv.style.background = DiceColor[dices[i].color].toString();
+        //     document.getElementById("rollingDiv_id").appendChild(diceDiv);
+        //     // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        // }
+        // console.log("Augen auf ...");
+        // ƒ.Time.game.setTimer(3000, 1, () => { gameValidate()  });
     }
     DiceCup.initGame = initGame;
     function rollDices() {
@@ -181,9 +182,44 @@ var DiceCup;
     DiceCup.gameValidate = gameValidate;
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
+        switch (DiceCup.gameState) {
+            case DiceCup.GameState.menu:
+                DiceCup.gameMenu();
+                break;
+            case DiceCup.GameState.ready:
+                DiceCup.initTransition();
+                break;
+            case DiceCup.GameState.counting:
+                break;
+            case DiceCup.GameState.choosing:
+                break;
+            case DiceCup.GameState.validating:
+                break;
+            case DiceCup.GameState.summary:
+                break;
+        }
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
+    function changeGameState() {
+        switch (DiceCup.gameState) {
+            case DiceCup.GameState.menu:
+                DiceCup.gameMenu();
+                break;
+            case DiceCup.GameState.ready:
+                DiceCup.initTransition();
+                break;
+            case DiceCup.GameState.counting:
+                break;
+            case DiceCup.GameState.choosing:
+                break;
+            case DiceCup.GameState.validating:
+                break;
+            case DiceCup.GameState.summary:
+                break;
+        }
+    }
+    DiceCup.changeGameState = changeGameState;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -630,7 +666,9 @@ var DiceCup;
         rightButtonArea.appendChild(startButton);
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
-            DiceCup.initTransition();
+            DiceCup.gameState = DiceCup.GameState.ready;
+            DiceCup.changeGameState();
+            // initTransition();
         });
     }
     DiceCup.playMenu = playMenu;

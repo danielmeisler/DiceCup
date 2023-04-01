@@ -12,39 +12,33 @@ namespace DiceCup {
         console.log(dice.mtxLocal.translation);
     }
 
-    export let bot: Bot;
-    export let bot2: Bot;
-
     export function initGame(): void {
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-        initCategories();
-        dices = [];
+        // initCategories();
+        // dices = [];
 
-        let gameDiv: HTMLDivElement = document.createElement("div");
-        gameDiv.id = "rollingDiv_id";
-        document.getElementById("game").appendChild(gameDiv);
+        // let gameDiv: HTMLDivElement = document.createElement("div");
+        // gameDiv.id = "rollingDiv_id";
+        // document.getElementById("game").appendChild(gameDiv);
     
-        for (let i: number = 0; i < 6; i++) {
-            dices.push(new Dice(i));
-            dices.push(new Dice(i));
-        }
+        // for (let i: number = 0; i < 6; i++) {
+        //     dices.push(new Dice(i));
+        //     dices.push(new Dice(i));
+        // }
     
-        for (let i: number = 0; i < 12; i++) {
-            let diceDiv: HTMLDivElement = document.createElement("div");
-            diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer_id_" + i;
-            diceDiv.innerHTML = dices[i].value.toString();
-            diceDiv.style.background = DiceColor[dices[i].color].toString();
-            document.getElementById("rollingDiv_id").appendChild(diceDiv);
-            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        }
-
-        bot = new Bot("Agent", BotDifficulty.easy, dices);
-        bot2 = new Bot("Spion", BotDifficulty.easy, dices);
+        // for (let i: number = 0; i < 12; i++) {
+        //     let diceDiv: HTMLDivElement = document.createElement("div");
+        //     diceDiv.classList.add("diceDiv");
+        //     diceDiv.id = "diceContainer_id_" + i;
+        //     diceDiv.innerHTML = dices[i].value.toString();
+        //     diceDiv.style.background = DiceColor[dices[i].color].toString();
+        //     document.getElementById("rollingDiv_id").appendChild(diceDiv);
+        //     // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        // }
     
-        console.log("Augen auf ...");
-        ƒ.Time.game.setTimer(3000, 1, () => { gameValidate()  });
+        // console.log("Augen auf ...");
+        // ƒ.Time.game.setTimer(3000, 1, () => { gameValidate()  });
 
     }
 
@@ -82,7 +76,50 @@ namespace DiceCup {
 
     function update(_event: Event): void {
         // ƒ.Physics.simulate();  // if physics is included and used
+        switch (gameState) {
+            case GameState.menu: 
+                gameMenu();
+            break;
+            case GameState.ready: 
+                initTransition();
+            break;
+            case GameState.counting: 
+
+            break;
+            case GameState.choosing: 
+
+            break;
+            case GameState.validating: 
+
+            break;
+            case GameState.summary: 
+            
+            break;
+        }
         viewport.draw();
         //ƒ.AudioManager.default.update();
-      }
+    }
+
+    export function changeGameState() {
+        switch (gameState) {
+            case GameState.menu: 
+                gameMenu();
+            break;
+            case GameState.ready: 
+                initTransition();
+            break;
+            case GameState.counting: 
+
+            break;
+            case GameState.choosing: 
+
+            break;
+            case GameState.validating: 
+
+            break;
+            case GameState.summary: 
+            
+            break;
+        }
+    }
 }

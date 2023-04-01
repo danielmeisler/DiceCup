@@ -2,11 +2,12 @@ const staticDiceCup = "dev-dice-cup-v1"
 const assets = [
   "/",
   "DiceCup.html",
-  "Game/Styling/DiceCup.css",
-  "Game/Styling/Menu.css",
-  "Game/Styling/Game.css",
-  "Game/Script/Build/Script.js",
-  "Game/Script/Source/data/scoringCategories.json",
+  "Game/Script/Styling/DiceCup.css",
+  "Game/Script/Styling/Menu.css",
+  "Game/Script/Styling/Hud.css",
+  "Game/Script/Styling/Game.css",
+  "Game/Script/Styling/Categories.css",
+  "Game/Script/Styling/Transitions.css"
 ]
 
 self.addEventListener("install", installEvent => {
