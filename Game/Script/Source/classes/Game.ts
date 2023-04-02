@@ -74,28 +74,8 @@ namespace DiceCup {
         
     }
 
-    function update(_event: Event): void {
+    export function update(_event: Event): void {
         // ƒ.Physics.simulate();  // if physics is included and used
-        switch (gameState) {
-            case GameState.menu: 
-                gameMenu();
-            break;
-            case GameState.ready: 
-                initTransition();
-            break;
-            case GameState.counting: 
-
-            break;
-            case GameState.choosing: 
-
-            break;
-            case GameState.validating: 
-
-            break;
-            case GameState.summary: 
-            
-            break;
-        }
         viewport.draw();
         //ƒ.AudioManager.default.update();
     }

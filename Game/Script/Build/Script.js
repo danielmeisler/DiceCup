@@ -48,8 +48,6 @@ var DiceCup;
             navigator.serviceWorker.register("../../serviceWorker.js");
         }
         DiceCup.viewport = _event.detail;
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         DiceCup.gameState = DiceCup.GameState.menu;
         DiceCup.changeGameState();
     }
@@ -182,25 +180,10 @@ var DiceCup;
     DiceCup.gameValidate = gameValidate;
     function update(_event) {
         // ƒ.Physics.simulate();  // if physics is included and used
-        switch (DiceCup.gameState) {
-            case DiceCup.GameState.menu:
-                DiceCup.gameMenu();
-                break;
-            case DiceCup.GameState.ready:
-                DiceCup.initTransition();
-                break;
-            case DiceCup.GameState.counting:
-                break;
-            case DiceCup.GameState.choosing:
-                break;
-            case DiceCup.GameState.validating:
-                break;
-            case DiceCup.GameState.summary:
-                break;
-        }
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
+    DiceCup.update = update;
     function changeGameState() {
         switch (DiceCup.gameState) {
             case DiceCup.GameState.menu:

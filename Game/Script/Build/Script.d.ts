@@ -40,6 +40,7 @@ declare namespace DiceCup {
     function initGame(): void;
     function rollDices(): void;
     function gameValidate(): void;
+    function update(_event: Event): void;
     function changeGameState(): void;
 }
 declare namespace DiceCup {
