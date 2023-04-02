@@ -68,8 +68,7 @@ namespace DiceCup {
 
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
-            gameState = GameState.ready;
-            changeGameState();
+            changeGameState(GameState.ready);
             // initTransition();
         });
     }

@@ -1,6 +1,31 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    export function changeGameState(_gameState: GameState) {
+        switch (_gameState) {
+            case GameState.menu: 
+                gameMenu();
+            break;
+            case GameState.ready: 
+                initTransition();
+            break;
+            case GameState.counting: 
+                initHud();
+                initViewport();
+                initGame();
+            break;
+            case GameState.choosing: 
+                initCategories();
+            break;
+            case GameState.validating: 
+
+            break;
+            case GameState.summary: 
+            
+            break;
+        }
+    }
+
     export async function initViewport() {
         viewport.camera.mtxPivot.translateZ(10);
         viewport.camera.mtxPivot.rotateY(180);
@@ -16,29 +41,30 @@ namespace DiceCup {
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         // initCategories();
-        // dices = [];
+        dices = [];
+        console.log("test");
 
-        // let gameDiv: HTMLDivElement = document.createElement("div");
-        // gameDiv.id = "rollingDiv_id";
-        // document.getElementById("game").appendChild(gameDiv);
+        let gameDiv: HTMLDivElement = document.createElement("div");
+        gameDiv.id = "rollingDiv_id";
+        document.getElementById("game").appendChild(gameDiv);
     
-        // for (let i: number = 0; i < 6; i++) {
-        //     dices.push(new Dice(i));
-        //     dices.push(new Dice(i));
-        // }
+        for (let i: number = 0; i < 6; i++) {
+            dices.push(new Dice(i));
+            dices.push(new Dice(i));
+        }
     
-        // for (let i: number = 0; i < 12; i++) {
-        //     let diceDiv: HTMLDivElement = document.createElement("div");
-        //     diceDiv.classList.add("diceDiv");
-        //     diceDiv.id = "diceContainer_id_" + i;
-        //     diceDiv.innerHTML = dices[i].value.toString();
-        //     diceDiv.style.background = DiceColor[dices[i].color].toString();
-        //     document.getElementById("rollingDiv_id").appendChild(diceDiv);
-        //     // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        // }
+        for (let i: number = 0; i < 12; i++) {
+            let diceDiv: HTMLDivElement = document.createElement("div");
+            diceDiv.classList.add("diceDiv");
+            diceDiv.id = "diceContainer_id_" + i;
+            diceDiv.innerHTML = dices[i].value.toString();
+            diceDiv.style.background = DiceColor[dices[i].color].toString();
+            document.getElementById("rollingDiv_id").appendChild(diceDiv);
+            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        }
     
-        // console.log("Augen auf ...");
-        // ƒ.Time.game.setTimer(3000, 1, () => { gameValidate()  });
+        console.log("Augen auf ...");
+        ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(GameState.choosing)});
 
     }
 
@@ -80,26 +106,5 @@ namespace DiceCup {
         //ƒ.AudioManager.default.update();
     }
 
-    export function changeGameState() {
-        switch (gameState) {
-            case GameState.menu: 
-                gameMenu();
-            break;
-            case GameState.ready: 
-                initTransition();
-            break;
-            case GameState.counting: 
-
-            break;
-            case GameState.choosing: 
-
-            break;
-            case GameState.validating: 
-
-            break;
-            case GameState.summary: 
-            
-            break;
-        }
-    }
+    
 }

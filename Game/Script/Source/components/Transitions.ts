@@ -23,27 +23,26 @@ namespace DiceCup {
                 document.getElementById("startTransitionContainer").appendChild(text);
             }
             transitionCounter++;
-            console.log(transitionCounter);
             ƒ.Time.game.setTimer(3000, 1, () => { transition() });
         } else {
+            let id: number = firstPhrase.length + transitionCounter;
             if (transitionCounter == 0) {
                 for (let i = 0; i < firstPhrase.length; i++) {
                     document.getElementById("startTransitionText_id_" + i).remove();
                 }
+            } else {
+                let lastId: number = id - 1;
+                document.getElementById("startTransitionText_id_" + lastId).innerHTML = "";
             }
             let text: HTMLSpanElement = document.createElement("span");
-            text.id = "startTransitionText_id_" + firstPhrase.length + transitionCounter;
+            text.id = "startTransitionText_id_" + id;
             text.style.setProperty("--i", transitionCounter.toString())
             text.innerHTML = countDown[transitionCounter];
             document.getElementById("startTransitionContainer").appendChild(text);
             transitionCounter++;
-            console.log(transitionCounter);
-            console.log(countDown.length);
             if (transitionCounter == countDown.length + 1) {
                 document.getElementById("startTransitionContainer").remove();
-                initHud();
-                initViewport();
-                initGame();
+                changeGameState(GameState.counting);
             } else {
                 ƒ.Time.game.setTimer(1000, 1, () => { transition() });
             }

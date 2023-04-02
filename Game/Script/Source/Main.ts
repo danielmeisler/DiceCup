@@ -3,7 +3,6 @@ namespace DiceCup {
   ƒ.Debug.info("Dice Cup is running!");
   
   export let viewport: ƒ.Viewport;
-  export let gameState: GameState;
 
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
   export let dices: Dice[] = [];
@@ -14,7 +13,6 @@ namespace DiceCup {
         navigator.serviceWorker.register("../../serviceWorker.js")
     }
     viewport = _event.detail;
-    gameState = GameState.menu;
-    changeGameState();
+    changeGameState(GameState.menu);
   }
 }
