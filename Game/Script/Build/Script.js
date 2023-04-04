@@ -76,6 +76,7 @@ var DiceCup;
             }
         }
         botEasy() {
+            console.log("EASY BOT");
             let randomCategory = Math.floor((Math.random() * 12) + 1);
             if (this.usedCategories.includes(randomCategory)) {
                 this.botEasy();
@@ -86,6 +87,12 @@ var DiceCup;
                 console.log(this.usedCategories);
                 this.botValuation(randomCategory);
             }
+        }
+        botMedium() {
+            console.log("MEDIUM BOT");
+        }
+        botHard() {
+            console.log("HARD BOT");
         }
         botValuation(_category) {
             new DiceCup.Valuation(_category, DiceCup.dices);
@@ -118,18 +125,23 @@ var DiceCup;
                 break;
             case DiceCup.GameState.ready:
                 DiceCup.initTransition();
+                DiceCup.initHud();
+                DiceCup.initCategories();
+                DiceCup.initSummary();
                 break;
             case DiceCup.GameState.counting:
-                DiceCup.initHud();
                 initViewport();
                 initGame();
+                DiceCup.showHud();
                 break;
             case DiceCup.GameState.choosing:
-                DiceCup.initCategories();
+                DiceCup.showCategories();
                 break;
             case DiceCup.GameState.validating:
+                // validateRound();
                 break;
             case DiceCup.GameState.summary:
+                DiceCup.showSummary();
                 break;
         }
     }
@@ -144,12 +156,21 @@ var DiceCup;
         console.log(dice.mtxLocal.translation);
     }
     DiceCup.initViewport = initViewport;
+    function createBots(_bots) {
+        let bots = [];
+        for (let index = 0; index < _bots.length; index++) {
+            bots[index] = new DiceCup.Bot(_bots[index].botName, _bots[index].difficulty, DiceCup.dices);
+        }
+        return bots;
+    }
     function initGame() {
+        let bots = [];
+        bots = createBots(DiceCup.gameSettings.bot);
+        console.log(bots);
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         // initCategories();
         DiceCup.dices = [];
-        console.log("test");
         let gameDiv = document.createElement("div");
         gameDiv.id = "rollingDiv_id";
         document.getElementById("game").appendChild(gameDiv);
@@ -161,6 +182,7 @@ var DiceCup;
             let diceDiv = document.createElement("div");
             diceDiv.classList.add("diceDiv");
             diceDiv.id = "diceContainer_id_" + i;
+            diceDiv.classList.add("diceCategory_" + DiceCup.DiceColor[DiceCup.dices[i].color]);
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
             document.getElementById("rollingDiv_id").appendChild(diceDiv);
@@ -179,6 +201,7 @@ var DiceCup;
         for (let i = 0; i < 12; i++) {
             let diceDiv = document.createElement("div");
             diceDiv.classList.add("diceDiv");
+            diceDiv.classList.add("diceCategory_" + DiceCup.DiceColor[DiceCup.dices[i].color]);
             diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = DiceCup.dices[i].value.toString();
             diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
@@ -189,15 +212,8 @@ var DiceCup;
     }
     DiceCup.rollDices = rollDices;
     function gameValidate() {
-        console.log("Becher drauf!");
-        DiceCup.showCategories();
-        for (let i = 0; i < 12; i++) {
-            document.getElementById("diceContainer_id_" + i).remove();
-        }
         // for (let i: number = 0; i < 12; i++) {
-        //     let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation_id_" + i);
-        //     valuationDiv.setAttribute("index", i.toString());
-        //     valuationDiv.classList.add("valuationShow");
+        //     document.getElementById("diceContainer_id_" + i).remove();
         // }
     }
     DiceCup.gameValidate = gameValidate;
@@ -218,45 +234,56 @@ var DiceCup;
             this.scoringCategory = _category;
             // this.chooseScoringCategory(this.scoringCategory);
         }
-        chooseScoringCategory(_scoringCategory) {
+        chooseScoringCategory() {
             let value;
-            switch (_scoringCategory) {
+            switch (this.scoringCategory) {
                 case DiceCup.ScoringCategory.fours:
                     value = this.calculateNumber(4);
-                    console.log("scoring: " + value);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.fives:
                     value = this.calculateNumber(5);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.sixes:
                     value = this.calculateNumber(6);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.white:
                     value = this.calculateColor(DiceCup.DiceColor.white);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.black:
                     value = this.calculateColor(DiceCup.DiceColor.black);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.red:
                     value = this.calculateColor(DiceCup.DiceColor.red);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.blue:
                     value = this.calculateColor(DiceCup.DiceColor.blue);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.green:
                     value = this.calculateColor(DiceCup.DiceColor.green);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.yellow:
                     value = this.calculateColor(DiceCup.DiceColor.yellow);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.doubles:
                     value = this.calculateDoubles();
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.oneToThree:
                     value = this.calculateNumber(1, 2, 3);
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
                 case DiceCup.ScoringCategory.diceCup:
                     value = this.calculateDiceCup();
+                    DiceCup.hideHudCategory(this.scoringCategory);
                     break;
             }
             return value;
@@ -266,6 +293,7 @@ var DiceCup;
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].value === _number || this.dices[i].value === _number2 || this.dices[i].value === _number3) {
                     value += this.dices[i].value;
+                    document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
                 }
             }
             if (_number2 && _number3) {
@@ -282,6 +310,7 @@ var DiceCup;
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
                     value += this.dices[i].value;
+                    document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
                 }
             }
             DiceCup.highscore += value;
@@ -293,6 +322,9 @@ var DiceCup;
             for (let i = 0; i < this.dices.length - 1; i++) {
                 if (this.dices[i].color === this.dices[i + 1].color && this.dices[i].value === this.dices[i + 1].value) {
                     value += 10;
+                    let double = i + 1;
+                    document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
+                    document.getElementById("diceContainer_id_" + double).style.border = "1vh ridge gold";
                 }
             }
             DiceCup.highscore += value;
@@ -303,6 +335,7 @@ var DiceCup;
             let value = 0;
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;
+                document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
             }
             DiceCup.highscore += value;
             console.log("DiceCup: " + value);
@@ -355,19 +388,9 @@ var DiceCup;
             points.classList.add("categoryPoints");
             button.appendChild(points);
         }
+        visibility("hidden");
     }
     DiceCup.initCategories = initCategories;
-    function handleCategory(_event) {
-        let index = parseInt(_event.currentTarget.getAttribute("index"));
-        let valuation = new DiceCup.Valuation(index, DiceCup.dices);
-        let value = valuation.chooseScoringCategory(index);
-        document.getElementById("categoryPoints_id_" + index).innerHTML = value.toString();
-        document.getElementById("categoryImage_i_" + index).classList.add("categoryImagesTransparent");
-        this.disabled = true;
-        hideCategories();
-        new DiceCup.Valuation(parseInt(_event.currentTarget.getAttribute("index")), DiceCup.dices);
-        //HIER KOMMT DIE VALUATION PHASE... MACH SIE NACH DEN GAMESTATES
-    }
     function showCategories() {
         document.getElementById("categoryContainer_id").classList.add("categoriesShown");
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
@@ -382,6 +405,20 @@ var DiceCup;
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
     }
     DiceCup.hideCategories = hideCategories;
+    function handleCategory(_event) {
+        let index = parseInt(_event.currentTarget.getAttribute("index"));
+        document.getElementById("categoryImage_i_" + _event.currentTarget.getAttribute("index")).classList.add("categoryImagesTransparent");
+        this.disabled = true;
+        hideCategories();
+        ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index); });
+    }
+    function addPointsToButton(_index) {
+        let valuation = new DiceCup.Valuation(_index, DiceCup.dices);
+        let value = valuation.chooseScoringCategory();
+        document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
+        document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
+        ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
+    }
     function visibility(_visibility) {
         document.getElementById("categoryBackground_id").style.visibility = _visibility;
     }
@@ -400,6 +437,7 @@ var DiceCup;
         for (let i = 0; i < 12; i++) {
             let valuationButton = document.createElement("div");
             valuationButton.classList.add("valuation");
+            valuationButton.classList.add("valuationHidden");
             valuationButton.id = "valuation_id_" + i;
             valuationContainer.appendChild(valuationButton);
             let icon = document.createElement("div");
@@ -416,6 +454,78 @@ var DiceCup;
         }
     }
     DiceCup.initHud = initHud;
+    function showHud() {
+        for (let i = 0; i < 12; i++) {
+            document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
+            document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        }
+    }
+    DiceCup.showHud = showHud;
+    function hideHudCategory(_id) {
+        document.getElementById("valuation_id_" + _id).classList.remove("valuationShow");
+        document.getElementById("valuation_id_" + _id).classList.add("valuationHidden");
+    }
+    DiceCup.hideHudCategory = hideHudCategory;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    async function initSummary() {
+        let response = await fetch("Game/Script/Data/scoringCategories.json");
+        let categories = await response.json();
+        let background = document.createElement("div");
+        background.id = "summaryBackground_id";
+        document.querySelector("body").appendChild(background);
+        let container = document.createElement("div");
+        container.classList.add("summaryHidden");
+        container.id = "summaryContainer_id";
+        background.appendChild(container);
+        let content = document.createElement("div");
+        content.id = "summaryContent_id";
+        container.appendChild(content);
+        let imgCounter = 0;
+        for (let row = 0; row < 7; row++) {
+            for (let col = 0; col < 14; col++) {
+                let gridDiv = document.createElement("div");
+                gridDiv.classList.add("summaryRow_" + row);
+                gridDiv.classList.add("summaryColumn_" + col);
+                gridDiv.id = "summaryGrid_id_" + row + "_" + col;
+                content.appendChild(gridDiv);
+                if (row == 0 && col > 0 && col < 13) {
+                    let imgContainer = document.createElement("div");
+                    imgContainer.classList.add("summaryImgContainer");
+                    gridDiv.appendChild(imgContainer);
+                    let img = document.createElement("img");
+                    img.id = "summaryImg_id_" + col;
+                    img.classList.add("summaryImg");
+                    img.src = categories[imgCounter].image;
+                    imgContainer.appendChild(img);
+                    imgCounter++;
+                }
+                if (row == 0 && col > 0 && col < 13) {
+                }
+            }
+        }
+        visibility("hidden");
+    }
+    DiceCup.initSummary = initSummary;
+    function showSummary() {
+        document.getElementById("summaryContainer_id").classList.add("summaryShown");
+        document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
+        document.getElementById("summaryBackground_id").classList.add("emptyBackground");
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+    }
+    DiceCup.showSummary = showSummary;
+    function hideSummary() {
+        document.getElementById("summaryContainer_id").classList.remove("summaryShown");
+        document.getElementById("summaryContainer_id").classList.add("summaryHidden");
+        document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
+    }
+    DiceCup.hideSummary = hideSummary;
+    function visibility(_visibility) {
+        document.getElementById("summaryBackground_id").style.visibility = _visibility;
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -597,6 +707,8 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    let botSettings;
+    let botCounter = 0;
     function playMenu() {
         let spMenu = document.createElement("div");
         spMenu.id = "singleplayerMenu_id";
@@ -653,11 +765,36 @@ var DiceCup;
         rightButtonArea.appendChild(startButton);
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
+            createGameSettings();
             DiceCup.changeGameState(DiceCup.GameState.ready);
-            // initTransition();
         });
     }
     DiceCup.playMenu = playMenu;
+    function createGameSettings() {
+        let bots = document.querySelectorAll(".botContainer").length;
+        botSettings = [];
+        for (let i = 0; i < bots; i++) {
+            botSettings.push({ botName: document.getElementById("botName_id_" + i).placeholder, difficulty: DiceCup.BotDifficulty.easy });
+        }
+        DiceCup.gameSettings = { playerName: document.getElementById("playerName_id").placeholder, bot: botSettings };
+        if (document.getElementById("playerName_id").value) {
+            DiceCup.gameSettings.playerName = document.getElementById("playerName_id").value;
+        }
+        for (let i = 0; i < bots; i++) {
+            if (document.getElementById("botName_id_" + i).value) {
+                botSettings[i].botName = document.getElementById("botName_id_" + i).value;
+            }
+            if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.BotDifficulty[0]) {
+                botSettings[i].difficulty = DiceCup.BotDifficulty.easy;
+            }
+            else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.BotDifficulty[1]) {
+                botSettings[i].difficulty = DiceCup.BotDifficulty.medium;
+            }
+            else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.BotDifficulty[2]) {
+                botSettings[i].difficulty = DiceCup.BotDifficulty.hard;
+            }
+        }
+    }
     function createPlayerPortrait() {
         let playerContainer = document.createElement("div");
         playerContainer.id = "playerContainer_id";
@@ -686,33 +823,36 @@ var DiceCup;
     }
     function createBotPortrait() {
         let botContainer = document.createElement("div");
-        botContainer.id = "botContainer_id";
+        botContainer.id = "botContainer_id_" + botCounter;
+        botContainer.classList.add("botContainer");
         botContainer.classList.add("lobbyContainer");
         botContainer.style.order = "1";
         document.getElementById("lobbyPortraits_id").appendChild(botContainer);
         let botDiv = document.createElement("button");
-        botDiv.id = "botPortrait_id";
+        botDiv.id = "botPortrait_id_" + botCounter;
         botDiv.classList.add("lobbyPortrait");
         botDiv.classList.add("lobbyPortrait_active");
         botDiv.classList.add("diceCupButtons");
         botDiv.disabled = true;
         botContainer.appendChild(botDiv);
-        let botRemove = document.createElement("button");
-        botRemove.id = "botRemove_id";
-        botRemove.classList.add("botRemove");
-        botDiv.appendChild(botRemove);
-        botRemove.addEventListener("click", handleRemovePlayer);
-        let botRemoveIcon = document.createElement("img");
-        botRemoveIcon.classList.add("botRemoveIcons");
-        botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
-        botRemove.appendChild(botRemoveIcon);
+        if (botCounter > 0) {
+            let botRemove = document.createElement("button");
+            botRemove.id = "botRemove_id_" + botCounter;
+            botRemove.classList.add("botRemove");
+            botDiv.appendChild(botRemove);
+            botRemove.addEventListener("click", handleRemoveBot);
+            let botRemoveIcon = document.createElement("img");
+            botRemoveIcon.classList.add("botRemoveIcons");
+            botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
+            botRemove.appendChild(botRemoveIcon);
+        }
         let botIcons = document.createElement("img");
         botIcons.classList.add("lobbyPortraitIcons");
         botIcons.src = "Game/Assets/images/menuButtons/bot.svg";
         botDiv.appendChild(botIcons);
         let botName = document.createElement("input");
-        botName.id = "botName_id";
-        botName.placeholder = "Agent";
+        botName.id = "botName_id_" + botCounter;
+        botName.placeholder = "Agent_" + botCounter;
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
         let difficultySwitch = document.createElement("div");
@@ -728,6 +868,7 @@ var DiceCup;
         let chosenDifficulty = 0;
         let difficultySwitchText = document.createElement("div");
         difficultySwitchText.classList.add("switchDifficultyText");
+        difficultySwitchText.id = "switchDifficultyText_id_" + botCounter;
         difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
         difficultySwitch.appendChild(difficultySwitchText);
         let switchButtonRight = document.createElement("button");
@@ -758,7 +899,7 @@ var DiceCup;
     }
     function createAddPortrait() {
         let addContainer = document.createElement("div");
-        addContainer.id = "addContainer_id";
+        addContainer.classList.add("addContainer");
         addContainer.classList.add("lobbyContainer");
         addContainer.style.order = "2";
         document.getElementById("lobbyPortraits_id").appendChild(addContainer);
@@ -771,13 +912,15 @@ var DiceCup;
         addIcons.classList.add("lobbyPortraitIcons");
         addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
         addPlayerDiv.appendChild(addIcons);
-        addPlayerDiv.addEventListener("click", handleAddPlayer);
+        addPlayerDiv.addEventListener("click", handleAddBot);
     }
-    function handleAddPlayer(_event) {
+    function handleAddBot(_event) {
+        botCounter++;
         this.parentElement.remove();
         createBotPortrait();
     }
-    function handleRemovePlayer(_event) {
+    function handleRemoveBot(_event) {
+        botCounter--;
         this.parentElement.parentElement.remove();
         createAddPortrait();
     }

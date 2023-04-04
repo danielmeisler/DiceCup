@@ -87,6 +87,11 @@
     position: relative;
 }
 
+.lobbyPortrait_active:active {
+    transform: scale(1);
+    filter: brightness(100%);
+}
+
 .lobbyPortrait_inactive {
     background: rgba(47, 66, 96, 0.5);
 }
@@ -147,11 +152,6 @@
 
 .switchDifficultyText {
     margin-top: -1%;
-}
-
-#botPortrait_id {
-    transform: scale(1);
-    filter: brightness(100%);
 }
 
 .botRemove {

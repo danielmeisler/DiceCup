@@ -28,6 +28,7 @@ namespace DiceCup {
         }
 
         public botEasy(): void{
+            console.log("EASY BOT");
             let randomCategory: number = Math.floor((Math.random() * 12) + 1);
 
             if (this.usedCategories.includes(randomCategory)) {
@@ -38,6 +39,16 @@ namespace DiceCup {
                 console.log(this.usedCategories);
                 this.botValuation(randomCategory);
             }
+        }
+
+        public botMedium(): void{
+            console.log("MEDIUM BOT");
+   
+        }
+
+        public botHard(): void{
+            console.log("HARD BOT");
+
         }
 
         private botValuation(_category: number): void {

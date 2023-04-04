@@ -1,5 +1,9 @@
 namespace DiceCup {
 
+
+    let botSettings: BotDao[];
+    let botCounter: number = 0;
+
     export function playMenu(): void {
         let spMenu: HTMLDivElement = document.createElement("div");
         spMenu.id = "singleplayerMenu_id";
@@ -68,9 +72,37 @@ namespace DiceCup {
 
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
+            createGameSettings();
             changeGameState(GameState.ready);
-            // initTransition();
         });
+    }
+
+    function createGameSettings(): void {
+        let bots: number = document.querySelectorAll(".botContainer").length;
+        botSettings = [];
+        
+        for (let i = 0; i < bots; i++) {
+            botSettings.push({botName: (<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder, difficulty: BotDifficulty.easy})
+        }
+        
+        gameSettings = {playerName: (<HTMLInputElement>document.getElementById("playerName_id")).placeholder, bot: botSettings};
+
+        if ((<HTMLInputElement>document.getElementById("playerName_id")).value) {
+            gameSettings.playerName = (<HTMLInputElement>document.getElementById("playerName_id")).value;
+        }
+
+        for (let i = 0; i < bots; i++) {
+            if ((<HTMLInputElement>document.getElementById("botName_id_" + i)).value) {
+                botSettings[i].botName = (<HTMLInputElement>document.getElementById("botName_id_" + i)).value;
+            }
+            if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[0]) {
+                botSettings[i].difficulty = BotDifficulty.easy;
+            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[1]){
+                botSettings[i].difficulty = BotDifficulty.medium;
+            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[2]) {
+                botSettings[i].difficulty = BotDifficulty.hard;
+            }
+        }
     }
 
     function createPlayerPortrait(): void {
@@ -106,29 +138,32 @@ namespace DiceCup {
 
     function createBotPortrait(): void {
         let botContainer: HTMLDivElement = document.createElement("div");
-        botContainer.id = "botContainer_id";
+        botContainer.id = "botContainer_id_" + botCounter;
+        botContainer.classList.add("botContainer");
         botContainer.classList.add("lobbyContainer");
         botContainer.style.order = "1";
         document.getElementById("lobbyPortraits_id").appendChild(botContainer);
 
         let botDiv: HTMLButtonElement = document.createElement("button");
-        botDiv.id = "botPortrait_id";
+        botDiv.id = "botPortrait_id_" + botCounter;
         botDiv.classList.add("lobbyPortrait");
         botDiv.classList.add("lobbyPortrait_active");
         botDiv.classList.add("diceCupButtons");
         botDiv.disabled = true;
         botContainer.appendChild(botDiv);
 
-        let botRemove: HTMLButtonElement = document.createElement("button");
-        botRemove.id = "botRemove_id";
-        botRemove.classList.add("botRemove");
-        botDiv.appendChild(botRemove);
-        botRemove.addEventListener("click", handleRemovePlayer);
+        if (botCounter > 0) {
+            let botRemove: HTMLButtonElement = document.createElement("button");
+            botRemove.id = "botRemove_id_" + botCounter;
+            botRemove.classList.add("botRemove");
+            botDiv.appendChild(botRemove);
+            botRemove.addEventListener("click", handleRemoveBot);
 
-        let botRemoveIcon: HTMLImageElement = document.createElement("img");
-        botRemoveIcon.classList.add("botRemoveIcons");
-        botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
-        botRemove.appendChild(botRemoveIcon);
+            let botRemoveIcon: HTMLImageElement = document.createElement("img");
+            botRemoveIcon.classList.add("botRemoveIcons");
+            botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
+            botRemove.appendChild(botRemoveIcon);
+        }
 
         let botIcons: HTMLImageElement = document.createElement("img");
         botIcons.classList.add("lobbyPortraitIcons");
@@ -136,8 +171,8 @@ namespace DiceCup {
         botDiv.appendChild(botIcons);
 
         let botName: HTMLInputElement = document.createElement("input");
-        botName.id = "botName_id";
-        botName.placeholder = "Agent";
+        botName.id = "botName_id_" + botCounter;
+        botName.placeholder = "Agent_" + botCounter;
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
 
@@ -158,6 +193,7 @@ namespace DiceCup {
 
         let difficultySwitchText: HTMLElement = document.createElement("div");
         difficultySwitchText.classList.add("switchDifficultyText");
+        difficultySwitchText.id = "switchDifficultyText_id_" + botCounter;
         difficultySwitchText.innerHTML = BotDifficulty[chosenDifficulty];
         difficultySwitch.appendChild(difficultySwitchText);
 
@@ -190,7 +226,7 @@ namespace DiceCup {
 
     function createAddPortrait(): void {
         let addContainer: HTMLDivElement = document.createElement("div");
-        addContainer.id = "addContainer_id";
+        addContainer.classList.add("addContainer");
         addContainer.classList.add("lobbyContainer");
         addContainer.style.order = "2";
         document.getElementById("lobbyPortraits_id").appendChild(addContainer);
@@ -206,16 +242,18 @@ namespace DiceCup {
         addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
         addPlayerDiv.appendChild(addIcons);
 
-        addPlayerDiv.addEventListener("click", handleAddPlayer);
+        addPlayerDiv.addEventListener("click", handleAddBot);
     }
 
-    function handleAddPlayer(_event: Event): void {
+    function handleAddBot(_event: Event): void {
+        botCounter++;
         this.parentElement.remove();
         createBotPortrait();
     }
 
-    function handleRemovePlayer(_event: Event): void {
-        this.parentElement.parentElement.remove();
-        createAddPortrait();
+    function handleRemoveBot(_event: Event): void {
+            botCounter--;
+            this.parentElement.parentElement.remove();
+            createAddPortrait();
     }
 }

@@ -23,6 +23,8 @@ declare namespace DiceCup {
         constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[]);
         chooseDifficulty(_difficulty: BotDifficulty): void;
         botEasy(): void;
+        botMedium(): void;
+        botHard(): void;
         private botValuation;
     }
 }
@@ -35,6 +37,7 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    let gameSettings: SinglePlayerSettingsDao;
     function changeGameState(_gameState: GameState): void;
     function initViewport(): Promise<void>;
     function initGame(): void;
@@ -47,7 +50,7 @@ declare namespace DiceCup {
         scoringCategory: ScoringCategory;
         dices: Dice[];
         constructor(_category: ScoringCategory, _dices: Dice[]);
-        chooseScoringCategory(_scoringCategory: ScoringCategory): number;
+        chooseScoringCategory(): number;
         calculateNumber(_number: number, _number2?: number, _number3?: number): number;
         calculateColor(_color: DiceColor): number;
         calculateDoubles(): number;
@@ -61,6 +64,13 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function initHud(): Promise<void>;
+    function showHud(): void;
+    function hideHudCategory(_id: number): void;
+}
+declare namespace DiceCup {
+    function initSummary(): Promise<void>;
+    function showSummary(): void;
+    function hideSummary(): void;
 }
 declare namespace DiceCup {
     function initTransition(): void;
@@ -129,8 +139,20 @@ declare namespace DiceCup {
     function playMenu(): void;
 }
 declare namespace DiceCup {
+    interface BotDao {
+        botName: string;
+        difficulty: BotDifficulty;
+    }
+}
+declare namespace DiceCup {
     interface ScoringCategoryDao {
         image: string;
         category: ScoringCategory;
+    }
+}
+declare namespace DiceCup {
+    interface SinglePlayerSettingsDao {
+        playerName: string;
+        bot: BotDao[];
     }
 }

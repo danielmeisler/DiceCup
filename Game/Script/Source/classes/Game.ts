@@ -1,6 +1,8 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    export let gameSettings: SinglePlayerSettingsDao;
+
     export function changeGameState(_gameState: GameState) {
         switch (_gameState) {
             case GameState.menu: 
@@ -8,20 +10,23 @@ namespace DiceCup {
             break;
             case GameState.ready: 
                 initTransition();
+                initHud();
+                initCategories();
+                initSummary();
             break;
             case GameState.counting: 
-                initHud();
                 initViewport();
                 initGame();
+                showHud();
             break;
             case GameState.choosing: 
-                initCategories();
+                showCategories();
             break;
             case GameState.validating: 
-
+                // validateRound();
             break;
             case GameState.summary: 
-            
+                showSummary();
             break;
         }
     }
@@ -37,12 +42,23 @@ namespace DiceCup {
         console.log(dice.mtxLocal.translation);
     }
 
+    function createBots(_bots: BotDao[]): Bot[] {
+        let bots: Bot[] = [];
+        for (let index = 0; index < _bots.length; index++) {
+            bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
+        }
+        return bots;
+    }
+
     export function initGame(): void {
+        let bots: Bot[] = [];
+        bots = createBots(gameSettings.bot);
+        console.log(bots);
+
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
         // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         // initCategories();
         dices = [];
-        console.log("test");
 
         let gameDiv: HTMLDivElement = document.createElement("div");
         gameDiv.id = "rollingDiv_id";
@@ -57,6 +73,7 @@ namespace DiceCup {
             let diceDiv: HTMLDivElement = document.createElement("div");
             diceDiv.classList.add("diceDiv");
             diceDiv.id = "diceContainer_id_" + i;
+            diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
             diceDiv.innerHTML = dices[i].value.toString();
             diceDiv.style.background = DiceColor[dices[i].color].toString();
             document.getElementById("rollingDiv_id").appendChild(diceDiv);
@@ -77,6 +94,7 @@ namespace DiceCup {
         for (let i: number = 0; i < 12; i++) {
             let diceDiv: HTMLDivElement = document.createElement("div");
             diceDiv.classList.add("diceDiv");
+            diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
             diceDiv.id = "diceContainer_id_" + i;
             diceDiv.innerHTML = dices[i].value.toString();
             diceDiv.style.background = DiceColor[dices[i].color].toString();
@@ -87,15 +105,8 @@ namespace DiceCup {
     }
 
     export function gameValidate(): void {
-        console.log("Becher drauf!");
-        showCategories();
-        for (let i: number = 0; i < 12; i++) {
-            document.getElementById("diceContainer_id_" + i).remove();
-        }
         // for (let i: number = 0; i < 12; i++) {
-        //     let valuationDiv: HTMLButtonElement = <HTMLButtonElement>document.getElementById("valuation_id_" + i);
-        //     valuationDiv.setAttribute("index", i.toString());
-        //     valuationDiv.classList.add("valuationShow");
+        //     document.getElementById("diceContainer_id_" + i).remove();
         // }
         
     }

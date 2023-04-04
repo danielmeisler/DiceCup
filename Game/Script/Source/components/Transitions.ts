@@ -4,7 +4,7 @@ namespace DiceCup {
     let countDown: string[] = ["&nbsp3", "&nbsp2", "&nbsp1", "&nbspGO!"];
     let transitionCounter: number = -1;
 
-    export function initTransition() {
+    export function initTransition(): void {
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
@@ -13,7 +13,7 @@ namespace DiceCup {
         transition();
     }
 
-    function transition() {
+    function transition(): void {
         if (transitionCounter == -1) {
             for (let i = 0; i < firstPhrase.length; i++) {
                 let text: HTMLSpanElement = document.createElement("span");

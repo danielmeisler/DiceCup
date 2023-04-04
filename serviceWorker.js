@@ -7,6 +7,7 @@ const assets = [
   "Game/Script/Styling/Hud.css",
   "Game/Script/Styling/Game.css",
   "Game/Script/Styling/Categories.css",
+  "Game/Script/Styling/Summary.css",
   "Game/Script/Styling/Transitions.css"
 ]
 

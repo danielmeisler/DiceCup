@@ -15,6 +15,7 @@ namespace DiceCup {
           for (let i: number = 0; i < 12; i++) {
             let valuationButton: HTMLDivElement = document.createElement("div");
             valuationButton.classList.add("valuation");
+            valuationButton.classList.add("valuationHidden");
             valuationButton.id = "valuation_id_" + i;
             valuationContainer.appendChild(valuationButton);
 
@@ -35,4 +36,15 @@ namespace DiceCup {
     
         }
 
+        export function showHud(): void {
+          for (let i: number = 0; i < 12; i++) {
+            document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
+            document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+          }
+        }
+
+        export function hideHudCategory(_id: number): void {
+          document.getElementById("valuation_id_" + _id).classList.remove("valuationShow");
+          document.getElementById("valuation_id_" + _id).classList.add("valuationHidden");
+        }
 }

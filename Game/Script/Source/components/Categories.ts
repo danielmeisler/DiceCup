@@ -51,18 +51,8 @@ namespace DiceCup {
             points.classList.add("categoryPoints");
             button.appendChild(points);
         }
-    }
 
-    function handleCategory(_event: Event): void {
-        let index: number = parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index"));
-        let valuation: Valuation = new Valuation(index, dices);
-        let value: number = valuation.chooseScoringCategory(index);
-        document.getElementById("categoryPoints_id_" + index).innerHTML = value.toString();
-        document.getElementById("categoryImage_i_" + index).classList.add("categoryImagesTransparent");
-        this.disabled = true;
-        hideCategories();
-        new Valuation(parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index")), dices);
-        //HIER KOMMT DIE VALUATION PHASE... MACH SIE NACH DEN GAMESTATES
+        visibility("hidden");
     }
 
     export function showCategories() {
@@ -77,6 +67,23 @@ namespace DiceCup {
         document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
+    }
+
+    function handleCategory(_event: Event): void {
+        let index: number = parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index"));
+        document.getElementById("categoryImage_i_" + (<HTMLDivElement>_event.currentTarget).getAttribute("index")).classList.add("categoryImagesTransparent");
+        this.disabled = true;
+        hideCategories();
+        ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index) });
+    }
+
+    function addPointsToButton(_index: number): void {
+        let valuation: Valuation = new Valuation(_index, dices);
+        let value: number = valuation.chooseScoringCategory();
+        document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
+        document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
+
+        ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
     }
 
     function visibility(_visibility: string) {
