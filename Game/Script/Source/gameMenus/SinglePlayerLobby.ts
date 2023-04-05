@@ -1,6 +1,5 @@
 namespace DiceCup {
 
-
     let botSettings: BotDao[];
     let botCounter: number = 0;
 
@@ -73,7 +72,6 @@ namespace DiceCup {
         startButton.addEventListener("click", () => {
             document.getElementById("gameMenu_id").style.display = "none";
             createGameSettings();
-            changeGameState(GameState.ready);
         });
     }
 
@@ -103,6 +101,7 @@ namespace DiceCup {
                 botSettings[i].difficulty = BotDifficulty.hard;
             }
         }
+        changeGameState(GameState.init);
     }
 
     function createPlayerPortrait(): void {

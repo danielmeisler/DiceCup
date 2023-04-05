@@ -6,7 +6,7 @@ namespace DiceCup {
 
           let domHud: HTMLDivElement = document.createElement("div");
           domHud.id = "hud_id";
-          document.querySelector("body").appendChild(domHud);
+          document.getElementById("DiceCup").appendChild(domHud);
 
           let valuationContainer: HTMLDivElement = document.createElement("div");
           valuationContainer.id = "valuationContainer_id";
@@ -15,7 +15,7 @@ namespace DiceCup {
           for (let i: number = 0; i < 12; i++) {
             let valuationButton: HTMLDivElement = document.createElement("div");
             valuationButton.classList.add("valuation");
-            valuationButton.classList.add("valuationHidden");
+            valuationButton.classList.add("valuationShow");
             valuationButton.id = "valuation_id_" + i;
             valuationContainer.appendChild(valuationButton);
 

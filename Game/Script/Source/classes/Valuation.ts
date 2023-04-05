@@ -7,7 +7,6 @@ namespace DiceCup {
         constructor(_category: ScoringCategory, _dices: Dice[]) {
             this.dices = _dices;
             this.scoringCategory = _category;
-            // this.chooseScoringCategory(this.scoringCategory);
         }
 
         public chooseScoringCategory(): number {
@@ -15,53 +14,41 @@ namespace DiceCup {
             switch (this.scoringCategory) {
                 case ScoringCategory.fours:
                     value = this.calculateNumber(4);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.fives:
                     value = this.calculateNumber(5);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.sixes:
                     value = this.calculateNumber(6);
-                    hideHudCategory(this.scoringCategory);
                     break;
 
                 case ScoringCategory.white:
                     value = this.calculateColor(DiceColor.white);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.black:
                     value = this.calculateColor(DiceColor.black);
-                    hideHudCategory(this.scoringCategory);
                     break;  
                 case ScoringCategory.red:
                     value = this.calculateColor(DiceColor.red);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.blue:
                     value = this.calculateColor(DiceColor.blue);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.green:
                     value = this.calculateColor(DiceColor.green);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.yellow:
                     value = this.calculateColor(DiceColor.yellow);
-                    hideHudCategory(this.scoringCategory);
                     break;
 
                 case ScoringCategory.doubles:
                     value = this.calculateDoubles();
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.oneToThree:
                     value = this.calculateNumber(1, 2, 3);
-                    hideHudCategory(this.scoringCategory);
                     break;
                 case ScoringCategory.diceCup:
                     value = this.calculateDiceCup();
-                    hideHudCategory(this.scoringCategory);
                     break;
             }
             return value;
@@ -74,7 +61,6 @@ namespace DiceCup {
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].value === _number || this.dices[i].value === _number2 || this.dices[i].value === _number3) {
                     value += this.dices[i].value;
-                    document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
                 }
             }
 
@@ -94,7 +80,6 @@ namespace DiceCup {
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
                     value += this.dices[i].value;
-                    document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
                 }
             }
 
@@ -109,10 +94,6 @@ namespace DiceCup {
             for (let i = 0; i < this.dices.length-1; i++) {
                 if (this.dices[i].color === this.dices[i+1].color && this.dices[i].value === this.dices[i+1].value) {
                     value += 10;
-                    
-                    let double: number = i + 1;
-                    document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
-                    document.getElementById("diceContainer_id_" + double).style.border = "1vh ridge gold";
                 }
             }
 
@@ -126,7 +107,6 @@ namespace DiceCup {
 
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;
-                document.getElementById("diceContainer_id_" + i).style.border = "1vh ridge gold";
             }
 
             highscore += value;

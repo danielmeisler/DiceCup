@@ -2,12 +2,11 @@ namespace DiceCup {
     import ƒ = FudgeCore;
 
     export async function initSummary() {
-        let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
-        let categories: ScoringCategoryDao[] = await response.json();
+        let summaryContent: string[][] = await createSummaryContent();
 
         let background: HTMLDivElement = document.createElement("div");
         background.id = "summaryBackground_id";
-        document.querySelector("body").appendChild(background);
+        document.getElementById("DiceCup").appendChild(background);
 
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("summaryHidden");
@@ -18,7 +17,8 @@ namespace DiceCup {
         content.id = "summaryContent_id";
         container.appendChild(content);
 
-        let imgCounter: number = 0;
+        let colIds: string[] = ["playerNames"];
+        colIds[13] = "sum";
 
         for (let row = 0; row < 7; row++) {
                 for (let col = 0; col < 14; col++) {
@@ -36,28 +36,78 @@ namespace DiceCup {
                     let img: HTMLImageElement = document.createElement("img");
                     img.id = "summaryImg_id_" + col;
                     img.classList.add("summaryImg");
-                    img.src = categories[imgCounter].image;
+                    img.src = summaryContent[0][col];
                     imgContainer.appendChild(img);
 
-                    imgCounter++;
+                    colIds[col] = ScoringCategory[col - 1];
+                } else {
+                    let text: HTMLSpanElement = document.createElement("span");
+                    text.id = "summaryText_id_" + summaryContent[row][0] + "_" + colIds[col];
+                    text.classList.add("summaryText");
+                    text.innerHTML = summaryContent[row][col];
+                    gridDiv.appendChild(text);
+                    if (row == 0) {
+                        text.classList.add("headerCol");
+                    } else if (col == 0) {
+                        text.classList.add("headerRow");
+                    }
                 }
-
-                if (row == 0 && col > 0 && col < 13) {
-
-                }
+                
             }
         }
-
-        
 
         visibility("hidden");
     }
 
-    export function showSummary() {
+    async function createSummaryContent(): Promise<string[][]> {
+        let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
+        let categories: ScoringCategoryDao[] = await response.json();
+        let content: string[][] = [];
+        let playerNames: string[] = [gameSettings.playerName];
+
+        for (let index = 0; index < gameSettings.bot.length; index++) {
+            playerNames.push(gameSettings.bot[index].botName);
+        }
+
+        for (let row = 0; row < 7; row++) {
+            content[row] = [];
+            for (let col = 0; col < 14; col++) {
+                content[row][col] = "";
+                if(col > 0 && col < 13) {
+                    content[0][col] = categories[col - 1].image;
+                } else if (col == 13) {
+                    content[0][col] = "Sum";
+                }
+            }
+            if(row > 0 && row < playerNames.length + 1) {
+                content[row][0] = playerNames[row - 1];
+            }
+        }
+        console.log(content);
+        return content;
+    }
+
+    export function updateSummary(_points: number, _category: number, _name: string): void {
+        for (let row = 0; row < 7; row++) {
+            for (let col = 0; col < 14; col++) {
+                document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
+            }
+        }
+        let temp: number = 0;
+        if (document.getElementById("summaryText_id_" + _name + "_sum").innerHTML) {
+            temp = parseInt(document.getElementById("summaryText_id_" + _name + "_sum").innerHTML);
+        }
+        _points += temp;
+        document.getElementById("summaryText_id_" + _name + "_sum").innerHTML = _points.toString();
+        console.log("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
+    }
+
+    export function showSummary() { 
         document.getElementById("summaryContainer_id").classList.add("summaryShown");
         document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
+        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
     }
 
     export function hideSummary() {
@@ -65,6 +115,13 @@ namespace DiceCup {
         document.getElementById("summaryContainer_id").classList.add("summaryHidden");
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
+        if (roundCounter < 11) {
+            changeGameState(GameState.ready);
+            roundCounter++;
+            console.log("Round: " + roundCounter + 1)
+        } else {
+            changeGameState(GameState.placement);
+        }
     }
 
     function visibility(_visibility: string) {

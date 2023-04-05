@@ -7,7 +7,7 @@ namespace DiceCup {
 
         let background: HTMLDivElement = document.createElement("div");
         background.id = "categoryBackground_id";
-        document.querySelector("body").appendChild(background);
+        document.getElementById("DiceCup").appendChild(background);
 
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("categoriesHidden");
@@ -82,7 +82,8 @@ namespace DiceCup {
         let value: number = valuation.chooseScoringCategory();
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
-
+        hideHudCategory(_index);
+        updateSummary(value, _index, "Player");
         ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
     }
 

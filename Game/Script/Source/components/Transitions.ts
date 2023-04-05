@@ -2,14 +2,15 @@ namespace DiceCup {
     import ƒ = FudgeCore;
     let firstPhrase: string[] = ["G", "a", "m", "e", "&nbsp", "S", "t", "a", "r", "t", "s"];
     let countDown: string[] = ["&nbsp3", "&nbsp2", "&nbsp1", "&nbspGO!"];
-    let transitionCounter: number = -1;
+    let transitionCounter: number;
 
     export function initTransition(): void {
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
-        document.querySelector("body").appendChild(container);
+        document.getElementById("DiceCup").appendChild(container);
 
+        transitionCounter = -1;
         transition();
     }
 
@@ -49,4 +50,5 @@ namespace DiceCup {
             
         }
     }
+
 }

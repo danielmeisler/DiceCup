@@ -4,7 +4,7 @@ namespace DiceCup {
         let gameMenuDiv: HTMLDivElement = document.createElement("div");
         gameMenuDiv.id = "gameMenu_id";
         gameMenuDiv.classList.add("gameMenus");
-        document.querySelector("body").appendChild(gameMenuDiv);
+        document.getElementById("DiceCup").appendChild(gameMenuDiv);
 
         let menuDiv: HTMLDivElement = document.createElement("div");
         menuDiv.id = "mainMenu_id";

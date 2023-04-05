@@ -1,9 +1,9 @@
 namespace DiceCup {
+    import ƒ = FudgeCore;
     export class Bot {
         
         public dices: Dice[];
-        private usedCategories: number[] = new Array(12);
-        private usedCategoryIndex: number = 0;
+        private usedCategories: number[] = [];
         difficulty: BotDifficulty;
         name: string;
 
@@ -13,8 +13,8 @@ namespace DiceCup {
             this.dices = _dices;
         }
 
-        public chooseDifficulty(_difficulty: BotDifficulty): void {
-            switch (_difficulty) {
+        public chooseDifficulty(): void {
+            switch (this.difficulty) {
                 case BotDifficulty.easy:
                     this.botEasy();
                     break;
@@ -29,13 +29,13 @@ namespace DiceCup {
 
         public botEasy(): void{
             console.log("EASY BOT");
-            let randomCategory: number = Math.floor((Math.random() * 12) + 1);
+            let randomCategory: number = Math.floor((Math.random() * 12));
 
             if (this.usedCategories.includes(randomCategory)) {
+                console.log("gefailed");
                 this.botEasy();
             } else {
-                this.usedCategories[this.usedCategoryIndex] = randomCategory;
-                this.usedCategoryIndex++;
+                this.usedCategories.push(randomCategory);
                 console.log(this.usedCategories);
                 this.botValuation(randomCategory);
             }
@@ -51,8 +51,11 @@ namespace DiceCup {
 
         }
 
-        private botValuation(_category: number): void {
-            new Valuation(_category, dices);
+        public botValuation(_category: number): void {
+            let valuation: Valuation = new Valuation(_category, dices);
+            let value: number = valuation.chooseScoringCategory();
+            ƒ.Time.game.setTimer(2000, 1, () => { updateSummary(value, _category, this.name) });
         }
+
     }
 }

@@ -8,6 +8,8 @@
     justify-content: center;
     align-items: center;
     word-spacing: 3vw;
+    background: linear-gradient(#5BB8BC, #5071A7);
+    z-index: 10;
 }
   
 .startTransitionContainer span {

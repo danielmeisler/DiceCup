@@ -81,7 +81,7 @@
     opacity: 0.2;
 }
 
-.categoryButtons:active {
+.categoryButtons:disabled:active {
     filter: brightness(100%);
     transform: scale(1);
 }

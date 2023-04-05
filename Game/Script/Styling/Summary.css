@@ -30,13 +30,13 @@
 }
 
 .summaryHidden {
-    transition: margin-top 2s linear;
-    margin-top: 200%;
+    transition: margin-bottom 2s linear;
+    margin-bottom: 200%;
 }
 
 .summaryShown {
-    transition: margin-top 2s linear;
-    margin-top: 0%;
+    transition: margin-bottom 2s linear;
+    margin-bottom: 0%;
 }
 
 .summaryImgContainer {
@@ -67,4 +67,28 @@ div[id^="summaryGrid"] {
 
 .summaryColumn_13 {
     border-left: 0.1vw solid #444444;
+}
+
+.summaryText {
+    width: 100%;
+    height: 100%;
+    font-family: "Bungee";
+    color: rgb(255, 255, 255);
+    font-size: 3vi;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-shadow: 0.2vi 0.2vi 1vi #000000;
+}
+
+.headerRow {
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 10%;
+}
+
+.headerRow, .headerCol {
+    color: #ffffff;
+    text-shadow: 0vi 0vi 0vi #000000;
 }

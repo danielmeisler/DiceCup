@@ -11,21 +11,22 @@ declare namespace DiceCup {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
     let dices: Dice[];
+    let firstRound: boolean;
     let highscore: number;
+    let roundCounter: number;
 }
 declare namespace DiceCup {
     class Bot {
         dices: Dice[];
         private usedCategories;
-        private usedCategoryIndex;
         difficulty: BotDifficulty;
         name: string;
         constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[]);
-        chooseDifficulty(_difficulty: BotDifficulty): void;
+        chooseDifficulty(): void;
         botEasy(): void;
         botMedium(): void;
         botHard(): void;
-        private botValuation;
+        botValuation(_category: number): void;
     }
 }
 declare namespace DiceCup {
@@ -69,6 +70,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function initSummary(): Promise<void>;
+    function updateSummary(_points: number, _category: number, _name: string): void;
     function showSummary(): void;
     function hideSummary(): void;
 }
@@ -95,11 +97,13 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     enum GameState {
         menu = 0,
-        ready = 1,
-        counting = 2,
-        choosing = 3,
-        validating = 4,
-        summary = 5
+        init = 1,
+        ready = 2,
+        counting = 3,
+        choosing = 4,
+        validating = 5,
+        summary = 6,
+        placement = 7
     }
 }
 declare namespace DiceCup {
