@@ -107,7 +107,7 @@ namespace DiceCup {
         document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
-        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
+        ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
     }
 
     export function hideSummary() {
