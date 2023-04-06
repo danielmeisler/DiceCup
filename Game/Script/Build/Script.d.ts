@@ -69,6 +69,12 @@ declare namespace DiceCup {
     function hideHudCategory(_id: number): void;
 }
 declare namespace DiceCup {
+    function initPlacements(): void;
+    function updatePlacements(): void;
+    function showPlacements(): void;
+    function hidePlacements(): void;
+}
+declare namespace DiceCup {
     function initSummary(): Promise<void>;
     function updateSummary(_points: number, _category: number, _name: string): void;
     function showSummary(): void;
@@ -111,8 +117,6 @@ declare namespace DiceCup {
         main = "mainMenu_id",
         singleplayer = "singleplayerMenu_id",
         multiplayer = "multiplayerMenu_id",
-        shop = "shopMenu_id",
-        help = "helpMenu_id",
         options = "optionsMenu_id"
     }
 }
@@ -133,14 +137,21 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
-    function gameMenu(): void;
+    function initMenu(): void;
+    function switchMenu(_toMenuID: MenuPages): void;
+    function hideMenu(): void;
 }
 declare namespace DiceCup {
     function mainMenu(): void;
-    function switchMenu(_thisMenuID: MenuPages, _toMenuID: MenuPages): void;
 }
 declare namespace DiceCup {
-    function playMenu(): void;
+    function multiplayerMenu(): void;
+}
+declare namespace DiceCup {
+    function optionsMenu(): void;
+}
+declare namespace DiceCup {
+    function singleplayerMenu(): void;
 }
 declare namespace DiceCup {
     interface BotDao {

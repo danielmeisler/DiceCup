@@ -12,6 +12,7 @@
     width: calc(100vw - 5vh);
     height: calc(100vh - 5vh);
     background-color: #313131;
+    overflow: hidden;
     border-radius: 1.5vw;
     display: flex;
     flex-direction: column;
@@ -59,10 +60,12 @@ div[id^="summaryGrid"] {
 
 .summaryRow_0 {
     border-bottom: 0.1vw solid #444444;
+    background-color: #2B2B2B;
 }
 
 .summaryColumn_0 {
     border-right: 0.1vw solid #444444;
+    background-color: #2B2B2B;
 }
 
 .summaryColumn_13 {
@@ -79,7 +82,7 @@ div[id^="summaryGrid"] {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    text-shadow: 0.2vi 0.2vi 1vi #000000;
+    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
 }
 
 .headerRow {
@@ -90,5 +93,6 @@ div[id^="summaryGrid"] {
 
 .headerRow, .headerCol {
     color: #ffffff;
+    font-family: 'Inter';
     text-shadow: 0vi 0vi 0vi #000000;
 }

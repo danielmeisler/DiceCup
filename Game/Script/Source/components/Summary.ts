@@ -106,6 +106,7 @@ namespace DiceCup {
         document.getElementById("summaryContainer_id").classList.add("summaryShown");
         document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
+        document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
         ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
     }
@@ -114,6 +115,7 @@ namespace DiceCup {
         document.getElementById("summaryContainer_id").classList.remove("summaryShown");
         document.getElementById("summaryContainer_id").classList.add("summaryHidden");
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
+        document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
         if (roundCounter < 11) {
             changeGameState(GameState.ready);

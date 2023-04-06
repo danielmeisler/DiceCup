@@ -53,7 +53,7 @@ var DiceCup;
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
-        DiceCup.changeGameState(DiceCup.GameState.menu);
+        DiceCup.initMenu();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -129,7 +129,7 @@ var DiceCup;
     function changeGameState(_gameState) {
         switch (_gameState) {
             case DiceCup.GameState.menu:
-                DiceCup.gameMenu();
+                DiceCup.switchMenu(DiceCup.MenuPages.main);
                 break;
             case DiceCup.GameState.init:
                 DiceCup.initHud();
@@ -137,6 +137,7 @@ var DiceCup;
                 DiceCup.initSummary();
                 initViewport();
                 DiceCup.initTransition();
+                DiceCup.initPlacements();
                 break;
             case DiceCup.GameState.ready:
                 DiceCup.initTransition();
@@ -154,7 +155,7 @@ var DiceCup;
                 DiceCup.showSummary();
                 break;
             case DiceCup.GameState.placement:
-                console.log("TEST");
+                DiceCup.showPlacements();
                 break;
         }
     }
@@ -401,6 +402,7 @@ var DiceCup;
         document.getElementById("categoryContainer_id").classList.add("categoriesShown");
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+        document.getElementById("categoryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
     }
     DiceCup.showCategories = showCategories;
@@ -408,6 +410,7 @@ var DiceCup;
         document.getElementById("categoryContainer_id").classList.remove("categoriesShown");
         document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
+        document.getElementById("categoryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
     }
     DiceCup.hideCategories = hideCategories;
@@ -424,7 +427,7 @@ var DiceCup;
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         DiceCup.hideHudCategory(_index);
-        DiceCup.updateSummary(value, _index, "Player");
+        DiceCup.updateSummary(value, _index, DiceCup.gameSettings.playerName);
         ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
     }
     function visibility(_visibility) {
@@ -462,6 +465,7 @@ var DiceCup;
         }
     }
     DiceCup.initHud = initHud;
+    // HIDE/SHOW HUD WENN WIEDER REIN ODER RAUS AUS DEM GAME
     function showHud() {
         for (let i = 0; i < 12; i++) {
             document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
@@ -474,6 +478,107 @@ var DiceCup;
         document.getElementById("valuation_id_" + _id).classList.add("valuationHidden");
     }
     DiceCup.hideHudCategory = hideHudCategory;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    function initPlacements() {
+        let background = document.createElement("div");
+        background.id = "placementsBackground_id";
+        document.getElementById("DiceCup").appendChild(background);
+        let container = document.createElement("div");
+        container.classList.add("placementsHidden");
+        container.id = "placementsContainer_id";
+        background.appendChild(container);
+        let placementTitle = document.createElement("span");
+        placementTitle.id = "placementsTitle_id";
+        placementTitle.innerHTML = "CONGRATULATIONS!";
+        container.appendChild(placementTitle);
+        let placementPortraits = document.createElement("div");
+        placementPortraits.id = "placementPortraits_id";
+        container.appendChild(placementPortraits);
+        createPlacements();
+        let placementsBottomArea = document.createElement("div");
+        placementsBottomArea.id = "placementsBottomArea_id";
+        container.appendChild(placementsBottomArea);
+        let replayButton = document.createElement("button");
+        replayButton.id = "replayButton_id";
+        replayButton.classList.add("diceCupButtons");
+        placementsBottomArea.appendChild(replayButton);
+        let replayButtonImage = document.createElement("img");
+        replayButtonImage.classList.add("buttonAreaIcons");
+        replayButtonImage.src = "Game/Assets/images/menuButtons/renew.svg";
+        replayButton.appendChild(replayButtonImage);
+        replayButton.addEventListener("click", () => {
+            hidePlacements();
+            DiceCup.switchMenu(DiceCup.MenuPages.singleplayer);
+        });
+        let placementPhrase = document.createElement("span");
+        placementPhrase.id = "placementPhrase_id";
+        placementPhrase.innerHTML = "You are " + "ERSTER" + " place!";
+        placementsBottomArea.appendChild(placementPhrase);
+        let nextButton = document.createElement("button");
+        nextButton.id = "nextButton_id";
+        nextButton.classList.add("diceCupButtons");
+        placementsBottomArea.appendChild(nextButton);
+        let nextButtonImage = document.createElement("img");
+        nextButtonImage.classList.add("buttonAreaIcons");
+        nextButtonImage.src = "Game/Assets/images/menuButtons/play.svg";
+        nextButton.appendChild(nextButtonImage);
+        nextButton.addEventListener("click", () => {
+            DiceCup.switchMenu(DiceCup.MenuPages.main);
+        });
+    }
+    DiceCup.initPlacements = initPlacements;
+    function createPlacements() {
+        for (let i = 0; i < 6; i++) {
+            let placementsContainer = document.createElement("div");
+            placementsContainer.id = "placementsContainer_id_" + i;
+            placementsContainer.classList.add("placementsContainer");
+            document.getElementById("placementPortraits_id").appendChild(placementsContainer);
+            let placementsDiv = document.createElement("div");
+            placementsDiv.id = "placementsPlayerPortrait_id_" + i;
+            placementsDiv.classList.add("placementsPortrait");
+            placementsDiv.classList.add("diceCupButtons");
+            placementsContainer.appendChild(placementsDiv);
+            let playerIcons = document.createElement("img");
+            playerIcons.classList.add("placementsPortraitIcons");
+            playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
+            placementsDiv.appendChild(playerIcons);
+            let playerName = document.createElement("div");
+            playerName.id = "playerName_id_" + i;
+            playerName.classList.add("placementNames");
+            playerName.innerHTML = "Player";
+            placementsContainer.appendChild(playerName);
+            let placement = document.createElement("div");
+            placement.classList.add("placementOrder");
+            placement.innerHTML = i + 1 + "." + " 202";
+            placementsContainer.appendChild(placement);
+        }
+    }
+    function updatePlacements() {
+    }
+    DiceCup.updatePlacements = updatePlacements;
+    function showPlacements() {
+        document.getElementById("placementsContainer_id").classList.add("placementsShown");
+        document.getElementById("placementsContainer_id").classList.remove("placementsHidden");
+        document.getElementById("placementsBackground_id").classList.add("emptyBackground");
+        document.getElementById("placementsBackground_id").style.zIndex = "10";
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+    }
+    DiceCup.showPlacements = showPlacements;
+    function hidePlacements() {
+        document.getElementById("placementsContainer_id").classList.remove("placementsShown");
+        document.getElementById("placementsContainer_id").classList.add("placementsHidden");
+        document.getElementById("placementsBackground_id").classList.remove("emptyBackground");
+        document.getElementById("placementsBackground_id").style.zIndex = "0";
+        hideHud;
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
+    }
+    DiceCup.hidePlacements = hidePlacements;
+    function visibility(_visibility) {
+        document.getElementById("placementsBackground_id").style.visibility = _visibility;
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -573,6 +678,7 @@ var DiceCup;
         document.getElementById("summaryContainer_id").classList.add("summaryShown");
         document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
+        document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
         ƒ.Time.game.setTimer(5000, 1, () => { hideSummary(); });
     }
@@ -581,6 +687,7 @@ var DiceCup;
         document.getElementById("summaryContainer_id").classList.remove("summaryShown");
         document.getElementById("summaryContainer_id").classList.add("summaryHidden");
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
+        document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
         if (DiceCup.roundCounter < 11) {
             DiceCup.changeGameState(DiceCup.GameState.ready);
@@ -692,8 +799,6 @@ var DiceCup;
         MenuPages["main"] = "mainMenu_id";
         MenuPages["singleplayer"] = "singleplayerMenu_id";
         MenuPages["multiplayer"] = "multiplayerMenu_id";
-        MenuPages["shop"] = "shopMenu_id";
-        MenuPages["help"] = "helpMenu_id";
         MenuPages["options"] = "optionsMenu_id";
     })(MenuPages = DiceCup.MenuPages || (DiceCup.MenuPages = {}));
 })(DiceCup || (DiceCup = {}));
@@ -717,11 +822,28 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    function gameMenu() {
+    let menuIds = Object.values(DiceCup.MenuPages);
+    function initMenu() {
         DiceCup.mainMenu();
-        DiceCup.playMenu();
+        DiceCup.singleplayerMenu();
+        DiceCup.multiplayerMenu();
+        DiceCup.optionsMenu();
+        switchMenu(DiceCup.MenuPages.main);
     }
-    DiceCup.gameMenu = gameMenu;
+    DiceCup.initMenu = initMenu;
+    function switchMenu(_toMenuID) {
+        for (let index = 0; index < Object.values(DiceCup.MenuPages).length; index++) {
+            document.getElementById(menuIds[index]).style.visibility = "hidden";
+        }
+        document.getElementById(_toMenuID).style.visibility = "visible";
+    }
+    DiceCup.switchMenu = switchMenu;
+    function hideMenu() {
+        for (let index = 0; index < Object.values(DiceCup.MenuPages).length; index++) {
+            document.getElementById(menuIds[index]).style.visibility = "hidden";
+        }
+    }
+    DiceCup.hideMenu = hideMenu;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -729,9 +851,10 @@ var DiceCup;
         let gameMenuDiv = document.createElement("div");
         gameMenuDiv.id = "gameMenu_id";
         gameMenuDiv.classList.add("gameMenus");
+        gameMenuDiv.style.visibility = "hidden";
         document.getElementById("DiceCup").appendChild(gameMenuDiv);
         let menuDiv = document.createElement("div");
-        menuDiv.id = "mainMenu_id";
+        menuDiv.id = DiceCup.MenuPages.main;
         menuDiv.classList.add("gameMenus");
         gameMenuDiv.appendChild(menuDiv);
         let logoDiv = document.createElement("div");
@@ -758,32 +881,49 @@ var DiceCup;
             menuButtons.appendChild(menuIcons);
         }
         document.getElementById("play_id").addEventListener("click", () => {
-            switchMenu(DiceCup.MenuPages.main, DiceCup.MenuPages.singleplayer);
+            DiceCup.switchMenu(DiceCup.MenuPages.singleplayer);
         });
-        document.getElementById("shop_id").addEventListener("click", () => {
-            switchMenu(DiceCup.MenuPages.main, DiceCup.MenuPages.shop);
-        });
-        document.getElementById("help_id").addEventListener("click", () => {
-            switchMenu(DiceCup.MenuPages.main, DiceCup.MenuPages.help);
-        });
+        // document.getElementById("shop_id").addEventListener("click", () => {
+        //     switchMenu(MenuPages.main, MenuPages.shop);
+        // });
+        // document.getElementById("help_id").addEventListener("click", () => {
+        //     switchMenu(MenuPages.main, MenuPages.help);
+        // });
         document.getElementById("options_id").addEventListener("click", () => {
-            switchMenu(DiceCup.MenuPages.main, DiceCup.MenuPages.options);
+            DiceCup.switchMenu(DiceCup.MenuPages.options);
         });
     }
     DiceCup.mainMenu = mainMenu;
-    function switchMenu(_thisMenuID, _toMenuID) {
-        document.getElementById(_thisMenuID).style.visibility = "hidden";
-        document.getElementById(_toMenuID).style.visibility = "visible";
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function multiplayerMenu() {
+        let mpMenu = document.createElement("div");
+        mpMenu.id = DiceCup.MenuPages.multiplayer;
+        mpMenu.classList.add("gameMenus");
+        mpMenu.style.visibility = "hidden";
+        document.getElementById("gameMenu_id").appendChild(mpMenu);
     }
-    DiceCup.switchMenu = switchMenu;
+    DiceCup.multiplayerMenu = multiplayerMenu;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function optionsMenu() {
+        let optionMenu = document.createElement("div");
+        optionMenu.id = DiceCup.MenuPages.options;
+        optionMenu.classList.add("gameMenus");
+        optionMenu.style.visibility = "hidden";
+        document.getElementById("gameMenu_id").appendChild(optionMenu);
+    }
+    DiceCup.optionsMenu = optionsMenu;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
     let botSettings;
     let botCounter = 0;
-    function playMenu() {
+    function singleplayerMenu() {
         let spMenu = document.createElement("div");
-        spMenu.id = "singleplayerMenu_id";
+        spMenu.id = DiceCup.MenuPages.singleplayer;
         spMenu.classList.add("gameMenus");
         spMenu.style.visibility = "hidden";
         document.getElementById("gameMenu_id").appendChild(spMenu);
@@ -818,7 +958,7 @@ var DiceCup;
         returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
         returnButton.appendChild(returnIcon);
         returnButton.addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.singleplayer, DiceCup.MenuPages.main);
+            DiceCup.switchMenu(DiceCup.MenuPages.main);
         });
         let settingsButton = document.createElement("button");
         settingsButton.id = "settingsButton_id";
@@ -836,11 +976,11 @@ var DiceCup;
         startButton.innerHTML = "START";
         rightButtonArea.appendChild(startButton);
         startButton.addEventListener("click", () => {
-            document.getElementById("gameMenu_id").style.display = "none";
+            DiceCup.hideMenu();
             createGameSettings();
         });
     }
-    DiceCup.playMenu = playMenu;
+    DiceCup.singleplayerMenu = singleplayerMenu;
     function createGameSettings() {
         let bots = document.querySelectorAll(".botContainer").length;
         botSettings = [];

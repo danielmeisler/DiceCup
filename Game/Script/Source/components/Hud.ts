@@ -36,6 +36,8 @@ namespace DiceCup {
     
         }
 
+        // HIDE/SHOW HUD WENN WIEDER REIN ODER RAUS AUS DEM GAME
+
         export function showHud(): void {
           for (let i: number = 0; i < 12; i++) {
             document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");

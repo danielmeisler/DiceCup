@@ -1,0 +1,115 @@
+#placementsBackground_id {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#placementsContainer_id {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#placementsTitle_id {
+    height: 10vw;
+    line-height: 10vw;
+    font-size: 5vw;
+    color: white;
+    font-family: "Bungee";
+    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
+}
+
+#placementPortraits_id {
+    width: 96vw;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.placementsPortrait {
+    width: 12vw;
+    aspect-ratio: 1/1;
+    background: #2F4260;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placementsPortraitIcons {
+    width: 70%;
+    aspect-ratio: 1/1;
+}
+
+.placementsContainer {
+    height: 23vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.placementNames {
+    width: 11vw;
+    border-width: 0;
+    aspect-ratio: 1/0.25;
+    border-radius: 3vh;
+    background: #3E5373;
+    color: white;
+    text-align: center;
+    font-size: 2vi;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placementOrder {
+    font-size: 3vi;
+    font-family: 'Inter';
+    color: white;
+}
+
+#placementsBottomArea_id {
+    width: 96vw;
+    height: 20vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#nextButton_id, #replayButton_id {
+    height: 9vw;
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #2F4260;
+    color: white;
+}
+
+#placementPhrase_id {
+    font-size: 3vi;
+    font-family: "Bungee";
+    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
+    color: white;
+}
+
+.placementsHidden {
+    transition: margin-bottom 2s linear;
+    margin-bottom: 200%;
+}
+
+.placementsShown {
+    transition: margin-bottom 2s linear;
+    margin-bottom: 0%;
+}

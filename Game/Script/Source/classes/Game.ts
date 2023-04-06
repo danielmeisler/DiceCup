@@ -7,7 +7,7 @@ namespace DiceCup {
     export function changeGameState(_gameState: GameState) {
         switch (_gameState) {
             case GameState.menu: 
-                gameMenu();
+                switchMenu(MenuPages.main);
             break;
             case GameState.init: 
                 initHud();
@@ -15,6 +15,7 @@ namespace DiceCup {
                 initSummary();
                 initViewport();
                 initTransition();
+                initPlacements();
             break;
             case GameState.ready: 
                 initTransition();
@@ -32,7 +33,7 @@ namespace DiceCup {
                 showSummary();
             break;
             case GameState.placement: 
-                console.log("TEST");
+                showPlacements();
             break;
         }
     }

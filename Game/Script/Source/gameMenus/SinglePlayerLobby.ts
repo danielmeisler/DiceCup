@@ -3,9 +3,9 @@ namespace DiceCup {
     let botSettings: BotDao[];
     let botCounter: number = 0;
 
-    export function playMenu(): void {
+    export function singleplayerMenu(): void {
         let spMenu: HTMLDivElement = document.createElement("div");
-        spMenu.id = "singleplayerMenu_id";
+        spMenu.id = MenuPages.singleplayer;
         spMenu.classList.add("gameMenus");
         spMenu.style.visibility = "hidden";
         document.getElementById("gameMenu_id").appendChild(spMenu);
@@ -48,7 +48,7 @@ namespace DiceCup {
         returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
         returnButton.appendChild(returnIcon);
         returnButton.addEventListener("click", () => {
-            switchMenu(MenuPages.singleplayer, MenuPages.main);
+            switchMenu(MenuPages.main);
         });
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
@@ -70,7 +70,7 @@ namespace DiceCup {
         rightButtonArea.appendChild(startButton);
 
         startButton.addEventListener("click", () => {
-            document.getElementById("gameMenu_id").style.display = "none";
+            hideMenu();
             createGameSettings();
         });
     }

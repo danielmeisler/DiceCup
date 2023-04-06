@@ -4,10 +4,11 @@ namespace DiceCup {
         let gameMenuDiv: HTMLDivElement = document.createElement("div");
         gameMenuDiv.id = "gameMenu_id";
         gameMenuDiv.classList.add("gameMenus");
+        gameMenuDiv.style.visibility = "hidden";
         document.getElementById("DiceCup").appendChild(gameMenuDiv);
 
         let menuDiv: HTMLDivElement = document.createElement("div");
-        menuDiv.id = "mainMenu_id";
+        menuDiv.id = MenuPages.main;
         menuDiv.classList.add("gameMenus");
         gameMenuDiv.appendChild(menuDiv);
 
@@ -41,26 +42,21 @@ namespace DiceCup {
         }
 
         document.getElementById("play_id").addEventListener("click", () => {
-            switchMenu(MenuPages.main, MenuPages.singleplayer);
+            switchMenu(MenuPages.singleplayer);
         });
 
-        document.getElementById("shop_id").addEventListener("click", () => {
-            switchMenu(MenuPages.main, MenuPages.shop);
+        // document.getElementById("shop_id").addEventListener("click", () => {
+        //     switchMenu(MenuPages.main, MenuPages.shop);
 
-        });
+        // });
 
-        document.getElementById("help_id").addEventListener("click", () => {
-            switchMenu(MenuPages.main, MenuPages.help);
-        });
+        // document.getElementById("help_id").addEventListener("click", () => {
+        //     switchMenu(MenuPages.main, MenuPages.help);
+        // });
 
         document.getElementById("options_id").addEventListener("click", () => {
-            switchMenu(MenuPages.main, MenuPages.options);
+            switchMenu(MenuPages.options);
         });
 
-    }
-
-    export function switchMenu(_thisMenuID: MenuPages, _toMenuID: MenuPages ): void {
-        document.getElementById(_thisMenuID).style.visibility = "hidden"; 
-        document.getElementById(_toMenuID).style.visibility = "visible"; 
     }
 }

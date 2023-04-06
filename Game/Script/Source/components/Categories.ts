@@ -59,6 +59,7 @@ namespace DiceCup {
         document.getElementById("categoryContainer_id").classList.add("categoriesShown");
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+        document.getElementById("categoryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
     }
 
@@ -66,6 +67,7 @@ namespace DiceCup {
         document.getElementById("categoryContainer_id").classList.remove("categoriesShown");
         document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
+        document.getElementById("categoryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
     }
 
@@ -83,7 +85,7 @@ namespace DiceCup {
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         hideHudCategory(_index);
-        updateSummary(value, _index, "Player");
+        updateSummary(value, _index, gameSettings.playerName);
         ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
     }
 

@@ -20,6 +20,6 @@ namespace DiceCup {
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
 
-    changeGameState(GameState.menu);
+    initMenu();
   }
 }

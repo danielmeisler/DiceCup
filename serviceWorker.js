@@ -8,7 +8,8 @@ const assets = [
   "Game/Script/Styling/Game.css",
   "Game/Script/Styling/Categories.css",
   "Game/Script/Styling/Summary.css",
-  "Game/Script/Styling/Transitions.css"
+  "Game/Script/Styling/Transitions.css",
+  "Game/Script/Styling/Placements.css"
 ]
 
 self.addEventListener("install", installEvent => {
