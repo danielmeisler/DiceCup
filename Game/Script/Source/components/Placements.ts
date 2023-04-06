@@ -109,7 +109,7 @@ namespace DiceCup {
         document.getElementById("placementsContainer_id").classList.add("placementsHidden");
         document.getElementById("placementsBackground_id").classList.remove("emptyBackground");
         document.getElementById("placementsBackground_id").style.zIndex = "0";
-        hideHud
+        // hideHud
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
     }
 
