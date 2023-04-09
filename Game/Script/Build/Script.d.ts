@@ -43,8 +43,8 @@ declare namespace DiceCup {
     function initViewport(): Promise<void>;
     function initGame(): void;
     function rollDices(): void;
-    function gameValidate(): void;
     function update(_event: Event): void;
+    function gameOver(): void;
 }
 declare namespace DiceCup {
     class Valuation {

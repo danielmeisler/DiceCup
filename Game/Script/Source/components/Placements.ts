@@ -17,7 +17,7 @@ namespace DiceCup {
         container.appendChild(placementTitle);
 
         let placementPortraits: HTMLDivElement = document.createElement("div");
-        placementPortraits.id = "placementPortraits_id";
+        placementPortraits.id = "placementsPortraits_id";
         container.appendChild(placementPortraits);
 
         createPlacements();
@@ -37,13 +37,12 @@ namespace DiceCup {
         replayButton.appendChild(replayButtonImage);
 
         replayButton.addEventListener("click", () => {
-            hidePlacements();
+            gameOver();
             switchMenu(MenuPages.singleplayer);
         });
 
         let placementPhrase: HTMLSpanElement = document.createElement("span");
-        placementPhrase.id = "placementPhrase_id";
-        placementPhrase.innerHTML = "You are " + "ERSTER" + " place!";
+        placementPhrase.id = "placementsPhrase_id";
         placementsBottomArea.appendChild(placementPhrase);
 
         let nextButton: HTMLButtonElement = document.createElement("button");
@@ -57,6 +56,7 @@ namespace DiceCup {
         nextButton.appendChild(nextButtonImage);
 
         nextButton.addEventListener("click", () => {
+            gameOver();
             switchMenu(MenuPages.main);
         });
     }
@@ -66,7 +66,7 @@ namespace DiceCup {
             let placementsContainer: HTMLDivElement = document.createElement("div");
             placementsContainer.id = "placementsContainer_id_" + i;
             placementsContainer.classList.add("placementsContainer");
-            document.getElementById("placementPortraits_id").appendChild(placementsContainer);
+            document.getElementById("placementsPortraits_id").appendChild(placementsContainer);
 
             let placementsDiv: HTMLDivElement = document.createElement("div");
             placementsDiv.id = "placementsPlayerPortrait_id_" + i;
@@ -75,25 +75,67 @@ namespace DiceCup {
             placementsContainer.appendChild(placementsDiv);
 
             let playerIcons: HTMLImageElement = document.createElement("img");
+            playerIcons.id = "placementsPlayerIcons_id_" + i;
             playerIcons.classList.add("placementsPortraitIcons");
-            playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
+            playerIcons.src = "Game/Assets/images/menuButtons/bot.svg";
             placementsDiv.appendChild(playerIcons);
 
             let playerName: HTMLDivElement = document.createElement("div");
             playerName.id = "playerName_id_" + i;
-            playerName.classList.add("placementNames");
-            playerName.innerHTML = "Player";
+            playerName.classList.add("placementsNames");
             placementsContainer.appendChild(playerName);
 
+            let points: HTMLDivElement = document.createElement("div");
+            points.id = "placementsPoints_id_" + i;
+            points.classList.add("placementsPoints");
+            placementsContainer.appendChild(points);
+
             let placement: HTMLDivElement = document.createElement("div");
-            placement.classList.add("placementOrder");
-            placement.innerHTML = i + 1 + "." + " 202";
-            placementsContainer.appendChild(placement);
+            placement.id = "placementsOrder_id_" + i;
+            placement.classList.add("placementsOrder");
+            placementsDiv.appendChild(placement);
         }
     }
 
     export function updatePlacements(): void {
+        let name: string[] = [];
+        let points: number[] = [];
+        let bots: BotDao[] = gameSettings.bot;
 
+        for (let i = 1; i < 7; i++) {
+            name[i - 1] = document.querySelector("#summaryGrid_id_" + i + "_0 > span").innerHTML;
+            points[i - 1] = parseInt(document.querySelector("#summaryGrid_id_" + i + "_13 > span").innerHTML);
+        }
+
+        for (let i = 0; i < points.length; i++) {
+            for (let j = 0; j < points.length; j++) {
+                if (points[j] < points[j+1]) {
+                    [points[j], points[j+1]] = [points[j+1], points[j]];
+                    [name[j], name[j+1]] = [name[j+1], name[j]];
+                }
+            }
+        }
+        for (let i = 0; i < 6; i++) {
+            if (name[i] == "") {
+                document.getElementById("placementsContainer_id_" + i).style.display = "none";
+            } else {
+                for (let j = 0; j < bots.length; j++) {
+                    if (name[i] == bots[j].botName) {
+                        (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/bot.svg";
+                        break;
+                    } else {
+                        (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/player.svg";
+                    }
+                }
+                document.getElementById("playerName_id_" + i).innerHTML = name[i];
+                document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
+                document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
+
+                if (name[i] == gameSettings.playerName) {
+                    document.getElementById("placementsPhrase_id").innerHTML = "You are " + (i + 1) + ". place!";
+                }
+            }
+        }
     }
 
     export function showPlacements() {
@@ -115,6 +157,5 @@ namespace DiceCup {
 
     function visibility(_visibility: string) {
         document.getElementById("placementsBackground_id").style.visibility = _visibility;
-
     }   
 }

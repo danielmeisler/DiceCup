@@ -32,7 +32,6 @@ namespace DiceCup {
             let randomCategory: number = Math.floor((Math.random() * 12));
 
             if (this.usedCategories.includes(randomCategory)) {
-                console.log("gefailed");
                 this.botEasy();
             } else {
                 this.usedCategories.push(randomCategory);
@@ -54,7 +53,7 @@ namespace DiceCup {
         public botValuation(_category: number): void {
             let valuation: Valuation = new Valuation(_category, dices);
             let value: number = valuation.chooseScoringCategory();
-            ƒ.Time.game.setTimer(2000, 1, () => { updateSummary(value, _category, this.name) });
+            ƒ.Time.game.setTimer(2000, 1, () => { updateSummary(value, _category, this.name)});
         }
 
     }

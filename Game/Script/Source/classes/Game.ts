@@ -21,6 +21,7 @@ namespace DiceCup {
                 initTransition();
             break;
             case GameState.counting: 
+                // showSummary();
                 initGame();
             break;
             case GameState.choosing: 
@@ -31,8 +32,11 @@ namespace DiceCup {
             break;
             case GameState.summary: 
                 showSummary();
+                // updatePlacements()
+                // showPlacements();
             break;
             case GameState.placement: 
+                updatePlacements()
                 showPlacements();
             break;
         }
@@ -50,6 +54,7 @@ namespace DiceCup {
     }
 
     function createBots(_bots: BotDao[]): Bot[] {
+        bots = [];
         for (let index = 0; index < _bots.length; index++) {
             bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
         }
@@ -60,13 +65,11 @@ namespace DiceCup {
         console.clear();
         if (firstRound == true) {
             createBots(gameSettings.bot);
-            console.log("true");
             let gameDiv: HTMLDivElement = document.createElement("div");
             gameDiv.id = "rollingDiv_id";
             document.getElementById("game").appendChild(gameDiv);
             firstRound = false;
         } else {
-            console.log("false");
             for (let i: number = 0; i < 12; i++) {
                 document.getElementById("diceContainer_id_" + i).remove();
             }
@@ -121,18 +124,19 @@ namespace DiceCup {
         ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(GameState.choosing)});
     }
 
-    export function gameValidate(): void {
-        // for (let i: number = 0; i < 12; i++) {
-        //     document.getElementById("diceContainer_id_" + i).remove();
-        // }
-        
-    }
-
     export function update(_event: Event): void {
         // ƒ.Physics.simulate();  // if physics is included and used
         viewport.draw();
         //ƒ.AudioManager.default.update();
     }
 
-    
+    export function gameOver(): void {
+        firstRound = true;
+        while (document.getElementById("DiceCup").childNodes.length > 1) {
+            document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
+        }
+        while (document.getElementById("game").firstChild) {
+        document.getElementById("game").removeChild(document.getElementById("game").lastChild);
+        }
+    }
 }
