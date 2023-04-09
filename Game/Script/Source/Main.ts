@@ -8,7 +8,7 @@ namespace DiceCup {
   export let dices: Dice[] = [];
   export let firstRound: boolean = true;
   export let highscore: number = 0;
-  export let roundCounter: number = 0;
+  export let roundCounter: number;
 
   function start(_event: CustomEvent): void {
     if ("serviceWorker" in navigator) {

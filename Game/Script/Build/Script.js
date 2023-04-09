@@ -44,7 +44,6 @@ var DiceCup;
     DiceCup.dices = [];
     DiceCup.firstRound = true;
     DiceCup.highscore = 0;
-    DiceCup.roundCounter = 0;
     function start(_event) {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("../../serviceWorker.js");
@@ -631,6 +630,7 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     async function initSummary() {
+        DiceCup.roundCounter = 0;
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
         background.id = "summaryBackground_id";

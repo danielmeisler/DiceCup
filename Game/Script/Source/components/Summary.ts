@@ -2,6 +2,7 @@ namespace DiceCup {
     import ƒ = FudgeCore;
 
     export async function initSummary() {
+        roundCounter = 0;
         let summaryContent: string[][] = await createSummaryContent();
 
         let background: HTMLDivElement = document.createElement("div");
