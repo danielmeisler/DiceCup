@@ -14,7 +14,9 @@ namespace DiceCup {
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("../../serviceWorker.js")
     }
+
     viewport = _event.detail;
+
 
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
@@ -22,4 +24,5 @@ namespace DiceCup {
 
     initMenu();
   }
+
 }

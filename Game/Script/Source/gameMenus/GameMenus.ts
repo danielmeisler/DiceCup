@@ -5,8 +5,11 @@ namespace DiceCup {
     export function initMenu(): void {
         mainMenu();
         singleplayerMenu();
+        multiplayerServers();
         multiplayerMenu();
         optionsMenu();
+        helpMenu();
+        
         switchMenu(MenuPages.main);
     }
 

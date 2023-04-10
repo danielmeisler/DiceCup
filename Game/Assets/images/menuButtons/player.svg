@@ -1,1 +1,11 @@
-<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><defs><style>.cls-1{fill:#fff;}</style></defs><circle class="cls-1" cx="25" cy="16.31" r="16.31"/><path class="cls-1" d="M42.86,28.37H38.67a17.83,17.83,0,0,1-27.34,0H7.14A7.14,7.14,0,0,0,0,35.51V50H50V35.51A7.14,7.14,0,0,0,42.86,28.37Z" transform="translate(0 0)"/></svg>
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 47.84">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <ellipse class="cls-1" cx="25" cy="16.08" rx="16.11" ry="16.08"/>
+  <path class="cls-1" d="M36.67,33.56a16.64,16.64,0,0,1-23.34,0A13.34,13.34,0,0,0,0,46.88V50H50V46.88A13.34,13.34,0,0,0,36.67,33.56Z" transform="translate(0 -2.13)"/>
+</svg>

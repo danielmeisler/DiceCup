@@ -53,29 +53,77 @@
 
 
 
-#singleplayerMenu_id {
-    flex-direction: column;
-    align-items: center;
+.subGameMenus {
     height: 100%;
     width: 100%;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
 }
 
-#singlePlayerMenuTitle_id {
+.gameMenuTitles {
+    width: 96vw;
     height: 10vw;
     line-height: 10vw;
     font-size: 5vw;
     color: white;
     font-family: "Bungee";
     text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
 }
 
-#lobbyPortraits_id {
+.gameMenuContent {
     width: 96vw;
+    height: 100%;
+}
+
+.gameMenuButtonArea {
+    width: 96vw;
+    height: 20vw;
+    display: flex;
+}
+
+.gameMenuLeftButtonArea, .gameMenuRightButtonArea {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+
+.gameMenuLeftButtonArea {
+    justify-content: left;
+}
+
+.gameMenuRightButtonArea {
+    justify-content: right;
+}
+
+.gameMenuButtons {
+    height: 9vw;
+    aspect-ratio: 1/1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #2F4260;
+    color: white;
+}
+
+.gameMenuButtonsIcons {
+    width: 80%;
+    aspect-ratio: 1/1;
+}
+
+
+
+
+
+#singleplayerMenuContent_id, #multiplayerLobbyMenuContent_id  {
     display: flex;
     justify-content: space-between;
-    height: 100%;
 }
 
 .lobbyPortrait {
@@ -88,18 +136,28 @@
     position: relative;
 }
 
-.lobbyPortrait_active:active {
+.lobbyPortrait_active:active, .lobbyPortrait_inactive:active {
     transform: scale(1);
     filter: brightness(100%);
 }
 
 .lobbyPortrait_inactive {
-    background: rgba(47, 66, 96, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(47, 66, 96, 0.5) !important;
 }
 
 .lobbyPortraitIcons {
     width: 70%;
     aspect-ratio: 1/1;
+}
+
+.lobbyPortraitIcons_inactive {
+    width: 70%;
+    aspect-ratio: 1/1;
+    opacity: 50%;
 }
 
 .lobbyContainer {
@@ -110,6 +168,10 @@
     justify-content: space-between;
 }
 
+.waitContainer {
+    height: 18vw;
+}
+
 .nameInputs, .difficultySwitch {
     width: 11vw;
     border-width: 0;
@@ -118,7 +180,7 @@
     background: #3E5373;
     color: white;
     text-align: center;
-    font-size: 2vi;
+    font-size: 1.5vi;
     font-family: "Inter";
     font-weight: bold;
     box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
@@ -135,6 +197,7 @@
 }
 
 .switchDifficulty {
+    width: 25%;
     border-width: 0;
     background: transparent;
     color: rgba(255, 255, 255, 0.5);
@@ -148,10 +211,12 @@
 }
 
 .switchDifficultyText {
+    width: 50%;
     margin-top: -1%;
+    overflow: hidden;
 }
 
-.botRemove {
+.removeButton {
     position: absolute;
     width: 2.5vw;
     aspect-ratio: 1/1;
@@ -167,51 +232,16 @@
     align-items: center;
 }
 
-.botRemove:active {
+.removeButton:active {
     transform: scale(0.9);
 }
 
-.botRemoveIcons {
+.removeButtonIcons {
     height: 60%;
     aspect-ratio: 1/1;
 }
 
-#buttonArea_id {
-    width: 100%;
-    height: 20vw;
-    display: flex;
-}
-
-#leftButtonArea_id, #rightButtonArea_id {
-    width: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 2vw;
-}
-
-#leftButtonArea_id {
-    padding-left: 2vw;
-    justify-content: left;
-}
-
-#rightButtonArea_id {
-    padding-right: 2vw;
-    justify-content: right;
-}
-
-.buttonArea {
-    height: 9vw;
-    aspect-ratio: 1/1;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    background: #2F4260;
-    color: white;
-}
-
-#startButton_id {
+.gameMenuStartButtons {
     width: 50%;
     background: #2A3546;
     font-family: "Bungee";
@@ -219,9 +249,4 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.buttonAreaIcons {
-    width: 80%;
-    aspect-ratio: 1/1;
 }

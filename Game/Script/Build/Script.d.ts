@@ -47,6 +47,15 @@ declare namespace DiceCup {
     function gameOver(): void;
 }
 declare namespace DiceCup {
+    class SubMenu {
+        private menu;
+        private id;
+        private title;
+        constructor(_menu: MenuPages, _id: string, _title: string);
+        createSubMenu(): void;
+    }
+}
+declare namespace DiceCup {
     class Valuation {
         scoringCategory: ScoringCategory;
         dices: Dice[];
@@ -117,7 +126,9 @@ declare namespace DiceCup {
         main = "mainMenu_id",
         singleplayer = "singleplayerMenu_id",
         multiplayer = "multiplayerMenu_id",
-        options = "optionsMenu_id"
+        multiplayerLobby = "multiplayerLobby_id",
+        options = "optionsMenu_id",
+        help = "helpMenu_id"
     }
 }
 declare namespace DiceCup {
@@ -142,10 +153,16 @@ declare namespace DiceCup {
     function hideMenu(): void;
 }
 declare namespace DiceCup {
+    function helpMenu(): void;
+}
+declare namespace DiceCup {
     function mainMenu(): void;
 }
 declare namespace DiceCup {
     function multiplayerMenu(): void;
+}
+declare namespace DiceCup {
+    function multiplayerServers(): void;
 }
 declare namespace DiceCup {
     function optionsMenu(): void;

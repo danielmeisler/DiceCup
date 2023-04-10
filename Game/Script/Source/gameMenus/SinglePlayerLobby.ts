@@ -4,20 +4,7 @@ namespace DiceCup {
     let botCounter: number = 0;
 
     export function singleplayerMenu(): void {
-        let spMenu: HTMLDivElement = document.createElement("div");
-        spMenu.id = MenuPages.singleplayer;
-        spMenu.classList.add("gameMenus");
-        spMenu.style.visibility = "hidden";
-        document.getElementById("gameMenu_id").appendChild(spMenu);
-
-        let spMenuTitle: HTMLSpanElement = document.createElement("span");
-        spMenuTitle.id = "singlePlayerMenuTitle_id";
-        spMenuTitle.innerHTML = "SINGLEPLAYER";
-        spMenu.appendChild(spMenuTitle);
-
-        let lobbyPortraits: HTMLDivElement = document.createElement("div");
-        lobbyPortraits.id = "lobbyPortraits_id";
-        spMenu.appendChild(lobbyPortraits);
+        new SubMenu(MenuPages.singleplayer, "singleplayer", "SINGLEPLAYER");
 
         createPlayerPortrait();
         createBotPortrait();
@@ -25,49 +12,27 @@ namespace DiceCup {
             createAddPortrait();
         }
 
-        let buttonArea: HTMLDivElement = document.createElement("div");
-        buttonArea.id = "buttonArea_id";
-        spMenu.appendChild(buttonArea);
-
-        let leftButtonArea: HTMLDivElement = document.createElement("div");
-        leftButtonArea.id = "leftButtonArea_id";
-        buttonArea.appendChild(leftButtonArea);
-
-        let rightButtonArea: HTMLDivElement = document.createElement("div");
-        rightButtonArea.id = "rightButtonArea_id";
-        buttonArea.appendChild(rightButtonArea);
-        
-        let returnButton: HTMLButtonElement = document.createElement("button");
-        returnButton.id = "returnButton_id";
-        returnButton.classList.add("buttonArea");
-        returnButton.classList.add("diceCupButtons");
-        leftButtonArea.appendChild(returnButton);
-
-        let returnIcon: HTMLImageElement = document.createElement("img");
-        returnIcon.classList.add("buttonAreaIcons");
-        returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
-        returnButton.appendChild(returnIcon);
-        returnButton.addEventListener("click", () => {
-            switchMenu(MenuPages.main);
-        });
-
         let settingsButton: HTMLButtonElement = document.createElement("button");
-        settingsButton.id = "settingsButton_id";
-        settingsButton.classList.add("buttonArea");
+        settingsButton.id = "singleplayerSettingsButton_id";
+        settingsButton.classList.add("gameMenuButtons");
         settingsButton.classList.add("diceCupButtons");
-        leftButtonArea.appendChild(settingsButton);
+        document.getElementById("singleplayerMenuLeftButtonArea_id").appendChild(settingsButton);
 
         let settingsIcon: HTMLImageElement = document.createElement("img");
-        settingsIcon.classList.add("buttonAreaIcons");
+        settingsIcon.classList.add("gameMenuButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
 
+        settingsButton.addEventListener("click", () => {
+        });
+
         let startButton: HTMLButtonElement = document.createElement("button");
-        startButton.id = "startButton_id";
-        startButton.classList.add("buttonArea");
+        startButton.id = "singleplayerStartButton_id";
+        startButton.classList.add("gameMenuStartButtons");
+        startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
         startButton.innerHTML = "START";
-        rightButtonArea.appendChild(startButton);
+        document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
 
         startButton.addEventListener("click", () => {
             hideMenu();
@@ -109,7 +74,7 @@ namespace DiceCup {
         playerContainer.id = "playerContainer_id";
         playerContainer.classList.add("lobbyContainer");
         playerContainer.style.order = "0";
-        document.getElementById("lobbyPortraits_id").appendChild(playerContainer);
+        document.getElementById("singleplayerMenuContent_id").appendChild(playerContainer);
 
         let playerDiv: HTMLButtonElement = document.createElement("button");
         playerDiv.id = "playerPortrait_id";
@@ -141,7 +106,7 @@ namespace DiceCup {
         botContainer.classList.add("botContainer");
         botContainer.classList.add("lobbyContainer");
         botContainer.style.order = "1";
-        document.getElementById("lobbyPortraits_id").appendChild(botContainer);
+        document.getElementById("singleplayerMenuContent_id").appendChild(botContainer);
 
         let botDiv: HTMLButtonElement = document.createElement("button");
         botDiv.id = "botPortrait_id_" + botCounter;
@@ -154,12 +119,12 @@ namespace DiceCup {
         if (botCounter > 0) {
             let botRemove: HTMLButtonElement = document.createElement("button");
             botRemove.id = "botRemove_id_" + botCounter;
-            botRemove.classList.add("botRemove");
+            botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
             botRemove.addEventListener("click", handleRemoveBot);
 
             let botRemoveIcon: HTMLImageElement = document.createElement("img");
-            botRemoveIcon.classList.add("botRemoveIcons");
+            botRemoveIcon.classList.add("removeButtonIcons");
             botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
             botRemove.appendChild(botRemoveIcon);
         }
@@ -171,7 +136,7 @@ namespace DiceCup {
 
         let botName: HTMLInputElement = document.createElement("input");
         botName.id = "botName_id_" + botCounter;
-        botName.placeholder = "Agent_" + botCounter;
+        botName.placeholder = "Agent_" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
 
@@ -228,7 +193,7 @@ namespace DiceCup {
         addContainer.classList.add("addContainer");
         addContainer.classList.add("lobbyContainer");
         addContainer.style.order = "2";
-        document.getElementById("lobbyPortraits_id").appendChild(addContainer);
+        document.getElementById("singleplayerMenuContent_id").appendChild(addContainer);
 
         let addPlayerDiv: HTMLButtonElement = document.createElement("button");
         addPlayerDiv.classList.add("lobbyPortrait");
@@ -251,8 +216,8 @@ namespace DiceCup {
     }
 
     function handleRemoveBot(_event: Event): void {
-            botCounter--;
-            this.parentElement.parentElement.remove();
-            createAddPortrait();
+        botCounter--;
+        this.parentElement.parentElement.remove();
+        createAddPortrait();
     }
 }

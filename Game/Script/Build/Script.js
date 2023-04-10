@@ -257,6 +257,62 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    class SubMenu {
+        menu;
+        id;
+        title;
+        constructor(_menu, _id, _title) {
+            this.menu = _menu;
+            this.id = _id;
+            this.title = _title;
+            this.createSubMenu();
+        }
+        createSubMenu() {
+            let background = document.createElement("div");
+            background.id = this.menu;
+            background.classList.add("gameMenus");
+            background.classList.add("subGameMenus");
+            background.style.visibility = "hidden";
+            document.getElementById("gameMenu_id").appendChild(background);
+            let title = document.createElement("span");
+            title.id = this.id + "MenuTitle_id";
+            title.classList.add("gameMenuTitles");
+            title.innerHTML = this.title;
+            background.appendChild(title);
+            let content = document.createElement("div");
+            content.id = this.id + "MenuContent_id";
+            content.classList.add("gameMenuContent");
+            background.appendChild(content);
+            let buttonArea = document.createElement("div");
+            buttonArea.id = this.id + "MenuButtons_id";
+            buttonArea.classList.add("gameMenuButtonArea");
+            background.appendChild(buttonArea);
+            let leftButtonArea = document.createElement("div");
+            leftButtonArea.id = this.id + "MenuLeftButtonArea_id";
+            leftButtonArea.classList.add("gameMenuLeftButtonArea");
+            buttonArea.appendChild(leftButtonArea);
+            let rightButtonArea = document.createElement("div");
+            rightButtonArea.id = this.id + "MenuRightButtonArea_id";
+            rightButtonArea.classList.add("gameMenuRightButtonArea");
+            buttonArea.appendChild(rightButtonArea);
+            let returnButton = document.createElement("button");
+            returnButton.id = this.id + "MenuReturnButton_id";
+            returnButton.classList.add("gameMenuButtons");
+            returnButton.classList.add("diceCupButtons");
+            leftButtonArea.appendChild(returnButton);
+            let returnIcon = document.createElement("img");
+            returnIcon.classList.add("gameMenuButtonsIcons");
+            returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
+            returnButton.appendChild(returnIcon);
+            returnButton.addEventListener("click", () => {
+                DiceCup.switchMenu(DiceCup.MenuPages.main);
+            });
+        }
+    }
+    DiceCup.SubMenu = SubMenu;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     class Valuation {
         scoringCategory;
         dices;
@@ -846,7 +902,9 @@ var DiceCup;
         MenuPages["main"] = "mainMenu_id";
         MenuPages["singleplayer"] = "singleplayerMenu_id";
         MenuPages["multiplayer"] = "multiplayerMenu_id";
+        MenuPages["multiplayerLobby"] = "multiplayerLobby_id";
         MenuPages["options"] = "optionsMenu_id";
+        MenuPages["help"] = "helpMenu_id";
     })(MenuPages = DiceCup.MenuPages || (DiceCup.MenuPages = {}));
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -873,8 +931,10 @@ var DiceCup;
     function initMenu() {
         DiceCup.mainMenu();
         DiceCup.singleplayerMenu();
+        DiceCup.multiplayerServers();
         DiceCup.multiplayerMenu();
         DiceCup.optionsMenu();
+        DiceCup.helpMenu();
         switchMenu(DiceCup.MenuPages.main);
     }
     DiceCup.initMenu = initMenu;
@@ -891,6 +951,13 @@ var DiceCup;
         }
     }
     DiceCup.hideMenu = hideMenu;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function helpMenu() {
+        new DiceCup.SubMenu(DiceCup.MenuPages.help, "help", "HOW TO PLAY");
+    }
+    DiceCup.helpMenu = helpMenu;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -914,7 +981,7 @@ var DiceCup;
         let buttonDiv = document.createElement("div");
         buttonDiv.id = "buttonContainer_id";
         menuDiv.appendChild(buttonDiv);
-        let menuButtonIds = ["play_id", "help_id", "shop_id", "options_id"];
+        let menuButtonIds = ["play_id", "shop_id", "help_id", "options_id"];
         let menuButtonIconPaths = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/shop.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
         for (let i = 0; i < 4; i++) {
             let menuButtons = document.createElement("button");
@@ -930,12 +997,12 @@ var DiceCup;
         document.getElementById("play_id").addEventListener("click", () => {
             DiceCup.switchMenu(DiceCup.MenuPages.singleplayer);
         });
-        // document.getElementById("shop_id").addEventListener("click", () => {
-        //     switchMenu(MenuPages.main, MenuPages.shop);
-        // });
-        // document.getElementById("help_id").addEventListener("click", () => {
-        //     switchMenu(MenuPages.main, MenuPages.help);
-        // });
+        document.getElementById("shop_id").addEventListener("click", () => {
+            DiceCup.switchMenu(DiceCup.MenuPages.multiplayer);
+        });
+        document.getElementById("help_id").addEventListener("click", () => {
+            DiceCup.switchMenu(DiceCup.MenuPages.help);
+        });
         document.getElementById("options_id").addEventListener("click", () => {
             DiceCup.switchMenu(DiceCup.MenuPages.options);
         });
@@ -944,23 +1011,141 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    let playerCounter = 0;
     function multiplayerMenu() {
-        let mpMenu = document.createElement("div");
-        mpMenu.id = DiceCup.MenuPages.multiplayer;
-        mpMenu.classList.add("gameMenus");
-        mpMenu.style.visibility = "hidden";
-        document.getElementById("gameMenu_id").appendChild(mpMenu);
+        new DiceCup.SubMenu(DiceCup.MenuPages.multiplayerLobby, "multiplayerLobby", "LOBBY");
+        document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
+            DiceCup.switchMenu(DiceCup.MenuPages.multiplayer);
+        });
+        let settingsButton = document.createElement("button");
+        settingsButton.id = "multiplayerLobbySettingsButton_id";
+        settingsButton.classList.add("gameMenuButtons");
+        settingsButton.classList.add("diceCupButtons");
+        document.getElementById("multiplayerLobbyMenuLeftButtonArea_id").appendChild(settingsButton);
+        let settingsIcon = document.createElement("img");
+        settingsIcon.classList.add("gameMenuButtonsIcons");
+        settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
+        settingsButton.appendChild(settingsIcon);
+        settingsButton.addEventListener("click", () => {
+        });
+        let startButton = document.createElement("button");
+        startButton.id = "multiplayerLobbyStartButton_id";
+        startButton.classList.add("gameMenuStartButtons");
+        startButton.classList.add("gameMenuButtons");
+        startButton.classList.add("diceCupButtons");
+        startButton.innerHTML = "START";
+        document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
+        startButton.addEventListener("click", () => {
+            DiceCup.hideMenu();
+            // createGameSettings();
+        });
+        createPlayerPortrait();
+        for (let i = 0; i < 5; i++) {
+            createWaitPortrait();
+        }
     }
     DiceCup.multiplayerMenu = multiplayerMenu;
+    function createPlayerPortrait() {
+        let playerContainer = document.createElement("div");
+        playerContainer.id = "playerContainer_id";
+        playerContainer.classList.add("lobbyContainer");
+        playerContainer.classList.add("waitContainer");
+        playerContainer.style.order = "0";
+        document.getElementById("multiplayerLobbyMenuContent_id").appendChild(playerContainer);
+        let playerDiv = document.createElement("button");
+        playerDiv.id = "playerPortrait_id";
+        playerDiv.classList.add("lobbyPortrait");
+        playerDiv.classList.add("lobbyPortrait_active");
+        playerDiv.classList.add("diceCupButtons");
+        playerContainer.appendChild(playerDiv);
+        if (playerCounter > 0) {
+            let playerRemove = document.createElement("button");
+            playerRemove.id = "playerRemove_id_" + playerCounter;
+            playerRemove.classList.add("removeButton");
+            playerDiv.appendChild(playerRemove);
+            // playerRemove.addEventListener("click", );
+            let botRemoveIcon = document.createElement("img");
+            botRemoveIcon.classList.add("removeButtonIcons");
+            botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
+            playerRemove.appendChild(botRemoveIcon);
+        }
+        let playerIcons = document.createElement("img");
+        playerIcons.classList.add("lobbyPortraitIcons");
+        playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
+        playerDiv.appendChild(playerIcons);
+        let playerName = document.createElement("input");
+        playerName.id = "playerName_id";
+        playerName.classList.add("nameInputs");
+        playerName.placeholder = "Player";
+        playerContainer.appendChild(playerName);
+        playerCounter++;
+    }
+    function createWaitPortrait() {
+        let waitContainer = document.createElement("div");
+        waitContainer.classList.add("waitContainer");
+        waitContainer.classList.add("lobbyContainer");
+        waitContainer.style.order = "2";
+        document.getElementById("multiplayerLobbyMenuContent_id").appendChild(waitContainer);
+        let waitPlayerDiv = document.createElement("button");
+        waitPlayerDiv.classList.add("lobbyPortrait");
+        waitPlayerDiv.classList.add("lobbyPortrait_inactive");
+        waitPlayerDiv.classList.add("diceCupButtons");
+        waitContainer.appendChild(waitPlayerDiv);
+        let addIcons = document.createElement("img");
+        addIcons.classList.add("lobbyPortraitIcons_inactive");
+        addIcons.src = "Game/Assets/images/menuButtons/player.svg";
+        waitPlayerDiv.appendChild(addIcons);
+        let playerName = document.createElement("div");
+        playerName.id = "playerName_id";
+        playerName.classList.add("nameInputs");
+        playerName.classList.add("lobbyPortrait_inactive");
+        playerName.innerHTML = "Waiting...";
+        waitContainer.appendChild(playerName);
+    }
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function multiplayerServers() {
+        new DiceCup.SubMenu(DiceCup.MenuPages.multiplayer, "multiplayer", "MULTIPLAYER");
+        let renewButton = document.createElement("button");
+        renewButton.id = "multiplayerRenewButton_id";
+        renewButton.classList.add("gameMenuButtons");
+        renewButton.classList.add("diceCupButtons");
+        document.getElementById("multiplayerMenuLeftButtonArea_id").appendChild(renewButton);
+        let renewIcon = document.createElement("img");
+        renewIcon.classList.add("gameMenuButtonsIcons");
+        renewIcon.src = "Game/Assets/images/menuButtons/renew.svg";
+        renewButton.appendChild(renewIcon);
+        renewButton.addEventListener("click", () => {
+            DiceCup.hideMenu();
+        });
+        let createButton = document.createElement("button");
+        createButton.id = "multiplayerCreateButton_id";
+        createButton.classList.add("gameMenuStartButtons");
+        createButton.classList.add("gameMenuButtons");
+        createButton.classList.add("diceCupButtons");
+        createButton.innerHTML = "CREATE";
+        document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
+        createButton.addEventListener("click", () => {
+            DiceCup.switchMenu(DiceCup.MenuPages.multiplayerLobby);
+        });
+        let joinButton = document.createElement("button");
+        joinButton.id = "multiplayerJoinButton_id";
+        joinButton.classList.add("gameMenuStartButtons");
+        joinButton.classList.add("gameMenuButtons");
+        joinButton.classList.add("diceCupButtons");
+        joinButton.innerHTML = "JOIN";
+        document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
+        joinButton.addEventListener("click", () => {
+            // createGameSettings();
+        });
+    }
+    DiceCup.multiplayerServers = multiplayerServers;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
     function optionsMenu() {
-        let optionMenu = document.createElement("div");
-        optionMenu.id = DiceCup.MenuPages.options;
-        optionMenu.classList.add("gameMenus");
-        optionMenu.style.visibility = "hidden";
-        document.getElementById("gameMenu_id").appendChild(optionMenu);
+        new DiceCup.SubMenu(DiceCup.MenuPages.options, "options", "OPTIONS");
     }
     DiceCup.optionsMenu = optionsMenu;
 })(DiceCup || (DiceCup = {}));
@@ -969,59 +1154,30 @@ var DiceCup;
     let botSettings;
     let botCounter = 0;
     function singleplayerMenu() {
-        let spMenu = document.createElement("div");
-        spMenu.id = DiceCup.MenuPages.singleplayer;
-        spMenu.classList.add("gameMenus");
-        spMenu.style.visibility = "hidden";
-        document.getElementById("gameMenu_id").appendChild(spMenu);
-        let spMenuTitle = document.createElement("span");
-        spMenuTitle.id = "singlePlayerMenuTitle_id";
-        spMenuTitle.innerHTML = "SINGLEPLAYER";
-        spMenu.appendChild(spMenuTitle);
-        let lobbyPortraits = document.createElement("div");
-        lobbyPortraits.id = "lobbyPortraits_id";
-        spMenu.appendChild(lobbyPortraits);
+        new DiceCup.SubMenu(DiceCup.MenuPages.singleplayer, "singleplayer", "SINGLEPLAYER");
         createPlayerPortrait();
         createBotPortrait();
         for (let index = 0; index < 4; index++) {
             createAddPortrait();
         }
-        let buttonArea = document.createElement("div");
-        buttonArea.id = "buttonArea_id";
-        spMenu.appendChild(buttonArea);
-        let leftButtonArea = document.createElement("div");
-        leftButtonArea.id = "leftButtonArea_id";
-        buttonArea.appendChild(leftButtonArea);
-        let rightButtonArea = document.createElement("div");
-        rightButtonArea.id = "rightButtonArea_id";
-        buttonArea.appendChild(rightButtonArea);
-        let returnButton = document.createElement("button");
-        returnButton.id = "returnButton_id";
-        returnButton.classList.add("buttonArea");
-        returnButton.classList.add("diceCupButtons");
-        leftButtonArea.appendChild(returnButton);
-        let returnIcon = document.createElement("img");
-        returnIcon.classList.add("buttonAreaIcons");
-        returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
-        returnButton.appendChild(returnIcon);
-        returnButton.addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.main);
-        });
         let settingsButton = document.createElement("button");
-        settingsButton.id = "settingsButton_id";
-        settingsButton.classList.add("buttonArea");
+        settingsButton.id = "singleplayerSettingsButton_id";
+        settingsButton.classList.add("gameMenuButtons");
         settingsButton.classList.add("diceCupButtons");
-        leftButtonArea.appendChild(settingsButton);
+        document.getElementById("singleplayerMenuLeftButtonArea_id").appendChild(settingsButton);
         let settingsIcon = document.createElement("img");
-        settingsIcon.classList.add("buttonAreaIcons");
+        settingsIcon.classList.add("gameMenuButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
+        settingsButton.addEventListener("click", () => {
+        });
         let startButton = document.createElement("button");
-        startButton.id = "startButton_id";
-        startButton.classList.add("buttonArea");
+        startButton.id = "singleplayerStartButton_id";
+        startButton.classList.add("gameMenuStartButtons");
+        startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
         startButton.innerHTML = "START";
-        rightButtonArea.appendChild(startButton);
+        document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
         startButton.addEventListener("click", () => {
             DiceCup.hideMenu();
             createGameSettings();
@@ -1059,7 +1215,7 @@ var DiceCup;
         playerContainer.id = "playerContainer_id";
         playerContainer.classList.add("lobbyContainer");
         playerContainer.style.order = "0";
-        document.getElementById("lobbyPortraits_id").appendChild(playerContainer);
+        document.getElementById("singleplayerMenuContent_id").appendChild(playerContainer);
         let playerDiv = document.createElement("button");
         playerDiv.id = "playerPortrait_id";
         playerDiv.classList.add("lobbyPortrait");
@@ -1086,7 +1242,7 @@ var DiceCup;
         botContainer.classList.add("botContainer");
         botContainer.classList.add("lobbyContainer");
         botContainer.style.order = "1";
-        document.getElementById("lobbyPortraits_id").appendChild(botContainer);
+        document.getElementById("singleplayerMenuContent_id").appendChild(botContainer);
         let botDiv = document.createElement("button");
         botDiv.id = "botPortrait_id_" + botCounter;
         botDiv.classList.add("lobbyPortrait");
@@ -1097,11 +1253,11 @@ var DiceCup;
         if (botCounter > 0) {
             let botRemove = document.createElement("button");
             botRemove.id = "botRemove_id_" + botCounter;
-            botRemove.classList.add("botRemove");
+            botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
             botRemove.addEventListener("click", handleRemoveBot);
             let botRemoveIcon = document.createElement("img");
-            botRemoveIcon.classList.add("botRemoveIcons");
+            botRemoveIcon.classList.add("removeButtonIcons");
             botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
             botRemove.appendChild(botRemoveIcon);
         }
@@ -1111,7 +1267,7 @@ var DiceCup;
         botDiv.appendChild(botIcons);
         let botName = document.createElement("input");
         botName.id = "botName_id_" + botCounter;
-        botName.placeholder = "Agent_" + botCounter;
+        botName.placeholder = "Agent_" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
         let difficultySwitch = document.createElement("div");
@@ -1161,7 +1317,7 @@ var DiceCup;
         addContainer.classList.add("addContainer");
         addContainer.classList.add("lobbyContainer");
         addContainer.style.order = "2";
-        document.getElementById("lobbyPortraits_id").appendChild(addContainer);
+        document.getElementById("singleplayerMenuContent_id").appendChild(addContainer);
         let addPlayerDiv = document.createElement("button");
         addPlayerDiv.classList.add("lobbyPortrait");
         addPlayerDiv.classList.add("lobbyPortrait_inactive");
