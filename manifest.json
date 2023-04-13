@@ -8,8 +8,8 @@
     "orientation": "landscape",
     "icons": [
         {
-        "src": "Game/Assets/images/icons/maskable_icon.png",
-        "sizes": "538x538",
+        "src": "Game/Assets/images/icons/dc_icon.png",
+        "sizes": "512x512",
         "purpose": "any maskable"
         }
     ]
