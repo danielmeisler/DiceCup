@@ -10,10 +10,6 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
-    let dices: Dice[];
-    let firstRound: boolean;
-    let highscore: number;
-    let roundCounter: number;
 }
 declare namespace DiceCup {
     class Bot {
@@ -38,20 +34,11 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
-    let gameSettings: SinglePlayerSettingsDao;
-    function changeGameState(_gameState: GameState): void;
-    function initViewport(): Promise<void>;
-    function initGame(): void;
-    function rollDices(): void;
-    function update(_event: Event): void;
-    function gameOver(): void;
-}
-declare namespace DiceCup {
     class SubMenu {
         private menu;
         private id;
         private title;
-        constructor(_menu: MenuPages, _id: string, _title: string);
+        constructor(_menu: MenuPage, _id: string, _title: string);
         createSubMenu(): void;
     }
 }
@@ -90,7 +77,7 @@ declare namespace DiceCup {
     function hideSummary(): void;
 }
 declare namespace DiceCup {
-    function initTransition(): void;
+    function startTransition(): void;
 }
 declare namespace DiceCup {
     enum BotDifficulty {
@@ -122,7 +109,7 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
-    enum MenuPages {
+    enum MenuPage {
         main = "mainMenu_id",
         singleplayer = "singleplayerMenu_id",
         multiplayer = "multiplayerMenu_id",
@@ -148,8 +135,22 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    let dices: Dice[];
+    let firstRound: boolean;
+    let highscore: number;
+    let roundCounter: number;
+    let gameSettings: SinglePlayerSettingsDao;
+    function initViewport(): Promise<void>;
+    function round(): void;
+    function update(_event: Event): void;
+    function gameOver(): void;
+}
+declare namespace DiceCup {
+    function changeGameState(_gameState: GameState): void;
+}
+declare namespace DiceCup {
     function initMenu(): void;
-    function switchMenu(_toMenuID: MenuPages): void;
+    function switchMenu(_toMenuID: MenuPage): void;
     function hideMenu(): void;
 }
 declare namespace DiceCup {

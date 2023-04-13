@@ -1,6 +1,6 @@
 namespace DiceCup {
 
-    let menuIds: string[] = Object.values(MenuPages);
+    let menuIds: string[] = Object.values(MenuPage);
 
     export function initMenu(): void {
         mainMenu();
@@ -10,17 +10,17 @@ namespace DiceCup {
         optionsMenu();
         helpMenu();
         
-        switchMenu(MenuPages.main);
+        switchMenu(MenuPage.main);
     }
 
-    export function switchMenu(_toMenuID: MenuPages ): void {
+    export function switchMenu(_toMenuID: MenuPage ): void {
         hideMenu();
         document.getElementById(_toMenuID).style.zIndex = "10";
         document.getElementById(_toMenuID).style.visibility = "visible"; 
     }
 
     export function hideMenu(): void {
-        for (let index = 0; index < Object.values(MenuPages).length; index++) {
+        for (let index = 0; index < Object.values(MenuPage).length; index++) {
             document.getElementById(menuIds[index]).style.visibility = "hidden"; 
             document.getElementById(menuIds[index]).style.zIndex = "0";
         }

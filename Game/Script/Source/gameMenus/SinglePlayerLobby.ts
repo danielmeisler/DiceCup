@@ -4,7 +4,7 @@ namespace DiceCup {
     let botCounter: number = 0;
 
     export function singleplayerMenu(): void {
-        new SubMenu(MenuPages.singleplayer, "singleplayer", "SINGLEPLAYER");
+        new SubMenu(MenuPage.singleplayer, "singleplayer", "SINGLEPLAYER");
 
         createPlayerPortrait();
         createBotPortrait();
@@ -19,7 +19,7 @@ namespace DiceCup {
         document.getElementById("singleplayerMenuLeftButtonArea_id").appendChild(settingsButton);
 
         let settingsIcon: HTMLImageElement = document.createElement("img");
-        settingsIcon.classList.add("gameMenuButtonsIcons");
+        settingsIcon.classList.add("diceCupButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
 

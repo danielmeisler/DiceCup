@@ -32,13 +32,13 @@ namespace DiceCup {
         placementsBottomArea.appendChild(replayButton);
 
         let replayButtonImage: HTMLImageElement = document.createElement("img");
-        replayButtonImage.classList.add("buttonAreaIcons");
+        replayButtonImage.classList.add("diceCupButtonsIcons");
         replayButtonImage.src = "Game/Assets/images/menuButtons/renew.svg";
         replayButton.appendChild(replayButtonImage);
 
         replayButton.addEventListener("click", () => {
             gameOver();
-            switchMenu(MenuPages.singleplayer);
+            switchMenu(MenuPage.singleplayer);
         });
 
         let placementPhrase: HTMLSpanElement = document.createElement("span");
@@ -51,14 +51,16 @@ namespace DiceCup {
         placementsBottomArea.appendChild(nextButton);
 
         let nextButtonImage: HTMLImageElement = document.createElement("img");
-        nextButtonImage.classList.add("buttonAreaIcons");
+        nextButtonImage.classList.add("diceCupButtonsIcons");
         nextButtonImage.src = "Game/Assets/images/menuButtons/play.svg";
         nextButton.appendChild(nextButtonImage);
 
         nextButton.addEventListener("click", () => {
             gameOver();
-            switchMenu(MenuPages.main);
+            switchMenu(MenuPage.main);
         });
+
+        visibility("hidden");
     }
 
     function createPlacements(): void {

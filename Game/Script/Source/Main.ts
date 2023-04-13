@@ -5,10 +5,6 @@ namespace DiceCup {
   export let viewport: ƒ.Viewport;
 
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
-  export let dices: Dice[] = [];
-  export let firstRound: boolean = true;
-  export let highscore: number = 0;
-  export let roundCounter: number;
 
   function start(_event: CustomEvent): void {
     if ("serviceWorker" in navigator) {

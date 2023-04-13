@@ -1,53 +1,50 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
-    let firstPhrase: string[] = ["G", "a", "m", "e", "&nbsp", "S", "t", "a", "r", "t", "s"];
-    let countDown: string[] = ["&nbsp3", "&nbsp2", "&nbsp1", "&nbspGO!"];
-    let transitionCounter: number;
+    let counter: number = 0;
+    let shortTime: number = 1000;
+    let longTime: number = 2000;
 
-    export function initTransition(): void {
+    export function startTransition(): void {
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
         document.getElementById("DiceCup").appendChild(container);
 
-        transitionCounter = -1;
-        transition();
+        let phrase: string[] = ["Round " + roundCounter, "3", "2", "1", "GO!"];
+        transition(phrase);
     }
 
-    function transition(): void {
-        if (transitionCounter == -1) {
-            for (let i = 0; i < firstPhrase.length; i++) {
-                let text: HTMLSpanElement = document.createElement("span");
-                text.id = "startTransitionText_id_" + i;
-                text.style.setProperty("--i", i.toString())
-                text.innerHTML = firstPhrase[i];
-                document.getElementById("startTransitionContainer").appendChild(text);
-            }
-            transitionCounter++;
-            ƒ.Time.game.setTimer(3000, 1, () => { transition() });
-        } else {
-            let id: number = firstPhrase.length + transitionCounter;
-            if (transitionCounter == 0) {
-                for (let i = 0; i < firstPhrase.length; i++) {
-                    document.getElementById("startTransitionText_id_" + i).remove();
+    function transition(_phrase: string[]): void {
+        if (document.getElementById("startTransitionText_id_0")) {
+            while (document.getElementById("startTransitionContainer").firstChild) {
+                document.getElementById("startTransitionContainer").removeChild(document.getElementById("startTransitionContainer").lastChild);
+              }
+        }
+
+        if (counter < _phrase.length) {
+                for (let i = 0; i < _phrase[counter].length; i++) {
+                    let text: HTMLSpanElement = document.createElement("span");
+                    text.id = "startTransitionText_id_" + i;
+                    text.style.setProperty("--i", i.toString())
+                    if (_phrase[counter][i] == " ") {
+                        text.innerHTML = "&nbsp";
+                    } else {
+                        text.innerHTML = _phrase[counter][i];
+                    }
+                    document.getElementById("startTransitionContainer").appendChild(text);
                 }
-            } else {
-                let lastId: number = id - 1;
-                document.getElementById("startTransitionText_id_" + lastId).innerHTML = "";
-            }
-            let text: HTMLSpanElement = document.createElement("span");
-            text.id = "startTransitionText_id_" + id;
-            text.style.setProperty("--i", transitionCounter.toString())
-            text.innerHTML = countDown[transitionCounter];
-            document.getElementById("startTransitionContainer").appendChild(text);
-            transitionCounter++;
-            if (transitionCounter == countDown.length + 1) {
-                document.getElementById("startTransitionContainer").remove();
-                changeGameState(GameState.counting);
-            } else {
-                ƒ.Time.game.setTimer(1000, 1, () => { transition() });
-            }
-            
+                counter++;
+                if (_phrase[counter - 1].length <= 3) {
+                    ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
+                } else {
+                    ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase) });
+                }
+
+        } else {
+            counter = 0;
+            roundCounter++;
+            document.getElementById("startTransitionContainer").remove();
+            changeGameState(GameState.counting);
         }
     }
 

@@ -1,11 +1,11 @@
 namespace DiceCup{
     export class SubMenu {
 
-        private menu: MenuPages;
+        private menu: MenuPage;
         private id: string;
         private title: string;
     
-        constructor(_menu: MenuPages, _id: string, _title: string) {
+        constructor(_menu: MenuPage, _id: string, _title: string) {
           this.menu = _menu;
           this.id = _id;
           this.title = _title;
@@ -53,11 +53,11 @@ namespace DiceCup{
             leftButtonArea.appendChild(returnButton);
     
             let returnIcon: HTMLImageElement = document.createElement("img");
-            returnIcon.classList.add("gameMenuButtonsIcons");
+            returnIcon.classList.add("diceCupButtonsIcons");
             returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
             returnButton.appendChild(returnIcon);
             returnButton.addEventListener("click", () => {
-                switchMenu(MenuPages.main);
+                switchMenu(MenuPage.main);
             });
         }
     }

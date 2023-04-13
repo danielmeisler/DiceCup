@@ -8,7 +8,7 @@ namespace DiceCup {
         document.getElementById("DiceCup").appendChild(gameMenuDiv);
 
         let menuDiv: HTMLDivElement = document.createElement("div");
-        menuDiv.id = MenuPages.main;
+        menuDiv.id = MenuPage.main;
         menuDiv.classList.add("gameMenus");
         gameMenuDiv.appendChild(menuDiv);
 
@@ -42,20 +42,20 @@ namespace DiceCup {
         }
 
         document.getElementById("play_id").addEventListener("click", () => {
-            switchMenu(MenuPages.singleplayer);
+            switchMenu(MenuPage.singleplayer);
         });
 
         document.getElementById("shop_id").addEventListener("click", () => {
-            switchMenu(MenuPages.multiplayer);
+            switchMenu(MenuPage.multiplayer);
 
         });
 
         document.getElementById("help_id").addEventListener("click", () => {
-            switchMenu(MenuPages.help);
+            switchMenu(MenuPage.help);
         });
 
         document.getElementById("options_id").addEventListener("click", () => {
-            switchMenu(MenuPages.options);
+            switchMenu(MenuPage.options);
         });
 
     }

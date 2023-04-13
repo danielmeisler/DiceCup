@@ -41,9 +41,6 @@ var DiceCup;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
     document.addEventListener("interactiveViewportStarted", start);
-    DiceCup.dices = [];
-    DiceCup.firstRound = true;
-    DiceCup.highscore = 0;
     function start(_event) {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("../../serviceWorker.js");
@@ -122,141 +119,6 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    var ƒ = FudgeCore;
-    let bots = [];
-    function changeGameState(_gameState) {
-        switch (_gameState) {
-            case DiceCup.GameState.menu:
-                DiceCup.switchMenu(DiceCup.MenuPages.main);
-                break;
-            case DiceCup.GameState.init:
-                DiceCup.initHud();
-                DiceCup.initCategories();
-                DiceCup.initSummary();
-                initViewport();
-                DiceCup.initTransition();
-                DiceCup.initPlacements();
-                break;
-            case DiceCup.GameState.ready:
-                DiceCup.initTransition();
-                break;
-            case DiceCup.GameState.counting:
-                // showSummary();
-                initGame();
-                break;
-            case DiceCup.GameState.choosing:
-                DiceCup.showCategories();
-                break;
-            case DiceCup.GameState.validating:
-                // validateRound();
-                break;
-            case DiceCup.GameState.summary:
-                DiceCup.showSummary();
-                // updatePlacements()
-                // showPlacements();
-                break;
-            case DiceCup.GameState.placement:
-                DiceCup.updatePlacements();
-                DiceCup.showPlacements();
-                break;
-        }
-    }
-    DiceCup.changeGameState = changeGameState;
-    async function initViewport() {
-        DiceCup.viewport.camera.mtxPivot.translateZ(10);
-        DiceCup.viewport.camera.mtxPivot.rotateY(180);
-        DiceCup.viewport.camera.mtxPivot.translateX(1);
-        DiceCup.viewport.camera.mtxPivot.translateY(1);
-        let graph = DiceCup.viewport.getBranch();
-        let dice = graph.getChildrenByName("Dice")[0];
-        console.log(dice.mtxLocal.translation);
-    }
-    DiceCup.initViewport = initViewport;
-    function createBots(_bots) {
-        bots = [];
-        for (let index = 0; index < _bots.length; index++) {
-            bots[index] = new DiceCup.Bot(_bots[index].botName, _bots[index].difficulty, DiceCup.dices);
-        }
-        return bots;
-    }
-    function initGame() {
-        console.clear();
-        if (DiceCup.firstRound == true) {
-            createBots(DiceCup.gameSettings.bot);
-            let gameDiv = document.createElement("div");
-            gameDiv.id = "rollingDiv_id";
-            document.getElementById("game").appendChild(gameDiv);
-            DiceCup.firstRound = false;
-        }
-        else {
-            for (let i = 0; i < 12; i++) {
-                document.getElementById("diceContainer_id_" + i).remove();
-            }
-        }
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-        // initCategories();
-        DiceCup.dices = [];
-        for (let i = 0; i < 6; i++) {
-            DiceCup.dices.push(new DiceCup.Dice(i));
-            DiceCup.dices.push(new DiceCup.Dice(i));
-        }
-        for (let i = 0; i < 12; i++) {
-            let diceDiv = document.createElement("div");
-            diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer_id_" + i;
-            diceDiv.classList.add("diceCategory_" + DiceCup.DiceColor[DiceCup.dices[i].color]);
-            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
-            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-            document.getElementById("rollingDiv_id").appendChild(diceDiv);
-            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        }
-        for (let index = 0; index < bots.length; index++) {
-            bots[index].chooseDifficulty();
-        }
-        console.log("Augen auf ...");
-        ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(DiceCup.GameState.choosing); });
-    }
-    DiceCup.initGame = initGame;
-    function rollDices() {
-        DiceCup.dices = [];
-        for (let i = 0; i < 6; i++) {
-            DiceCup.dices.push(new DiceCup.Dice(i));
-            DiceCup.dices.push(new DiceCup.Dice(i));
-        }
-        for (let i = 0; i < 12; i++) {
-            document.getElementById("diceContainer_id_" + i).remove();
-            let diceDiv = document.createElement("div");
-            diceDiv.classList.add("diceDiv");
-            diceDiv.classList.add("diceCategory_" + DiceCup.DiceColor[DiceCup.dices[i].color]);
-            diceDiv.id = "diceContainer_id_" + i;
-            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
-            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-            document.getElementById("rollingDiv_id").appendChild(diceDiv);
-        }
-        console.log("Augen auf ...");
-        ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(DiceCup.GameState.choosing); });
-    }
-    DiceCup.rollDices = rollDices;
-    function update(_event) {
-        // ƒ.Physics.simulate();  // if physics is included and used
-        DiceCup.viewport.draw();
-        //ƒ.AudioManager.default.update();
-    }
-    DiceCup.update = update;
-    function gameOver() {
-        DiceCup.firstRound = true;
-        while (document.getElementById("DiceCup").childNodes.length > 1) {
-            document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
-        }
-        while (document.getElementById("game").firstChild) {
-            document.getElementById("game").removeChild(document.getElementById("game").lastChild);
-        }
-    }
-    DiceCup.gameOver = gameOver;
-})(DiceCup || (DiceCup = {}));
-var DiceCup;
-(function (DiceCup) {
     class SubMenu {
         menu;
         id;
@@ -301,11 +163,11 @@ var DiceCup;
             returnButton.classList.add("diceCupButtons");
             leftButtonArea.appendChild(returnButton);
             let returnIcon = document.createElement("img");
-            returnIcon.classList.add("gameMenuButtonsIcons");
+            returnIcon.classList.add("diceCupButtonsIcons");
             returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
             returnButton.appendChild(returnIcon);
             returnButton.addEventListener("click", () => {
-                DiceCup.switchMenu(DiceCup.MenuPages.main);
+                DiceCup.switchMenu(DiceCup.MenuPage.main);
             });
         }
     }
@@ -526,7 +388,6 @@ var DiceCup;
         }
     }
     DiceCup.initHud = initHud;
-    // HIDE/SHOW HUD WENN WIEDER REIN ODER RAUS AUS DEM GAME
     function showHud() {
         for (let i = 0; i < 12; i++) {
             document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
@@ -567,12 +428,12 @@ var DiceCup;
         replayButton.classList.add("diceCupButtons");
         placementsBottomArea.appendChild(replayButton);
         let replayButtonImage = document.createElement("img");
-        replayButtonImage.classList.add("buttonAreaIcons");
+        replayButtonImage.classList.add("diceCupButtonsIcons");
         replayButtonImage.src = "Game/Assets/images/menuButtons/renew.svg";
         replayButton.appendChild(replayButtonImage);
         replayButton.addEventListener("click", () => {
             DiceCup.gameOver();
-            DiceCup.switchMenu(DiceCup.MenuPages.singleplayer);
+            DiceCup.switchMenu(DiceCup.MenuPage.singleplayer);
         });
         let placementPhrase = document.createElement("span");
         placementPhrase.id = "placementsPhrase_id";
@@ -582,13 +443,14 @@ var DiceCup;
         nextButton.classList.add("diceCupButtons");
         placementsBottomArea.appendChild(nextButton);
         let nextButtonImage = document.createElement("img");
-        nextButtonImage.classList.add("buttonAreaIcons");
+        nextButtonImage.classList.add("diceCupButtonsIcons");
         nextButtonImage.src = "Game/Assets/images/menuButtons/play.svg";
         nextButton.appendChild(nextButtonImage);
         nextButton.addEventListener("click", () => {
             DiceCup.gameOver();
-            DiceCup.switchMenu(DiceCup.MenuPages.main);
+            DiceCup.switchMenu(DiceCup.MenuPage.main);
         });
+        visibility("hidden");
     }
     DiceCup.initPlacements = initPlacements;
     function createPlacements() {
@@ -686,7 +548,6 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     async function initSummary() {
-        DiceCup.roundCounter = 0;
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
         background.id = "summaryBackground_id";
@@ -792,10 +653,8 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
-        if (DiceCup.roundCounter < 11) {
+        if (DiceCup.roundCounter <= 12) {
             DiceCup.changeGameState(DiceCup.GameState.ready);
-            DiceCup.roundCounter++;
-            console.log("Round: " + DiceCup.roundCounter + 1);
         }
         else {
             DiceCup.changeGameState(DiceCup.GameState.placement);
@@ -809,54 +668,50 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
-    let firstPhrase = ["G", "a", "m", "e", "&nbsp", "S", "t", "a", "r", "t", "s"];
-    let countDown = ["&nbsp3", "&nbsp2", "&nbsp1", "&nbspGO!"];
-    let transitionCounter;
-    function initTransition() {
+    let counter = 0;
+    let shortTime = 1000;
+    let longTime = 2000;
+    function startTransition() {
         let container = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
         document.getElementById("DiceCup").appendChild(container);
-        transitionCounter = -1;
-        transition();
+        let phrase = ["Round " + DiceCup.roundCounter, "3", "2", "1", "GO!"];
+        transition(phrase);
     }
-    DiceCup.initTransition = initTransition;
-    function transition() {
-        if (transitionCounter == -1) {
-            for (let i = 0; i < firstPhrase.length; i++) {
+    DiceCup.startTransition = startTransition;
+    function transition(_phrase) {
+        if (document.getElementById("startTransitionText_id_0")) {
+            while (document.getElementById("startTransitionContainer").firstChild) {
+                document.getElementById("startTransitionContainer").removeChild(document.getElementById("startTransitionContainer").lastChild);
+            }
+        }
+        if (counter < _phrase.length) {
+            for (let i = 0; i < _phrase[counter].length; i++) {
                 let text = document.createElement("span");
                 text.id = "startTransitionText_id_" + i;
                 text.style.setProperty("--i", i.toString());
-                text.innerHTML = firstPhrase[i];
+                if (_phrase[counter][i] == " ") {
+                    text.innerHTML = "&nbsp";
+                }
+                else {
+                    text.innerHTML = _phrase[counter][i];
+                }
                 document.getElementById("startTransitionContainer").appendChild(text);
             }
-            transitionCounter++;
-            ƒ.Time.game.setTimer(3000, 1, () => { transition(); });
+            counter++;
+            if (_phrase[counter - 1].length <= 3) {
+                ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase); });
+            }
+            else {
+                ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase); });
+            }
         }
         else {
-            let id = firstPhrase.length + transitionCounter;
-            if (transitionCounter == 0) {
-                for (let i = 0; i < firstPhrase.length; i++) {
-                    document.getElementById("startTransitionText_id_" + i).remove();
-                }
-            }
-            else {
-                let lastId = id - 1;
-                document.getElementById("startTransitionText_id_" + lastId).innerHTML = "";
-            }
-            let text = document.createElement("span");
-            text.id = "startTransitionText_id_" + id;
-            text.style.setProperty("--i", transitionCounter.toString());
-            text.innerHTML = countDown[transitionCounter];
-            document.getElementById("startTransitionContainer").appendChild(text);
-            transitionCounter++;
-            if (transitionCounter == countDown.length + 1) {
-                document.getElementById("startTransitionContainer").remove();
-                DiceCup.changeGameState(DiceCup.GameState.counting);
-            }
-            else {
-                ƒ.Time.game.setTimer(1000, 1, () => { transition(); });
-            }
+            counter = 0;
+            DiceCup.roundCounter++;
+            document.getElementById("startTransitionContainer").remove();
+            DiceCup.changeGameState(DiceCup.GameState.counting);
         }
     }
 })(DiceCup || (DiceCup = {}));
@@ -897,15 +752,15 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    let MenuPages;
-    (function (MenuPages) {
-        MenuPages["main"] = "mainMenu_id";
-        MenuPages["singleplayer"] = "singleplayerMenu_id";
-        MenuPages["multiplayer"] = "multiplayerMenu_id";
-        MenuPages["multiplayerLobby"] = "multiplayerLobby_id";
-        MenuPages["options"] = "optionsMenu_id";
-        MenuPages["help"] = "helpMenu_id";
-    })(MenuPages = DiceCup.MenuPages || (DiceCup.MenuPages = {}));
+    let MenuPage;
+    (function (MenuPage) {
+        MenuPage["main"] = "mainMenu_id";
+        MenuPage["singleplayer"] = "singleplayerMenu_id";
+        MenuPage["multiplayer"] = "multiplayerMenu_id";
+        MenuPage["multiplayerLobby"] = "multiplayerLobby_id";
+        MenuPage["options"] = "optionsMenu_id";
+        MenuPage["help"] = "helpMenu_id";
+    })(MenuPage = DiceCup.MenuPage || (DiceCup.MenuPage = {}));
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -927,7 +782,126 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    let menuIds = Object.values(DiceCup.MenuPages);
+    var ƒ = FudgeCore;
+    DiceCup.dices = [];
+    DiceCup.firstRound = true;
+    DiceCup.highscore = 0;
+    DiceCup.roundCounter = 1;
+    let bots = [];
+    async function initViewport() {
+        DiceCup.viewport.camera.mtxPivot.translateZ(10);
+        DiceCup.viewport.camera.mtxPivot.rotateY(180);
+        DiceCup.viewport.camera.mtxPivot.translateX(1);
+        DiceCup.viewport.camera.mtxPivot.translateY(1);
+        let graph = DiceCup.viewport.getBranch();
+        let dice = graph.getChildrenByName("Dice")[0];
+        console.log(dice.mtxLocal.translation);
+    }
+    DiceCup.initViewport = initViewport;
+    function createBots(_bots) {
+        bots = [];
+        for (let index = 0; index < _bots.length; index++) {
+            bots[index] = new DiceCup.Bot(_bots[index].botName, _bots[index].difficulty, DiceCup.dices);
+        }
+        return bots;
+    }
+    function round() {
+        console.clear();
+        if (DiceCup.firstRound == true) {
+            createBots(DiceCup.gameSettings.bot);
+            let gameDiv = document.createElement("div");
+            gameDiv.id = "rollingDiv_id";
+            document.getElementById("game").appendChild(gameDiv);
+            DiceCup.firstRound = false;
+        }
+        else {
+            for (let i = 0; i < 12; i++) {
+                document.getElementById("diceContainer_id_" + i).remove();
+            }
+        }
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
+        // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        // initCategories();
+        DiceCup.dices = [];
+        for (let i = 0; i < 6; i++) {
+            DiceCup.dices.push(new DiceCup.Dice(i));
+            DiceCup.dices.push(new DiceCup.Dice(i));
+        }
+        for (let i = 0; i < 12; i++) {
+            let diceDiv = document.createElement("div");
+            diceDiv.classList.add("diceDiv");
+            diceDiv.id = "diceContainer_id_" + i;
+            diceDiv.classList.add("diceCategory_" + DiceCup.DiceColor[DiceCup.dices[i].color]);
+            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
+            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
+            document.getElementById("rollingDiv_id").appendChild(diceDiv);
+            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        }
+        for (let index = 0; index < bots.length; index++) {
+            bots[index].chooseDifficulty();
+        }
+        console.log("Augen auf ...");
+        ƒ.Time.game.setTimer(3000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
+    }
+    DiceCup.round = round;
+    function update(_event) {
+        // ƒ.Physics.simulate();  // if physics is included and used
+        DiceCup.viewport.draw();
+        //ƒ.AudioManager.default.update();
+    }
+    DiceCup.update = update;
+    function gameOver() {
+        DiceCup.firstRound = true;
+        while (document.getElementById("DiceCup").childNodes.length > 1) {
+            document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
+        }
+        while (document.getElementById("game").firstChild) {
+            document.getElementById("game").removeChild(document.getElementById("game").lastChild);
+        }
+    }
+    DiceCup.gameOver = gameOver;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function changeGameState(_gameState) {
+        switch (_gameState) {
+            case DiceCup.GameState.menu:
+                DiceCup.switchMenu(DiceCup.MenuPage.main);
+                break;
+            case DiceCup.GameState.init:
+                DiceCup.initHud();
+                DiceCup.initCategories();
+                DiceCup.initSummary();
+                DiceCup.initViewport();
+                DiceCup.initPlacements();
+                changeGameState(DiceCup.GameState.ready);
+                break;
+            case DiceCup.GameState.ready:
+                DiceCup.startTransition();
+                break;
+            case DiceCup.GameState.counting:
+                DiceCup.round();
+                break;
+            case DiceCup.GameState.choosing:
+                DiceCup.showCategories();
+                break;
+            case DiceCup.GameState.validating:
+                // validateRound();
+                break;
+            case DiceCup.GameState.summary:
+                DiceCup.showSummary();
+                break;
+            case DiceCup.GameState.placement:
+                DiceCup.updatePlacements();
+                DiceCup.showPlacements();
+                break;
+        }
+    }
+    DiceCup.changeGameState = changeGameState;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    let menuIds = Object.values(DiceCup.MenuPage);
     function initMenu() {
         DiceCup.mainMenu();
         DiceCup.singleplayerMenu();
@@ -935,7 +909,7 @@ var DiceCup;
         DiceCup.multiplayerMenu();
         DiceCup.optionsMenu();
         DiceCup.helpMenu();
-        switchMenu(DiceCup.MenuPages.main);
+        switchMenu(DiceCup.MenuPage.main);
     }
     DiceCup.initMenu = initMenu;
     function switchMenu(_toMenuID) {
@@ -945,7 +919,7 @@ var DiceCup;
     }
     DiceCup.switchMenu = switchMenu;
     function hideMenu() {
-        for (let index = 0; index < Object.values(DiceCup.MenuPages).length; index++) {
+        for (let index = 0; index < Object.values(DiceCup.MenuPage).length; index++) {
             document.getElementById(menuIds[index]).style.visibility = "hidden";
             document.getElementById(menuIds[index]).style.zIndex = "0";
         }
@@ -955,7 +929,7 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     function helpMenu() {
-        new DiceCup.SubMenu(DiceCup.MenuPages.help, "help", "HOW TO PLAY");
+        new DiceCup.SubMenu(DiceCup.MenuPage.help, "help", "HOW TO PLAY");
     }
     DiceCup.helpMenu = helpMenu;
 })(DiceCup || (DiceCup = {}));
@@ -968,7 +942,7 @@ var DiceCup;
         gameMenuDiv.style.visibility = "hidden";
         document.getElementById("DiceCup").appendChild(gameMenuDiv);
         let menuDiv = document.createElement("div");
-        menuDiv.id = DiceCup.MenuPages.main;
+        menuDiv.id = DiceCup.MenuPage.main;
         menuDiv.classList.add("gameMenus");
         gameMenuDiv.appendChild(menuDiv);
         let logoDiv = document.createElement("div");
@@ -995,16 +969,16 @@ var DiceCup;
             menuButtons.appendChild(menuIcons);
         }
         document.getElementById("play_id").addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.singleplayer);
+            DiceCup.switchMenu(DiceCup.MenuPage.singleplayer);
         });
         document.getElementById("shop_id").addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.multiplayer);
+            DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
         });
         document.getElementById("help_id").addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.help);
+            DiceCup.switchMenu(DiceCup.MenuPage.help);
         });
         document.getElementById("options_id").addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.options);
+            DiceCup.switchMenu(DiceCup.MenuPage.options);
         });
     }
     DiceCup.mainMenu = mainMenu;
@@ -1013,9 +987,9 @@ var DiceCup;
 (function (DiceCup) {
     let playerCounter = 0;
     function multiplayerMenu() {
-        new DiceCup.SubMenu(DiceCup.MenuPages.multiplayerLobby, "multiplayerLobby", "LOBBY");
+        new DiceCup.SubMenu(DiceCup.MenuPage.multiplayerLobby, "multiplayerLobby", "LOBBY");
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.multiplayer);
+            DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
         });
         let settingsButton = document.createElement("button");
         settingsButton.id = "multiplayerLobbySettingsButton_id";
@@ -1023,7 +997,7 @@ var DiceCup;
         settingsButton.classList.add("diceCupButtons");
         document.getElementById("multiplayerLobbyMenuLeftButtonArea_id").appendChild(settingsButton);
         let settingsIcon = document.createElement("img");
-        settingsIcon.classList.add("gameMenuButtonsIcons");
+        settingsIcon.classList.add("diceCupButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
         settingsButton.addEventListener("click", () => {
@@ -1106,14 +1080,14 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     function multiplayerServers() {
-        new DiceCup.SubMenu(DiceCup.MenuPages.multiplayer, "multiplayer", "MULTIPLAYER");
+        new DiceCup.SubMenu(DiceCup.MenuPage.multiplayer, "multiplayer", "MULTIPLAYER");
         let renewButton = document.createElement("button");
         renewButton.id = "multiplayerRenewButton_id";
         renewButton.classList.add("gameMenuButtons");
         renewButton.classList.add("diceCupButtons");
         document.getElementById("multiplayerMenuLeftButtonArea_id").appendChild(renewButton);
         let renewIcon = document.createElement("img");
-        renewIcon.classList.add("gameMenuButtonsIcons");
+        renewIcon.classList.add("diceCupButtonsIcons");
         renewIcon.src = "Game/Assets/images/menuButtons/renew.svg";
         renewButton.appendChild(renewIcon);
         renewButton.addEventListener("click", () => {
@@ -1127,7 +1101,7 @@ var DiceCup;
         createButton.innerHTML = "CREATE";
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
         createButton.addEventListener("click", () => {
-            DiceCup.switchMenu(DiceCup.MenuPages.multiplayerLobby);
+            DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
         });
         let joinButton = document.createElement("button");
         joinButton.id = "multiplayerJoinButton_id";
@@ -1145,7 +1119,7 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     function optionsMenu() {
-        new DiceCup.SubMenu(DiceCup.MenuPages.options, "options", "OPTIONS");
+        new DiceCup.SubMenu(DiceCup.MenuPage.options, "options", "OPTIONS");
     }
     DiceCup.optionsMenu = optionsMenu;
 })(DiceCup || (DiceCup = {}));
@@ -1154,7 +1128,7 @@ var DiceCup;
     let botSettings;
     let botCounter = 0;
     function singleplayerMenu() {
-        new DiceCup.SubMenu(DiceCup.MenuPages.singleplayer, "singleplayer", "SINGLEPLAYER");
+        new DiceCup.SubMenu(DiceCup.MenuPage.singleplayer, "singleplayer", "SINGLEPLAYER");
         createPlayerPortrait();
         createBotPortrait();
         for (let index = 0; index < 4; index++) {
@@ -1166,7 +1140,7 @@ var DiceCup;
         settingsButton.classList.add("diceCupButtons");
         document.getElementById("singleplayerMenuLeftButtonArea_id").appendChild(settingsButton);
         let settingsIcon = document.createElement("img");
-        settingsIcon.classList.add("gameMenuButtonsIcons");
+        settingsIcon.classList.add("diceCupButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
         settingsButton.addEventListener("click", () => {

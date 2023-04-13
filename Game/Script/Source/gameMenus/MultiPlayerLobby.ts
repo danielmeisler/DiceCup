@@ -3,10 +3,10 @@ namespace DiceCup {
     let playerCounter: number = 0;
 
     export function multiplayerMenu(): void {
-        new SubMenu(MenuPages.multiplayerLobby, "multiplayerLobby", "LOBBY");
+        new SubMenu(MenuPage.multiplayerLobby, "multiplayerLobby", "LOBBY");
 
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
-            switchMenu(MenuPages.multiplayer);
+            switchMenu(MenuPage.multiplayer);
         });
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
@@ -16,7 +16,7 @@ namespace DiceCup {
         document.getElementById("multiplayerLobbyMenuLeftButtonArea_id").appendChild(settingsButton);
 
         let settingsIcon: HTMLImageElement = document.createElement("img");
-        settingsIcon.classList.add("gameMenuButtonsIcons");
+        settingsIcon.classList.add("diceCupButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
 

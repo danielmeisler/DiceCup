@@ -46,6 +46,11 @@ button {
   filter: brightness(80%);
 }
 
+.diceCupButtonsIcons {
+    width: 80%;
+    aspect-ratio: 1/1;
+}
+
 .emptyBackground {
   background: linear-gradient(#5BB8BC, #5071A7);
 }

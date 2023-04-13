@@ -2,7 +2,6 @@ namespace DiceCup {
     import ƒ = FudgeCore;
 
     export async function initSummary() {
-        roundCounter = 0;
         let summaryContent: string[][] = await createSummaryContent();
 
         let background: HTMLDivElement = document.createElement("div");
@@ -118,10 +117,8 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
-        if (roundCounter < 11) {
+        if (roundCounter <= 12) {
             changeGameState(GameState.ready);
-            roundCounter++;
-            console.log("Round: " + roundCounter + 1)
         } else {
             changeGameState(GameState.placement);
         }

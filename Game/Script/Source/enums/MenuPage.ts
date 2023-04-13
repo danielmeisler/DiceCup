@@ -1,5 +1,5 @@
 namespace DiceCup {
-    export enum MenuPages {
+    export enum MenuPage {
         main = "mainMenu_id",
         singleplayer = "singleplayerMenu_id",
         multiplayer = "multiplayerMenu_id",

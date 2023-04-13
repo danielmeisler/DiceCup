@@ -1,46 +1,12 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    export let dices: Dice[] = [];
+    export let firstRound: boolean = true;
+    export let highscore: number = 0;
+    export let roundCounter: number = 1;
     export let gameSettings: SinglePlayerSettingsDao;
     let bots: Bot[] = [];
-
-    export function changeGameState(_gameState: GameState) {
-        switch (_gameState) {
-            case GameState.menu: 
-                switchMenu(MenuPages.main);
-            break;
-            case GameState.init: 
-                initHud();
-                initCategories();
-                initSummary();
-                initViewport();
-                initTransition();
-                initPlacements();
-            break;
-            case GameState.ready: 
-                initTransition();
-            break;
-            case GameState.counting: 
-                // showSummary();
-                initGame();
-            break;
-            case GameState.choosing: 
-                showCategories();
-            break;
-            case GameState.validating: 
-                // validateRound();
-            break;
-            case GameState.summary: 
-                showSummary();
-                // updatePlacements()
-                // showPlacements();
-            break;
-            case GameState.placement: 
-                updatePlacements()
-                showPlacements();
-            break;
-        }
-    }
 
     export async function initViewport() {
         viewport.camera.mtxPivot.translateZ(10);
@@ -61,7 +27,7 @@ namespace DiceCup {
         return bots;
     }
 
-    export function initGame(): void {
+    export function round(): void {
         console.clear();
         if (firstRound == true) {
             createBots(gameSettings.bot);
@@ -102,26 +68,6 @@ namespace DiceCup {
         
             console.log("Augen auf ...");
             ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(GameState.choosing)});
-    }
-
-    export function rollDices(): void {
-        dices = [];
-        for (let i: number = 0; i < 6; i++) {
-            dices.push(new Dice(i));
-            dices.push(new Dice(i));
-        }
-        for (let i: number = 0; i < 12; i++) {
-            document.getElementById("diceContainer_id_" + i).remove();
-            let diceDiv: HTMLDivElement = document.createElement("div");
-            diceDiv.classList.add("diceDiv");
-            diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
-            diceDiv.id = "diceContainer_id_" + i;
-            diceDiv.innerHTML = dices[i].value.toString();
-            diceDiv.style.background = DiceColor[dices[i].color].toString();
-            document.getElementById("rollingDiv_id").appendChild(diceDiv);
-        }
-        console.log("Augen auf ...");
-        ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(GameState.choosing)});
     }
 
     export function update(_event: Event): void {
