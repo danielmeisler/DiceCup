@@ -19,27 +19,27 @@
 #placementsTitle_id {
     height: 10vw;
     line-height: 10vw;
-    font-size: 5vw;
-    color: white;
-    font-family: "Bungee";
-    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
+    font-family: var(--main_font);
+    text-shadow: var(--text_shadow);
+    font-size: var(--placements_title_fontsize);
+    color: var(--placements_title_color);
 }
 
 #placementsPortraits_id {
     width: 96vw;
+    height: 100%;
     display: flex;
     justify-content: space-evenly;
-    height: 100%;
 }
 
 .placementsPortrait {
     width: 12vw;
     aspect-ratio: 1/1;
-    background: #2F4260;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--placements_portrait_background);
 }
 
 .placementsPortraitIcons {
@@ -60,71 +60,71 @@
     border-width: 0;
     aspect-ratio: 1/0.25;
     border-radius: 3vh;
-    background: #3E5373;
-    color: white;
-    text-align: center;
-    font-size: 2vi;
-    font-family: "Inter";
-    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    background: var(--placements_names_background);
+    color: var(--placements_names_color);
+    font-size: var(--placements_names_fontsize);
+    font-family: var(--text_font);
+    box-shadow: var(--box_shadow);
 }
 
 .placementsPoints {
     width: 6vw;
     border-width: 0;
     border-radius: 3vh;
-    background: #ffffff;
-    color: #3E5373;
     text-align: center;
-    font-size: 2vi;
-    font-family: "Inter";
-    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    font-family: var(--text_font);
+    box-shadow: var(--box_shadow);
+    background: var(--placements_points_background);
+    color: var(--placements_points_color);
+    font-size: var(--placements_points_fontsize);
 }
 
 .placementsOrder {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
     width: 2.5vw;
     aspect-ratio: 1/1;
-    background: #2F4260;
     right: 0;
     top: 0;
     margin-right: -0.8vw;
     margin-top: -0.8vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8vi;
-    font-family: "Bungee";
-    color: white;
-    overflow: hidden;
     border-radius: 100%;
     border-width: 1vh;
     border-style: double;
-    border-color: #1a2638;
+    border-color: var(--placements_medals_4plus_bordercolor);
+    background: var(--placements_medals_4plus_background);
+    color: var(--placements_medals_4plus_color);
+    font-size: var(--placements_medals_fontsize);
+    font-family: var(--main_font);
 }
 
 #placementsOrder_id_0 {
-    background: #EDD500;
-    border-color: #6d6200;
-    color: #6d6200;
+    color: var(--placements_medals_1_color);
+    border-color: var(--placements_medals_1_bordercolor);
+    background: var(--placements_medals_1_background);
 }
 
 #placementsOrder_id_1 {
-    background: #F2F2F2;
-    border-color: #919191;
-    color: #919191;
+    color: var(--placements_medals_2_color);
+    border-color: var(--placements_medals_2_bordercolor);
+    background: var(--placements_medals_2_background);
 }
 
 #placementsOrder_id_2 {
-    background: #c58f3d;
-    border-color: #64461a;
-    color: #64461a;
+    color: var(--placements_medals_3_color);
+    border-color: var(--placements_medals_3_bordercolor);
+    background: var(--placements_medals_3_background);
 }
 
 #placementsBottomArea_id {
@@ -142,15 +142,15 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background: #2A3546;
-    color: white;
+    background: var(--menu_next_buttons);
+    color: var(--menu_buttons_color);
 }
 
 #placementsPhrase_id {
-    font-size: 3vi;
-    font-family: "Bungee";
-    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
-    color: white;
+    text-shadow: var(--text_shadow);
+    font-family: var(--main_font);
+    font-size: var(--placements_phrase_fontsize);
+    color: var(--placements_phrase_color);
 }
 
 .placementsHidden {

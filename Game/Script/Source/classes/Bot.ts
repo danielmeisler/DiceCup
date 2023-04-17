@@ -19,10 +19,10 @@ namespace DiceCup {
                     this.botEasy();
                     break;
                 case BotDifficulty.medium:
-                
+                    this.botMedium();
                     break;
                 case BotDifficulty.hard:
-                    
+                    this.botHard();
                     break;
             }
         }
@@ -42,7 +42,7 @@ namespace DiceCup {
 
         public botMedium(): void{
             console.log("MEDIUM BOT");
-   
+            
         }
 
         public botHard(): void{

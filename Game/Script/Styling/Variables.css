@@ -1,0 +1,85 @@
+:root {
+    /* Fonts */
+    --main_font: "Bungee";
+    --text_font: "Inter";
+
+    /* Game Variables */
+    --background_fade_1: #5BB8BC;
+    --background_fade_2: #5071A7;
+    --background_fade: linear-gradient(var(--background_fade_1), var(--background_fade_2));
+
+    --text_color: white;
+    --box_shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
+    --text_shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
+    --text_placeholder: rgba(255, 255, 255, 0.5);
+
+    /* Menu Variables */
+    --menu_title_color: white;
+    --menu_title_fontsize: 5vi;
+    --menu_buttons_background: #2F4260;
+    --menu_buttons_color: white;
+    --menu_buttons_fontsize: 4vi;
+    --menu_next_buttons: #2A3546;
+    --menu_next_buttons_fontsize: 4.5vi;
+
+    /* Lobby Variables */
+    --lobby_portrait_color: white;
+    --lobby_portrait_background: #2F4260;
+    --lobby_portrait_background_inactive: rgba(47, 66, 96, 0.5);
+    --lobby_text: white;
+    --lobby_text_inactive: rgba(255, 255, 255, 0.5);
+    --lobby_names_background: #3E5373;
+    --lobby_names_fontsize: 1.5vi;
+    --lobby_remove_button_background: #CF4C4C;
+
+    /* Transition Variables */
+    --transition_text_color: white;
+    --transition_text_fontsize: 10vi;
+    --transition_text_wordspacing: 3vi;
+
+    /* Hud Variables */
+    --hud_background: #313131;
+
+    /* Category Panel Variables */
+    --category_background: #313131;
+    --category_header: #36417E;
+    --category_buttons: #4A4A4A;
+    --category_buttons_disabled: #202020;
+    --category_title_fontcolor: white;
+    --category_title_fontsize: 5vi;
+    --category_points_fontcolor: white;
+    --category_points_fontsize: 4vi;
+
+    /* Summary Panel Variables */
+    --summary_background: #313131;
+    --summary_sub_background: #2B2B2B;
+    --summary_border: 0.1vw solid #444444;
+    --summary_text_color: white;
+    --summary_text_fontsize: 3vi;
+
+    /* Placements Panel Variables */
+    --placements_title_color: white;
+    --placements_title_fontsize: 5vi;
+    --placements_portrait_background: #2F4260;
+    --placements_names_background: #3E5373;
+    --placements_names_color: white;
+    --placements_names_fontsize: 1.5vi;
+    --placements_points_background: white;
+    --placements_points_color: #3E5373;
+    --placements_points_fontsize: 2vi;
+    --placements_phrase_color: white;
+    --placements_phrase_fontsize: 3vi;
+    --placements_medals_fontsize: 1.8vi;
+    --placements_medals_4plus_color: white;
+    --placements_medals_4plus_background: #2F4260;
+    --placements_medals_4plus_bordercolor: #1a2638;
+    --placements_medals_3_color: #64461a;
+    --placements_medals_3_background: #c58f3d;
+    --placements_medals_3_bordercolor: #64461a;
+    --placements_medals_2_color: #919191;
+    --placements_medals_2_background: #F2F2F2;
+    --placements_medals_2_bordercolor: #919191;
+    --placements_medals_1_color: #6d6200;
+    --placements_medals_1_background: #EDD500;
+    --placements_medals_1_bordercolor: #6d6200;
+}

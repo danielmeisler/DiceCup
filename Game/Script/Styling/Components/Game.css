@@ -1,7 +1,7 @@
 #game {
   height: 100%;
   width: 100%;
-  background: linear-gradient(#5BB8BC, #5071A7);
+  background: var(--background_fade);
 }
 
 #rollingDiv_id {
@@ -19,6 +19,6 @@
   width: 5%;
   aspect-ratio: 1/1;
   font-size: 3vi;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-family: var(--text_font);
   color: gray;
 }

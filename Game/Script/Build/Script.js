@@ -71,8 +71,10 @@ var DiceCup;
                     this.botEasy();
                     break;
                 case DiceCup.BotDifficulty.medium:
+                    this.botMedium();
                     break;
                 case DiceCup.BotDifficulty.hard:
+                    this.botHard();
                     break;
             }
         }
@@ -644,7 +646,7 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
-        ƒ.Time.game.setTimer(5000, 1, () => { hideSummary(); });
+        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
     }
     DiceCup.showSummary = showSummary;
     function hideSummary() {

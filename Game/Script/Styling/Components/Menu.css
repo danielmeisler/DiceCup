@@ -2,8 +2,8 @@
     height: 100%;
     width: 100%;
     position: absolute;
-    background: linear-gradient(#5BB8BC, #5071A7);
     display: flex;
+    background: var(--background_fade);
 }
 
 #mainMenu_id {
@@ -37,12 +37,12 @@
     width: 45%;
     height: 45%;
     margin: 2.5%;
-    background: #2F4260;
-    color: white;
-    font-size: 4.5vi;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--menu_buttons_background);
+    color: var(--menu_buttons_color);
+    font-size: var(--menu_buttons_fontsize);
 }
 
 .menuButtonsIcons {
@@ -66,12 +66,12 @@
     width: 96vw;
     height: 10vw;
     line-height: 10vw;
-    font-size: 5vw;
-    color: white;
-    font-family: "Bungee";
-    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: center;
+    color: var(--menu_title_color);
+    font-size: var(--menu_title_fontsize);
+    font-family: var(--main_font);
+    text-shadow: var(--text_shadow);   
 }
 
 .gameMenuContent {
@@ -88,9 +88,9 @@
 .gameMenuLeftButtonArea, .gameMenuRightButtonArea {
     width: 50%;
     height: 100%;
+    gap: 2vw;
     display: flex;
     align-items: center;
-    gap: 2vw;
 }
 
 .gameMenuLeftButtonArea {
@@ -108,8 +108,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    background: #2F4260;
-    color: white;
+    background: var(--menu_buttons_background);
+    color: var(--menu_buttons_color);
 }
 
 
@@ -124,8 +124,8 @@
 }
 
 .lobbyPortrait_active {
-    background: #2F4260;
     position: relative;
+    background: var(--lobby_portrait_background);
 }
 
 .lobbyPortrait_active:active, .lobbyPortrait_inactive:active {
@@ -137,8 +137,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: rgba(255, 255, 255, 0.5) !important;
-    background: rgba(47, 66, 96, 0.5) !important;
+    color: var(--lobby_text_inactive) !important;
+    background: var(--lobby_portrait_background_inactive) !important;
 }
 
 .lobbyPortraitIcons {
@@ -169,17 +169,17 @@
     border-width: 0;
     aspect-ratio: 1/0.25;
     border-radius: 3vh;
-    background: #3E5373;
-    color: white;
     text-align: center;
-    font-size: 1.5vi;
-    font-family: "Inter";
     font-weight: bold;
-    box-shadow: 0 0.2em 0.2em rgba(0, 0, 0, 0.25);
+    font-size: var(--lobby_names_fontsize);
+    font-family: var(--text_font);
+    color: var(--lobby_text);
+    box-shadow: var(--box_shadow);
+    background: var(--lobby_names_background);
 }
 
 .nameInputs::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text_placeholder);
 }
 
 .difficultySwitch {
@@ -192,14 +192,12 @@
     width: 25%;
     border-width: 0;
     background: transparent;
-    color: rgba(255, 255, 255, 0.5);
     height: 100%;
 }
 
 .switchButtonIcons {
     height: 50%;
     width: 1vw;
-    color: rgba(255, 255, 255, 0.5);
 }
 
 .switchDifficultyText {
@@ -214,7 +212,6 @@
     aspect-ratio: 1/1;
     border-radius: 50%;
     border-width: 0;
-    background: #CF4C4C;
     right: 0;
     top: 0;
     margin-right: -0.8vw;
@@ -222,6 +219,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--lobby_remove_button_background);
 }
 
 .removeButton:active {
@@ -235,10 +233,10 @@
 
 .gameMenuStartButtons {
     width: 50%;
-    background: #2A3546;
-    font-family: "Bungee";
-    font-size: 5vi;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--menu_next_buttons);
+    font-family: var(--main_font);
+    font-size: var(--menu_next_buttons_fontsize);
 }

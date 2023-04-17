@@ -1,33 +1,33 @@
 #summaryBackground_id {
-    position: absolute;
     width: 100%;
     height: 100%;
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #summaryContainer_id {
-    position: absolute;
     width: calc(100vw - 5vh);
     height: calc(100vh - 5vh);
-    background-color: #313131;
+    position: absolute;
     overflow: hidden;
-    border-radius: 1.5vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 1.5vw;
+    background-color: var(--summary_background);
 }
 
 #summaryContent_id {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 20% repeat(12, calc(70%/12)) 10%;
-    grid-template-rows: repeat(7, calc(100%/7));
     justify-items: center;
     align-items: center;
+    grid-template-columns: 20% repeat(12, calc(70%/12)) 10%;
+    grid-template-rows: repeat(7, calc(100%/7));
 }
 
 .summaryHidden {
@@ -59,30 +59,30 @@ div[id^="summaryGrid"] {
 }
 
 .summaryRow_0 {
-    border-bottom: 0.1vw solid #444444;
-    background-color: #2B2B2B;
+    border-bottom: var(--summary_border);
+    background-color: var(--summary_sub_background);
 }
 
 .summaryColumn_0 {
-    border-right: 0.1vw solid #444444;
-    background-color: #2B2B2B;
+    border-right: var(--summary_border);
+    background-color: var(--summary_sub_background);
 }
 
 .summaryColumn_13 {
-    border-left: 0.1vw solid #444444;
+    border-left: var(--summary_border);
 }
 
 .summaryText {
     width: 100%;
     height: 100%;
-    font-family: "Bungee";
-    color: rgb(255, 255, 255);
-    font-size: 3vi;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    text-shadow: 0vi 0.4vi 0.4vi rgba(0, 0, 0, 0.25);
+    text-shadow: var(--text_shadow);
+    font-family: var(--main_font);
+    color: var(--summary_text_color);
+    font-size: var(--summary_text_fontsize);
 }
 
 .headerRow {
@@ -92,7 +92,7 @@ div[id^="summaryGrid"] {
 }
 
 .headerRow, .headerCol {
-    color: #ffffff;
-    font-family: 'Inter';
     text-shadow: 0vi 0vi 0vi #000000;
+    color: var(--summary_text_color);
+    font-family: var(--text_font);
 }

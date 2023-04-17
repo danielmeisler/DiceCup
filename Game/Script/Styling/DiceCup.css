@@ -36,9 +36,9 @@ button {
 }
 
 .diceCupButtons {
-  box-shadow: 0 0.5vw 0.5vw 0 rgba(0, 0, 0, 0.25);
   border-width: 0;
   border-radius: 2vw;
+  box-shadow: var(--box_shadow);
 }
 
 .diceCupButtons:active {
@@ -47,10 +47,10 @@ button {
 }
 
 .diceCupButtonsIcons {
-    width: 80%;
-    aspect-ratio: 1/1;
+  width: 80%;
+  aspect-ratio: 1/1;
 }
 
 .emptyBackground {
-  background: linear-gradient(#5BB8BC, #5071A7);
+  background: var(--background_fade);
 }
