@@ -78,6 +78,7 @@ namespace DiceCup {
 
     export function gameOver(): void {
         firstRound = true;
+        roundCounter = 1;
         while (document.getElementById("DiceCup").childNodes.length > 1) {
             document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
         }

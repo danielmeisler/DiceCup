@@ -1,3 +1,28 @@
 :root {
     --white: #ffffff;
+    --gray: #444444;
+    --black: #313131;
+    --black_darker: #2b2b2b;
+    --black_darkest: #202020;
+
+    --cyan_fade: #5BB8BC;
+    --blue_fade: #5071A7;
+
+    --blue_darker: #1A2638;
+    --blue_dark: #2A3546;
+    --blue: #2F4260;
+    --blue_light: #3E5373;
+    --blue_highlight: #36417E;
+
+    --red_light: #CF4C4C;
+
+    --first_medal_main: #EDD500;
+    --first_medal_sub: #6d6200;
+    --second_medal_main: #F2F2F2;
+    --second_medal_sub: #919191;
+    --third_medal_main: #c58f3d;
+    --third_medal_sub: #64461a;
+    --medal_font: #ffffff;
+    --medal_main: #2F4260;
+    --medal_sub: #1A2638;
 }

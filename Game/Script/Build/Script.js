@@ -553,6 +553,7 @@ var DiceCup;
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
         background.id = "summaryBackground_id";
+        background.addEventListener("click", hideSummary);
         document.getElementById("DiceCup").appendChild(background);
         let container = document.createElement("div");
         container.classList.add("summaryHidden");
@@ -854,6 +855,7 @@ var DiceCup;
     DiceCup.update = update;
     function gameOver() {
         DiceCup.firstRound = true;
+        DiceCup.roundCounter = 1;
         while (document.getElementById("DiceCup").childNodes.length > 1) {
             document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
         }

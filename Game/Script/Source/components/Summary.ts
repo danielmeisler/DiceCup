@@ -6,6 +6,7 @@ namespace DiceCup {
 
         let background: HTMLDivElement = document.createElement("div");
         background.id = "summaryBackground_id";
+        background.addEventListener("click", hideSummary);
         document.getElementById("DiceCup").appendChild(background);
 
         let container: HTMLDivElement = document.createElement("div");
