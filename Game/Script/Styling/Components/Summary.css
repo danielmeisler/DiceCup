@@ -26,7 +26,7 @@
     display: grid;
     justify-items: center;
     align-items: center;
-    grid-template-columns: 20% repeat(12, calc(70%/12)) 10%;
+    grid-template-columns: 20%  10% repeat(12, calc(70%/12));
     grid-template-rows: repeat(7, calc(100%/7));
 }
 
@@ -49,7 +49,7 @@
 }
 
 .summaryImg {
-    width: 70%;
+    width: 60%;
     aspect-ratio: 1/1;
 }
 
@@ -61,15 +61,22 @@ div[id^="summaryGrid"] {
 .summaryRow_0 {
     border-bottom: var(--summary_border);
     background-color: var(--summary_sub_background);
+    z-index: 1;
 }
 
 .summaryColumn_0 {
-    border-right: var(--summary_border);
     background-color: var(--summary_sub_background);
 }
 
-.summaryColumn_13 {
+.summaryColumn_1 {
     border-left: var(--summary_border);
+    border-right: var(--summary_border);
+    /* background-color: var(--summary_sub_background); */
+    z-index: 2;
+}
+
+#summaryGrid_id_1_1 {
+    border-top: var(--summary_border);
 }
 
 .summaryText {
@@ -79,8 +86,8 @@ div[id^="summaryGrid"] {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    text-shadow: var(--text_shadow);
     font-family: var(--main_font);
+    text-shadow: var(--text_shadow);
     color: var(--summary_text_color);
     font-size: var(--summary_text_fontsize);
 }

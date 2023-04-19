@@ -563,7 +563,7 @@ var DiceCup;
         content.id = "summaryContent_id";
         container.appendChild(content);
         let colIds = ["playerNames"];
-        colIds[13] = "sum";
+        colIds[1] = "sum";
         for (let row = 0; row < 7; row++) {
             for (let col = 0; col < 14; col++) {
                 let gridDiv = document.createElement("div");
@@ -571,16 +571,16 @@ var DiceCup;
                 gridDiv.classList.add("summaryColumn_" + col);
                 gridDiv.id = "summaryGrid_id_" + row + "_" + col;
                 content.appendChild(gridDiv);
-                if (row == 0 && col > 0 && col < 13) {
+                if (row == 0 && col > 1 && col < 14) {
                     let imgContainer = document.createElement("div");
                     imgContainer.classList.add("summaryImgContainer");
                     gridDiv.appendChild(imgContainer);
                     let img = document.createElement("img");
-                    img.id = "summaryImg_id_" + col;
+                    img.id = "summaryImg_id_" + (col - 2);
                     img.classList.add("summaryImg");
                     img.src = summaryContent[0][col];
                     imgContainer.appendChild(img);
-                    colIds[col] = DiceCup.ScoringCategory[col - 1];
+                    colIds[col] = DiceCup.ScoringCategory[col - 2];
                 }
                 else {
                     let text = document.createElement("span");
@@ -612,10 +612,10 @@ var DiceCup;
             content[row] = [];
             for (let col = 0; col < 14; col++) {
                 content[row][col] = "";
-                if (col > 0 && col < 13) {
-                    content[0][col] = categories[col - 1].image;
+                if (col > 1 && col < 14) {
+                    content[0][col] = categories[col - 2].image;
                 }
-                else if (col == 13) {
+                else if (col == 1) {
                     content[0][col] = "Sum";
                 }
             }
@@ -693,7 +693,13 @@ var DiceCup;
             for (let i = 0; i < _phrase[counter].length; i++) {
                 let text = document.createElement("span");
                 text.id = "startTransitionText_id_" + i;
-                text.style.setProperty("--i", i.toString());
+                text.animate([
+                    { transform: "translateY(0)" },
+                    { transform: "translateY(-20px)" },
+                    { transform: "translateY(0)" },
+                    { transform: "translateY(0)" },
+                    { transform: "translateY(0)" }
+                ], { duration: 1000, iterations: Infinity, delay: 100 * i });
                 if (_phrase[counter][i] == " ") {
                     text.innerHTML = "&nbsp";
                 }

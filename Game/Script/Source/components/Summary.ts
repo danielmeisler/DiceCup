@@ -19,7 +19,7 @@ namespace DiceCup {
         container.appendChild(content);
 
         let colIds: string[] = ["playerNames"];
-        colIds[13] = "sum";
+        colIds[1] = "sum";
 
         for (let row = 0; row < 7; row++) {
                 for (let col = 0; col < 14; col++) {
@@ -29,18 +29,18 @@ namespace DiceCup {
                 gridDiv.id = "summaryGrid_id_" + row + "_" + col;
                 content.appendChild(gridDiv);
 
-                if (row == 0 && col > 0 && col < 13) {
+                if (row == 0 && col > 1 && col < 14) {
                     let imgContainer: HTMLDivElement = document.createElement("div");
                     imgContainer.classList.add("summaryImgContainer");
                     gridDiv.appendChild(imgContainer);
 
                     let img: HTMLImageElement = document.createElement("img");
-                    img.id = "summaryImg_id_" + col;
+                    img.id = "summaryImg_id_" + (col - 2);
                     img.classList.add("summaryImg");
                     img.src = summaryContent[0][col];
                     imgContainer.appendChild(img);
 
-                    colIds[col] = ScoringCategory[col - 1];
+                    colIds[col] = ScoringCategory[col - 2];
                 } else {
                     let text: HTMLSpanElement = document.createElement("span");
                     text.id = "summaryText_id_" + summaryContent[row][0] + "_" + colIds[col];
@@ -74,9 +74,9 @@ namespace DiceCup {
             content[row] = [];
             for (let col = 0; col < 14; col++) {
                 content[row][col] = "";
-                if(col > 0 && col < 13) {
-                    content[0][col] = categories[col - 1].image;
-                } else if (col == 13) {
+                if(col > 1 && col < 14) {
+                    content[0][col] = categories[col - 2].image;
+                } else if (col == 1) {
                     content[0][col] = "Sum";
                 }
             }

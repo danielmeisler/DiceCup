@@ -18,11 +18,11 @@
     position: relative;
     display: inline-block;
     text-transform: uppercase;
-    animation: waviy 1s infinite;
-    animation-delay: calc(.1s * var(--i));
+    /* animation: waviy 1s infinite; */
+    /* animation-delay: calc(.1s * var(--i)); */
 }
 
-@keyframes waviy {
+/* @keyframes waviy {
     0%,40%,100% {
         transform: translateY(0);
         backface-visibility: hidden;
@@ -33,4 +33,4 @@
         backface-visibility: hidden;
         will-change: transform;
     }
-}
+} */
