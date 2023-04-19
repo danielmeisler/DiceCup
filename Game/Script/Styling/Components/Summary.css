@@ -92,6 +92,14 @@ div[id^="summaryGrid"] {
     font-size: var(--summary_text_fontsize);
 }
 
+.summaryHighlight {
+    color: var(--summary_text_highlight);
+}
+
+.sumRow {
+    color: var(--summary_text_header);
+}
+
 .headerRow {
     justify-content: flex-start;
     align-items: center;
@@ -100,6 +108,6 @@ div[id^="summaryGrid"] {
 
 .headerRow, .headerCol {
     text-shadow: 0vi 0vi 0vi #000000;
-    color: var(--summary_text_color);
+    color: var(--summary_text_header);
     font-family: var(--text_font);
 }

@@ -54,7 +54,9 @@
     --summary_background: var(--black);
     --summary_sub_background: var(--black_darker);
     --summary_border: 0.1vw solid var(--gray);
-    --summary_text_color: var(--white);
+    --summary_text_header: var(--white);
+    --summary_text_highlight: var(--white);
+    --summary_text_color: var(--gray_lighter);
     --summary_text_fontsize: 3vi;
 
     /* Placements Panel Variables */

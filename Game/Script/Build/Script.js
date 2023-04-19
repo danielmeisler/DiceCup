@@ -549,6 +549,8 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
+    let playerNames = [];
+    let lastPoints = [];
     async function initSummary() {
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
@@ -594,6 +596,9 @@ var DiceCup;
                     else if (col == 0) {
                         text.classList.add("headerRow");
                     }
+                    else if (col == 1) {
+                        text.classList.add("sumRow");
+                    }
                 }
             }
         }
@@ -604,7 +609,7 @@ var DiceCup;
         let response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories = await response.json();
         let content = [];
-        let playerNames = [DiceCup.gameSettings.playerName];
+        playerNames = [DiceCup.gameSettings.playerName];
         for (let index = 0; index < DiceCup.gameSettings.bot.length; index++) {
             playerNames.push(DiceCup.gameSettings.bot[index].botName);
         }
@@ -627,11 +632,12 @@ var DiceCup;
         return content;
     }
     function updateSummary(_points, _category, _name) {
-        for (let row = 0; row < 7; row++) {
-            for (let col = 0; col < 14; col++) {
-                document.getElementById("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]).innerHTML = _points.toString();
-            }
+        if (lastPoints.length - playerNames.length >= 0) {
+            document.getElementById(lastPoints[lastPoints.length - playerNames.length]).classList.remove("summaryHighlight");
         }
+        document.getElementById("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]).innerHTML = _points.toString();
+        document.getElementById("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]).classList.add("summaryHighlight");
+        lastPoints.push("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]);
         let temp = 0;
         if (document.getElementById("summaryText_id_" + _name + "_sum").innerHTML) {
             temp = parseInt(document.getElementById("summaryText_id_" + _name + "_sum").innerHTML);

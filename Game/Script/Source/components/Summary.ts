@@ -1,6 +1,9 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    let playerNames: string[] = [];
+    let lastPoints: string[] = [];
+
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
 
@@ -51,6 +54,8 @@ namespace DiceCup {
                         text.classList.add("headerCol");
                     } else if (col == 0) {
                         text.classList.add("headerRow");
+                    } else if (col == 1) {
+                        text.classList.add("sumRow");
                     }
                 }
                 
@@ -64,8 +69,7 @@ namespace DiceCup {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();
         let content: string[][] = [];
-        let playerNames: string[] = [gameSettings.playerName];
-
+        playerNames= [gameSettings.playerName];
         for (let index = 0; index < gameSettings.bot.length; index++) {
             playerNames.push(gameSettings.bot[index].botName);
         }
@@ -89,11 +93,14 @@ namespace DiceCup {
     }
 
     export function updateSummary(_points: number, _category: number, _name: string): void {
-        for (let row = 0; row < 7; row++) {
-            for (let col = 0; col < 14; col++) {
-                document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
-            }
+        if (lastPoints.length - playerNames.length >= 0) {
+            document.getElementById(lastPoints[lastPoints.length - playerNames.length]).classList.remove("summaryHighlight");
         }
+
+        document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
+        document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).classList.add("summaryHighlight");
+        lastPoints.push("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
+
         let temp: number = 0;
         if (document.getElementById("summaryText_id_" + _name + "_sum").innerHTML) {
             temp = parseInt(document.getElementById("summaryText_id_" + _name + "_sum").innerHTML);
