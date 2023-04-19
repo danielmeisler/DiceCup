@@ -16,6 +16,7 @@ namespace DiceCup {
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
 
+    enableWakeLock();
     initMenu();
   }
 

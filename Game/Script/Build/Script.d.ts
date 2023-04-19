@@ -149,6 +149,11 @@ declare namespace DiceCup {
     function changeGameState(_gameState: GameState): void;
 }
 declare namespace DiceCup {
+    function enableWakeLock(): Promise<boolean>;
+    function disableWakeLock(): void;
+    function resetTimer(): void;
+}
+declare namespace DiceCup {
     function initMenu(): void;
     function switchMenu(_toMenuID: MenuPage): void;
     function hideMenu(): void;

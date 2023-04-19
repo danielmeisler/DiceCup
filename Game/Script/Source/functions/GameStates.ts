@@ -33,6 +33,7 @@ namespace DiceCup{
                 showPlacements();
             break;
         }
+        resetTimer();
     }
 
 }

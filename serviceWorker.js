@@ -20,10 +20,18 @@ self.addEventListener("install", installEvent => {
   )
 })
 
-self.addEventListener("fetch", function (event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-      fetch(event.request).catch(function() {
-          return caches.match(event.request)
-      })
+      caches.open(cacheName)
+          .then(function(cache) {
+              cache.match(event.request)
+                  .then( function(cacheResponse) {
+                      fetch(event.request)
+                          .then(function(networkResponse) {
+                              cache.put(event.request, networkResponse)
+                          })
+                      return cacheResponse || networkResponse
+                  })
+          })
   )
-})
+});

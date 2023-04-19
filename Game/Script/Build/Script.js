@@ -49,6 +49,7 @@ var DiceCup;
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
+        DiceCup.enableWakeLock();
         DiceCup.initMenu();
     }
 })(DiceCup || (DiceCup = {}));
@@ -915,8 +916,34 @@ var DiceCup;
                 DiceCup.showPlacements();
                 break;
         }
+        DiceCup.resetTimer();
     }
     DiceCup.changeGameState = changeGameState;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    let wakeLock = null;
+    let timer;
+    async function enableWakeLock() {
+        if ("wakeLock" in navigator) {
+            // @ts-ignore
+            wakeLock = await navigator.wakeLock.request("screen");
+            resetTimer();
+        }
+        return (wakeLock != null);
+    }
+    DiceCup.enableWakeLock = enableWakeLock;
+    function disableWakeLock() {
+        wakeLock && wakeLock.release().then(() => { wakeLock = null; });
+        console.log("DEAKTIVIERT");
+    }
+    DiceCup.disableWakeLock = disableWakeLock;
+    function resetTimer() {
+        timer && ƒ.Time.game.deleteTimer(timer);
+        timer = ƒ.Time.game.setTimer(30000, 1, disableWakeLock);
+    }
+    DiceCup.resetTimer = resetTimer;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
