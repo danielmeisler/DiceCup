@@ -53,6 +53,11 @@
 </head>
 
 <body>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("serviceWorker.js")
+        }
+    </script>
     <canvas class="fullscreen" id="canvas"></canvas>
     <div id="game"> </div>
 </body>
