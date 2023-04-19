@@ -7,9 +7,6 @@ namespace DiceCup {
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 
   function start(_event: CustomEvent): void {
-    // if ("serviceWorker" in navigator) {
-    //     navigator.serviceWorker.register("../../serviceWorker.js")
-    // }
     viewport = _event.detail;
 
     let diceCup: HTMLDivElement = document.createElement("div");

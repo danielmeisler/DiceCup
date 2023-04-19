@@ -42,9 +42,6 @@ var DiceCup;
     ƒ.Debug.info("Dice Cup is running!");
     document.addEventListener("interactiveViewportStarted", start);
     function start(_event) {
-        // if ("serviceWorker" in navigator) {
-        //     navigator.serviceWorker.register("../../serviceWorker.js")
-        // }
         DiceCup.viewport = _event.detail;
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
