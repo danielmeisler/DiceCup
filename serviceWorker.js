@@ -20,10 +20,10 @@ self.addEventListener("install", installEvent => {
   )
 })
 
-self.addEventListener("fetch", function (event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-      fetch(event.request).catch(function() {
-          return caches.match(event.request)
+      fetch(event.request).then(function(networkResponse) {
+          return networkResponse
       })
   )
 })
