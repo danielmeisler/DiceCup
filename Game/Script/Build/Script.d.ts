@@ -43,6 +43,15 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    class TimerBar {
+        private time;
+        private percentage;
+        private id;
+        constructor(_id: string, _time: number);
+        private getTimerPercentage;
+    }
+}
+declare namespace DiceCup {
     class Valuation {
         scoringCategory: ScoringCategory;
         dices: Dice[];
@@ -71,6 +80,8 @@ declare namespace DiceCup {
     function hidePlacements(): void;
 }
 declare namespace DiceCup {
+    let playerNames: string[];
+    let lastPoints: string[];
     function initSummary(): Promise<void>;
     function updateSummary(_points: number, _category: number, _name: string): void;
     function showSummary(): void;
@@ -138,11 +149,15 @@ declare namespace DiceCup {
     let dices: Dice[];
     let firstRound: boolean;
     let highscore: number;
+    let roundTimer: number;
     let roundCounter: number;
+    let maxRounds: number;
     let gameSettings: SinglePlayerSettingsDao;
     function initViewport(): Promise<void>;
     function round(): void;
     function update(_event: Event): void;
+}
+declare namespace DiceCup {
     function gameOver(): void;
 }
 declare namespace DiceCup {

@@ -18,14 +18,14 @@ namespace DiceCup {
         header.id = "categoryHeader_id";
         container.appendChild(header);
 
+        let timer: HTMLDivElement = document.createElement("div");
+        timer.id = "categoryTimer_id";
+        header.appendChild(timer);
+
         let title: HTMLSpanElement = document.createElement("span");
         title.id = "categoryTitle_id";
         title.innerHTML = "Choose a category"
         header.appendChild(title);
-
-        let timer: HTMLDivElement = document.createElement("div");
-        timer.id = "categoryTimer_id";
-        header.appendChild(timer);
 
         let content: HTMLDivElement = document.createElement("div");
         content.id = "categoryContent_id";

@@ -4,7 +4,9 @@ namespace DiceCup {
     export let dices: Dice[] = [];
     export let firstRound: boolean = true;
     export let highscore: number = 0;
+    export let roundTimer: number = 3;
     export let roundCounter: number = 1;
+    export let maxRounds: number = 1;
     export let gameSettings: SinglePlayerSettingsDao;
     let bots: Bot[] = [];
 
@@ -67,7 +69,8 @@ namespace DiceCup {
 
         
             console.log("Augen auf ...");
-            ƒ.Time.game.setTimer(3000, 1, () => { changeGameState(GameState.choosing)});
+            new TimerBar("hudTimer_id", roundTimer);
+            ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
     }
 
     export function update(_event: Event): void {
@@ -76,14 +79,5 @@ namespace DiceCup {
         //ƒ.AudioManager.default.update();
     }
 
-    export function gameOver(): void {
-        firstRound = true;
-        roundCounter = 1;
-        while (document.getElementById("DiceCup").childNodes.length > 1) {
-            document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
-        }
-        while (document.getElementById("game").firstChild) {
-        document.getElementById("game").removeChild(document.getElementById("game").lastChild);
-        }
-    }
+
 }

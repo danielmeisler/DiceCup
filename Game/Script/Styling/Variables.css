@@ -39,10 +39,13 @@
 
     /* Hud Variables */
     --hud_background: var(--black);
+    --hud_timer_background: var(--black);
+    --hud_timer_color: var(--blue_highlight);
 
     /* Category Panel Variables */
     --category_background: var(--black);
     --category_header: var(--blue_highlight);
+    --category_header_sub: var(--black);
     --category_buttons: var(--gray);
     --category_buttons_disabled: var(--black_darkest);
     --category_title_fontcolor: var(--white);

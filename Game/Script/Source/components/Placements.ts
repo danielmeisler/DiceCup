@@ -104,9 +104,9 @@ namespace DiceCup {
         let points: number[] = [];
         let bots: BotDao[] = gameSettings.bot;
 
-        for (let i = 1; i < 7; i++) {
-            name[i - 1] = document.querySelector("#summaryGrid_id_" + i + "_0 > span").innerHTML;
-            points[i - 1] = parseInt(document.querySelector("#summaryGrid_id_" + i + "_13 > span").innerHTML);
+        for (let i = 0; i < playerNames.length; i++) {
+            name[i] = document.querySelector("#summaryText_id_" + playerNames[i] + "_playerNames").innerHTML;
+            points[i] = parseInt(document.querySelector("#summaryText_id_" + playerNames[i] + "_sum").innerHTML);
         }
 
         for (let i = 0; i < points.length; i++) {
@@ -117,25 +117,28 @@ namespace DiceCup {
                 }
             }
         }
-        for (let i = 0; i < 6; i++) {
-            if (name[i] == "") {
-                document.getElementById("placementsContainer_id_" + i).style.display = "none";
-            } else {
-                for (let j = 0; j < bots.length; j++) {
-                    if (name[i] == bots[j].botName) {
-                        (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/bot.svg";
-                        break;
-                    } else {
-                        (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/player.svg";
-                    }
-                }
-                document.getElementById("playerName_id_" + i).innerHTML = name[i];
-                document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
-                document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
 
-                if (name[i] == gameSettings.playerName) {
-                    document.getElementById("placementsPhrase_id").innerHTML = "You are " + (i + 1) + ". place!";
+        for (let i = 0; i < 6; i++) {
+            if (i >= playerNames.length) {
+                document.getElementById("placementsContainer_id_" + i).style.display = "none";
+            }
+        }
+
+        for (let i = 0; i < points.length; i++) {
+            for (let j = 0; j < bots.length; j++) {
+                if (name[i] == bots[j].botName) {
+                    (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/bot.svg";
+                    break;
+                } else {
+                    (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/player.svg";
                 }
+            }
+            document.getElementById("playerName_id_" + i).innerHTML = name[i];
+            document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
+            document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
+
+            if (name[i] == gameSettings.playerName) {
+                document.getElementById("placementsPhrase_id").innerHTML = "You are " + (i + 1) + ". place!";
             }
         }
     }

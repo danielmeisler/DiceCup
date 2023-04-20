@@ -14,7 +14,6 @@ namespace DiceCup {
 
     export function disableWakeLock(): void {
         wakeLock && wakeLock.release().then(() => {wakeLock = null});
-        console.log("DEAKTIVIERT");
     }
 
     export function resetTimer(): void {

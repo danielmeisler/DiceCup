@@ -1,8 +1,8 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
-    let playerNames: string[] = [];
-    let lastPoints: string[] = [];
+    export let playerNames: string[] = [];
+    export let lastPoints: string[] = [];
 
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
@@ -125,7 +125,7 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
-        if (roundCounter <= 12) {
+        if (roundCounter <= maxRounds) {
             changeGameState(GameState.ready);
         } else {
             changeGameState(GameState.placement);

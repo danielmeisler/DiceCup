@@ -3,6 +3,20 @@
   height: 100%;
   width: 100%;
 }
+
+#hudTimerContainer_id {
+  position: absolute;
+  width: 100%;
+  height: 1vw;
+  overflow: hidden;
+  background: var(--hud_timer_background);
+}
+
+#hudTimer_id {
+  width: 100%;
+  height: 100%;
+  background: var(--hud_timer_color);
+}
   
 #valuationContainer_id {
   width: 100%;

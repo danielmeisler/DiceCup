@@ -36,11 +36,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--category_header);
+    overflow: hidden;
+    background: var(--category_header_sub);
     box-shadow: var(--box_shadow);
 }
 
+#categoryTimer_id {
+    height: 100%;
+    width: 100%;
+    background-color: var(--category_header);
+}   
+
 #categoryTitle_id {
+    position: absolute;
     padding-left: 3%;
     color: var(--category_title_fontcolor);
     font-size: var(--category_title_fontsize);
