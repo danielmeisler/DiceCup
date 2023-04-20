@@ -14,7 +14,8 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     class Bot {
         dices: Dice[];
-        private usedCategories;
+        private freeCategories;
+        private categoryCounter;
         difficulty: BotDifficulty;
         name: string;
         constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[]);
@@ -22,7 +23,8 @@ declare namespace DiceCup {
         botEasy(): void;
         botMedium(): void;
         botHard(): void;
-        botValuation(_category: number): void;
+        private botValuation;
+        private checkProbabilities;
     }
 }
 declare namespace DiceCup {

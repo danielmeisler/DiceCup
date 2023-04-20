@@ -6,7 +6,7 @@ namespace DiceCup {
     export let highscore: number = 0;
     export let roundTimer: number = 3;
     export let roundCounter: number = 1;
-    export let maxRounds: number = 1;
+    export let maxRounds: number = 12;
     export let gameSettings: SinglePlayerSettingsDao;
     let bots: Bot[] = [];
 

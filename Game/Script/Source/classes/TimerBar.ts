@@ -18,9 +18,13 @@ namespace DiceCup{
             // let width: number = document.getElementById("categoryTimer_id").offsetWidth;
             // this.newWidth = (this.percentage * width) / 100;
             // console.log(this.newWidth);
-            document.getElementById(this.id).style.transition = "width 1s linear";
-            this.percentage = (_count * 100) / this.time;
-            document.getElementById(this.id).style.width = this.percentage + "%";
+                document.getElementById(this.id).style.transition = "width 1s linear";
+                this.percentage = (_count * 100) / this.time;
+                document.getElementById(this.id).style.width = this.percentage + "%";
+
+            if (document.getElementById(this.id).style.width == "0%") {
+                ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
+            }
         }
     }
 }

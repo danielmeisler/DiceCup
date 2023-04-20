@@ -55,7 +55,8 @@ var DiceCup;
     var ƒ = FudgeCore;
     class Bot {
         dices;
-        usedCategories = [];
+        freeCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        categoryCounter = 12;
         difficulty;
         name;
         constructor(_name, _difficulty, _dices) {
@@ -78,18 +79,26 @@ var DiceCup;
         }
         botEasy() {
             console.log("EASY BOT");
-            let randomCategory = Math.floor((Math.random() * 12));
-            if (this.usedCategories.includes(randomCategory)) {
-                this.botEasy();
-            }
-            else {
-                this.usedCategories.push(randomCategory);
-                console.log(this.usedCategories);
-                this.botValuation(randomCategory);
-            }
+            let randomCategory = this.freeCategories[(Math.floor((Math.random() * this.categoryCounter)))];
+            let tempArray = this.freeCategories.filter((element) => element !== randomCategory);
+            this.freeCategories = tempArray;
+            this.botValuation(randomCategory);
+            this.categoryCounter--;
         }
         botMedium() {
             console.log("MEDIUM BOT");
+            //LOGIC
+            let values = [];
+            for (let i = 0; i < this.freeCategories.length; i++) {
+                let valuation = new DiceCup.Valuation(this.freeCategories[i], DiceCup.dices);
+                values[i] = valuation.chooseScoringCategory();
+            }
+            console.log(values);
+            this.checkProbabilities();
+            // this.botValuation(randomCategory);
+            // let tempArray: number[] = this.freeCategories.filter((element) => element !== randomCategory);
+            // this.freeCategories = tempArray;
+            this.categoryCounter--;
         }
         botHard() {
             console.log("HARD BOT");
@@ -98,6 +107,16 @@ var DiceCup;
             let valuation = new DiceCup.Valuation(_category, DiceCup.dices);
             let value = valuation.chooseScoringCategory();
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.updateSummary(value, _category, this.name); });
+        }
+        checkProbabilities() {
+            let dices = [1, 2, 3, 4, 5, 6];
+            let sum = [];
+            let probabilities = [];
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 6; j++) {
+                    sum.push(dices[i] + dices[j]);
+                }
+            }
         }
     }
     DiceCup.Bot = Bot;
@@ -193,6 +212,9 @@ var DiceCup;
             document.getElementById(this.id).style.transition = "width 1s linear";
             this.percentage = (_count * 100) / this.time;
             document.getElementById(this.id).style.width = this.percentage + "%";
+            if (document.getElementById(this.id).style.width == "0%") {
+                ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
+            }
         }
     }
     DiceCup.TimerBar = TimerBar;
@@ -834,7 +856,7 @@ var DiceCup;
     DiceCup.highscore = 0;
     DiceCup.roundTimer = 3;
     DiceCup.roundCounter = 1;
-    DiceCup.maxRounds = 1;
+    DiceCup.maxRounds = 12;
     let bots = [];
     async function initViewport() {
         DiceCup.viewport.camera.mtxPivot.translateZ(10);
