@@ -34,7 +34,7 @@ namespace DiceCup {
                         ],{
                             duration: 1000, 
                             iterations: Infinity, 
-                            delay: 100 * i
+                            // delay: 100 * i
                         }
                     );
                     if (_phrase[counter][i] == " ") {
