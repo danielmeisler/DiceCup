@@ -25,6 +25,7 @@ declare namespace DiceCup {
         botHard(): void;
         private botValuation;
         private checkProbabilities;
+        private chooseCategoryProbabilities;
     }
 }
 declare namespace DiceCup {
