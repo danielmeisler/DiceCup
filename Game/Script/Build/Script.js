@@ -94,7 +94,9 @@ var DiceCup;
                 values[i] = valuation.chooseScoringCategory();
             }
             console.log(values);
-            this.checkProbabilities(values);
+            new DiceCup.Probabilities(DiceCup.dices, values);
+            // prob.numberProbabilities(values);
+            // prob.colorProbabilities(values);
             // this.botValuation(randomCategory);
             // let tempArray: number[] = this.freeCategories.filter((element) => element !== randomCategory);
             // this.freeCategories = tempArray;
@@ -107,70 +109,6 @@ var DiceCup;
             let valuation = new DiceCup.Valuation(_category, DiceCup.dices);
             let value = valuation.chooseScoringCategory();
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.updateSummary(value, _category, this.name); });
-        }
-        checkProbabilities(_values) {
-            let sum = [];
-            let results = [];
-            let probabilities = [];
-            let sumProb = [];
-            let values = [];
-            let positive = [];
-            let negative = [];
-            let combined = [];
-            let tempSum = this.chooseCategoryProbabilities();
-            sum = tempSum.filter(function (elem, index, self) { return index === self.indexOf(elem); });
-            tempSum.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
-            results = results.filter(Number);
-            for (let i = 0; i < sum.length; i++) {
-                probabilities[i] = (results[i] * 100) / tempSum.length;
-                probabilities[i] = (Number)(probabilities[i].toFixed(2));
-                if (i < (sum.length / 2) - 1) {
-                    sumProb[i] = [sum[i], -probabilities[i]];
-                }
-                else {
-                    sumProb[i] = [sum[i], probabilities[i]];
-                }
-            }
-            for (let j = 3; j <= 8; j++) {
-                for (let i = 0; i < sumProb.length; i++) {
-                    if (sumProb[i][0] == _values[j]) {
-                        values.push([_values[j], sumProb[i][1]]);
-                    }
-                }
-            }
-            for (let i = 0; i < values.length; i++) {
-                positive[i] = [];
-                negative[i] = [];
-                if (values[i][1] > 0) {
-                    positive[i].push(values[i][0], values[i][1]);
-                }
-                else {
-                    negative[i].push(values[i][0], values[i][1]);
-                }
-            }
-            positive = positive.filter(function (x) { return (x.join('').length !== 0); });
-            negative = negative.filter(function (x) { return (x.join('').length !== 0); });
-            positive.sort((a, b) => { return a[1] - b[1]; });
-            negative.sort((a, b) => { return a[1] - b[1]; });
-            combined = positive.concat(negative);
-            console.log(combined);
-        }
-        chooseCategoryProbabilities() {
-            let dices = [1, 2, 3, 4, 5, 6];
-            let sum = [];
-            for (let i = 0; i < 6; i++) {
-                for (let j = 0; j < 6; j++) {
-                    sum.push(dices[i] + dices[j]);
-                }
-            }
-            // for (let i = 0; i < 6; i++) {
-            //     for (let j = 0; j < 6; j++) {
-            //         for (let k = 0; k < 6; k++) {
-            //             sum.push(dices[i] + dices[j] + dices[k]);
-            //         }
-            //     }
-            // }
-            return sum;
         }
     }
     DiceCup.Bot = Bot;
@@ -189,6 +127,99 @@ var DiceCup;
         }
     }
     DiceCup.Dice = Dice;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    class Probabilities {
+        values = [];
+        dices;
+        allProbs = [];
+        constructor(_dices, _values) {
+            this.dices = _dices;
+            this.values = _values;
+            this.fillProbabilities();
+        }
+        fillProbabilities() {
+            for (let i = 0; i < Object.keys(DiceCup.ScoringCategory).length / 2; i++) {
+                this.allProbs.push({ category: "", points: 0, probability: 0 });
+                this.allProbs[i].category = DiceCup.ScoringCategory[i];
+            }
+            this.numberProbabilities();
+            this.colorProbabilities();
+            this.doublesProbabilities();
+            this.oneTwoThreeProbabilities();
+            this.diceCupProbabilities();
+            console.log(this.allProbs);
+        }
+        numberProbabilities() {
+            let diceValues = this.dices.map((element) => element.value);
+            let results = [];
+            diceValues.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
+            for (let cat = DiceCup.ScoringCategory.fours, diceValues_456 = 4; cat <= DiceCup.ScoringCategory.sixes; cat++, diceValues_456++) {
+                if (results[diceValues_456]) {
+                    this.allProbs[cat].points = this.values[cat];
+                    this.allProbs[cat].probability = Math.round((((1 / 6) ** results[diceValues_456]) * 100) * 100) / 100;
+                }
+            }
+        }
+        colorProbabilities() {
+            // for (let cat = ScoringCategory.white; cat <= ScoringCategory.yellow; cat++) {
+            //     this.allProbs[cat].points = this.values[cat];
+            //     this.allProbs[cat].probability = Math.round((this.sumProbabilities(12, this.values[cat]) * 100) * 100) / 100;
+            // }
+            let dices = [1, 2, 3, 4, 5, 6];
+            let sum = [];
+            let nonFilteredSum = [];
+            let results = [];
+            let probabilities = [];
+            for (let i = 0; i < dices.length; i++) {
+                for (let j = 0; j < dices.length; j++) {
+                    nonFilteredSum.push(dices[i] + dices[j]);
+                }
+            }
+            sum = nonFilteredSum.filter(function (elem, index, self) { return index === self.indexOf(elem); });
+            nonFilteredSum.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
+            results = results.filter(Number);
+            for (let i = 0; i < sum.length; i++) {
+                probabilities[i] = (results[i] * 100) / nonFilteredSum.length;
+                probabilities[i] = Math.round(probabilities[i] * 100) / 100;
+            }
+            for (let cat = DiceCup.ScoringCategory.white; cat <= DiceCup.ScoringCategory.yellow; cat++) {
+                for (let i = 0; i < sum.length; i++) {
+                    if (sum[i] == this.values[cat]) {
+                        this.allProbs[cat].points = this.values[cat];
+                        this.allProbs[cat].probability = probabilities[i];
+                    }
+                }
+            }
+        }
+        doublesProbabilities() {
+            this.allProbs[DiceCup.ScoringCategory.doubles].points = this.values[DiceCup.ScoringCategory.doubles];
+            this.allProbs[DiceCup.ScoringCategory.doubles].probability = Math.round((((1 / 6) ** (this.values[DiceCup.ScoringCategory.doubles] / 10)) * 100) * 100) / 100;
+        }
+        oneTwoThreeProbabilities() {
+            let counter = 0;
+            this.dices.map((value) => {
+                if (value.value < 4) {
+                    counter++;
+                }
+            });
+            this.allProbs[DiceCup.ScoringCategory.oneToThree].probability = Math.round((((1 / 2) ** counter) * 100) * 100) / 100;
+            this.allProbs[DiceCup.ScoringCategory.oneToThree].points = this.values[DiceCup.ScoringCategory.oneToThree];
+        }
+        diceCupProbabilities() {
+            this.allProbs[DiceCup.ScoringCategory.diceCup].points = this.values[DiceCup.ScoringCategory.diceCup];
+            this.allProbs[DiceCup.ScoringCategory.diceCup].probability = Math.round((this.sumProbabilities(12, this.values[DiceCup.ScoringCategory.diceCup]) * 100) * 100) / 100;
+        }
+        sumProbabilities(nDices, sum) {
+            let dices = [1, 2, 3, 4, 5, 6];
+            if (nDices == 1) {
+                return dices.includes(sum) ? 1 / 6 : 0;
+            }
+            return dices.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i) * this.sumProbabilities(1, i), 0);
+        }
+    }
+    DiceCup.Probabilities = Probabilities;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -426,7 +457,7 @@ var DiceCup;
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.add("emptyBackground");
         document.getElementById("categoryBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"), new DiceCup.TimerBar("categoryTimer_id", 5); });
     }
     DiceCup.showCategories = showCategories;
     function hideCategories() {
@@ -757,7 +788,7 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
-        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
+        ƒ.Time.game.setTimer(5000, 1, () => { hideSummary(); });
     }
     DiceCup.showSummary = showSummary;
     function hideSummary() {

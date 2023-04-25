@@ -24,8 +24,6 @@ declare namespace DiceCup {
         botMedium(): void;
         botHard(): void;
         private botValuation;
-        private checkProbabilities;
-        private chooseCategoryProbabilities;
     }
 }
 declare namespace DiceCup {
@@ -34,6 +32,21 @@ declare namespace DiceCup {
         value: number;
         constructor(_color: DiceColor);
         roll(): number;
+    }
+}
+declare namespace DiceCup {
+    class Probabilities {
+        private values;
+        private dices;
+        private allProbs;
+        constructor(_dices: Dice[], _values: number[]);
+        fillProbabilities(): void;
+        private numberProbabilities;
+        private colorProbabilities;
+        private doublesProbabilities;
+        private oneTwoThreeProbabilities;
+        private diceCupProbabilities;
+        private sumProbabilities;
     }
 }
 declare namespace DiceCup {
@@ -198,6 +211,13 @@ declare namespace DiceCup {
     interface BotDao {
         botName: string;
         difficulty: BotDifficulty;
+    }
+}
+declare namespace DiceCup {
+    interface ProbabilitiesDao {
+        category: string;
+        points: number;
+        probability: number;
     }
 }
 declare namespace DiceCup {
