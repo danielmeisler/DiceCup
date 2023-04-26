@@ -134,6 +134,7 @@ var DiceCup;
         values = [];
         dices;
         allProbs = [];
+        diceCupProbs = new Map();
         constructor(_dices, _values) {
             this.dices = _dices;
             this.values = _values;
@@ -158,44 +159,21 @@ var DiceCup;
             for (let cat = DiceCup.ScoringCategory.fours, diceValues_456 = 4; cat <= DiceCup.ScoringCategory.sixes; cat++, diceValues_456++) {
                 if (results[diceValues_456]) {
                     this.allProbs[cat].points = this.values[cat];
-                    this.allProbs[cat].probability = Math.round((((1 / 6) ** results[diceValues_456]) * 100) * 100) / 100;
+                    this.allProbs[cat].probability = ((1 / 6) ** results[diceValues_456]) * 100;
                 }
             }
         }
         colorProbabilities() {
-            // for (let cat = ScoringCategory.white; cat <= ScoringCategory.yellow; cat++) {
-            //     this.allProbs[cat].points = this.values[cat];
-            //     this.allProbs[cat].probability = Math.round((this.sumProbabilities(12, this.values[cat]) * 100) * 100) / 100;
-            // }
-            let dices = [1, 2, 3, 4, 5, 6];
-            let sum = [];
-            let nonFilteredSum = [];
-            let results = [];
-            let probabilities = [];
-            for (let i = 0; i < dices.length; i++) {
-                for (let j = 0; j < dices.length; j++) {
-                    nonFilteredSum.push(dices[i] + dices[j]);
-                }
-            }
-            sum = nonFilteredSum.filter(function (elem, index, self) { return index === self.indexOf(elem); });
-            nonFilteredSum.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
-            results = results.filter(Number);
-            for (let i = 0; i < sum.length; i++) {
-                probabilities[i] = (results[i] * 100) / nonFilteredSum.length;
-                probabilities[i] = Math.round(probabilities[i] * 100) / 100;
-            }
             for (let cat = DiceCup.ScoringCategory.white; cat <= DiceCup.ScoringCategory.yellow; cat++) {
-                for (let i = 0; i < sum.length; i++) {
-                    if (sum[i] == this.values[cat]) {
-                        this.allProbs[cat].points = this.values[cat];
-                        this.allProbs[cat].probability = probabilities[i];
-                    }
-                }
+                this.allProbs[cat].points = this.values[cat];
+                this.allProbs[cat].probability = this.sumProbabilities(2, this.values[cat]) * 100;
             }
         }
         doublesProbabilities() {
+            let power = (this.values[DiceCup.ScoringCategory.doubles] / 10);
+            let opposite = 6 - (this.values[DiceCup.ScoringCategory.doubles] / 10);
+            this.allProbs[DiceCup.ScoringCategory.doubles].probability = (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
             this.allProbs[DiceCup.ScoringCategory.doubles].points = this.values[DiceCup.ScoringCategory.doubles];
-            this.allProbs[DiceCup.ScoringCategory.doubles].probability = Math.round((((1 / 6) ** (this.values[DiceCup.ScoringCategory.doubles] / 10)) * 100) * 100) / 100;
         }
         oneTwoThreeProbabilities() {
             let counter = 0;
@@ -204,19 +182,25 @@ var DiceCup;
                     counter++;
                 }
             });
-            this.allProbs[DiceCup.ScoringCategory.oneToThree].probability = Math.round((((1 / 2) ** counter) * 100) * 100) / 100;
+            this.allProbs[DiceCup.ScoringCategory.oneToThree].probability = ((1 / 2) ** counter) * 100;
             this.allProbs[DiceCup.ScoringCategory.oneToThree].points = this.values[DiceCup.ScoringCategory.oneToThree];
         }
         diceCupProbabilities() {
             this.allProbs[DiceCup.ScoringCategory.diceCup].points = this.values[DiceCup.ScoringCategory.diceCup];
-            this.allProbs[DiceCup.ScoringCategory.diceCup].probability = Math.round((this.sumProbabilities(12, this.values[DiceCup.ScoringCategory.diceCup]) * 100) * 100) / 100;
+            this.allProbs[DiceCup.ScoringCategory.diceCup].probability = this.sumProbabilities(10, this.values[DiceCup.ScoringCategory.diceCup]) * 100;
         }
         sumProbabilities(nDices, sum) {
-            let dices = [1, 2, 3, 4, 5, 6];
-            if (nDices == 1) {
-                return dices.includes(sum) ? 1 / 6 : 0;
-            }
-            return dices.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i) * this.sumProbabilities(1, i), 0);
+            let dice_numbers = [1, 2, 3, 4, 5, 6];
+            const calculate = (nDices, sum) => {
+                if (nDices == 1) {
+                    return dice_numbers.includes(sum) ? 1 / 6 : 0;
+                }
+                return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i) * this.sumProbabilities(1, i), 0);
+            };
+            let key = JSON.stringify([nDices, sum]);
+            if (!this.diceCupProbs.has(key))
+                this.diceCupProbs.set(key, calculate(nDices, sum));
+            return this.diceCupProbs.get(key);
         }
     }
     DiceCup.Probabilities = Probabilities;
@@ -290,6 +274,9 @@ var DiceCup;
             this.time = _time;
             ƒ.Time.game.setTimer(1000, this.time, (_event) => { this.getTimerPercentage(_event.count - 1); });
         }
+        resetTimer() {
+            ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
+        }
         getTimerPercentage(_count) {
             // let width: number = document.getElementById("categoryTimer_id").offsetWidth;
             // this.newWidth = (this.percentage * width) / 100;
@@ -297,9 +284,6 @@ var DiceCup;
             document.getElementById(this.id).style.transition = "width 1s linear";
             this.percentage = (_count * 100) / this.time;
             document.getElementById(this.id).style.width = this.percentage + "%";
-            if (document.getElementById(this.id).style.width == "0%") {
-                ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
-            }
         }
     }
     DiceCup.TimerBar = TimerBar;
@@ -943,6 +927,7 @@ var DiceCup;
     DiceCup.roundCounter = 1;
     DiceCup.maxRounds = 12;
     let bots = [];
+    let gameTimer;
     async function initViewport() {
         DiceCup.viewport.camera.mtxPivot.translateZ(10);
         DiceCup.viewport.camera.mtxPivot.rotateY(180);
@@ -970,6 +955,7 @@ var DiceCup;
             DiceCup.firstRound = false;
         }
         else {
+            gameTimer.resetTimer();
             for (let i = 0; i < 12; i++) {
                 document.getElementById("diceContainer_id_" + i).remove();
             }
@@ -996,7 +982,7 @@ var DiceCup;
             bots[index].chooseDifficulty();
         }
         console.log("Augen auf ...");
-        new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
+        gameTimer = new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
         ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
     }
     DiceCup.round = round;

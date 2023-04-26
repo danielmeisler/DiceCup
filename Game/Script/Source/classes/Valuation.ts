@@ -55,7 +55,7 @@ namespace DiceCup {
         }
 
 
-        public calculateNumber(_number: number, _number2?: number, _number3?: number): number {
+        private calculateNumber(_number: number, _number2?: number, _number3?: number): number {
             let value: number = 0;
 
             for (let i = 0; i < this.dices.length; i++) {
@@ -74,7 +74,7 @@ namespace DiceCup {
             return value;
         }
 
-        public calculateColor(_color: DiceColor): number {
+        private calculateColor(_color: DiceColor): number {
             let value: number = 0;
 
             for (let i = 0; i < this.dices.length; i++) {
@@ -88,7 +88,7 @@ namespace DiceCup {
             return value;
         }
         
-        public calculateDoubles(): number {
+        private calculateDoubles(): number {
             let value: number = 0;
 
             for (let i = 0; i < this.dices.length-1; i++) {
@@ -102,7 +102,7 @@ namespace DiceCup {
             return value;
         }
 
-        public calculateDiceCup(): number {
+        private calculateDiceCup(): number {
             let value: number = 0;
 
             for (let i = 0; i < this.dices.length; i++) {

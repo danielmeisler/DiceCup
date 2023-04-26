@@ -9,6 +9,7 @@ namespace DiceCup {
     export let maxRounds: number = 12;
     export let gameSettings: SinglePlayerSettingsDao;
     let bots: Bot[] = [];
+    let gameTimer: TimerBar;
 
     export async function initViewport() {
         viewport.camera.mtxPivot.translateZ(10);
@@ -38,6 +39,7 @@ namespace DiceCup {
             document.getElementById("game").appendChild(gameDiv);
             firstRound = false;
         } else {
+            gameTimer.resetTimer();
             for (let i: number = 0; i < 12; i++) {
                 document.getElementById("diceContainer_id_" + i).remove();
             }
@@ -69,7 +71,8 @@ namespace DiceCup {
 
         
             console.log("Augen auf ...");
-            new TimerBar("hudTimer_id", roundTimer);
+
+            gameTimer = new TimerBar("hudTimer_id", roundTimer);
             ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
     }
 

@@ -39,6 +39,7 @@ declare namespace DiceCup {
         private values;
         private dices;
         private allProbs;
+        private diceCupProbs;
         constructor(_dices: Dice[], _values: number[]);
         fillProbabilities(): void;
         private numberProbabilities;
@@ -64,6 +65,7 @@ declare namespace DiceCup {
         private percentage;
         private id;
         constructor(_id: string, _time: number);
+        resetTimer(): void;
         private getTimerPercentage;
     }
 }
@@ -73,10 +75,10 @@ declare namespace DiceCup {
         dices: Dice[];
         constructor(_category: ScoringCategory, _dices: Dice[]);
         chooseScoringCategory(): number;
-        calculateNumber(_number: number, _number2?: number, _number3?: number): number;
-        calculateColor(_color: DiceColor): number;
-        calculateDoubles(): number;
-        calculateDiceCup(): number;
+        private calculateNumber;
+        private calculateColor;
+        private calculateDoubles;
+        private calculateDiceCup;
     }
 }
 declare namespace DiceCup {
