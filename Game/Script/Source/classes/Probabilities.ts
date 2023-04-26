@@ -33,8 +33,10 @@ namespace DiceCup {
 
             for (let cat = ScoringCategory.fours, diceValues_456 = 4; cat <= ScoringCategory.sixes; cat++, diceValues_456++) {
                 if (results[diceValues_456]) {
+                    let power: number = results[diceValues_456];
+                    let opposite: number = 12 - results[diceValues_456];
+                    this.allProbs[cat].probability = (((1/6) ** power) * ((5/6) ** opposite)) * 100;
                     this.allProbs[cat].points = this.values[cat];
-                    this.allProbs[cat].probability = ((1/6) ** results[diceValues_456]) * 100;
                 }
             }
         }

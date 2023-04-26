@@ -158,8 +158,10 @@ var DiceCup;
             diceValues.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
             for (let cat = DiceCup.ScoringCategory.fours, diceValues_456 = 4; cat <= DiceCup.ScoringCategory.sixes; cat++, diceValues_456++) {
                 if (results[diceValues_456]) {
+                    let power = results[diceValues_456];
+                    let opposite = 12 - results[diceValues_456];
+                    this.allProbs[cat].probability = (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
                     this.allProbs[cat].points = this.values[cat];
-                    this.allProbs[cat].probability = ((1 / 6) ** results[diceValues_456]) * 100;
                 }
             }
         }
