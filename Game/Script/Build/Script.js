@@ -61,49 +61,48 @@ var DiceCup;
         name;
         constructor(_name, _difficulty, _dices) {
             this.name = _name;
-            this.difficulty = _difficulty;
             this.dices = _dices;
+            this.difficulty = _difficulty;
         }
-        chooseDifficulty() {
-            switch (this.difficulty) {
-                case DiceCup.BotDifficulty.easy:
-                    this.botEasy();
-                    break;
-                case DiceCup.BotDifficulty.medium:
-                    this.botMedium();
-                    break;
-                case DiceCup.BotDifficulty.hard:
-                    this.botHard();
-                    break;
-            }
-        }
-        botEasy() {
-            console.log("EASY BOT");
-            let randomCategory = this.freeCategories[(Math.floor((Math.random() * this.categoryCounter)))];
-            let tempArray = this.freeCategories.filter((element) => element !== randomCategory);
-            this.freeCategories = tempArray;
-            this.botValuation(randomCategory);
-            this.categoryCounter--;
-        }
-        botMedium() {
-            console.log("MEDIUM BOT");
-            //LOGIC
+        botsTurn() {
+            let pickedCategory = 0;
             let values = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
                 let valuation = new DiceCup.Valuation(this.freeCategories[i], DiceCup.dices);
                 values[i] = valuation.chooseScoringCategory();
             }
-            console.log(values);
-            new DiceCup.Probabilities(DiceCup.dices, values);
-            // prob.numberProbabilities(values);
-            // prob.colorProbabilities(values);
-            // this.botValuation(randomCategory);
-            // let tempArray: number[] = this.freeCategories.filter((element) => element !== randomCategory);
-            // this.freeCategories = tempArray;
+            let prob = new DiceCup.Probabilities(DiceCup.dices, values, this.freeCategories);
+            let allProb = prob.fillProbabilities();
+            pickedCategory = this.chooseDifficulty(allProb);
+            this.botValuation(pickedCategory);
+            let tempArray = this.freeCategories.filter((element) => element !== pickedCategory);
+            this.freeCategories = tempArray;
             this.categoryCounter--;
+            console.log(this.freeCategories);
         }
-        botHard() {
-            console.log("HARD BOT");
+        chooseDifficulty(_categories) {
+            let pickedCategory = 0;
+            switch (this.difficulty) {
+                case DiceCup.BotDifficulty.easy:
+                    pickedCategory = this.botEasy(_categories);
+                    break;
+                case DiceCup.BotDifficulty.medium:
+                    pickedCategory = this.botMedium(_categories);
+                    break;
+                case DiceCup.BotDifficulty.hard:
+                    pickedCategory = this.botHard(_categories);
+                    break;
+            }
+            return pickedCategory;
+        }
+        botEasy(_categories) {
+            return (_categories[(Math.floor((Math.random() * this.categoryCounter)))].category);
+        }
+        botMedium(_categories) {
+            return (_categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category);
+        }
+        botHard(_categories) {
+            return (_categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category);
         }
         botValuation(_category) {
             let valuation = new DiceCup.Valuation(_category, DiceCup.dices);
@@ -132,64 +131,92 @@ var DiceCup;
 (function (DiceCup) {
     class Probabilities {
         values = [];
+        freeCategories = [];
         dices;
         allProbs = [];
         diceCupProbs = new Map();
-        constructor(_dices, _values) {
+        constructor(_dices, _values, _freeCategories) {
             this.dices = _dices;
             this.values = _values;
-            this.fillProbabilities();
+            this.freeCategories = _freeCategories;
         }
         fillProbabilities() {
-            for (let i = 0; i < Object.keys(DiceCup.ScoringCategory).length / 2; i++) {
-                this.allProbs.push({ category: "", points: 0, probability: 0 });
-                this.allProbs[i].category = DiceCup.ScoringCategory[i];
+            for (let i = 0; i < this.freeCategories.length; i++) {
+                this.allProbs.push({ stringCategory: "", category: null, points: 0, probability: 0, value: 0 });
+                this.allProbs[i].points = this.values[i];
+                this.allProbs[i].stringCategory = DiceCup.ScoringCategory[this.freeCategories[i]];
+                this.allProbs[i].category = this.freeCategories[i];
+                this.allProbs[i].probability = this.chooseProbabilities(this.freeCategories[i]);
             }
-            this.numberProbabilities();
-            this.colorProbabilities();
-            this.doublesProbabilities();
-            this.oneTwoThreeProbabilities();
-            this.diceCupProbabilities();
+            // this.numberProbabilities();
+            // this.colorProbabilities();
+            // this.doublesProbabilities();
+            // this.oneToThreeProbabilities();
+            // this.diceCupProbabilities();
+            // this.sortProbabilities();
             console.log(this.allProbs);
+            return this.allProbs;
         }
-        numberProbabilities() {
+        chooseProbabilities(_category) {
+            let prob = 0;
+            switch (_category) {
+                case DiceCup.ScoringCategory.fours:
+                case DiceCup.ScoringCategory.fives:
+                case DiceCup.ScoringCategory.sixes:
+                    prob = this.numberProbabilities(_category);
+                    break;
+                case DiceCup.ScoringCategory.white:
+                case DiceCup.ScoringCategory.black:
+                case DiceCup.ScoringCategory.red:
+                case DiceCup.ScoringCategory.blue:
+                case DiceCup.ScoringCategory.green:
+                case DiceCup.ScoringCategory.yellow:
+                    prob = this.colorProbabilities(_category);
+                    break;
+                case DiceCup.ScoringCategory.doubles:
+                    prob = this.doublesProbabilities(_category);
+                    break;
+                case DiceCup.ScoringCategory.oneToThree:
+                    prob = this.oneToThreeProbabilities(_category);
+                    break;
+                case DiceCup.ScoringCategory.diceCup:
+                    prob = this.diceCupProbabilities(_category);
+                    break;
+                default:
+                    break;
+            }
+            return prob;
+        }
+        numberProbabilities(_category) {
             let diceValues = this.dices.map((element) => element.value);
             let results = [];
             diceValues.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
-            for (let cat = DiceCup.ScoringCategory.fours, diceValues_456 = 4; cat <= DiceCup.ScoringCategory.sixes; cat++, diceValues_456++) {
-                if (results[diceValues_456]) {
-                    let power = results[diceValues_456];
-                    let opposite = 12 - results[diceValues_456];
-                    this.allProbs[cat].probability = (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
-                    this.allProbs[cat].points = this.values[cat];
-                }
-            }
+            let power = results[_category + 4];
+            let opposite = 12 - results[_category + 4];
+            return (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
         }
-        colorProbabilities() {
-            for (let cat = DiceCup.ScoringCategory.white; cat <= DiceCup.ScoringCategory.yellow; cat++) {
-                this.allProbs[cat].points = this.values[cat];
-                this.allProbs[cat].probability = this.sumProbabilities(2, this.values[cat]) * 100;
-            }
+        colorProbabilities(_category) {
+            return this.sumProbabilities(2, this.values[_category]) * 100;
         }
-        doublesProbabilities() {
-            let power = (this.values[DiceCup.ScoringCategory.doubles] / 10);
-            let opposite = 6 - (this.values[DiceCup.ScoringCategory.doubles] / 10);
-            this.allProbs[DiceCup.ScoringCategory.doubles].probability = (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
-            this.allProbs[DiceCup.ScoringCategory.doubles].points = this.values[DiceCup.ScoringCategory.doubles];
+        doublesProbabilities(_category) {
+            let power = (this.values[_category] / 10);
+            let opposite = 6 - (this.values[_category] / 10);
+            return (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
         }
-        oneTwoThreeProbabilities() {
-            let counter = 0;
+        oneToThreeProbabilities(_category) {
+            let power = 0;
             this.dices.map((value) => {
                 if (value.value < 4) {
-                    counter++;
+                    power++;
                 }
             });
-            this.allProbs[DiceCup.ScoringCategory.oneToThree].probability = ((1 / 2) ** counter) * 100;
-            this.allProbs[DiceCup.ScoringCategory.oneToThree].points = this.values[DiceCup.ScoringCategory.oneToThree];
+            let opposite = 12 - power;
+            // return (((1/2) ** power) * ((1/2) * opposite)) * 100;
+            return this.sumProbabilities(power, this.values[_category]) * 100;
+            // this.allProbs[ScoringCategory.oneToThree].probability = this.sumProbabilities(12, this.values[ScoringCategory.oneToThree]) * 100
         }
-        diceCupProbabilities() {
-            this.allProbs[DiceCup.ScoringCategory.diceCup].points = this.values[DiceCup.ScoringCategory.diceCup];
-            this.allProbs[DiceCup.ScoringCategory.diceCup].probability = this.sumProbabilities(10, this.values[DiceCup.ScoringCategory.diceCup]) * 100;
+        diceCupProbabilities(_category) {
+            return this.sumProbabilities(10, this.values[_category]) * 100;
         }
         sumProbabilities(nDices, sum) {
             let dice_numbers = [1, 2, 3, 4, 5, 6];
@@ -203,6 +230,38 @@ var DiceCup;
             if (!this.diceCupProbs.has(key))
                 this.diceCupProbs.set(key, calculate(nDices, sum));
             return this.diceCupProbs.get(key);
+        }
+        sortProbabilities() {
+            this.allProbs.map(function (elem) {
+                elem.value = elem.points - elem.probability;
+                if (elem.category == DiceCup.ScoringCategory.white || DiceCup.ScoringCategory.black || DiceCup.ScoringCategory.red || DiceCup.ScoringCategory.blue || DiceCup.ScoringCategory.green || DiceCup.ScoringCategory.yellow) {
+                    elem.value = elem.value * 0.5;
+                }
+                if (elem.category == DiceCup.ScoringCategory.fours || DiceCup.ScoringCategory.fives || DiceCup.ScoringCategory.sixes) {
+                    elem.value = elem.value * 2;
+                }
+                if (elem.category == DiceCup.ScoringCategory.doubles) {
+                    elem.value = elem.value * 2;
+                }
+                if (elem.category == DiceCup.ScoringCategory.oneToThree) {
+                    elem.value = elem.value / 2;
+                }
+                if (elem.category == DiceCup.ScoringCategory.diceCup) {
+                    elem.value = elem.value / 4;
+                }
+            });
+            // this.allProbs.sort( function( a , b){
+            //     if((a.value * a.points) > (b.points * b.value)) return 1;
+            //     if((a.value * a.points) < (b.points * b.value)) return -1;
+            //     return 0;
+            // });
+            this.allProbs.sort(function (a, b) {
+                if (a.value > b.value)
+                    return 1;
+                if (a.value < b.value)
+                    return -1;
+                return 0;
+            });
         }
     }
     DiceCup.Probabilities = Probabilities;
@@ -277,7 +336,6 @@ var DiceCup;
             ƒ.Time.game.setTimer(1000, this.time, (_event) => { this.getTimerPercentage(_event.count - 1); });
         }
         resetTimer() {
-            ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
         }
         getTimerPercentage(_count) {
             // let width: number = document.getElementById("categoryTimer_id").offsetWidth;
@@ -286,6 +344,9 @@ var DiceCup;
             document.getElementById(this.id).style.transition = "width 1s linear";
             this.percentage = (_count * 100) / this.time;
             document.getElementById(this.id).style.width = this.percentage + "%";
+            if (document.getElementById(this.id).style.width == "0%") {
+                ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
+            }
         }
     }
     DiceCup.TimerBar = TimerBar;
@@ -443,7 +504,7 @@ var DiceCup;
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.add("emptyBackground");
         document.getElementById("categoryBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"), new DiceCup.TimerBar("categoryTimer_id", 5); });
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
     }
     DiceCup.showCategories = showCategories;
     function hideCategories() {
@@ -774,7 +835,7 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
-        ƒ.Time.game.setTimer(5000, 1, () => { hideSummary(); });
+        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
     }
     DiceCup.showSummary = showSummary;
     function hideSummary() {
@@ -929,7 +990,6 @@ var DiceCup;
     DiceCup.roundCounter = 1;
     DiceCup.maxRounds = 12;
     let bots = [];
-    let gameTimer;
     async function initViewport() {
         DiceCup.viewport.camera.mtxPivot.translateZ(10);
         DiceCup.viewport.camera.mtxPivot.rotateY(180);
@@ -957,7 +1017,6 @@ var DiceCup;
             DiceCup.firstRound = false;
         }
         else {
-            gameTimer.resetTimer();
             for (let i = 0; i < 12; i++) {
                 document.getElementById("diceContainer_id_" + i).remove();
             }
@@ -981,10 +1040,10 @@ var DiceCup;
             // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
         }
         for (let index = 0; index < bots.length; index++) {
-            bots[index].chooseDifficulty();
+            bots[index].botsTurn();
         }
         console.log("Augen auf ...");
-        gameTimer = new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
+        new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
         ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
     }
     DiceCup.round = round;

@@ -60,7 +60,7 @@ namespace DiceCup {
         document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.add("emptyBackground");
         document.getElementById("categoryBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"), new TimerBar("categoryTimer_id", 5)});
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
     }
 
     export function hideCategories() {

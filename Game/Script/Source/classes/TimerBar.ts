@@ -15,7 +15,7 @@ namespace DiceCup{
         }
 
         public resetTimer(): void {
-            ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
+
         }
 
         private getTimerPercentage(_count: number): void {
@@ -25,6 +25,10 @@ namespace DiceCup{
             document.getElementById(this.id).style.transition = "width 1s linear";
             this.percentage = (_count * 100) / this.time;
             document.getElementById(this.id).style.width = this.percentage + "%";
+            if (document.getElementById(this.id).style.width == "0%") {
+                ƒ.Time.game.setTimer(1000, 1, () => document.getElementById(this.id).style.width = "100%");
+            }
+           
         }
         
     }
