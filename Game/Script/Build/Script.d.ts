@@ -52,6 +52,7 @@ declare namespace DiceCup {
         private diceCupProbabilities;
         private sumProbabilities;
         private sortProbabilities;
+        private binomial;
     }
 }
 declare namespace DiceCup {
@@ -115,7 +116,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     enum BotDifficulty {
         easy = 0,
-        medium = 1,
+        normal = 1,
         hard = 2
     }
 }

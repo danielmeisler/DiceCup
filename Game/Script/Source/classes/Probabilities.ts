@@ -14,23 +14,14 @@ namespace DiceCup {
         }
 
         public fillProbabilities(): ProbabilitiesDao[] {
-
             for (let i = 0; i < this.freeCategories.length; i++) {
-                this.allProbs.push({stringCategory: "", category: null, points: 0, probability: 0, value: 0});
+                this.allProbs.push({stringCategory: null, category: null, points: null, probability: null, value: null});
                 this.allProbs[i].points = this.values[i];
                 this.allProbs[i].stringCategory = ScoringCategory[this.freeCategories[i]];
                 this.allProbs[i].category = this.freeCategories[i];
-                this.allProbs[i].probability = this.chooseProbabilities(this.freeCategories[i]);
+                this.allProbs[i].probability = this.values[i] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
-
-            // this.numberProbabilities();
-            // this.colorProbabilities();
-            // this.doublesProbabilities();
-            // this.oneToThreeProbabilities();
-            // this.diceCupProbabilities();
-
             // this.sortProbabilities();
-
             console.log(this.allProbs);
             return this.allProbs;
         }
@@ -60,8 +51,6 @@ namespace DiceCup {
                 case ScoringCategory.diceCup:
                     prob = this.diceCupProbabilities(_category);
                     break;
-                default:
-                    break;
             }
             return prob;
         }
@@ -72,20 +61,22 @@ namespace DiceCup {
             diceValues.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
             let power: number = results[_category + 4];
             let opposite: number = 12 - results[_category + 4];
-            return (((1/6) ** power) * ((5/6) ** opposite)) * 100;
+            return ((1/6) ** power) * ((5/6) ** opposite) * this.binomial(12, power) * 100; 
         }
 
         private colorProbabilities(_category: number): number {
-            return this.sumProbabilities(2, this.values[_category]) * 100;
+            let dice_numbers: number[] = [1, 2, 3, 4, 5, 6];
+            return this.sumProbabilities(2, this.values[_category], dice_numbers) * 100;
         }
 
         private doublesProbabilities(_category: number): number {
             let power: number = (this.values[_category] / 10);
             let opposite: number = 6 - (this.values[_category] / 10);
-            return (((1/6) ** power) * ((5/6) ** opposite)) * 100;
+            return ((1/6) ** power) * ((5/6) ** opposite) * 100;
         }
 
         private oneToThreeProbabilities(_category: number): number {
+            let dice_numbers: number[] = [1, 2, 3];   
             let power: number = 0;
             this.dices.map((value) => {
                 if (value.value < 4) {
@@ -93,23 +84,20 @@ namespace DiceCup {
                 }
             })
             let opposite: number = 12 - power;
-            // return (((1/2) ** power) * ((1/2) * opposite)) * 100;
-            return this.sumProbabilities(power, this.values[_category]) * 100;
-            // this.allProbs[ScoringCategory.oneToThree].probability = this.sumProbabilities(12, this.values[ScoringCategory.oneToThree]) * 100
+            return ((1/2) ** power) * ((1/2) ** opposite) * this.binomial(12, power) * this.sumProbabilities(power, this.values[_category], dice_numbers) * 100;
         }
 
         private diceCupProbabilities(_category: number): number {
-            return this.sumProbabilities(10, this.values[_category]) * 100;
+            let dice_numbers: number[] = [1, 2, 3, 4, 5, 6];
+            return this.sumProbabilities(10, this.values[_category], dice_numbers) * 100;
         }
 
-        private sumProbabilities(nDices: number, sum: number): number{
-            let dice_numbers: number[] = [1, 2, 3, 4, 5, 6];
-          
+        private sumProbabilities(nDices: number, sum: number, dice_numbers: number[]): number{
             const calculate = (nDices: number, sum: number): number => {
               if (nDices == 1) {
                 return dice_numbers.includes(sum) ? 1 / 6 : 0;
               }
-                return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i) * this.sumProbabilities(1, i), 0);
+                return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i, dice_numbers) * this.sumProbabilities(1, i, dice_numbers), 0);
             }
             let key = JSON.stringify([nDices, sum]);
 
@@ -150,5 +138,12 @@ namespace DiceCup {
                 return 0;
             });
         }
+
+        private binomial(n: number, k: number): number {
+           var coeff = 1;
+           for (var x = n-k+1; x <= n; x++) coeff *= x;
+           for (x = 1; x <= k; x++) coeff /= x;
+           return coeff;
+       }
     }
 }

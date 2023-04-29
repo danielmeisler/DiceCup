@@ -37,7 +37,7 @@ namespace DiceCup {
                 case BotDifficulty.easy:
                     pickedCategory = this.botEasy(_categories);
                     break;
-                case BotDifficulty.medium:
+                case BotDifficulty.normal:
                     pickedCategory = this.botMedium(_categories);
                     break;
                 case BotDifficulty.hard:

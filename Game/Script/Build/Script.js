@@ -86,7 +86,7 @@ var DiceCup;
                 case DiceCup.BotDifficulty.easy:
                     pickedCategory = this.botEasy(_categories);
                     break;
-                case DiceCup.BotDifficulty.medium:
+                case DiceCup.BotDifficulty.normal:
                     pickedCategory = this.botMedium(_categories);
                     break;
                 case DiceCup.BotDifficulty.hard:
@@ -142,17 +142,12 @@ var DiceCup;
         }
         fillProbabilities() {
             for (let i = 0; i < this.freeCategories.length; i++) {
-                this.allProbs.push({ stringCategory: "", category: null, points: 0, probability: 0, value: 0 });
+                this.allProbs.push({ stringCategory: null, category: null, points: null, probability: null, value: null });
                 this.allProbs[i].points = this.values[i];
                 this.allProbs[i].stringCategory = DiceCup.ScoringCategory[this.freeCategories[i]];
                 this.allProbs[i].category = this.freeCategories[i];
-                this.allProbs[i].probability = this.chooseProbabilities(this.freeCategories[i]);
+                this.allProbs[i].probability = this.values[i] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
-            // this.numberProbabilities();
-            // this.colorProbabilities();
-            // this.doublesProbabilities();
-            // this.oneToThreeProbabilities();
-            // this.diceCupProbabilities();
             // this.sortProbabilities();
             console.log(this.allProbs);
             return this.allProbs;
@@ -182,8 +177,6 @@ var DiceCup;
                 case DiceCup.ScoringCategory.diceCup:
                     prob = this.diceCupProbabilities(_category);
                     break;
-                default:
-                    break;
             }
             return prob;
         }
@@ -193,17 +186,19 @@ var DiceCup;
             diceValues.forEach(function (x) { results[x] = (results[x] || 0) + 1; });
             let power = results[_category + 4];
             let opposite = 12 - results[_category + 4];
-            return (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
+            return ((1 / 6) ** power) * ((5 / 6) ** opposite) * this.binomial(12, power) * 100;
         }
         colorProbabilities(_category) {
-            return this.sumProbabilities(2, this.values[_category]) * 100;
+            let dice_numbers = [1, 2, 3, 4, 5, 6];
+            return this.sumProbabilities(2, this.values[_category], dice_numbers) * 100;
         }
         doublesProbabilities(_category) {
             let power = (this.values[_category] / 10);
             let opposite = 6 - (this.values[_category] / 10);
-            return (((1 / 6) ** power) * ((5 / 6) ** opposite)) * 100;
+            return ((1 / 6) ** power) * ((5 / 6) ** opposite) * 100;
         }
         oneToThreeProbabilities(_category) {
+            let dice_numbers = [1, 2, 3];
             let power = 0;
             this.dices.map((value) => {
                 if (value.value < 4) {
@@ -211,20 +206,18 @@ var DiceCup;
                 }
             });
             let opposite = 12 - power;
-            // return (((1/2) ** power) * ((1/2) * opposite)) * 100;
-            return this.sumProbabilities(power, this.values[_category]) * 100;
-            // this.allProbs[ScoringCategory.oneToThree].probability = this.sumProbabilities(12, this.values[ScoringCategory.oneToThree]) * 100
+            return ((1 / 2) ** power) * ((1 / 2) ** opposite) * this.binomial(12, power) * this.sumProbabilities(power, this.values[_category], dice_numbers) * 100;
         }
         diceCupProbabilities(_category) {
-            return this.sumProbabilities(10, this.values[_category]) * 100;
-        }
-        sumProbabilities(nDices, sum) {
             let dice_numbers = [1, 2, 3, 4, 5, 6];
+            return this.sumProbabilities(10, this.values[_category], dice_numbers) * 100;
+        }
+        sumProbabilities(nDices, sum, dice_numbers) {
             const calculate = (nDices, sum) => {
                 if (nDices == 1) {
                     return dice_numbers.includes(sum) ? 1 / 6 : 0;
                 }
-                return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i) * this.sumProbabilities(1, i), 0);
+                return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i, dice_numbers) * this.sumProbabilities(1, i, dice_numbers), 0);
             };
             let key = JSON.stringify([nDices, sum]);
             if (!this.diceCupProbs.has(key))
@@ -262,6 +255,14 @@ var DiceCup;
                     return -1;
                 return 0;
             });
+        }
+        binomial(n, k) {
+            var coeff = 1;
+            for (var x = n - k + 1; x <= n; x++)
+                coeff *= x;
+            for (x = 1; x <= k; x++)
+                coeff /= x;
+            return coeff;
         }
     }
     DiceCup.Probabilities = Probabilities;
@@ -920,7 +921,7 @@ var DiceCup;
     let BotDifficulty;
     (function (BotDifficulty) {
         BotDifficulty[BotDifficulty["easy"] = 0] = "easy";
-        BotDifficulty[BotDifficulty["medium"] = 1] = "medium";
+        BotDifficulty[BotDifficulty["normal"] = 1] = "normal";
         BotDifficulty[BotDifficulty["hard"] = 2] = "hard";
     })(BotDifficulty = DiceCup.BotDifficulty || (DiceCup.BotDifficulty = {}));
 })(DiceCup || (DiceCup = {}));
@@ -1411,7 +1412,7 @@ var DiceCup;
                 botSettings[i].difficulty = DiceCup.BotDifficulty.easy;
             }
             else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.BotDifficulty[1]) {
-                botSettings[i].difficulty = DiceCup.BotDifficulty.medium;
+                botSettings[i].difficulty = DiceCup.BotDifficulty.normal;
             }
             else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.BotDifficulty[2]) {
                 botSettings[i].difficulty = DiceCup.BotDifficulty.hard;
@@ -1492,9 +1493,13 @@ var DiceCup;
         let chosenDifficulty = 0;
         let difficultySwitchText = document.createElement("div");
         difficultySwitchText.classList.add("switchDifficultyText");
-        difficultySwitchText.id = "switchDifficultyText_id_" + botCounter;
-        difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+        // difficultySwitchText.classList.add("scrollContainer");
         difficultySwitch.appendChild(difficultySwitchText);
+        let difficultyText = document.createElement("span");
+        // difficultyText.classList.add("scrollText");
+        difficultyText.id = "switchDifficultyText_id_" + botCounter;
+        difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+        difficultySwitchText.appendChild(difficultyText);
         let switchButtonRight = document.createElement("button");
         switchButtonRight.classList.add("switchDifficulty");
         difficultySwitch.appendChild(switchButtonRight);
@@ -1509,7 +1514,7 @@ var DiceCup;
             else {
                 chosenDifficulty = 0;
             }
-            difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+            difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
         });
         switchButtonLeft.addEventListener("click", () => {
             if (chosenDifficulty > 0) {
@@ -1518,7 +1523,7 @@ var DiceCup;
             else {
                 chosenDifficulty = 2;
             }
-            difficultySwitchText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+            difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
         });
     }
     function createAddPortrait() {

@@ -1,7 +1,7 @@
 namespace DiceCup {
     export enum BotDifficulty {
         easy,
-        medium,
+        normal,
         hard
     }
 }

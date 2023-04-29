@@ -61,7 +61,7 @@ namespace DiceCup {
             if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[0]) {
                 botSettings[i].difficulty = BotDifficulty.easy;
             } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[1]){
-                botSettings[i].difficulty = BotDifficulty.medium;
+                botSettings[i].difficulty = BotDifficulty.normal;
             } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[2]) {
                 botSettings[i].difficulty = BotDifficulty.hard;
             }
@@ -155,11 +155,16 @@ namespace DiceCup {
 
         let chosenDifficulty: number = 0;
 
-        let difficultySwitchText: HTMLElement = document.createElement("div");
+        let difficultySwitchText: HTMLDivElement = document.createElement("div");
         difficultySwitchText.classList.add("switchDifficultyText");
-        difficultySwitchText.id = "switchDifficultyText_id_" + botCounter;
-        difficultySwitchText.innerHTML = BotDifficulty[chosenDifficulty];
+        // difficultySwitchText.classList.add("scrollContainer");
         difficultySwitch.appendChild(difficultySwitchText);
+
+        let difficultyText: HTMLSpanElement = document.createElement("span");
+        // difficultyText.classList.add("scrollText");
+        difficultyText.id = "switchDifficultyText_id_" + botCounter;
+        difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+        difficultySwitchText.appendChild(difficultyText);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");
         switchButtonRight.classList.add("switchDifficulty");
@@ -176,7 +181,7 @@ namespace DiceCup {
             } else {
                 chosenDifficulty = 0;
             }
-            difficultySwitchText.innerHTML = BotDifficulty[chosenDifficulty];
+            difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
         });
         switchButtonLeft.addEventListener("click", () => {
             if (chosenDifficulty > 0) {
@@ -184,7 +189,7 @@ namespace DiceCup {
             } else {
                 chosenDifficulty = 2;
             }
-            difficultySwitchText.innerHTML = BotDifficulty[chosenDifficulty];
+            difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
         });
     }
 
