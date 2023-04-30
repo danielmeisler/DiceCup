@@ -21,7 +21,8 @@ namespace DiceCup {
                 this.allProbs[i].category = this.freeCategories[i];
                 this.allProbs[i].probability = this.values[i] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
-            // this.sortProbabilities();
+            this.sortProbabilities();
+            console.log(dices);
             console.log(this.allProbs);
             return this.allProbs;
         }
@@ -72,7 +73,7 @@ namespace DiceCup {
         private doublesProbabilities(_category: number): number {
             let power: number = (this.values[_category] / 10);
             let opposite: number = 6 - (this.values[_category] / 10);
-            return ((1/6) ** power) * ((5/6) ** opposite) * 100;
+            return ((1/6) ** power) * ((5/6) ** opposite) * this.binomial(6, power) * 100;
         }
 
         private oneToThreeProbabilities(_category: number): number {
@@ -89,7 +90,7 @@ namespace DiceCup {
 
         private diceCupProbabilities(_category: number): number {
             let dice_numbers: number[] = [1, 2, 3, 4, 5, 6];
-            return this.sumProbabilities(10, this.values[_category], dice_numbers) * 100;
+            return this.sumProbabilities(12, this.values[_category], dice_numbers) * 100;
         }
 
         private sumProbabilities(nDices: number, sum: number, dice_numbers: number[]): number{
@@ -109,32 +110,35 @@ namespace DiceCup {
 
         private sortProbabilities(): void {
             this.allProbs.map(function(elem) {
-                elem.value = elem.points - elem.probability;
-                if (elem.category == ScoringCategory.white || ScoringCategory.black || ScoringCategory.red || ScoringCategory.blue || ScoringCategory.green || ScoringCategory.yellow) {
-                    elem.value = elem.value * 0.5;
-                }
-                if (elem.category == ScoringCategory.fours || ScoringCategory.fives || ScoringCategory.sixes) {
-                    elem.value = elem.value * 2;
-                }
-                if (elem.category == ScoringCategory.doubles) {
-                    elem.value = elem.value * 2;
-                }
-                if (elem.category == ScoringCategory.oneToThree) {
-                    elem.value = elem.value / 2;
-                }
-                if (elem.category == ScoringCategory.diceCup) {
-                    elem.value = elem.value / 4;
-                }
+                elem.value = elem.points;
 
+                if (elem.category == ScoringCategory.fours) {
+                    elem.value -= 8;
+                } else if (elem.category == ScoringCategory.fives) {
+                    elem.value -= 10;
+                } else if (elem.category == ScoringCategory.sixes) {
+                    elem.value -= 12;
+                } else if (elem.category == ScoringCategory.doubles) {
+                    elem.value /= 5;
+                } else if (elem.category == ScoringCategory.oneToThree) {
+                    elem.value -= 12;
+                } else if (elem.category == ScoringCategory.diceCup) {
+                    elem.value -= 42;
+                } else {
+                    elem.value -= 7;
+                }
+                
+                if (elem.points == 0) {
+                    elem.value = Number.NEGATIVE_INFINITY;
+                }
             })
-            // this.allProbs.sort( function( a , b){
-            //     if((a.value * a.points) > (b.points * b.value)) return 1;
-            //     if((a.value * a.points) < (b.points * b.value)) return -1;
-            //     return 0;
-            // });
-            this.allProbs.sort( function( a , b){
-                if(a.value > b.value) return 1;
-                if(a.value < b.value) return -1;
+            this.allProbs.sort( function(a,b){
+                if(a.value < b.value) return 1;
+                if(a.value > b.value) return -1;
+                if(a.value == b.value) {
+                    if(a.points < b.points) return 1;
+                    if(a.points > b.points) return -1;
+                }
                 return 0;
             });
         }

@@ -148,7 +148,8 @@ var DiceCup;
                 this.allProbs[i].category = this.freeCategories[i];
                 this.allProbs[i].probability = this.values[i] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
-            // this.sortProbabilities();
+            this.sortProbabilities();
+            console.log(DiceCup.dices);
             console.log(this.allProbs);
             return this.allProbs;
         }
@@ -195,7 +196,7 @@ var DiceCup;
         doublesProbabilities(_category) {
             let power = (this.values[_category] / 10);
             let opposite = 6 - (this.values[_category] / 10);
-            return ((1 / 6) ** power) * ((5 / 6) ** opposite) * 100;
+            return ((1 / 6) ** power) * ((5 / 6) ** opposite) * this.binomial(6, power) * 100;
         }
         oneToThreeProbabilities(_category) {
             let dice_numbers = [1, 2, 3];
@@ -210,7 +211,7 @@ var DiceCup;
         }
         diceCupProbabilities(_category) {
             let dice_numbers = [1, 2, 3, 4, 5, 6];
-            return this.sumProbabilities(10, this.values[_category], dice_numbers) * 100;
+            return this.sumProbabilities(12, this.values[_category], dice_numbers) * 100;
         }
         sumProbabilities(nDices, sum, dice_numbers) {
             const calculate = (nDices, sum) => {
@@ -226,33 +227,43 @@ var DiceCup;
         }
         sortProbabilities() {
             this.allProbs.map(function (elem) {
-                elem.value = elem.points - elem.probability;
-                if (elem.category == DiceCup.ScoringCategory.white || DiceCup.ScoringCategory.black || DiceCup.ScoringCategory.red || DiceCup.ScoringCategory.blue || DiceCup.ScoringCategory.green || DiceCup.ScoringCategory.yellow) {
-                    elem.value = elem.value * 0.5;
+                elem.value = elem.points;
+                if (elem.category == DiceCup.ScoringCategory.fours) {
+                    elem.value -= 8;
                 }
-                if (elem.category == DiceCup.ScoringCategory.fours || DiceCup.ScoringCategory.fives || DiceCup.ScoringCategory.sixes) {
-                    elem.value = elem.value * 2;
+                else if (elem.category == DiceCup.ScoringCategory.fives) {
+                    elem.value -= 10;
                 }
-                if (elem.category == DiceCup.ScoringCategory.doubles) {
-                    elem.value = elem.value * 2;
+                else if (elem.category == DiceCup.ScoringCategory.sixes) {
+                    elem.value -= 12;
                 }
-                if (elem.category == DiceCup.ScoringCategory.oneToThree) {
-                    elem.value = elem.value / 2;
+                else if (elem.category == DiceCup.ScoringCategory.doubles) {
+                    elem.value /= 5;
                 }
-                if (elem.category == DiceCup.ScoringCategory.diceCup) {
-                    elem.value = elem.value / 4;
+                else if (elem.category == DiceCup.ScoringCategory.oneToThree) {
+                    elem.value -= 12;
+                }
+                else if (elem.category == DiceCup.ScoringCategory.diceCup) {
+                    elem.value -= 42;
+                }
+                else {
+                    elem.value -= 7;
+                }
+                if (elem.points == 0) {
+                    elem.value = Number.NEGATIVE_INFINITY;
                 }
             });
-            // this.allProbs.sort( function( a , b){
-            //     if((a.value * a.points) > (b.points * b.value)) return 1;
-            //     if((a.value * a.points) < (b.points * b.value)) return -1;
-            //     return 0;
-            // });
             this.allProbs.sort(function (a, b) {
-                if (a.value > b.value)
-                    return 1;
                 if (a.value < b.value)
+                    return 1;
+                if (a.value > b.value)
                     return -1;
+                if (a.value == b.value) {
+                    if (a.points < b.points)
+                        return 1;
+                    if (a.points > b.points)
+                        return -1;
+                }
                 return 0;
             });
         }
@@ -1363,6 +1374,7 @@ var DiceCup;
 (function (DiceCup) {
     let botSettings;
     let botCounter = 0;
+    let chosenDifficulty = 1;
     function singleplayerMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.singleplayer, "singleplayer", "SINGLEPLAYER");
         createPlayerPortrait();
@@ -1490,7 +1502,6 @@ var DiceCup;
         switchButtonLeftIcon.classList.add("switchButtonIcons");
         switchButtonLeftIcon.src = "Game/Assets/images/menuButtons/left.svg";
         switchButtonLeft.appendChild(switchButtonLeftIcon);
-        let chosenDifficulty = 0;
         let difficultySwitchText = document.createElement("div");
         difficultySwitchText.classList.add("switchDifficultyText");
         // difficultySwitchText.classList.add("scrollContainer");

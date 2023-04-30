@@ -2,6 +2,7 @@ namespace DiceCup {
 
     let botSettings: BotDao[];
     let botCounter: number = 0;
+    let chosenDifficulty: number = 1;
 
     export function singleplayerMenu(): void {
         new SubMenu(MenuPage.singleplayer, "singleplayer", "SINGLEPLAYER");
@@ -152,8 +153,6 @@ namespace DiceCup {
         switchButtonLeftIcon.classList.add("switchButtonIcons");
         switchButtonLeftIcon.src = "Game/Assets/images/menuButtons/left.svg";
         switchButtonLeft.appendChild(switchButtonLeftIcon);
-
-        let chosenDifficulty: number = 0;
 
         let difficultySwitchText: HTMLDivElement = document.createElement("div");
         difficultySwitchText.classList.add("switchDifficultyText");
