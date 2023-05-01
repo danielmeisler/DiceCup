@@ -69,7 +69,9 @@ var DiceCup;
             let values = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
                 let valuation = new DiceCup.Valuation(this.freeCategories[i], DiceCup.dices);
-                values[i] = valuation.chooseScoringCategory();
+                values[i] = [];
+                values[i][0] = this.freeCategories[i];
+                values[i][1] = valuation.chooseScoringCategory();
             }
             let prob = new DiceCup.Probabilities(DiceCup.dices, values, this.freeCategories);
             let allProb = prob.fillProbabilities();
@@ -143,10 +145,10 @@ var DiceCup;
         fillProbabilities() {
             for (let i = 0; i < this.freeCategories.length; i++) {
                 this.allProbs.push({ stringCategory: null, category: null, points: null, probability: null, value: null });
-                this.allProbs[i].points = this.values[i];
+                this.allProbs[i].points = this.values[i][1];
                 this.allProbs[i].stringCategory = DiceCup.ScoringCategory[this.freeCategories[i]];
                 this.allProbs[i].category = this.freeCategories[i];
-                this.allProbs[i].probability = this.values[i] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
+                this.allProbs[i].probability = this.values[i][1] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
             this.sortProbabilities();
             console.log(DiceCup.dices);
@@ -191,15 +193,21 @@ var DiceCup;
         }
         colorProbabilities(_category) {
             let dice_numbers = [1, 2, 3, 4, 5, 6];
-            return this.sumProbabilities(2, this.values[_category], dice_numbers) * 100;
+            let category = this.values.map((cat) => cat[0]);
+            let counter = category.indexOf(_category);
+            return this.sumProbabilities(2, this.values[counter][1], dice_numbers) * 100;
         }
         doublesProbabilities(_category) {
-            let power = (this.values[_category] / 10);
-            let opposite = 6 - (this.values[_category] / 10);
+            let category = this.values.map((cat) => cat[0]);
+            let counter = category.indexOf(_category);
+            let power = (this.values[counter][1] / 10);
+            let opposite = 6 - (this.values[counter][1] / 10);
             return ((1 / 6) ** power) * ((5 / 6) ** opposite) * this.binomial(6, power) * 100;
         }
         oneToThreeProbabilities(_category) {
             let dice_numbers = [1, 2, 3];
+            let category = this.values.map((cat) => cat[0]);
+            let counter = category.indexOf(_category);
             let power = 0;
             this.dices.map((value) => {
                 if (value.value < 4) {
@@ -207,22 +215,24 @@ var DiceCup;
                 }
             });
             let opposite = 12 - power;
-            return ((1 / 2) ** power) * ((1 / 2) ** opposite) * this.binomial(12, power) * this.sumProbabilities(power, this.values[_category], dice_numbers) * 100;
+            return ((1 / 2) ** power) * ((1 / 2) ** opposite) * this.binomial(12, power) * this.sumProbabilities(power, this.values[counter][1], dice_numbers) * 100;
         }
         diceCupProbabilities(_category) {
             let dice_numbers = [1, 2, 3, 4, 5, 6];
-            return this.sumProbabilities(12, this.values[_category], dice_numbers) * 100;
+            let category = this.values.map((cat) => cat[0]);
+            let counter = category.indexOf(_category);
+            return this.sumProbabilities(10, this.values[counter][1], dice_numbers) * 100;
         }
         sumProbabilities(nDices, sum, dice_numbers) {
-            const calculate = (nDices, sum) => {
+            const calculate = (nDices, sum, dice_numbers) => {
                 if (nDices == 1) {
                     return dice_numbers.includes(sum) ? 1 / 6 : 0;
                 }
                 return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i, dice_numbers) * this.sumProbabilities(1, i, dice_numbers), 0);
             };
-            let key = JSON.stringify([nDices, sum]);
+            let key = JSON.stringify([nDices, sum, dice_numbers]);
             if (!this.diceCupProbs.has(key))
-                this.diceCupProbs.set(key, calculate(nDices, sum));
+                this.diceCupProbs.set(key, calculate(nDices, sum, dice_numbers));
             return this.diceCupProbs.get(key);
         }
         sortProbabilities() {

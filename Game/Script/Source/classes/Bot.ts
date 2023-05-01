@@ -16,10 +16,12 @@ namespace DiceCup {
 
         public botsTurn(): void {
             let pickedCategory: number = 0;
-            let values: number[] = [];
+            let values: number[][] = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
                 let valuation: Valuation = new Valuation(this.freeCategories[i], dices);
-                values[i] = valuation.chooseScoringCategory();
+                values[i] = [];
+                values[i][0] = this.freeCategories[i];
+                values[i][1] = valuation.chooseScoringCategory();
             }
             let prob = new Probabilities(dices, values, this.freeCategories);
             let allProb: ProbabilitiesDao[] = prob.fillProbabilities();

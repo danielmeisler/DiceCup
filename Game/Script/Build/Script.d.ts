@@ -42,7 +42,7 @@ declare namespace DiceCup {
         private dices;
         private allProbs;
         private diceCupProbs;
-        constructor(_dices: Dice[], _values: number[], _freeCategories: number[]);
+        constructor(_dices: Dice[], _values: number[][], _freeCategories: number[]);
         fillProbabilities(): ProbabilitiesDao[];
         private chooseProbabilities;
         private numberProbabilities;
