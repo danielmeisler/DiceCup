@@ -24,7 +24,7 @@ namespace DiceCup{
             console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
             ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.randomDiceThrow);
-            ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+            ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 240);
         }
 
         public roll(): number {

@@ -39,7 +39,7 @@ namespace DiceCup {
     export function round(): void {
         // console.clear();
         ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 240);
         // if (firstRound == true) {
         //     createBots(gameSettings.bot);
         //     let gameDiv: HTMLDivElement = document.createElement("div");
