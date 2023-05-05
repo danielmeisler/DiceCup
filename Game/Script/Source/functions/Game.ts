@@ -14,16 +14,12 @@ namespace DiceCup {
         let response: Response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors: RgbaDao[] = await response.json();
 
-        viewport.camera.mtxPivot.translateX(-8);
-        viewport.camera.mtxPivot.translateY(20);
-        viewport.camera.mtxPivot.translateZ(-8);
-        viewport.camera.mtxPivot.rotateY(45);
-        viewport.camera.mtxPivot.rotateX(55);
+        viewport.camera.mtxPivot.translateZ(-10);
+        viewport.camera.mtxPivot.translateY(16);
+        viewport.camera.mtxPivot.rotateX(60);
 
         let graph: ƒ.Node = viewport.getBranch();
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-            console.log(color);
-            console.log(diceColors[Math.floor(color)]);
             new Dice( "Dice_" + i, diceColors[Math.floor(color)]);
         }
 

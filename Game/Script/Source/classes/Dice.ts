@@ -19,7 +19,9 @@ namespace DiceCup{
             this.dice = this.graph.getChildrenByName(this.nodeId)[0];
             this.diceRigid = this.dice.getComponent(ƒ.ComponentRigidbody);
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 5) - 2.5, Math.random() * 5, (Math.random() * 5) - 2.5);
+            this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
+            console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
             ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.randomDiceThrow);
         }
@@ -34,8 +36,8 @@ namespace DiceCup{
 
             let deltaTime: number = ƒ.Loop.timeFrameReal;
             this.timeStamp += 1000000 * deltaTime;
-            // this.dice.mtxLocal.translation = new ƒ.Vector3(-1 - (this.timeStamp % 3) * 1.5, 2 + Math.floor(this.timeStamp / 3) * 1.5, -1 + (this.timeStamp % 3) * 1.5) ;
-            this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180); 
+            
+            // this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180); 
             // this.cmp.mtxPivot.translation =  new ƒ.Vector3(0 ,0 , 0);
             // this.dice.mtxLocal.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
             // // this.cmp.mtxPivot.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);

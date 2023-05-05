@@ -23,7 +23,7 @@ window.addEventListener("load", init);
 function init(_event)/* : void */ {
   let graphId/* : string */ = document.head.querySelector("meta[autoView]").getAttribute("autoView")
   startInteractiveViewport(graphId);
-  //dialog.showModal();
+  // dialog.showModal();
 }
 
 // setup and start interactive viewport

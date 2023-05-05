@@ -134,7 +134,9 @@ var DiceCup;
             this.dice = this.graph.getChildrenByName(this.nodeId)[0];
             this.diceRigid = this.dice.getComponent(ƒ.ComponentRigidbody);
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 5) - 2.5, Math.random() * 5, (Math.random() * 5) - 2.5);
+            this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
+            console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
             ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, this.randomDiceThrow);
         }
@@ -146,8 +148,7 @@ var DiceCup;
         randomDiceThrow = (_event) => {
             let deltaTime = ƒ.Loop.timeFrameReal;
             this.timeStamp += 1000000 * deltaTime;
-            // this.dice.mtxLocal.translation = new ƒ.Vector3(-1 - (this.timeStamp % 3) * 1.5, 2 + Math.floor(this.timeStamp / 3) * 1.5, -1 + (this.timeStamp % 3) * 1.5) ;
-            this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180);
+            // this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180); 
             // this.cmp.mtxPivot.translation =  new ƒ.Vector3(0 ,0 , 0);
             // this.dice.mtxLocal.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
             // // this.cmp.mtxPivot.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
@@ -1052,15 +1053,11 @@ var DiceCup;
     async function initViewport() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
-        DiceCup.viewport.camera.mtxPivot.translateX(-8);
-        DiceCup.viewport.camera.mtxPivot.translateY(20);
-        DiceCup.viewport.camera.mtxPivot.translateZ(-8);
-        DiceCup.viewport.camera.mtxPivot.rotateY(45);
-        DiceCup.viewport.camera.mtxPivot.rotateX(55);
+        DiceCup.viewport.camera.mtxPivot.translateZ(-10);
+        DiceCup.viewport.camera.mtxPivot.translateY(16);
+        DiceCup.viewport.camera.mtxPivot.rotateX(60);
         let graph = DiceCup.viewport.getBranch();
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            console.log(color);
-            console.log(diceColors[Math.floor(color)]);
             new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)]);
         }
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
