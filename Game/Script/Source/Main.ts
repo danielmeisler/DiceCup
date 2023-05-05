@@ -14,7 +14,8 @@ namespace DiceCup {
     document.querySelector("body").appendChild(diceCup);
 
     enableWakeLock();
-    initMenu();
+    // initMenu();
+    initViewport();
   }
 
 }

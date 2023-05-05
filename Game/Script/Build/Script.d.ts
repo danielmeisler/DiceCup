@@ -29,10 +29,18 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     class Dice {
-        color: DiceColor;
-        value: number;
-        constructor(_color: DiceColor);
+        private graph;
+        private dice;
+        private diceMat;
+        private diceRigid;
+        private nodeId;
+        private color;
+        private value;
+        private timeStamp;
+        constructor(_nodeId: string, _color: RgbaDao);
         roll(): number;
+        private randomDiceThrow;
+        private convertDiceColor;
     }
 }
 declare namespace DiceCup {
@@ -227,6 +235,15 @@ declare namespace DiceCup {
         points: number;
         probability: number;
         value: number;
+    }
+}
+declare namespace DiceCup {
+    interface RgbaDao {
+        name: DiceColor;
+        r: number;
+        g: number;
+        b: number;
+        a: number;
     }
 }
 declare namespace DiceCup {

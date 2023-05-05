@@ -47,7 +47,8 @@ var DiceCup;
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
         DiceCup.enableWakeLock();
-        DiceCup.initMenu();
+        // initMenu();
+        DiceCup.initViewport();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -116,15 +117,51 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    var ƒ = FudgeCore;
     class Dice {
+        graph = DiceCup.viewport.getBranch();
+        dice;
+        diceMat;
+        diceRigid;
+        nodeId;
         color;
         value;
-        constructor(_color) {
+        timeStamp = 0;
+        constructor(_nodeId, _color) {
+            this.nodeId = _nodeId;
             this.color = _color;
             this.value = this.roll();
+            this.dice = this.graph.getChildrenByName(this.nodeId)[0];
+            this.diceRigid = this.dice.getComponent(ƒ.ComponentRigidbody);
+            this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
+            this.dice.mtxLocal.translation = new ƒ.Vector3(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
+            ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, this.randomDiceThrow);
         }
         roll() {
-            return Math.floor((Math.random() * 6) + 1);
+            // this.randomDiceThrow();
+            this.value = Math.floor((Math.random() * 6) + 1);
+            return this.value;
+        }
+        randomDiceThrow = (_event) => {
+            let deltaTime = ƒ.Loop.timeFrameReal;
+            this.timeStamp += 1000000 * deltaTime;
+            // this.dice.mtxLocal.translation = new ƒ.Vector3(-1 - (this.timeStamp % 3) * 1.5, 2 + Math.floor(this.timeStamp / 3) * 1.5, -1 + (this.timeStamp % 3) * 1.5) ;
+            this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180);
+            // this.cmp.mtxPivot.translation =  new ƒ.Vector3(0 ,0 , 0);
+            // this.dice.mtxLocal.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
+            // // this.cmp.mtxPivot.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
+            // console.log(this.timeStamp);
+            // this.dice.mtxLocal.rotateY(180 * deltaTime);
+            // this.timeStamp += 1 * deltaTime;
+            // let currPos: ƒ.Vector3 = this.dice.mtxLocal.rotation;
+            // this.dice.mtxLocal.rotation = new ƒ.Vector3(currPos.x,this.sin(this.timeStamp)+0.5,currPos.z);
+            // console.log("sin", this.sin(this.timeStamp));
+        };
+        convertDiceColor(_value) {
+            let value;
+            value = (_value / 2.55) / 100;
+            return value;
         }
     }
     DiceCup.Dice = Dice;
@@ -1013,13 +1050,21 @@ var DiceCup;
     DiceCup.maxRounds = 12;
     let bots = [];
     async function initViewport() {
-        DiceCup.viewport.camera.mtxPivot.translateZ(10);
-        DiceCup.viewport.camera.mtxPivot.rotateY(180);
-        DiceCup.viewport.camera.mtxPivot.translateX(1);
-        DiceCup.viewport.camera.mtxPivot.translateY(1);
+        let response = await fetch("Game/Script/Data/diceColors.json");
+        let diceColors = await response.json();
+        DiceCup.viewport.camera.mtxPivot.translateX(-8);
+        DiceCup.viewport.camera.mtxPivot.translateY(20);
+        DiceCup.viewport.camera.mtxPivot.translateZ(-8);
+        DiceCup.viewport.camera.mtxPivot.rotateY(45);
+        DiceCup.viewport.camera.mtxPivot.rotateX(55);
         let graph = DiceCup.viewport.getBranch();
-        let dice = graph.getChildrenByName("Dice")[0];
-        console.log(dice.mtxLocal.translation);
+        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+            console.log(color);
+            console.log(diceColors[Math.floor(color)]);
+            new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)]);
+        }
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
+        ƒ.Loop.start();
     }
     DiceCup.initViewport = initViewport;
     function createBots(_bots) {
@@ -1030,47 +1075,45 @@ var DiceCup;
         return bots;
     }
     function round() {
-        console.clear();
-        if (DiceCup.firstRound == true) {
-            createBots(DiceCup.gameSettings.bot);
-            let gameDiv = document.createElement("div");
-            gameDiv.id = "rollingDiv_id";
-            document.getElementById("game").appendChild(gameDiv);
-            DiceCup.firstRound = false;
-        }
-        else {
-            for (let i = 0; i < 12; i++) {
-                document.getElementById("diceContainer_id_" + i).remove();
-            }
-        }
+        // console.clear();
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-        // initCategories();
-        DiceCup.dices = [];
-        for (let i = 0; i < 6; i++) {
-            DiceCup.dices.push(new DiceCup.Dice(i));
-            DiceCup.dices.push(new DiceCup.Dice(i));
-        }
-        for (let i = 0; i < 12; i++) {
-            let diceDiv = document.createElement("div");
-            diceDiv.classList.add("diceDiv");
-            diceDiv.id = "diceContainer_id_" + i;
-            diceDiv.classList.add("diceCategory_" + DiceCup.DiceColor[DiceCup.dices[i].color]);
-            diceDiv.innerHTML = DiceCup.dices[i].value.toString();
-            diceDiv.style.background = DiceCup.DiceColor[DiceCup.dices[i].color].toString();
-            document.getElementById("rollingDiv_id").appendChild(diceDiv);
-            // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        }
-        for (let index = 0; index < bots.length; index++) {
-            bots[index].botsTurn();
-        }
-        console.log("Augen auf ...");
-        new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
-        ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
+        ƒ.Loop.start();
+        // if (firstRound == true) {
+        //     createBots(gameSettings.bot);
+        //     let gameDiv: HTMLDivElement = document.createElement("div");
+        //     gameDiv.id = "rollingDiv_id";
+        //     document.getElementById("game").appendChild(gameDiv);
+        //     firstRound = false;
+        // } else {
+        //     for (let i: number = 0; i < 12; i++) {
+        //         document.getElementById("diceContainer_id_" + i).remove();
+        //     }
+        // }
+        //     dices = [];
+        //     for (let i: number = 0; i < 6; i++) {
+        //         dices.push(new Dice(i));
+        //         dices.push(new Dice(i));
+        //     }
+        //     for (let i: number = 0; i < 12; i++) {
+        //         let diceDiv: HTMLDivElement = document.createElement("div");
+        //         diceDiv.classList.add("diceDiv");
+        //         diceDiv.id = "diceContainer_id_" + i;
+        //         diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
+        //         diceDiv.innerHTML = dices[i].value.toString();
+        //         diceDiv.style.background = DiceColor[dices[i].color].toString();
+        //         document.getElementById("rollingDiv_id").appendChild(diceDiv);
+        //         // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        //     }
+        //     for (let index = 0; index < bots.length; index++) {
+        //         bots[index].botsTurn();
+        //     }
+        //     console.log("Augen auf ...");
+        //     new TimerBar("hudTimer_id", roundTimer);
+        //     ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
     }
     DiceCup.round = round;
     function update(_event) {
-        // ƒ.Physics.simulate();  // if physics is included and used
+        ƒ.Physics.simulate(); // if physics is included and used
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
