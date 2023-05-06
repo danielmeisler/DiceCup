@@ -11,7 +11,7 @@ namespace DiceCup {
     let bots: Bot[] = [];
 
     export async function initViewport() {
-        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 2, -0.5);
+        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 3, -1);
         viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
 
         let response: Response = await fetch("Game/Script/Data/diceColors.json");
