@@ -1075,7 +1075,7 @@ var DiceCup;
     function round() {
         // console.clear();
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 30);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
         // if (firstRound == true) {
         //     createBots(gameSettings.bot);
         //     let gameDiv: HTMLDivElement = document.createElement("div");
