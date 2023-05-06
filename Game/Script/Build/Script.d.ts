@@ -31,15 +31,15 @@ declare namespace DiceCup {
     class Dice {
         private graph;
         private dice;
+        private sides;
+        private dots;
         private diceMat;
-        private diceRigid;
+        private dotsMat;
         private nodeId;
         private color;
         private value;
-        private timeStamp;
         constructor(_nodeId: string, _color: RgbaDao);
         roll(): number;
-        private randomDiceThrow;
         private convertDiceColor;
     }
 }
@@ -185,7 +185,7 @@ declare namespace DiceCup {
     let maxRounds: number;
     let gameSettings: SinglePlayerSettingsDao;
     function initViewport(): Promise<void>;
-    function round(): void;
+    function round(): Promise<void>;
 }
 declare namespace DiceCup {
     function gameOver(): void;

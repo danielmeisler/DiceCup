@@ -47,8 +47,8 @@ var DiceCup;
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
         DiceCup.enableWakeLock();
-        // initMenu();
-        DiceCup.initViewport();
+        DiceCup.initMenu();
+        // initViewport();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -121,45 +121,36 @@ var DiceCup;
     class Dice {
         graph = DiceCup.viewport.getBranch();
         dice;
+        sides;
+        dots;
         diceMat;
-        diceRigid;
+        dotsMat;
         nodeId;
         color;
         value;
-        timeStamp = 0;
         constructor(_nodeId, _color) {
             this.nodeId = _nodeId;
             this.color = _color;
             this.value = this.roll();
             this.dice = this.graph.getChildrenByName(this.nodeId)[0];
-            this.diceRigid = this.dice.getComponent(ƒ.ComponentRigidbody);
+            this.sides = this.graph.getChildrenByName(this.nodeId)[0].getChildren();
+            this.dots = this.sides.map(elem => elem.getChildren());
+            this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 5) - 2.5, 10, (Math.random() * 5) - 2.5);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, (Math.random() * 5) + 3, (Math.random() * 8) - 4);
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
-            console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
-            // ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.randomDiceThrow);
-            // ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+            if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
+                this.dotsMat.map(dots => dots.map(dot => { console.log(dot), dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); }));
+            }
+            else {
+                this.dotsMat.map(dots => dots.map(dot => { console.log(dot), dot.clrPrimary = new ƒ.Color(1, 1, 1, 1); }));
+            }
         }
         roll() {
-            // this.randomDiceThrow();
             this.value = Math.floor((Math.random() * 6) + 1);
             return this.value;
         }
-        randomDiceThrow = (_event) => {
-            let deltaTime = ƒ.Loop.timeFrameReal;
-            this.timeStamp += 1000000 * deltaTime;
-            // this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180); 
-            // this.cmp.mtxPivot.translation =  new ƒ.Vector3(0 ,0 , 0);
-            // this.dice.mtxLocal.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
-            // // this.cmp.mtxPivot.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);
-            // console.log(this.timeStamp);
-            // this.dice.mtxLocal.rotateY(180 * deltaTime);
-            // this.timeStamp += 1 * deltaTime;
-            // let currPos: ƒ.Vector3 = this.dice.mtxLocal.rotation;
-            // this.dice.mtxLocal.rotation = new ƒ.Vector3(currPos.x,this.sin(this.timeStamp)+0.5,currPos.z);
-            // console.log("sin", this.sin(this.timeStamp));
-        };
         convertDiceColor(_value) {
             let value;
             value = (_value / 2.55) / 100;
@@ -928,7 +919,7 @@ var DiceCup;
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
         document.getElementById("DiceCup").appendChild(container);
-        let phrase = ["Round " + DiceCup.roundCounter, "3", "2", "1", "GO!"];
+        let phrase = ["Round " + DiceCup.roundCounter, "READY?", "GO!"];
         transition(phrase);
     }
     DiceCup.startTransition = startTransition;
@@ -1052,17 +1043,9 @@ var DiceCup;
     DiceCup.maxRounds = 12;
     let bots = [];
     async function initViewport() {
-        let response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors = await response.json();
         DiceCup.viewport.camera.mtxPivot.translateZ(-10);
         DiceCup.viewport.camera.mtxPivot.translateY(16);
         DiceCup.viewport.camera.mtxPivot.rotateX(60);
-        let graph = DiceCup.viewport.getBranch();
-        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)]);
-        }
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start();
     }
     DiceCup.initViewport = initViewport;
     function createBots(_bots) {
@@ -1072,42 +1055,48 @@ var DiceCup;
         }
         return bots;
     }
-    function round() {
+    async function round() {
         // console.clear();
+        let response = await fetch("Game/Script/Data/diceColors.json");
+        let diceColors = await response.json();
+        if (DiceCup.firstRound == true) {
+            createBots(DiceCup.gameSettings.bot);
+            // let gameDiv: HTMLDivElement = document.createElement("div");
+            // gameDiv.id = "rollingDiv_id";
+            // document.getElementById("game").appendChild(gameDiv);
+            DiceCup.firstRound = false;
+        }
+        else {
+            for (let i = 0; i < 12; i++) {
+                // document.getElementById("diceContainer_id_" + i).remove();
+            }
+        }
+        // dices = [];
+        // for (let i: number = 0; i < 6; i++) {
+        //     dices.push(new Dice(i));
+        //     dices.push(new Dice(i));
+        // }
+        // for (let i: number = 0; i < 12; i++) {
+        //     let diceDiv: HTMLDivElement = document.createElement("div");
+        //     diceDiv.classList.add("diceDiv");
+        //     diceDiv.id = "diceContainer_id_" + i;
+        //     diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
+        //     diceDiv.innerHTML = dices[i].value.toString();
+        //     diceDiv.style.background = DiceColor[dices[i].color].toString();
+        //     document.getElementById("rollingDiv_id").appendChild(diceDiv);
+        //     // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
+        // }
+        console.log("Augen auf ...");
+        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+            new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)]);
+        }
+        for (let index = 0; index < bots.length; index++) {
+            bots[index].botsTurn();
+        }
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
-        // if (firstRound == true) {
-        //     createBots(gameSettings.bot);
-        //     let gameDiv: HTMLDivElement = document.createElement("div");
-        //     gameDiv.id = "rollingDiv_id";
-        //     document.getElementById("game").appendChild(gameDiv);
-        //     firstRound = false;
-        // } else {
-        //     for (let i: number = 0; i < 12; i++) {
-        //         document.getElementById("diceContainer_id_" + i).remove();
-        //     }
-        // }
-        //     dices = [];
-        //     for (let i: number = 0; i < 6; i++) {
-        //         dices.push(new Dice(i));
-        //         dices.push(new Dice(i));
-        //     }
-        //     for (let i: number = 0; i < 12; i++) {
-        //         let diceDiv: HTMLDivElement = document.createElement("div");
-        //         diceDiv.classList.add("diceDiv");
-        //         diceDiv.id = "diceContainer_id_" + i;
-        //         diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
-        //         diceDiv.innerHTML = dices[i].value.toString();
-        //         diceDiv.style.background = DiceColor[dices[i].color].toString();
-        //         document.getElementById("rollingDiv_id").appendChild(diceDiv);
-        //         // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        //     }
-        //     for (let index = 0; index < bots.length; index++) {
-        //         bots[index].botsTurn();
-        //     }
-        //     console.log("Augen auf ...");
-        //     new TimerBar("hudTimer_id", roundTimer);
-        //     ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
+        new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
+        ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
     }
     DiceCup.round = round;
     function update(_event) {
