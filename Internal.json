@@ -83,34 +83,34 @@
           {
             "ƒ.ComponentLight": {
               "pivot": {
-                "translation": "[0, -20, 0]",
+                "translation": "[0, -5, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
               "light": {
-                "ƒ.LightDirectional": {
+                "ƒ.LightSpot": {
                   "color": "[1, 1, 1, 1]"
                 }
               },
               "Component": {
-                "active": true
+                "active": false
               }
             }
           },
           {
             "ƒ.ComponentLight": {
               "pivot": {
-                "translation": "[0, 10, 0]",
+                "translation": "[0, 5, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
               "light": {
                 "ƒ.LightAmbient": {
-                  "color": "[0.8352941176470589, 0.8274509803921568, 0.8274509803921568, 0.08]"
+                  "color": "[0.8352941176470589, 0.8274509803921568, 0.8274509803921568, 1]"
                 }
               },
               "Component": {
-                "active": true
+                "active": false
               }
             }
           }
