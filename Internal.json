@@ -93,7 +93,7 @@
                 }
               },
               "Component": {
-                "active": true
+                "active": false
               }
             }
           },
@@ -110,7 +110,7 @@
                 }
               },
               "Component": {
-                "active": true
+                "active": false
               }
             }
           }
