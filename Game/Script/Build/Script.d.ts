@@ -36,10 +36,12 @@ declare namespace DiceCup {
         private diceMat;
         private dotsMat;
         private nodeId;
-        private color;
-        private value;
-        constructor(_nodeId: string, _color: RgbaDao);
+        color: DiceColor;
+        value: number;
+        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor);
         roll(): number;
+        private translateDice;
+        private rotateDice;
         private convertDiceColor;
     }
 }
