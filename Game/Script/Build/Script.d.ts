@@ -36,12 +36,10 @@ declare namespace DiceCup {
         private diceMat;
         private dotsMat;
         private nodeId;
-        color: DiceColor;
-        value: number;
-        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor);
+        private color;
+        private value;
+        constructor(_nodeId: string, _color: RgbaDao);
         roll(): number;
-        private translateDice;
-        private rotateDice;
         private convertDiceColor;
     }
 }
@@ -188,7 +186,6 @@ declare namespace DiceCup {
     let gameSettings: SinglePlayerSettingsDao;
     function initViewport(): Promise<void>;
     function round(): Promise<void>;
-    function update(_event: Event): void;
 }
 declare namespace DiceCup {
     function gameOver(): void;

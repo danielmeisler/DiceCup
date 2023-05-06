@@ -47,8 +47,8 @@ var DiceCup;
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
         DiceCup.enableWakeLock();
-        // initMenu();
-        DiceCup.initViewport();
+        DiceCup.initMenu();
+        // initViewport();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -128,7 +128,7 @@ var DiceCup;
         nodeId;
         color;
         value;
-        constructor(_nodeId, _colorRGBA, _color) {
+        constructor(_nodeId, _color) {
             this.nodeId = _nodeId;
             this.color = _color;
             this.value = this.roll();
@@ -137,53 +137,19 @@ var DiceCup;
             this.dots = this.sides.map(elem => elem.getChildren());
             this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, (Math.random() * 5) + 3, (Math.random() * 2) - 1);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, (Math.random() * 5) + 3, (Math.random() * 8) - 4);
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
-            // this.translateDice(this.dice);
-            // this.rotateDice(this.dice);
-            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
             if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
-                this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); }));
+                this.dotsMat.map(dots => dots.map(dot => { console.log(dot), dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); }));
             }
             else {
-                this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(1, 1, 1, 1); }));
+                this.dotsMat.map(dots => dots.map(dot => { console.log(dot), dot.clrPrimary = new ƒ.Color(1, 1, 1, 1); }));
             }
         }
         roll() {
             this.value = Math.floor((Math.random() * 6) + 1);
             return this.value;
-        }
-        translateDice(_node) {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, 1, (Math.random() * 8) - 4);
-            console.log(_node.mtxLocal.translation.y);
-            if (_node.mtxLocal.translation.y > 1) {
-                this.translateDice(_node);
-            }
-        }
-        rotateDice(_node) {
-            let randomRotate = Math.random() * 360;
-            switch (this.value) {
-                case 1:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(-90, randomRotate, 0);
-                    break;
-                case 2:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(0, randomRotate, 0);
-                    break;
-                case 3:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(randomRotate, 0, -90);
-                    break;
-                case 4:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(randomRotate, 0, 90);
-                    break;
-                case 5:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(180, randomRotate, 0);
-                    break;
-                case 6:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(90, randomRotate, 0);
-                    break;
-                default:
-                    break;
-            }
         }
         convertDiceColor(_value) {
             let value;
@@ -947,10 +913,8 @@ var DiceCup;
     var ƒ = FudgeCore;
     let counter = 0;
     let shortTime = 1000;
-    let longTime = 1000;
+    let longTime = 2000;
     function startTransition() {
-        // viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 16, -5);
-        // viewport.camera.mtxPivot.rotation = new ƒ.Vector3(0, 0, 0);
         let container = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
@@ -1079,15 +1043,9 @@ var DiceCup;
     DiceCup.maxRounds = 12;
     let bots = [];
     async function initViewport() {
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 3, -1);
-        DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
-        let response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors = await response.json();
-        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], color));
-        }
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+        DiceCup.viewport.camera.mtxPivot.translateZ(-10);
+        DiceCup.viewport.camera.mtxPivot.translateY(16);
+        DiceCup.viewport.camera.mtxPivot.rotateX(60);
     }
     DiceCup.initViewport = initViewport;
     function createBots(_bots) {
@@ -1101,8 +1059,6 @@ var DiceCup;
         // console.clear();
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 16, -10);
-        DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
         if (DiceCup.firstRound == true) {
             createBots(DiceCup.gameSettings.bot);
             // let gameDiv: HTMLDivElement = document.createElement("div");
@@ -1132,13 +1088,13 @@ var DiceCup;
         // }
         console.log("Augen auf ...");
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], color));
+            new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)]);
         }
         for (let index = 0; index < bots.length; index++) {
             bots[index].botsTurn();
         }
-        // ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-        // ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
         new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
         ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
     }
@@ -1148,7 +1104,6 @@ var DiceCup;
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
-    DiceCup.update = update;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
