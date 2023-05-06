@@ -23,8 +23,8 @@ namespace DiceCup{
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
             console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
-            ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.randomDiceThrow);
-            ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+            // ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.randomDiceThrow);
+            // ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
         }
 
         public roll(): number {
@@ -37,7 +37,6 @@ namespace DiceCup{
 
             let deltaTime: number = ƒ.Loop.timeFrameReal;
             this.timeStamp += 1000000 * deltaTime;
-            
             // this.dice.mtxLocal.rotation = new ƒ.Vector3(((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180, 0, ((this.timeStamp * Math.random() * 90 - 45) * Math.PI) / 180); 
             // this.cmp.mtxPivot.translation =  new ƒ.Vector3(0 ,0 , 0);
             // this.dice.mtxLocal.rotation = new ƒ.Vector3(this.timeStamp, this.timeStamp, 0);

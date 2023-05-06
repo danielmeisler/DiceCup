@@ -186,7 +186,6 @@ declare namespace DiceCup {
     let gameSettings: SinglePlayerSettingsDao;
     function initViewport(): Promise<void>;
     function round(): void;
-    function update(_event: Event): void;
 }
 declare namespace DiceCup {
     function gameOver(): void;

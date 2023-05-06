@@ -80,12 +80,10 @@ namespace DiceCup {
         //     ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
     }
 
-    export function update(_event: Event): void {
+    function update(_event: Event): void {
         ƒ.Physics.simulate();  // if physics is included and used
         viewport.draw();
         //ƒ.AudioManager.default.update();
-    }
     
-
-
+    }
 }

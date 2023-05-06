@@ -138,8 +138,8 @@ var DiceCup;
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
             console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
-            ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, this.randomDiceThrow);
-            ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
+            // ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, this.randomDiceThrow);
+            // ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
         }
         roll() {
             // this.randomDiceThrow();
@@ -1115,7 +1115,6 @@ var DiceCup;
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
-    DiceCup.update = update;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
