@@ -134,19 +134,20 @@ var DiceCup;
             this.value = this.roll();
             this.dice = this.graph.getChildrenByName(this.nodeId)[0];
             this.sides = this.graph.getChildrenByName(this.nodeId)[0].getChildren();
-            // this.dots = this.sides.map(elem => elem.getChildren());
-            // this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
+            this.dots = this.sides.map(elem => elem.getChildren());
+            this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
             this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, (Math.random() * 5) + 3, (Math.random() * 2) - 1);
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
             // this.translateDice(this.dice);
             // this.rotateDice(this.dice);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
-            // if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
-            //     this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1) }));
-            // } else {
-            //     this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(1, 1, 1, 1) }));
-            // }
+            if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
+                this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); }));
+            }
+            else {
+                this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(1, 1, 1, 1); }));
+            }
         }
         roll() {
             this.value = Math.floor((Math.random() * 6) + 1);
