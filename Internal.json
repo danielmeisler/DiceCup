@@ -60,6 +60,18 @@
       }
     }
   },
+  "Material|2023-05-06T22:02:10.769Z|59223": {
+    "ƒ.Material": {
+      "name": "dice_color",
+      "idResource": "Material|2023-05-06T22:02:10.769Z|59223",
+      "shader": "ShaderLit",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[1, 1, 1, 1]"
+        }
+      }
+    }
+  },
   "Graph|2023-03-02T15:52:53.709Z|69363": {
     "ƒ.Graph": {
       "name": "Root",
@@ -561,7 +573,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -1579,7 +1591,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -2597,7 +2609,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -3615,7 +3627,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -4633,7 +4645,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -5651,7 +5663,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -6669,7 +6681,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -7687,7 +7699,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -8705,7 +8717,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -9723,7 +9735,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -10741,7 +10753,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -11759,7 +11771,7 @@
                     "local": {
                       "translation": "[0, 1, 0]",
                       "rotation": "[0, 0, 0]",
-                      "scaling": "[1, 1, 1]"
+                      "scaling": "[0.5, 0.5, 0.5]"
                     },
                     "Component": {
                       "active": true
@@ -12736,18 +12748,6 @@
       ],
       "idResource": "Graph|2023-03-02T15:52:53.709Z|69363",
       "type": "Graph"
-    }
-  },
-  "Material|2023-05-06T22:02:10.769Z|59223": {
-    "ƒ.Material": {
-      "name": "dice_color",
-      "idResource": "Material|2023-05-06T22:02:10.769Z|59223",
-      "shader": "ShaderLit",
-      "coat": {
-        "ƒ.CoatColored": {
-          "color": "[1, 1, 1, 1]"
-        }
-      }
     }
   }
 }
