@@ -60,20 +60,6 @@
       }
     }
   },
-  "Material|2023-05-06T14:42:33.777Z|26404": {
-    "ƒ.Material": {
-      "name": "Dice",
-      "idResource": "Material|2023-05-06T14:42:33.777Z|26404",
-      "shader": "ShaderGouraud",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
   "Graph|2023-03-02T15:52:53.709Z|69363": {
     "ƒ.Graph": {
       "name": "Root",
