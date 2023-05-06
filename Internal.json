@@ -81,7 +81,7 @@
           {
             "ƒ.ComponentLight": {
               "pivot": {
-                "translation": "[0, 0, 0]",
+                "translation": "[0, 5, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
@@ -98,12 +98,12 @@
           {
             "ƒ.ComponentLight": {
               "pivot": {
-                "translation": "[0, 0, 0]",
+                "translation": "[0, 10, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
               "light": {
-                "ƒ.LightSpot": {
+                "ƒ.LightDirectional": {
                   "color": "[1, 1, 1, 1]"
                 }
               },
@@ -587,7 +587,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -1605,7 +1605,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -2623,7 +2623,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -3641,7 +3641,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -4659,7 +4659,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -5677,7 +5677,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -6695,7 +6695,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -7713,7 +7713,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -8731,7 +8731,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -9749,7 +9749,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -10767,7 +10767,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
@@ -11785,7 +11785,7 @@
                     "initialization": "TO_PIVOT",
                     "friction": 0.2,
                     "restitution": 0.2,
-                    "mass": 1,
+                    "mass": 3,
                     "dampTranslation": 0.1,
                     "dampRotation": 0.1,
                     "effectGravity": 1,
