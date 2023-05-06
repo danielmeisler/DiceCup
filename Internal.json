@@ -1552,7 +1552,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_1",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -2570,7 +2570,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_2",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -3588,7 +3588,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_3",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -4606,7 +4606,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_4",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -5624,7 +5624,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_5",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -6642,7 +6642,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_6",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -7660,7 +7660,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_7",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -8678,7 +8678,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_8",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -9696,7 +9696,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_9",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -10714,7 +10714,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_10",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
@@ -11732,7 +11732,7 @@
         {
           "ƒ.Node": {
             "name": "Dice_11",
-            "active": true,
+            "active": false,
             "components": {
               "ComponentMesh": [
                 {
