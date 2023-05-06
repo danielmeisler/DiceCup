@@ -2,9 +2,12 @@ namespace DiceCup {
     import ƒ = FudgeCore;
     let counter: number = 0;
     let shortTime: number = 1000;
-    let longTime: number = 2000;
+    let longTime: number = 1000;
 
     export function startTransition(): void {
+        // viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 16, -5);
+        // viewport.camera.mtxPivot.rotation = new ƒ.Vector3(0, 0, 0);
+
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
