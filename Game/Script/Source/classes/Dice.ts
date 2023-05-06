@@ -19,7 +19,7 @@ namespace DiceCup{
             this.dice = this.graph.getChildrenByName(this.nodeId)[0];
             this.diceRigid = this.dice.getComponent(ƒ.ComponentRigidbody);
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 5) - 2.5, Math.random() * 5, (Math.random() * 5) - 2.5);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 5) - 2.5, 10, (Math.random() * 5) - 2.5);
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
             console.log(this.dice.mtxLocal.translation);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(this.color.r), this.convertDiceColor(this.color.g), this.convertDiceColor(this.color.b), this.color.a);
