@@ -12760,7 +12760,7 @@
                 {
                   "ƒ.ComponentMaterial": {
                     "sortForAlpha": false,
-                    "clrPrimary": "[0, 1, 0.615686274509804, 1]",
+                    "clrPrimary": "[0.06666666666666667, 0, 1, 1]",
                     "clrSecondary": "[1, 1, 1, 1]",
                     "pivot": {
                       "translation": "[0, 0]",
