@@ -18,7 +18,7 @@ namespace DiceCup {
             let pickedCategory: number = 0;
             let values: number[][] = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
-                let valuation: Valuation = new Valuation(this.freeCategories[i], dices);
+                let valuation: Valuation = new Valuation(this.freeCategories[i], dices, false);
                 values[i] = [];
                 values[i][0] = this.freeCategories[i];
                 values[i][1] = valuation.chooseScoringCategory();
@@ -62,7 +62,7 @@ namespace DiceCup {
         }
 
         private botValuation(_category: number): void {
-            let valuation: Valuation = new Valuation(_category, dices);
+            let valuation: Valuation = new Valuation(_category, dices, false);
             let value: number = valuation.chooseScoringCategory();
             ƒ.Time.game.setTimer(2000, 1, () => { updateSummary(value, _category, this.name)});
         }

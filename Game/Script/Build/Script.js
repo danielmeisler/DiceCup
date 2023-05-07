@@ -47,8 +47,8 @@ var DiceCup;
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
         DiceCup.enableWakeLock();
-        // initMenu();
-        DiceCup.initViewport();
+        DiceCup.initMenu();
+        // initViewport();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -69,7 +69,7 @@ var DiceCup;
             let pickedCategory = 0;
             let values = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
-                let valuation = new DiceCup.Valuation(this.freeCategories[i], DiceCup.dices);
+                let valuation = new DiceCup.Valuation(this.freeCategories[i], DiceCup.dices, false);
                 values[i] = [];
                 values[i][0] = this.freeCategories[i];
                 values[i][1] = valuation.chooseScoringCategory();
@@ -108,7 +108,7 @@ var DiceCup;
             return (_categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category);
         }
         botValuation(_category) {
-            let valuation = new DiceCup.Valuation(_category, DiceCup.dices);
+            let valuation = new DiceCup.Valuation(_category, DiceCup.dices, false);
             let value = valuation.chooseScoringCategory();
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.updateSummary(value, _category, this.name); });
         }
@@ -125,6 +125,9 @@ var DiceCup;
         dots;
         diceMat;
         dotsMat;
+        diceRig;
+        arenaTranslation = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
+        arenaRotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
         nodeId;
         color;
         value;
@@ -133,15 +136,12 @@ var DiceCup;
             this.color = _color;
             this.value = this.roll();
             this.dice = this.graph.getChildrenByName(this.nodeId)[0];
-            console.log(this.dice);
             this.sides = this.graph.getChildrenByName(this.nodeId)[0].getChildren();
             this.dots = this.sides.map(elem => elem.getChildren());
             this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, Math.random() * 5 + 3, (Math.random() * 2) - 1);
-            this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
-            // this.translateDice(this.dice);
-            // this.rotateDice(this.dice);
+            this.diceRig = this.dice.getComponent(ƒ.ComponentRigidbody);
+            this.rollDices(1);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
                 this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); }));
@@ -154,8 +154,39 @@ var DiceCup;
             this.value = Math.floor((Math.random() * 6) + 1);
             return this.value;
         }
+        validateDices() {
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(224), this.convertDiceColor(187), this.convertDiceColor(0), 1);
+            this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(1, 1, 1, 1); }));
+        }
+        transparentDices() {
+            for (let i = 0; i < 12; i++) {
+                let tempDice = this.graph.getChildrenByName("Dice_" + i)[0];
+                let tempMat = tempDice.getComponent(ƒ.ComponentMaterial);
+                let tempSides = this.graph.getChildrenByName("Dice_" + i)[0].getChildren();
+                let tempDots = tempSides.map(elem => elem.getChildren());
+                let tempDotsMat = tempDots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
+                tempMat.clrPrimary.a = 0.2;
+                tempDotsMat.map(dots => dots.map(dot => { dot.clrPrimary.a = 0.2; }));
+            }
+        }
+        rollDices(_mode) {
+            this.diceRig.activate(false);
+            switch (_mode) {
+                case 0:
+                    this.dice.mtxLocal.translation = this.arenaTranslation;
+                    this.dice.mtxLocal.rotation = this.arenaRotation;
+                    break;
+                case 1:
+                    this.translateDice(this.dice);
+                    this.rotateDice(this.dice);
+                    break;
+                default:
+                    break;
+            }
+            this.diceRig.activate(true);
+        }
         translateDice(_node) {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, 1, (Math.random() * 8) - 4);
+            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, 0.5, (Math.random() * 4) - 1.5);
             console.log(_node.mtxLocal.translation.y);
             if (_node.mtxLocal.translation.y > 1) {
                 this.translateDice(_node);
@@ -443,9 +474,11 @@ var DiceCup;
     class Valuation {
         scoringCategory;
         dices;
-        constructor(_category, _dices) {
+        player;
+        constructor(_category, _dices, _player) {
             this.dices = _dices;
             this.scoringCategory = _category;
+            this.player = _player;
         }
         chooseScoringCategory() {
             let value;
@@ -491,9 +524,11 @@ var DiceCup;
         }
         calculateNumber(_number, _number2, _number3) {
             let value = 0;
+            this.player && DiceCup.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].value === _number || this.dices[i].value === _number2 || this.dices[i].value === _number3) {
                     value += this.dices[i].value;
+                    this.player && this.dices[i].validateDices();
                 }
             }
             if (_number2 && _number3) {
@@ -507,9 +542,11 @@ var DiceCup;
         }
         calculateColor(_color) {
             let value = 0;
+            this.player && DiceCup.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
                     value += this.dices[i].value;
+                    this.player && this.dices[i].validateDices();
                 }
             }
             DiceCup.highscore += value;
@@ -518,9 +555,12 @@ var DiceCup;
         }
         calculateDoubles() {
             let value = 0;
+            this.player && DiceCup.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length - 1; i++) {
                 if (this.dices[i].color === this.dices[i + 1].color && this.dices[i].value === this.dices[i + 1].value) {
                     value += 10;
+                    this.player && this.dices[i].validateDices();
+                    this.player && this.dices[i + 1].validateDices();
                 }
             }
             DiceCup.highscore += value;
@@ -529,8 +569,10 @@ var DiceCup;
         }
         calculateDiceCup() {
             let value = 0;
+            this.player && DiceCup.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;
+                this.player && this.dices[i].validateDices();
             }
             DiceCup.highscore += value;
             console.log("DiceCup: " + value);
@@ -610,7 +652,7 @@ var DiceCup;
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index); });
     }
     function addPointsToButton(_index) {
-        let valuation = new DiceCup.Valuation(_index, DiceCup.dices);
+        let valuation = new DiceCup.Valuation(_index, DiceCup.dices, true);
         let value = valuation.chooseScoringCategory();
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
@@ -1078,13 +1120,13 @@ var DiceCup;
     DiceCup.maxRounds = 12;
     let bots = [];
     async function initViewport() {
-        let response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors = await response.json();
+        // let response: Response = await fetch("Game/Script/Data/diceColors.json");
+        // let diceColors: RgbaDao[] = await response.json();
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
-        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], color));
-        }
+        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+        //     dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
+        // }
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
     }
@@ -1097,45 +1139,20 @@ var DiceCup;
         return bots;
     }
     async function round() {
-        // console.clear();
+        console.clear();
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
         if (DiceCup.firstRound == true) {
             createBots(DiceCup.gameSettings.bot);
-            // let gameDiv: HTMLDivElement = document.createElement("div");
-            // gameDiv.id = "rollingDiv_id";
-            // document.getElementById("game").appendChild(gameDiv);
             DiceCup.firstRound = false;
         }
-        else {
-            for (let i = 0; i < 12; i++) {
-                // document.getElementById("diceContainer_id_" + i).remove();
-            }
-        }
-        // dices = [];
-        // for (let i: number = 0; i < 6; i++) {
-        //     dices.push(new Dice(i));
-        //     dices.push(new Dice(i));
-        // }
-        // for (let i: number = 0; i < 12; i++) {
-        //     let diceDiv: HTMLDivElement = document.createElement("div");
-        //     diceDiv.classList.add("diceDiv");
-        //     diceDiv.id = "diceContainer_id_" + i;
-        //     diceDiv.classList.add("diceCategory_" + DiceColor[dices[i].color]);
-        //     diceDiv.innerHTML = dices[i].value.toString();
-        //     diceDiv.style.background = DiceColor[dices[i].color].toString();
-        //     document.getElementById("rollingDiv_id").appendChild(diceDiv);
-        //     // document.getElementById("valuation_id_" + i).classList.add("valuationShow");
-        // }
-        console.log("Augen auf ...");
+        DiceCup.dices = [];
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], color));
+            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
         }
         for (let index = 0; index < bots.length; index++) {
             bots[index].botsTurn();
         }
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
         new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
         ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
     }

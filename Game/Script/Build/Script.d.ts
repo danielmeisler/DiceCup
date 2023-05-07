@@ -35,11 +35,17 @@ declare namespace DiceCup {
         private dots;
         private diceMat;
         private dotsMat;
+        private diceRig;
+        private arenaTranslation;
+        private arenaRotation;
         private nodeId;
         color: DiceColor;
         value: number;
         constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor);
         roll(): number;
+        validateDices(): void;
+        transparentDices(): void;
+        private rollDices;
         private translateDice;
         private rotateDice;
         private convertDiceColor;
@@ -86,9 +92,10 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     class Valuation {
-        scoringCategory: ScoringCategory;
-        dices: Dice[];
-        constructor(_category: ScoringCategory, _dices: Dice[]);
+        private scoringCategory;
+        private dices;
+        private player;
+        constructor(_category: ScoringCategory, _dices: Dice[], _player: boolean);
         chooseScoringCategory(): number;
         private calculateNumber;
         private calculateColor;

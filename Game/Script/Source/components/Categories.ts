@@ -80,7 +80,7 @@ namespace DiceCup {
     }
 
     function addPointsToButton(_index: number): void {
-        let valuation: Valuation = new Valuation(_index, dices);
+        let valuation: Valuation = new Valuation(_index, dices, true);
         let value: number = valuation.chooseScoringCategory();
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");

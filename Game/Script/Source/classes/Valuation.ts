@@ -1,12 +1,14 @@
 namespace DiceCup {
     export class Valuation {
     
-        public scoringCategory: ScoringCategory;
-        public dices: Dice[];
+        private scoringCategory: ScoringCategory;
+        private dices: Dice[];
+        private player: boolean;
     
-        constructor(_category: ScoringCategory, _dices: Dice[]) {
+        constructor(_category: ScoringCategory, _dices: Dice[], _player: boolean) {
             this.dices = _dices;
             this.scoringCategory = _category;
+            this.player = _player;
         }
 
         public chooseScoringCategory(): number {
@@ -57,10 +59,12 @@ namespace DiceCup {
 
         private calculateNumber(_number: number, _number2?: number, _number3?: number): number {
             let value: number = 0;
+            this.player && dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].value === _number || this.dices[i].value === _number2 || this.dices[i].value === _number3) {
                     value += this.dices[i].value;
+                    this.player && this.dices[i].validateDices();
                 }
             }
 
@@ -76,10 +80,12 @@ namespace DiceCup {
 
         private calculateColor(_color: DiceColor): number {
             let value: number = 0;
+            this.player && dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
                     value += this.dices[i].value;
+                    this.player && this.dices[i].validateDices();
                 }
             }
 
@@ -90,10 +96,13 @@ namespace DiceCup {
         
         private calculateDoubles(): number {
             let value: number = 0;
+            this.player && dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length-1; i++) {
                 if (this.dices[i].color === this.dices[i+1].color && this.dices[i].value === this.dices[i+1].value) {
                     value += 10;
+                    this.player && this.dices[i].validateDices();
+                    this.player && this.dices[i + 1].validateDices();
                 }
             }
 
@@ -104,9 +113,11 @@ namespace DiceCup {
 
         private calculateDiceCup(): number {
             let value: number = 0;
+            this.player && dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;
+                this.player && this.dices[i].validateDices();
             }
 
             highscore += value;
