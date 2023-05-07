@@ -186,7 +186,7 @@ var DiceCup;
             this.diceRig.activate(true);
         }
         translateDice(_node) {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, 0.5, (Math.random() * 4) - 1.5);
+            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, 0.51, (Math.random() * 4) - 1.5);
             console.log(_node.mtxLocal.translation.y);
             if (_node.mtxLocal.translation.y > 1) {
                 this.translateDice(_node);
@@ -1119,18 +1119,6 @@ var DiceCup;
     DiceCup.roundCounter = 1;
     DiceCup.maxRounds = 12;
     let bots = [];
-    async function initViewport() {
-        // let response: Response = await fetch("Game/Script/Data/diceColors.json");
-        // let diceColors: RgbaDao[] = await response.json();
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
-        DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
-        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-        //     dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
-        // }
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_GAME, 60);
-    }
-    DiceCup.initViewport = initViewport;
     function createBots(_bots) {
         bots = [];
         for (let index = 0; index < _bots.length; index++) {
@@ -1138,17 +1126,20 @@ var DiceCup;
         }
         return bots;
     }
-    async function round() {
-        console.clear();
+    async function rollDices() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
-        if (DiceCup.firstRound == true) {
-            createBots(DiceCup.gameSettings.bot);
-            DiceCup.firstRound = false;
-        }
         DiceCup.dices = [];
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
             DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
+        }
+    }
+    DiceCup.rollDices = rollDices;
+    function round() {
+        console.clear();
+        if (DiceCup.firstRound == true) {
+            createBots(DiceCup.gameSettings.bot);
+            DiceCup.firstRound = false;
         }
         for (let index = 0; index < bots.length; index++) {
             bots[index].botsTurn();
@@ -1162,6 +1153,7 @@ var DiceCup;
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
+    DiceCup.update = update;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -1194,6 +1186,7 @@ var DiceCup;
                 break;
             case DiceCup.GameState.ready:
                 DiceCup.startTransition();
+                DiceCup.rollDices();
                 break;
             case DiceCup.GameState.counting:
                 DiceCup.round();
@@ -1215,6 +1208,22 @@ var DiceCup;
         DiceCup.resetTimer();
     }
     DiceCup.changeGameState = changeGameState;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    async function initViewport() {
+        // let response: Response = await fetch("Game/Script/Data/diceColors.json");
+        // let diceColors: RgbaDao[] = await response.json();
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
+        DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
+        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+        //     dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
+        // }
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, DiceCup.update);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
+    }
+    DiceCup.initViewport = initViewport;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {

@@ -193,14 +193,18 @@ declare namespace DiceCup {
     let roundCounter: number;
     let maxRounds: number;
     let gameSettings: SinglePlayerSettingsDao;
-    function initViewport(): Promise<void>;
-    function round(): Promise<void>;
+    function rollDices(): Promise<void>;
+    function round(): void;
+    function update(_event: Event): void;
 }
 declare namespace DiceCup {
     function gameOver(): void;
 }
 declare namespace DiceCup {
     function changeGameState(_gameState: GameState): void;
+}
+declare namespace DiceCup {
+    function initViewport(): Promise<void>;
 }
 declare namespace DiceCup {
     function enableWakeLock(): Promise<boolean>;

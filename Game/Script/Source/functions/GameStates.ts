@@ -15,6 +15,7 @@ namespace DiceCup{
             break;
             case GameState.ready: 
                 startTransition();
+                rollDices();
             break;
             case GameState.counting: 
                 round();
