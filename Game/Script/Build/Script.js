@@ -138,7 +138,7 @@ var DiceCup;
             this.dots = this.sides.map(elem => elem.getChildren());
             this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 9) - 4.5, Math.random() * 5 + 3, (Math.random() * 9) - 4.5);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, Math.random() * 5 + 3, (Math.random() * 2) - 1);
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
             // this.translateDice(this.dice);
             // this.rotateDice(this.dice);
@@ -1080,7 +1080,7 @@ var DiceCup;
     async function initViewport() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 16, -10);
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
             DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], color));

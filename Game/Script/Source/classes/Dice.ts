@@ -25,7 +25,7 @@ namespace DiceCup{
             this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
 
-            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 9) - 4.5, Math.random() * 5 + 3, (Math.random() * 9) - 4.5);
+            this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 8) - 4, Math.random() * 5 + 3, (Math.random() * 2) - 1);
             this.dice.mtxLocal.rotation = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
             // this.translateDice(this.dice);
             // this.rotateDice(this.dice);

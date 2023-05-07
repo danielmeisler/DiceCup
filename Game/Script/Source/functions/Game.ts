@@ -14,7 +14,7 @@ namespace DiceCup {
         let response: Response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors: RgbaDao[] = await response.json();
         
-        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 16, -10);
+        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
 
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
