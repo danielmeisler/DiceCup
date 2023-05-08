@@ -120,6 +120,7 @@
 }
 
 .gameMenuAlert {
+    text-shadow: var(--text_shadow);
     font-family: var(--text_font);
     font-size: var(--lobby_alert_fontsize);
     color: var(--lobby_alert_color);
