@@ -11,6 +11,8 @@ namespace DiceCup{
         private diceRig: ƒ.ComponentRigidbody;
         private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
+        private arenaSameScale: number = ((Math.random() * 2) + 3) / 10;
+        private arenaScale: ƒ.Vector3 = new ƒ.Vector3(this.arenaSameScale,this.arenaSameScale,this.arenaSameScale);
 
         private nodeId: string;
         public color: DiceColor;
@@ -26,6 +28,7 @@ namespace DiceCup{
             this.dotsMat = this.dots.map(elem => elem.map(elem => elem.getComponent(ƒ.ComponentMaterial)));
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
             this.diceRig = this.dice.getComponent(ƒ.ComponentRigidbody);
+            this.dice.mtxLocal.scaling = this.arenaScale;
             this.rollDices(1);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {

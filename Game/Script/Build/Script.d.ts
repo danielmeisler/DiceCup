@@ -38,6 +38,8 @@ declare namespace DiceCup {
         private diceRig;
         private arenaTranslation;
         private arenaRotation;
+        private arenaSameScale;
+        private arenaScale;
         private nodeId;
         color: DiceColor;
         value: number;
