@@ -10,6 +10,7 @@ namespace DiceCup {
         let menuDiv: HTMLDivElement = document.createElement("div");
         menuDiv.id = MenuPage.main;
         menuDiv.classList.add("gameMenus");
+        menuDiv.classList.add("noBackground");
         gameMenuDiv.appendChild(menuDiv);
 
         let logoDiv: HTMLDivElement = document.createElement("div");
@@ -18,7 +19,7 @@ namespace DiceCup {
 
         let logoImage: HTMLImageElement = document.createElement("img");
         logoImage.id = "logo_id";
-        logoImage.src = "Game/Assets/images/temp_logo.png";
+        logoImage.src = "Game/Assets/images/temp_logo_test.png";
         logoDiv.appendChild(logoImage);
 
         let buttonDiv: HTMLDivElement = document.createElement("div");

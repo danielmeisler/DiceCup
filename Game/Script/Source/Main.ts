@@ -3,7 +3,7 @@ namespace DiceCup {
   ƒ.Debug.info("Dice Cup is running!");
   
   export let viewport: ƒ.Viewport;
-  export let viewportState: ViewportState.menu;
+  export let viewportState: ViewportState;
 
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 

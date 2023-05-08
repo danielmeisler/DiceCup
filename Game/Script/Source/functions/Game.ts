@@ -12,6 +12,7 @@ namespace DiceCup {
 
     function createBots(_bots: BotDao[]): Bot[] {
         bots = [];
+        console.log(dices);
         for (let index = 0; index < _bots.length; index++) {
             bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
         }
@@ -28,28 +29,36 @@ namespace DiceCup {
         }
     }
 
-    export function round(): void {
+    export async function round(): Promise<void> {
         console.clear();
-
+        await rollDices();
+        
         if (firstRound == true) {
             createBots(gameSettings.bot);
             firstRound = false;
         }
 
-            for (let index = 0; index < bots.length; index++) {
-                bots[index].botsTurn();
-            }
+        for (let index = 0; index < bots.length; index++) {
+            bots[index].botsTurn();
+        }
 
-            new TimerBar("hudTimer_id", roundTimer);
-            ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
+        new TimerBar("hudTimer_id", roundTimer);
+        ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
     }
 
     export function update(_event: Event): void {
-        viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0))
-        viewport.camera.mtxPivot.translateX(0.02);
-
-
         ƒ.Physics.simulate();  // if physics is included and used
+
+        switch (viewportState) {
+            case ViewportState.menu:
+                viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0))
+                viewport.camera.mtxPivot.translateX(0.02);
+                break;
+        
+            default:
+                break;
+        }
+
         viewport.draw();
         //ƒ.AudioManager.default.update();
     }

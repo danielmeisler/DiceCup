@@ -193,7 +193,7 @@ var DiceCup;
             this.diceRig.activate(true);
         }
         translateDice(_node) {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, 0.51, (Math.random() * 4) - 1.5);
+            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
             console.log(_node.mtxLocal.translation.y);
             if (_node.mtxLocal.translation.y > 1) {
                 this.translateDice(_node);
@@ -1135,6 +1135,18 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    function changeFloor(_change) {
+        let graph = DiceCup.viewport.getBranch();
+        let arena = graph.getChildrenByName("Arena")[0];
+        let game_floor = arena.getChildrenByName("Floor_game")[0];
+        let menu_floor = arena.getChildrenByName("Floor_menu")[0];
+        game_floor.activate(_change);
+        menu_floor.activate(!_change);
+    }
+    DiceCup.changeFloor = changeFloor;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     var ƒ = FudgeCore;
     DiceCup.dices = [];
     DiceCup.firstRound = true;
@@ -1145,6 +1157,7 @@ var DiceCup;
     let bots = [];
     function createBots(_bots) {
         bots = [];
+        console.log(DiceCup.dices);
         for (let index = 0; index < _bots.length; index++) {
             bots[index] = new DiceCup.Bot(_bots[index].botName, _bots[index].difficulty, DiceCup.dices);
         }
@@ -1159,8 +1172,9 @@ var DiceCup;
         }
     }
     DiceCup.rollDices = rollDices;
-    function round() {
+    async function round() {
         console.clear();
+        await rollDices();
         if (DiceCup.firstRound == true) {
             createBots(DiceCup.gameSettings.bot);
             DiceCup.firstRound = false;
@@ -1173,9 +1187,15 @@ var DiceCup;
     }
     DiceCup.round = round;
     function update(_event) {
-        DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0));
-        DiceCup.viewport.camera.mtxPivot.translateX(0.02);
         ƒ.Physics.simulate(); // if physics is included and used
+        switch (DiceCup.viewportState) {
+            case DiceCup.ViewportState.menu:
+                DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0));
+                DiceCup.viewport.camera.mtxPivot.translateX(0.02);
+                break;
+            default:
+                break;
+        }
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
     }
@@ -1213,11 +1233,10 @@ var DiceCup;
             case DiceCup.GameState.ready:
                 DiceCup.startTransition();
                 DiceCup.changeViewportState(DiceCup.ViewportState.transition);
-                DiceCup.rollDices();
                 break;
             case DiceCup.GameState.counting:
-                DiceCup.changeViewportState(DiceCup.ViewportState.game);
                 DiceCup.round();
+                DiceCup.changeViewportState(DiceCup.ViewportState.game);
                 break;
             case DiceCup.GameState.choosing:
                 DiceCup.showCategories();
@@ -1252,6 +1271,7 @@ var DiceCup;
                 gameViewport();
                 break;
         }
+        DiceCup.viewportState = _viewportState;
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, DiceCup.update);
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 30);
     }
@@ -1261,21 +1281,23 @@ var DiceCup;
         let diceColors = await response.json();
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -3);
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2));
+            new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2);
         }
+        DiceCup.changeFloor(false);
     }
     async function transitionViewport() {
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
-        DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(80, 0, 0);
+        let response = await fetch("Game/Script/Data/diceColors.json");
+        let diceColors = await response.json();
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -3);
+        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2));
+        }
+        DiceCup.changeFloor(false);
     }
     async function gameViewport() {
-        // let response: Response = await fetch("Game/Script/Data/diceColors.json");
-        // let diceColors: RgbaDao[] = await response.json();
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
-        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-        //     dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
-        // }
+        DiceCup.changeFloor(true);
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1347,13 +1369,14 @@ var DiceCup;
         let menuDiv = document.createElement("div");
         menuDiv.id = DiceCup.MenuPage.main;
         menuDiv.classList.add("gameMenus");
+        menuDiv.classList.add("noBackground");
         gameMenuDiv.appendChild(menuDiv);
         let logoDiv = document.createElement("div");
         logoDiv.id = "logoContainer_id";
         menuDiv.appendChild(logoDiv);
         let logoImage = document.createElement("img");
         logoImage.id = "logo_id";
-        logoImage.src = "Game/Assets/images/temp_logo.png";
+        logoImage.src = "Game/Assets/images/temp_logo_test.png";
         logoDiv.appendChild(logoImage);
         let buttonDiv = document.createElement("div");
         buttonDiv.id = "buttonContainer_id";

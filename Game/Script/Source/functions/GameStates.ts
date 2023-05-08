@@ -16,11 +16,11 @@ namespace DiceCup{
             case GameState.ready: 
                 startTransition();
                 changeViewportState(ViewportState.transition);
-                rollDices();
+
             break;
             case GameState.counting: 
-                changeViewportState(ViewportState.game);
                 round();
+                changeViewportState(ViewportState.game);
             break;
             case GameState.choosing: 
                 showCategories();

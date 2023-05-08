@@ -83,7 +83,7 @@ namespace DiceCup{
         }
 
         private translateDice(_node: ƒ.Node): void {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, 0.51, (Math.random() * 4) - 1.5);
+            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
             console.log(_node.mtxLocal.translation.y);
             if (_node.mtxLocal.translation.y > 1) {
                 this.translateDice(_node);
