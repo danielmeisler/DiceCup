@@ -81,14 +81,13 @@ namespace DiceCup {
     }
 
     function checkPlayernames(_names: string[]): boolean {
-        let test: string[] = _names.filter((item, index) => _names.indexOf(item) !== index);
-        console.log(test)
+        let doubles: string[] = _names.filter((item, index) => _names.indexOf(item) !== index);
         for (let i = 0; i < _names.length; i++) {
             if (!/^[A-Za-z0-9]*$/.test(_names[i])) {
                 document.getElementById("singleplayerAlert_id").innerHTML = "Only alphabetic and numeric tokens!";
                 return false;
             }
-            if (test.length != 0) {
+            if (doubles.length != 0) {
                 document.getElementById("singleplayerAlert_id").innerHTML = "No same names!";
                 return false;
             }
