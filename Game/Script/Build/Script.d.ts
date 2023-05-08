@@ -10,6 +10,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
+    let viewportState: ViewportState.menu;
 }
 declare namespace DiceCup {
     class Bot {
@@ -43,7 +44,7 @@ declare namespace DiceCup {
         private nodeId;
         color: DiceColor;
         value: number;
-        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor);
+        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number);
         roll(): number;
         validateDices(): void;
         transparentDices(): void;
@@ -188,6 +189,13 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    enum ViewportState {
+        menu = 0,
+        transition = 1,
+        game = 2
+    }
+}
+declare namespace DiceCup {
     let dices: Dice[];
     let firstRound: boolean;
     let highscore: number;
@@ -206,7 +214,7 @@ declare namespace DiceCup {
     function changeGameState(_gameState: GameState): void;
 }
 declare namespace DiceCup {
-    function initViewport(): Promise<void>;
+    function changeViewportState(_viewportState: ViewportState): void;
 }
 declare namespace DiceCup {
     function enableWakeLock(): Promise<boolean>;

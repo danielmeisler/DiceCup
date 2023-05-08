@@ -18,7 +18,7 @@ namespace DiceCup{
         public color: DiceColor;
         public value: number;
     
-        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor) {
+        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number) {
             this.nodeId = _nodeId;
             this.color = _color;
             this.value = this.roll();
@@ -29,7 +29,7 @@ namespace DiceCup{
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
             this.diceRig = this.dice.getComponent(ƒ.ComponentRigidbody);
             this.dice.mtxLocal.scaling = this.arenaScale;
-            this.rollDices(1);
+            this.rollDices(_rollDiceMode);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
                 this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1) }));
@@ -70,6 +70,10 @@ namespace DiceCup{
                     break;
                 case 1:
                     this.translateDice(this.dice);
+                    this.rotateDice(this.dice);
+                    break;
+                case 2:
+                    this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, Math.random() * 3, (Math.random() * 2) - 1);
                     this.rotateDice(this.dice);
                     break;
                 default:

@@ -48,7 +48,7 @@ var DiceCup;
         document.querySelector("body").appendChild(diceCup);
         DiceCup.enableWakeLock();
         DiceCup.initMenu();
-        // initViewport();
+        DiceCup.changeViewportState(DiceCup.ViewportState.menu);
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -133,7 +133,7 @@ var DiceCup;
         nodeId;
         color;
         value;
-        constructor(_nodeId, _colorRGBA, _color) {
+        constructor(_nodeId, _colorRGBA, _color, _rollDiceMode) {
             this.nodeId = _nodeId;
             this.color = _color;
             this.value = this.roll();
@@ -144,7 +144,7 @@ var DiceCup;
             this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
             this.diceRig = this.dice.getComponent(ƒ.ComponentRigidbody);
             this.dice.mtxLocal.scaling = this.arenaScale;
-            this.rollDices(1);
+            this.rollDices(_rollDiceMode);
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
                 this.dotsMat.map(dots => dots.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); }));
@@ -181,6 +181,10 @@ var DiceCup;
                     break;
                 case 1:
                     this.translateDice(this.dice);
+                    this.rotateDice(this.dice);
+                    break;
+                case 2:
+                    this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, Math.random() * 3, (Math.random() * 2) - 1);
                     this.rotateDice(this.dice);
                     break;
                 default:
@@ -1122,6 +1126,15 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    let ViewportState;
+    (function (ViewportState) {
+        ViewportState[ViewportState["menu"] = 0] = "menu";
+        ViewportState[ViewportState["transition"] = 1] = "transition";
+        ViewportState[ViewportState["game"] = 2] = "game";
+    })(ViewportState = DiceCup.ViewportState || (DiceCup.ViewportState = {}));
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     var ƒ = FudgeCore;
     DiceCup.dices = [];
     DiceCup.firstRound = true;
@@ -1142,7 +1155,7 @@ var DiceCup;
         let diceColors = await response.json();
         DiceCup.dices = [];
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
+            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 1));
         }
     }
     DiceCup.rollDices = rollDices;
@@ -1160,6 +1173,8 @@ var DiceCup;
     }
     DiceCup.round = round;
     function update(_event) {
+        DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0));
+        DiceCup.viewport.camera.mtxPivot.translateX(0.02);
         ƒ.Physics.simulate(); // if physics is included and used
         DiceCup.viewport.draw();
         //ƒ.AudioManager.default.update();
@@ -1186,20 +1201,22 @@ var DiceCup;
         switch (_gameState) {
             case DiceCup.GameState.menu:
                 DiceCup.switchMenu(DiceCup.MenuPage.main);
+                DiceCup.changeViewportState(DiceCup.ViewportState.menu);
                 break;
             case DiceCup.GameState.init:
                 DiceCup.initHud();
                 DiceCup.initCategories();
                 DiceCup.initSummary();
-                DiceCup.initViewport();
                 DiceCup.initPlacements();
                 changeGameState(DiceCup.GameState.ready);
                 break;
             case DiceCup.GameState.ready:
                 DiceCup.startTransition();
+                DiceCup.changeViewportState(DiceCup.ViewportState.transition);
                 DiceCup.rollDices();
                 break;
             case DiceCup.GameState.counting:
+                DiceCup.changeViewportState(DiceCup.ViewportState.game);
                 DiceCup.round();
                 break;
             case DiceCup.GameState.choosing:
@@ -1223,7 +1240,35 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
-    async function initViewport() {
+    function changeViewportState(_viewportState) {
+        switch (_viewportState) {
+            case DiceCup.ViewportState.menu:
+                menuViewport();
+                break;
+            case DiceCup.ViewportState.transition:
+                transitionViewport();
+                break;
+            case DiceCup.ViewportState.game:
+                gameViewport();
+                break;
+        }
+        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, DiceCup.update);
+        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 30);
+    }
+    DiceCup.changeViewportState = changeViewportState;
+    async function menuViewport() {
+        let response = await fetch("Game/Script/Data/diceColors.json");
+        let diceColors = await response.json();
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -3);
+        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2));
+        }
+    }
+    async function transitionViewport() {
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
+        DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(80, 0, 0);
+    }
+    async function gameViewport() {
         // let response: Response = await fetch("Game/Script/Data/diceColors.json");
         // let diceColors: RgbaDao[] = await response.json();
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
@@ -1231,10 +1276,7 @@ var DiceCup;
         // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
         //     dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
         // }
-        ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, DiceCup.update);
-        ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);
     }
-    DiceCup.initViewport = initViewport;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {

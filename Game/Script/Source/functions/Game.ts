@@ -24,7 +24,7 @@ namespace DiceCup {
         dices = [];
 
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-            dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color)));
+            dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 1));
         }
     }
 
@@ -45,6 +45,10 @@ namespace DiceCup {
     }
 
     export function update(_event: Event): void {
+        viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0))
+        viewport.camera.mtxPivot.translateX(0.02);
+
+
         ƒ.Physics.simulate();  // if physics is included and used
         viewport.draw();
         //ƒ.AudioManager.default.update();

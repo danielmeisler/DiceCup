@@ -4,20 +4,22 @@ namespace DiceCup{
         switch (_gameState) {
             case GameState.menu: 
                 switchMenu(MenuPage.main);
+                changeViewportState(ViewportState.menu);
             break;
             case GameState.init: 
                 initHud();
                 initCategories();
                 initSummary();
-                initViewport();
                 initPlacements();
                 changeGameState(GameState.ready);
             break;
             case GameState.ready: 
                 startTransition();
+                changeViewportState(ViewportState.transition);
                 rollDices();
             break;
             case GameState.counting: 
+                changeViewportState(ViewportState.game);
                 round();
             break;
             case GameState.choosing: 

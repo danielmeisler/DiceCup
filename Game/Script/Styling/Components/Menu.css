@@ -3,7 +3,7 @@
     width: 100%;
     position: absolute;
     display: flex;
-    background: var(--background_fade);
+    /* background: var(--background_fade); */
 }
 
 #mainMenu_id {
