@@ -45,7 +45,7 @@ namespace DiceCup {
         botSettings = [];
         
         for (let i = 0; i < bots; i++) {
-            botSettings.push({botName: (<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder, difficulty: BotDifficulty.easy})
+            botSettings.push({botName: (<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder, difficulty: BotDifficulty.easy});
         }
         
         gameSettings = {playerName: (<HTMLInputElement>document.getElementById("playerName_id")).placeholder, bot: botSettings};
