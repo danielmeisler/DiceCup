@@ -1,5 +1,5 @@
 namespace DiceCup {
-
+    import ƒ = FudgeCore;
     let botSettings: BotDao[];
     let botCounter: number = 0;
     let chosenDifficulty: number = 1;
@@ -36,7 +36,6 @@ namespace DiceCup {
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
 
         startButton.addEventListener("click", () => {
-            hideMenu();
             createGameSettings();
         });
     }
@@ -67,7 +66,34 @@ namespace DiceCup {
                 botSettings[i].difficulty = BotDifficulty.hard;
             }
         }
-        changeGameState(GameState.init);
+
+        let playerNames: string[] = [gameSettings.playerName];
+        for (let index = 0; index < gameSettings.bot.length; index++) {
+            playerNames.push(gameSettings.bot[index].botName);
+        }
+
+        if (!checkPlayernames(playerNames)) {
+            ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
+        } else {
+            hideMenu();
+            changeGameState(GameState.init);
+        }
+    }
+
+    function checkPlayernames(_names: string[]): boolean {
+        let test: string[] = _names.filter((item, index) => _names.indexOf(item) !== index);
+        console.log(test)
+        for (let i = 0; i < _names.length; i++) {
+            if (!/^[A-Za-z0-9]*$/.test(_names[i])) {
+                document.getElementById("singleplayerAlert_id").innerHTML = "Only alphabetic and numeric tokens!";
+                return false;
+            }
+            if (test.length != 0) {
+                document.getElementById("singleplayerAlert_id").innerHTML = "No same names!";
+                return false;
+            }
+        }
+        return true;
     }
 
     function createPlayerPortrait(): void {
@@ -137,7 +163,7 @@ namespace DiceCup {
 
         let botName: HTMLInputElement = document.createElement("input");
         botName.id = "botName_id_" + botCounter;
-        botName.placeholder = "Agent_" + Math.floor((Math.random() * 99));
+        botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
 

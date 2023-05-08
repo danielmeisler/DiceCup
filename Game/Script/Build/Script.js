@@ -420,6 +420,14 @@ var DiceCup;
             leftButtonArea.id = this.id + "MenuLeftButtonArea_id";
             leftButtonArea.classList.add("gameMenuLeftButtonArea");
             buttonArea.appendChild(leftButtonArea);
+            let midButtonArea = document.createElement("div");
+            midButtonArea.id = this.id + "MenuMidButtonArea_id";
+            midButtonArea.classList.add("gameMenuMidButtonArea");
+            buttonArea.appendChild(midButtonArea);
+            let alert = document.createElement("span");
+            alert.id = this.id + "Alert_id";
+            alert.classList.add("gameMenuAlert");
+            midButtonArea.appendChild(alert);
             let rightButtonArea = document.createElement("div");
             rightButtonArea.id = this.id + "MenuRightButtonArea_id";
             rightButtonArea.classList.add("gameMenuRightButtonArea");
@@ -1475,6 +1483,7 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    var ƒ = FudgeCore;
     let botSettings;
     let botCounter = 0;
     let chosenDifficulty = 1;
@@ -1504,7 +1513,6 @@ var DiceCup;
         startButton.innerHTML = "START";
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
         startButton.addEventListener("click", () => {
-            DiceCup.hideMenu();
             createGameSettings();
         });
     }
@@ -1533,7 +1541,32 @@ var DiceCup;
                 botSettings[i].difficulty = DiceCup.BotDifficulty.hard;
             }
         }
-        DiceCup.changeGameState(DiceCup.GameState.init);
+        let playerNames = [DiceCup.gameSettings.playerName];
+        for (let index = 0; index < DiceCup.gameSettings.bot.length; index++) {
+            playerNames.push(DiceCup.gameSettings.bot[index].botName);
+        }
+        if (!checkPlayernames(playerNames)) {
+            ƒ.Time.game.setTimer(1000, 1, () => { document.getElementById("singleplayerAlert_id").innerHTML = ""; });
+        }
+        else {
+            DiceCup.hideMenu();
+            DiceCup.changeGameState(DiceCup.GameState.init);
+        }
+    }
+    function checkPlayernames(_names) {
+        let test = _names.filter((item, index) => _names.indexOf(item) !== index);
+        console.log(test);
+        for (let i = 0; i < _names.length; i++) {
+            if (!/^[A-Za-z0-9]*$/.test(_names[i])) {
+                document.getElementById("singleplayerAlert_id").innerHTML = "Only alphabetic and numeric tokens!";
+                return false;
+            }
+            if (test.length != 0) {
+                document.getElementById("singleplayerAlert_id").innerHTML = "No same names!";
+                return false;
+            }
+        }
+        return true;
     }
     function createPlayerPortrait() {
         let playerContainer = document.createElement("div");
@@ -1592,7 +1625,7 @@ var DiceCup;
         botDiv.appendChild(botIcons);
         let botName = document.createElement("input");
         botName.id = "botName_id_" + botCounter;
-        botName.placeholder = "Agent_" + Math.floor((Math.random() * 99));
+        botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
         let difficultySwitch = document.createElement("div");

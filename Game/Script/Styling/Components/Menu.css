@@ -51,8 +51,6 @@
 }
 
 
-
-
 .subGameMenus {
     height: 100%;
     width: 100%;
@@ -86,7 +84,6 @@
 }
 
 .gameMenuLeftButtonArea, .gameMenuRightButtonArea {
-    width: 50%;
     height: 100%;
     gap: 2vw;
     display: flex;
@@ -94,10 +91,20 @@
 }
 
 .gameMenuLeftButtonArea {
+    width: 25%;
     justify-content: left;
 }
 
+.gameMenuMidButtonArea {
+    width: 50%;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
 .gameMenuRightButtonArea {
+    width: 25%;
     justify-content: right;
 }
 
@@ -110,6 +117,14 @@
     align-items: center;
     background: var(--menu_buttons_background);
     color: var(--menu_buttons_color);
+}
+
+.gameMenuAlert {
+    font-family: var(--text_font);
+    font-size: var(--lobby_alert_fontsize);
+    color: var(--lobby_alert_color);
+    justify-content: center;
+    padding: 1vi;
 }
 
 
@@ -232,7 +247,7 @@
 }
 
 .gameMenuStartButtons {
-    width: 50%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;

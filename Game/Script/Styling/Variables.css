@@ -27,6 +27,8 @@
     --lobby_portrait_background: var(--blue);
     --lobby_portrait_background_inactive: rgba(47, 66, 96, 0.5);
     --lobby_text: var(--white);
+    --lobby_alert_color: var(--white);
+    --lobby_alert_fontsize: 2.5vi;
     --lobby_text_inactive: rgba(255, 255, 255, 0.5);
     --lobby_names_background: var(--blue_light);
     --lobby_names_fontsize: 1.5vi;

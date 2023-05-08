@@ -41,6 +41,16 @@ namespace DiceCup{
             leftButtonArea.classList.add("gameMenuLeftButtonArea");
             buttonArea.appendChild(leftButtonArea);
 
+            let midButtonArea: HTMLDivElement = document.createElement("div");
+            midButtonArea.id = this.id + "MenuMidButtonArea_id";
+            midButtonArea.classList.add("gameMenuMidButtonArea");
+            buttonArea.appendChild(midButtonArea);
+
+            let alert: HTMLSpanElement = document.createElement("span");
+            alert.id = this.id + "Alert_id";
+            alert.classList.add("gameMenuAlert");
+            midButtonArea.appendChild(alert);
+
             let rightButtonArea: HTMLDivElement = document.createElement("div");
             rightButtonArea.id = this.id + "MenuRightButtonArea_id";
             rightButtonArea.classList.add("gameMenuRightButtonArea");
