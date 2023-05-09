@@ -32,14 +32,12 @@ declare namespace DiceCup {
     class Dice {
         private graph;
         private dice;
-        private sides;
-        private dots;
         private diceMat;
-        private dotsMat;
         private diceRig;
+        private dots;
+        private dotsMat;
         private arenaTranslation;
         private arenaRotation;
-        private arenaSameScale;
         private arenaScale;
         private nodeId;
         color: DiceColor;

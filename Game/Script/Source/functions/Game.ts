@@ -51,7 +51,7 @@ namespace DiceCup {
 
         switch (viewportState) {
             case ViewportState.menu:
-                viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.8, 0))
+                viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 1, 0))
                 viewport.camera.mtxPivot.translateX(0.02);
                 break;
         
