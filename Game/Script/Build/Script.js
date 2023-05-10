@@ -1189,7 +1189,6 @@ var DiceCup;
     DiceCup.rollDices = rollDices;
     async function round() {
         console.clear();
-        await rollDices();
         if (DiceCup.firstRound == true) {
             createBots(DiceCup.gameSettings.bot);
             DiceCup.firstRound = false;
@@ -1232,7 +1231,7 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    function changeGameState(_gameState) {
+    async function changeGameState(_gameState) {
         switch (_gameState) {
             case DiceCup.GameState.menu:
                 DiceCup.switchMenu(DiceCup.MenuPage.main);
@@ -1246,6 +1245,7 @@ var DiceCup;
                 changeGameState(DiceCup.GameState.ready);
                 break;
             case DiceCup.GameState.ready:
+                await DiceCup.rollDices();
                 DiceCup.startTransition();
                 DiceCup.changeViewportState(DiceCup.ViewportState.transition);
                 break;
@@ -1302,14 +1302,14 @@ var DiceCup;
         }
     }
     async function transitionViewport() {
-        let response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors = await response.json();
-        DiceCup.changeFloor(false);
-        DiceCup.activateCover(false);
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
-        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
-        }
+        // let response: Response = await fetch("Game/Script/Data/diceColors.json");
+        // let diceColors: RgbaDao[] = await response.json();
+        // changeFloor(false);
+        // activateCover(false);
+        // viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
+        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+        //     dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
+        // }
     }
     async function gameViewport() {
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);

@@ -1,6 +1,6 @@
 namespace DiceCup{
 
-    export function changeGameState(_gameState: GameState) {
+    export async function changeGameState(_gameState: GameState) {
         switch (_gameState) {
             case GameState.menu: 
                 switchMenu(MenuPage.main);
@@ -14,9 +14,9 @@ namespace DiceCup{
                 changeGameState(GameState.ready);
             break;
             case GameState.ready: 
+                await rollDices();
                 startTransition();
                 changeViewportState(ViewportState.transition);
-
             break;
             case GameState.counting: 
                 round();

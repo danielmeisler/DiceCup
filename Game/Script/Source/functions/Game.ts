@@ -35,7 +35,6 @@ namespace DiceCup {
 
     export async function round(): Promise<void> {
         console.clear();
-        await rollDices();
         
         if (firstRound == true) {
             createBots(gameSettings.bot);

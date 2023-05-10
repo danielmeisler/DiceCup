@@ -216,7 +216,7 @@ declare namespace DiceCup {
     function gameOver(): void;
 }
 declare namespace DiceCup {
-    function changeGameState(_gameState: GameState): void;
+    function changeGameState(_gameState: GameState): Promise<void>;
 }
 declare namespace DiceCup {
     function changeViewportState(_viewportState: ViewportState): void;

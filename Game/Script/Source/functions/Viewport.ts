@@ -33,18 +33,16 @@ namespace DiceCup {
     }
 
     async function transitionViewport() {
-        let response: Response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors: RgbaDao[] = await response.json();
-        changeFloor(false);
-        activateCover(false);
+        // let response: Response = await fetch("Game/Script/Data/diceColors.json");
+        // let diceColors: RgbaDao[] = await response.json();
+        // changeFloor(false);
+        // activateCover(false);
         
-        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
+        // viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
 
-        for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-            dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
-        }
-
-
+        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+        //     dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
+        // }
 
     }
     
