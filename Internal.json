@@ -113,7 +113,7 @@
                 "scaling": "[1, 1, 1]"
               },
               "light": {
-                "ƒ.LightSpot": {
+                "ƒ.LightDirectional": {
                   "color": "[1, 1, 1, 1]"
                 }
               },
@@ -883,9 +883,9 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[0, 1.2000000476837158, 0]",
+                            "translation": "[0, 1, 0.5]",
                             "rotation": "[0, 0, 0]",
-                            "scaling": "[10, 0.30000001192092896, 10]"
+                            "scaling": "[10, 0.30000001192092896, 4]"
                           },
                           "Component": {
                             "active": true
@@ -893,31 +893,7 @@
                         }
                       }
                     ],
-                    "ComponentRigidbody": [
-                      {
-                        "ƒ.ComponentRigidbody": {
-                          "initialization": "TO_PIVOT",
-                          "friction": 0.2,
-                          "restitution": 0.2,
-                          "mass": 1,
-                          "dampTranslation": 0.1,
-                          "dampRotation": 0.1,
-                          "effectGravity": 1,
-                          "typeBody": "STATIC",
-                          "typeCollider": "CUBE",
-                          "isTrigger": false,
-                          "id": 4,
-                          "pivot": {
-                            "translation": "[0, 0, 0]",
-                            "rotation": "[0, 0, 0]",
-                            "scaling": "[1, 1, 1]"
-                          },
-                          "Component": {
-                            "active": true
-                          }
-                        }
-                      }
-                    ]
+                    "ComponentRigidbody": []
                   },
                   "children": []
                 }
@@ -930,7 +906,15 @@
             "name": "Dices",
             "active": true,
             "components": {},
-            "children": []
+            "children": [
+              {
+                "ƒ.GraphInstance": {
+                  "deserializeFromSource": true,
+                  "name": "Dice_Graph",
+                  "idSource": "Graph|2023-05-10T15:01:16.035Z|13867"
+                }
+              }
+            ]
           }
         }
       ],
@@ -2195,6 +2179,29 @@
         }
       ],
       "idResource": "Graph|2023-05-10T12:08:54.682Z|33820",
+      "type": "Graph"
+    }
+  },
+  "Material|2023-05-10T14:59:02.304Z|89323": {
+    "ƒ.Material": {
+      "name": "Dice_color_test",
+      "idResource": "Material|2023-05-10T14:59:02.304Z|89323",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "Graph|2023-05-10T15:01:16.035Z|13867": {
+    "ƒ.Graph": {
+      "name": "Dice_Graph",
+      "components": {},
+      "children": [],
+      "idResource": "Graph|2023-05-10T15:01:16.035Z|13867",
       "type": "Graph"
     }
   }

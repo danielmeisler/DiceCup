@@ -4,12 +4,13 @@ namespace DiceCup{
 
         private graph: ƒ.Node = viewport.getBranch();
         private diceNode: ƒ.Node = this.graph.getChildrenByName("Dices")[0];
-        private diceTest: ƒ.Graph;
+        private diceGraph: ƒ.Graph;
         private diceInst: ƒ.GraphInstance;
         private diceMat: ƒ.ComponentMaterial;
         private diceRig: ƒ.ComponentRigidbody;
         private dots: ƒ.Node[];
         private dotsMat: ƒ.ComponentMaterial[];
+        
         private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
         private arenaScale: ƒ.Vector3 = new ƒ.Vector3(0.3,0.3,0.3);
@@ -29,8 +30,8 @@ namespace DiceCup{
         }
 
         private async initDice(_colorRGBA: RgbaDao, _rollDiceMode?: number): Promise<void> {
-            this.diceTest = <ƒ.Graph>ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
-            this.diceInst = await ƒ.Project.createGraphInstance(this.diceTest);
+            this.diceGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
+            this.diceInst = await ƒ.Project.createGraphInstance(this.diceGraph);
             this.diceMat = this.diceInst.getComponent(ƒ.ComponentMaterial);
             this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
             this.dots = this.diceInst.getChildren();

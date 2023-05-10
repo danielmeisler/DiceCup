@@ -14,9 +14,9 @@ namespace DiceCup{
                 changeGameState(GameState.ready);
             break;
             case GameState.ready: 
-                await rollDices();
                 startTransition();
                 changeViewportState(ViewportState.transition);
+                await rollDices();
             break;
             case GameState.counting: 
                 round();

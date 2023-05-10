@@ -121,7 +121,7 @@ var DiceCup;
     class Dice {
         graph = DiceCup.viewport.getBranch();
         diceNode = this.graph.getChildrenByName("Dices")[0];
-        diceTest;
+        diceGraph;
         diceInst;
         diceMat;
         diceRig;
@@ -142,8 +142,8 @@ var DiceCup;
             return this.value;
         }
         async initDice(_colorRGBA, _rollDiceMode) {
-            this.diceTest = ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
-            this.diceInst = await ƒ.Project.createGraphInstance(this.diceTest);
+            this.diceGraph = ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
+            this.diceInst = await ƒ.Project.createGraphInstance(this.diceGraph);
             this.diceMat = this.diceInst.getComponent(ƒ.ComponentMaterial);
             this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
             this.dots = this.diceInst.getChildren();
@@ -1245,9 +1245,9 @@ var DiceCup;
                 changeGameState(DiceCup.GameState.ready);
                 break;
             case DiceCup.GameState.ready:
-                await DiceCup.rollDices();
                 DiceCup.startTransition();
                 DiceCup.changeViewportState(DiceCup.ViewportState.transition);
+                await DiceCup.rollDices();
                 break;
             case DiceCup.GameState.counting:
                 DiceCup.round();

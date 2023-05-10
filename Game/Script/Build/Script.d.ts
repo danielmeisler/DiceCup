@@ -32,7 +32,7 @@ declare namespace DiceCup {
     class Dice {
         private graph;
         private diceNode;
-        private diceTest;
+        private diceGraph;
         private diceInst;
         private diceMat;
         private diceRig;
