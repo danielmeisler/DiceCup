@@ -31,7 +31,9 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     class Dice {
         private graph;
-        private dice;
+        private diceNode;
+        private diceTest;
+        private diceInst;
         private diceMat;
         private diceRig;
         private dots;
@@ -39,16 +41,17 @@ declare namespace DiceCup {
         private arenaTranslation;
         private arenaRotation;
         private arenaScale;
-        private nodeId;
         color: DiceColor;
         value: number;
-        constructor(_nodeId: string, _colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number);
+        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number);
         roll(): number;
+        private initDice;
         validateDices(): void;
         transparentDices(): void;
         private rollDices;
         private translateDice;
         private rotateDice;
+        private colorDices;
         private convertDiceColor;
     }
 }
@@ -195,6 +198,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function changeFloor(_change: boolean): void;
+    function activateCover(_change: boolean): void;
 }
 declare namespace DiceCup {
     let dices: Dice[];

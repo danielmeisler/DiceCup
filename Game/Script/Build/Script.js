@@ -120,7 +120,9 @@ var DiceCup;
     var ƒ = FudgeCore;
     class Dice {
         graph = DiceCup.viewport.getBranch();
-        dice;
+        diceNode = this.graph.getChildrenByName("Dices")[0];
+        diceTest;
+        diceInst;
         diceMat;
         diceRig;
         dots;
@@ -128,61 +130,55 @@ var DiceCup;
         arenaTranslation = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         arenaRotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
         arenaScale = new ƒ.Vector3(0.3, 0.3, 0.3);
-        nodeId;
         color;
         value;
-        constructor(_nodeId, _colorRGBA, _color, _rollDiceMode) {
-            this.nodeId = _nodeId;
+        constructor(_colorRGBA, _color, _rollDiceMode) {
             this.color = _color;
             this.value = this.roll();
-            this.dice = this.graph.getChildrenByName(this.nodeId)[0];
-            this.diceMat = this.dice.getComponent(ƒ.ComponentMaterial);
-            this.diceRig = this.dice.getComponent(ƒ.ComponentRigidbody);
-            this.dots = this.graph.getChildrenByName(this.nodeId)[0].getChildren();
-            this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
-            console.log(this.arenaScale);
-            this.dice.mtxLocal.scaling = this.arenaScale;
-            this.rollDices(_rollDiceMode);
-            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
-            if (_nodeId == "Dice_0" || _nodeId == "Dice_1" || _nodeId == "Dice_8" || _nodeId == "Dice_9" || _nodeId == "Dice_10" || _nodeId == "Dice_11") {
-                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(0.1, 0.1, 0.1, 1); });
-            }
-            else {
-                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(0.9, 0.9, 0.9, 1); });
-            }
+            this.initDice(_colorRGBA, _rollDiceMode);
         }
         roll() {
             this.value = Math.floor((Math.random() * 6) + 1);
             return this.value;
+        }
+        async initDice(_colorRGBA, _rollDiceMode) {
+            this.diceTest = ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
+            this.diceInst = await ƒ.Project.createGraphInstance(this.diceTest);
+            this.diceMat = this.diceInst.getComponent(ƒ.ComponentMaterial);
+            this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
+            this.dots = this.diceInst.getChildren();
+            this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
+            this.diceInst.mtxLocal.scaling = this.arenaScale;
+            this.rollDices(_rollDiceMode);
+            this.colorDices(_colorRGBA);
+            this.diceNode.addChild(this.diceInst);
         }
         validateDices() {
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(224), this.convertDiceColor(187), this.convertDiceColor(0), 1);
             this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); });
         }
         transparentDices() {
-            for (let i = 0; i < 12; i++) {
-                let tempDice = this.graph.getChildrenByName("Dice_" + i)[0];
-                let tempMat = tempDice.getComponent(ƒ.ComponentMaterial);
-                let tempDots = this.graph.getChildrenByName("Dice_" + i)[0].getChildren();
-                let tempDotsMat = tempDots.map(elem => elem.getComponent(ƒ.ComponentMaterial));
-                tempMat.clrPrimary.a = 0.2;
-                tempDotsMat.map(dot => { dot.clrPrimary.a = 0.2; });
-            }
+            let tempDices = this.diceNode.getChildren();
+            let tempMat = tempDices.map(dice => dice.getComponent(ƒ.ComponentMaterial));
+            let tempDots = tempDices.map(dice => dice.getChildren());
+            let tempDotsMat = tempDots.map(dot => dot.map(dot => dot.getComponent(ƒ.ComponentMaterial)));
+            tempMat.map(dice => dice.clrPrimary.a = 0.2);
+            tempDotsMat.map(dot => dot.map(dot => dot.clrPrimary.a = 0.2));
         }
         rollDices(_mode) {
             this.diceRig.activate(false);
             switch (_mode) {
                 case 0:
-                    this.dice.mtxLocal.translation = this.arenaTranslation;
-                    this.dice.mtxLocal.rotation = this.arenaRotation;
+                    this.diceInst.mtxLocal.translation = this.arenaTranslation;
+                    this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 1:
-                    this.rotateDice(this.dice);
-                    this.translateDice(this.dice);
+                    this.rotateDice(this.diceInst);
+                    this.translateDice(this.diceInst);
                     break;
                 case 2:
-                    this.dice.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, Math.random() * 3 + 3, (Math.random() * 2) - 1);
-                    this.dice.mtxLocal.rotation = this.arenaRotation;
+                    this.diceInst.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, Math.random() * 3 + 3, (Math.random() * 2) - 1);
+                    this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 default:
                     break;
@@ -190,33 +186,47 @@ var DiceCup;
             this.diceRig.activate(true);
         }
         translateDice(_node) {
-            console.log(_node.mtxLocal.scaling.x);
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, 0.35, (Math.random() * 4) - 1.5);
-            // console.log(_node.mtxLocal.translation.y);
+            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
         }
         rotateDice(_node) {
             let randomRotate = Math.random() * 360;
             switch (this.value) {
                 case 1:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(0, randomRotate, 0);
+                    _node.mtxLocal.rotateY(randomRotate);
                     break;
                 case 2:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(90, randomRotate, 0);
+                    _node.mtxLocal.rotateY(randomRotate);
+                    _node.mtxLocal.rotateX(90);
                     break;
                 case 3:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(0, randomRotate, 90);
+                    _node.mtxLocal.rotateY(randomRotate);
+                    _node.mtxLocal.rotateZ(90);
                     break;
                 case 4:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(randomRotate, 0, -90);
+                    _node.mtxLocal.rotateY(randomRotate);
+                    _node.mtxLocal.rotateZ(-90);
                     break;
                 case 5:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(-90, randomRotate, 0);
+                    _node.mtxLocal.rotateY(randomRotate);
+                    _node.mtxLocal.rotateX(-90);
                     break;
                 case 6:
-                    _node.mtxLocal.rotation = new ƒ.Vector3(180, randomRotate, 0);
+                    _node.mtxLocal.rotateY(randomRotate);
+                    _node.mtxLocal.rotateX(180);
                     break;
                 default:
                     break;
+            }
+        }
+        async colorDices(_colorRGBA) {
+            let response = await fetch("Game/Script/Data/diceColors.json");
+            let diceColors = await response.json();
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
+            if (_colorRGBA.name == DiceCup.DiceColor.white || _colorRGBA.name == DiceCup.DiceColor.green || _colorRGBA.name == DiceCup.DiceColor.yellow) {
+                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 2].r), this.convertDiceColor(diceColors[diceColors.length - 2].g), diceColors[diceColors.length - 2].b, diceColors[diceColors.length - 2].a); });
+            }
+            else {
+                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 1].r), this.convertDiceColor(diceColors[diceColors.length - 1].g), diceColors[diceColors.length - 1].b, diceColors[diceColors.length - 1].a); });
             }
         }
         convertDiceColor(_value) {
@@ -1139,6 +1149,13 @@ var DiceCup;
         menu_floor.activate(!_change);
     }
     DiceCup.changeFloor = changeFloor;
+    function activateCover(_change) {
+        let graph = DiceCup.viewport.getBranch();
+        let arena = graph.getChildrenByName("Arena")[0];
+        let cover = arena.getChildrenByName("Game_cover")[0];
+        cover.activate(_change);
+    }
+    DiceCup.activateCover = activateCover;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -1161,9 +1178,12 @@ var DiceCup;
     async function rollDices() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
+        let graph = DiceCup.viewport.getBranch();
+        let diceNode = graph.getChildrenByName("Dices")[0];
+        diceNode.removeAllChildren();
         DiceCup.dices = [];
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 1));
+            DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
         }
     }
     DiceCup.rollDices = rollDices;
@@ -1274,25 +1294,28 @@ var DiceCup;
     async function menuViewport() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
+        DiceCup.changeFloor(false);
+        DiceCup.activateCover(false);
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 1, -5);
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2);
+            new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
-        DiceCup.changeFloor(false);
     }
     async function transitionViewport() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
+        DiceCup.changeFloor(false);
+        DiceCup.activateCover(false);
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2));
+            DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
         }
-        DiceCup.changeFloor(false);
     }
     async function gameViewport() {
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
         DiceCup.changeFloor(true);
+        DiceCup.activateCover(true);
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;

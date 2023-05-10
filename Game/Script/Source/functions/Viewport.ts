@@ -21,28 +21,30 @@ namespace DiceCup {
     async function menuViewport() {   
         let response: Response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors: RgbaDao[] = await response.json();
+        changeFloor(false);
+        activateCover(false);
         
         viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 1, -5);
 
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-            new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2);
+            new Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
-
-        changeFloor(false);
 
     }
 
     async function transitionViewport() {
         let response: Response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors: RgbaDao[] = await response.json();
+        changeFloor(false);
+        activateCover(false);
         
         viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
 
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-            dices.push(new Dice("Dice_" + i, diceColors[Math.floor(color)], Math.floor(color), 2));
+            dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
         }
 
-        changeFloor(false);
+
 
     }
     
@@ -51,5 +53,6 @@ namespace DiceCup {
         viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
 
         changeFloor(true);
+        activateCover(true);
     }
 }

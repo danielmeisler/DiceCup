@@ -10,4 +10,11 @@ namespace DiceCup{
         menu_floor.activate(!_change);
     }
 
+    export function activateCover(_change: boolean) {
+        let graph: ƒ.Node = viewport.getBranch();
+        let arena: ƒ.Node = graph.getChildrenByName("Arena")[0];
+        let cover: ƒ.Node = arena.getChildrenByName("Game_cover")[0];
+        cover.activate(_change);
+    }
+
 }
