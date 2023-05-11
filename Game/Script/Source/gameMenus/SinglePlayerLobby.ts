@@ -5,7 +5,7 @@ namespace DiceCup {
     let chosenDifficulty: number = 1;
 
     export function singleplayerMenu(): void {
-        new SubMenu(MenuPage.singleplayer, "singleplayer", "SINGLEPLAYER");
+        new SubMenu(MenuPage.singleplayer, "singleplayer", language.menu.singleplayer.lobby.title);
 
         createPlayerPortrait();
         createBotPortrait();
@@ -32,7 +32,7 @@ namespace DiceCup {
         startButton.classList.add("gameMenuStartButtons");
         startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
-        startButton.innerHTML = "START";
+        startButton.innerHTML = language.menu.singleplayer.lobby.start_button;
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
 
         startButton.addEventListener("click", () => {
@@ -58,11 +58,11 @@ namespace DiceCup {
             if ((<HTMLInputElement>document.getElementById("botName_id_" + i)).value) {
                 botSettings[i].botName = (<HTMLInputElement>document.getElementById("botName_id_" + i)).value;
             }
-            if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[0]) {
+            if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.easy) {
                 botSettings[i].difficulty = BotDifficulty.easy;
-            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[1]){
+            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.normal){
                 botSettings[i].difficulty = BotDifficulty.normal;
-            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == BotDifficulty[2]) {
+            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.hard) {
                 botSettings[i].difficulty = BotDifficulty.hard;
             }
         }
@@ -88,7 +88,7 @@ namespace DiceCup {
                 return false;
             }
             if (doubles.length != 0) {
-                document.getElementById("singleplayerAlert_id").innerHTML = "No same names!";
+                document.getElementById("singleplayerAlert_id").innerHTML = "No identical names!";
                 return false;
             }
         }
@@ -117,7 +117,7 @@ namespace DiceCup {
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = "Player";
+        playerName.placeholder = language.menu.player;
         playerContainer.appendChild(playerName);
 
         let difficultySwitchHidden: HTMLDivElement = document.createElement("div");
@@ -187,7 +187,8 @@ namespace DiceCup {
         let difficultyText: HTMLSpanElement = document.createElement("span");
         // difficultyText.classList.add("scrollText");
         difficultyText.id = "switchDifficultyText_id_" + botCounter;
-        difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+        // difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+        difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
         difficultySwitchText.appendChild(difficultyText);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");
@@ -205,7 +206,7 @@ namespace DiceCup {
             } else {
                 chosenDifficulty = 0;
             }
-            difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+            difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
         });
         switchButtonLeft.addEventListener("click", () => {
             if (chosenDifficulty > 0) {
@@ -213,7 +214,7 @@ namespace DiceCup {
             } else {
                 chosenDifficulty = 2;
             }
-            difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+            difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
         });
     }
 
@@ -248,5 +249,23 @@ namespace DiceCup {
         botCounter--;
         this.parentElement.parentElement.remove();
         createAddPortrait();
+    }
+
+    function difficultyLanguage(_difficulty: string): string {
+        let diff_lang: string;
+        switch (_difficulty) {
+            case BotDifficulty[BotDifficulty.easy]:
+                diff_lang = language.menu.singleplayer.lobby.difficulties.easy;
+                break;
+            case BotDifficulty[BotDifficulty.normal]:
+                diff_lang = language.menu.singleplayer.lobby.difficulties.normal;
+                break;
+            case BotDifficulty[BotDifficulty.hard]:
+                diff_lang = language.menu.singleplayer.lobby.difficulties.hard;
+                break;
+            default:
+                break;
+        }
+        return diff_lang;
     }
 }

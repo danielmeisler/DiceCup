@@ -164,6 +164,12 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    enum Languages {
+        english = "english",
+        german = "german"
+    }
+}
+declare namespace DiceCup {
     enum MenuPage {
         main = "mainMenu_id",
         singleplayer = "singleplayerMenu_id",
@@ -222,11 +228,6 @@ declare namespace DiceCup {
     function changeViewportState(_viewportState: ViewportState): void;
 }
 declare namespace DiceCup {
-    function enableWakeLock(): Promise<boolean>;
-    function disableWakeLock(): void;
-    function resetTimer(): void;
-}
-declare namespace DiceCup {
     function initMenu(): void;
     function switchMenu(_toMenuID: MenuPage): void;
     function hideMenu(): void;
@@ -253,6 +254,70 @@ declare namespace DiceCup {
     interface BotDao {
         botName: string;
         difficulty: BotDifficulty;
+    }
+}
+declare namespace DiceCup {
+    interface LanguageDao {
+        menu: {
+            singleplayer: {
+                lobby: {
+                    title: string;
+                    start_button: string;
+                    alerts: {
+                        invalid_tokes: string;
+                        identical_names: string;
+                    };
+                    difficulties: {
+                        easy: string;
+                        normal: string;
+                        hard: string;
+                    };
+                };
+                lobby_settings: {
+                    title: string;
+                };
+            };
+            multiplayer: {
+                list: {
+                    title: string;
+                    create_button: string;
+                    join_button: string;
+                };
+                lobby: {
+                    title: string;
+                    alert: string;
+                    waiting: string;
+                    start_button: string;
+                };
+            };
+            help: {
+                title: string;
+            };
+            settings: {
+                title: string;
+            };
+            player: string;
+        };
+        game: {
+            transition: {
+                phrase_1: string;
+                phrase_2: string;
+                phrase_3: string;
+            };
+            categories: {
+                title: string;
+            };
+            summary: {
+                sum: string;
+            };
+            placements: {
+                title: string;
+                alerts: {
+                    part_1: string;
+                    part_2: string;
+                };
+            };
+        };
     }
 }
 declare namespace DiceCup {
@@ -284,4 +349,13 @@ declare namespace DiceCup {
         playerName: string;
         bot: BotDao[];
     }
+}
+declare namespace DiceCup {
+    let language: LanguageDao;
+    function chooseLanguage(_language: Languages): Promise<void>;
+}
+declare namespace DiceCup {
+    function enableWakeLock(): Promise<boolean>;
+    function disableWakeLock(): void;
+    function resetTimer(): void;
 }

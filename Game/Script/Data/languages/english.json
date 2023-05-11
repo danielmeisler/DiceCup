@@ -1,0 +1,62 @@
+{
+    "menu": {
+        "singleplayer": {
+            "lobby": {
+                "title": "Singleplayer",
+                "start_button": "Start",
+                "alerts": {
+                    "invalid_tokes": "Only alphabetic and numeric tokens",
+                    "identical_names": "No identical names!"
+                },
+                "difficulties": {
+                    "easy": "easy",
+                    "normal": "normal",
+                    "hard": "hard"
+                }
+            },
+            "lobby_settings": {
+                "title": "Lobby Settings"
+            }
+        },
+        "multiplayer": {
+            "list": {
+                "title": "Multiplayer",
+                "create_button": "create",
+                "join_button": "join"
+            },
+            "lobby": {
+                "title": "Game",
+                "alert": "Waiting for more players...",
+                "waiting": "Waiting...",
+                "start_button": "Start"
+            }
+        },
+        "help": {
+            "title": "How to play"
+        },
+        "settings": {
+            "title": "Settings"
+        },
+        "player": "Player"
+    },
+    "game": {
+        "transition": {
+            "phrase_1": "Round ",
+            "phrase_2": "READY?",
+            "phrase_3": "GO!"
+        },
+        "categories": {
+            "title": "Choose a category"
+        },
+        "summary": {
+            "sum": "sum"
+        },
+        "placements": {
+            "title": "Congratulations!",
+            "alerts": {
+                "part_1": "You are",
+                "part_2": "place!"
+            } 
+        }
+    }
+}

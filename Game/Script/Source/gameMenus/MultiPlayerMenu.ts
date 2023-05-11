@@ -1,7 +1,7 @@
 namespace DiceCup {
 
     export function multiplayerServers(): void {
-        new SubMenu(MenuPage.multiplayer, "multiplayer", "MULTIPLAYER");
+        new SubMenu(MenuPage.multiplayer, "multiplayer", language.menu.multiplayer.list.title);
 
         let renewButton: HTMLButtonElement = document.createElement("button");
         renewButton.id = "multiplayerRenewButton_id";
@@ -23,7 +23,7 @@ namespace DiceCup {
         createButton.classList.add("gameMenuStartButtons");
         createButton.classList.add("gameMenuButtons");
         createButton.classList.add("diceCupButtons");
-        createButton.innerHTML = "CREATE";
+        createButton.innerHTML = language.menu.multiplayer.list.create_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
 
         createButton.addEventListener("click", () => {
@@ -35,11 +35,12 @@ namespace DiceCup {
         joinButton.classList.add("gameMenuStartButtons");
         joinButton.classList.add("gameMenuButtons");
         joinButton.classList.add("diceCupButtons");
-        joinButton.innerHTML = "JOIN";
+        joinButton.innerHTML = language.menu.multiplayer.list.join_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
 
         joinButton.addEventListener("click", () => {
             // createGameSettings();
         });
     }
+
 }

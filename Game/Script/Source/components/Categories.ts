@@ -24,7 +24,7 @@ namespace DiceCup {
 
         let title: HTMLSpanElement = document.createElement("span");
         title.id = "categoryTitle_id";
-        title.innerHTML = "Choose a category"
+        title.innerHTML = language.game.categories.title;
         header.appendChild(title);
 
         let content: HTMLDivElement = document.createElement("div");

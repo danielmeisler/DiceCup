@@ -155,9 +155,9 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[0, 0, 0]",
+                            "translation": "[0, -0.5, 0]",
                             "rotation": "[0, 0, 0]",
-                            "scaling": "[30, 0.5, 30]"
+                            "scaling": "[30, 1, 30]"
                           },
                           "Component": {
                             "active": true
@@ -254,7 +254,7 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[0, 2, 3]",
+                            "translation": "[0, 1, 3]",
                             "rotation": "[0, 0, 0]",
                             "scaling": "[9, 3, 1]"
                           },
@@ -335,7 +335,7 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[0, 2, -2]",
+                            "translation": "[0, 1, -2]",
                             "rotation": "[0, 0, 0]",
                             "scaling": "[9, 3, 1]"
                           },
@@ -416,7 +416,7 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[5, 2, 0.5]",
+                            "translation": "[5, 1, 0.5]",
                             "rotation": "[0, 0, 0]",
                             "scaling": "[1, 3, 6]"
                           },
@@ -497,7 +497,7 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[-5, 2, 0.5]",
+                            "translation": "[-5, 1, 0.5]",
                             "rotation": "[0, 0, 0]",
                             "scaling": "[1, 3, 6]"
                           },
@@ -784,9 +784,9 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[0, 0, 0]",
+                            "translation": "[0, -0.5, 0]",
                             "rotation": "[0, 0, 0]",
-                            "scaling": "[30, 0.5, 30]"
+                            "scaling": "[30, 1, 30]"
                           },
                           "Component": {
                             "active": true
@@ -883,9 +883,9 @@
                       {
                         "ƒ.ComponentTransform": {
                           "local": {
-                            "translation": "[0, 1, 0.5]",
+                            "translation": "[0, 1.2999999523162842, 0.5]",
                             "rotation": "[0, 0, 0]",
-                            "scaling": "[10, 0.30000001192092896, 4]"
+                            "scaling": "[10, 0.9999999403953552, 4]"
                           },
                           "Component": {
                             "active": true
@@ -893,7 +893,31 @@
                         }
                       }
                     ],
-                    "ComponentRigidbody": []
+                    "ComponentRigidbody": [
+                      {
+                        "ƒ.ComponentRigidbody": {
+                          "initialization": "TO_PIVOT",
+                          "friction": 0.2,
+                          "restitution": 0.2,
+                          "mass": 1,
+                          "dampTranslation": 0.1,
+                          "dampRotation": 0.1,
+                          "effectGravity": 1,
+                          "typeBody": "DYNAMIC",
+                          "typeCollider": "CUBE",
+                          "isTrigger": false,
+                          "id": 4,
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ]
                   },
                   "children": []
                 }
@@ -906,15 +930,7 @@
             "name": "Dices",
             "active": true,
             "components": {},
-            "children": [
-              {
-                "ƒ.GraphInstance": {
-                  "deserializeFromSource": true,
-                  "name": "Dice_Graph",
-                  "idSource": "Graph|2023-05-10T15:01:16.035Z|13867"
-                }
-              }
-            ]
+            "children": []
           }
         }
       ],
@@ -964,9 +980,9 @@
           {
             "ƒ.ComponentTransform": {
               "local": {
-                "translation": "[0, 1, 0]",
+                "translation": "[0, 0.30000001192092896, 0]",
                 "rotation": "[0, 0, 0]",
-                "scaling": "[0.10000000149011612, 0.10000000149011612, 0.10000000149011612]"
+                "scaling": "[0.30000001192092896, 0.30000001192092896, 0.30000001192092896]"
               },
               "Component": {
                 "active": true
@@ -2179,29 +2195,6 @@
         }
       ],
       "idResource": "Graph|2023-05-10T12:08:54.682Z|33820",
-      "type": "Graph"
-    }
-  },
-  "Material|2023-05-10T14:59:02.304Z|89323": {
-    "ƒ.Material": {
-      "name": "Dice_color_test",
-      "idResource": "Material|2023-05-10T14:59:02.304Z|89323",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "Graph|2023-05-10T15:01:16.035Z|13867": {
-    "ƒ.Graph": {
-      "name": "Dice_Graph",
-      "components": {},
-      "children": [],
-      "idResource": "Graph|2023-05-10T15:01:16.035Z|13867",
       "type": "Graph"
     }
   }

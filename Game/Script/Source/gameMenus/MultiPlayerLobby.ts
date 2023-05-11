@@ -3,7 +3,7 @@ namespace DiceCup {
     let playerCounter: number = 0;
 
     export function multiplayerMenu(): void {
-        new SubMenu(MenuPage.multiplayerLobby, "multiplayerLobby", "LOBBY");
+        new SubMenu(MenuPage.multiplayerLobby, "multiplayerLobby", (<HTMLInputElement>document.getElementById("playerName_id")).placeholder + "'s " + language.menu.multiplayer.lobby.title);
 
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             switchMenu(MenuPage.multiplayer);
@@ -28,7 +28,7 @@ namespace DiceCup {
         startButton.classList.add("gameMenuStartButtons");
         startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
-        startButton.innerHTML = "START";
+        startButton.innerHTML = language.menu.multiplayer.lobby.start_button;
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
 
         startButton.addEventListener("click", () => {
@@ -78,7 +78,7 @@ namespace DiceCup {
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = "Player";
+        playerName.placeholder = language.menu.player;
         playerContainer.appendChild(playerName);
 
         playerCounter++;
@@ -106,7 +106,7 @@ namespace DiceCup {
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
         playerName.classList.add("lobbyPortrait_inactive");
-        playerName.innerHTML = "Waiting...";
+        playerName.innerHTML = language.menu.multiplayer.lobby.waiting;
         waitContainer.appendChild(playerName);
     }
 }

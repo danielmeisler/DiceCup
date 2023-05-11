@@ -81,7 +81,7 @@ namespace DiceCup {
                 if(col > 1 && col < 14) {
                     content[0][col] = categories[col - 2].image;
                 } else if (col == 1) {
-                    content[0][col] = "Sum";
+                    content[0][col] = language.game.summary.sum;
                 }
             }
             if(row > 0 && row < playerNames.length + 1) {

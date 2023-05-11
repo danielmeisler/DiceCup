@@ -5,15 +5,16 @@ namespace DiceCup {
   export let viewport: ƒ.Viewport;
   export let viewportState: ViewportState;
 
-  document.addEventListener("interactiveViewportStarted", <EventListener>start);
+  document.addEventListener("interactiveViewportStarted", <EventListener><unknown>start);
 
-  function start(_event: CustomEvent): void {
+  async function start(_event: CustomEvent): Promise<void> {
     viewport = _event.detail;
 
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
 
+    await chooseLanguage(Languages.german);
     enableWakeLock();
     initMenu();
     changeViewportState(ViewportState.menu);

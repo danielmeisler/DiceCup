@@ -26,7 +26,7 @@
     display: grid;
     justify-items: center;
     align-items: center;
-    grid-template-columns: 20%  10% repeat(12, calc(70%/12));
+    grid-template-columns: 18%  12% repeat(12, calc(70%/12));
     grid-template-rows: repeat(7, calc(100%/7));
 }
 

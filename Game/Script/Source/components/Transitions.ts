@@ -10,7 +10,7 @@ namespace DiceCup {
         container.id = "startTransitionContainer";
         document.getElementById("DiceCup").appendChild(container);
 
-        let phrase: string[] = ["Round " + roundCounter, "READY?", "GO!"];
+        let phrase: string[] = [language.game.transition.phrase_1 + roundCounter, language.game.transition.phrase_2, language.game.transition.phrase_3];
         transition(phrase);
     }
 

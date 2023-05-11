@@ -13,7 +13,7 @@ namespace DiceCup {
 
         let placementTitle: HTMLSpanElement = document.createElement("span");
         placementTitle.id = "placementsTitle_id";
-        placementTitle.innerHTML = "CONGRATULATIONS!";
+        placementTitle.innerHTML = language.game.placements.title;
         container.appendChild(placementTitle);
 
         let placementPortraits: HTMLDivElement = document.createElement("div");
@@ -138,7 +138,7 @@ namespace DiceCup {
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
 
             if (name[i] == gameSettings.playerName) {
-                document.getElementById("placementsPhrase_id").innerHTML = "You are " + (i + 1) + ". place!";
+                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.alerts.part_1 + (i + 1) + ". " +  language.game.placements.alerts.part_2;
             }
         }
     }

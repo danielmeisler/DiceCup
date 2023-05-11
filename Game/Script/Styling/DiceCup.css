@@ -39,6 +39,8 @@ button {
   border-width: 0;
   border-radius: 2vw;
   box-shadow: var(--box_shadow);
+  inline-size: 10;
+  overflow-wrap: break-word;
 }
 
 .diceCupButtons:active {
