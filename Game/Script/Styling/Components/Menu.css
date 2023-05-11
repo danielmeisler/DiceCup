@@ -260,3 +260,11 @@
     font-family: var(--main_font);
     font-size: var(--menu_next_buttons_fontsize);
 }
+
+#multiplayerMenuMidButtonArea_id {
+    width: 30%;
+}
+
+#multiplayerMenuRightButtonArea_id {
+    width: 45%;
+}
