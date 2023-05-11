@@ -41,15 +41,19 @@ var DiceCup;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
     document.addEventListener("interactiveViewportStarted", start);
-    async function start(_event) {
+    function start(_event) {
         DiceCup.viewport = _event.detail;
+        DiceCup.enableWakeLock();
+        load();
+    }
+    async function load() {
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
-        await DiceCup.chooseLanguage(DiceCup.Languages.german);
-        DiceCup.enableWakeLock();
-        DiceCup.initMenu();
+        DiceCup.currentLanguage = DiceCup.Languages.german;
+        await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         DiceCup.changeViewportState(DiceCup.ViewportState.menu);
+        DiceCup.initMenu();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1547,8 +1551,79 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    let volume = 50;
     function optionsMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.options, "options", DiceCup.language.menu.settings.title);
+        let contentContainer = document.createElement("div");
+        contentContainer.id = "optionsContentContainer_id";
+        contentContainer.classList.add("lobbyContainer");
+        document.getElementById("optionsMenuContent_id").appendChild(contentContainer);
+        let soundControlTag = document.createElement("span");
+        soundControlTag.id = "optionsSoundControlTag_id";
+        soundControlTag.innerHTML = "Volume";
+        contentContainer.appendChild(soundControlTag);
+        let soundControlContainer = document.createElement("div");
+        soundControlContainer.id = "optionsSoundControlContainer_id";
+        contentContainer.appendChild(soundControlContainer);
+        let switchButtonLeft = document.createElement("button");
+        switchButtonLeft.classList.add("optionsSwitchVolume");
+        soundControlContainer.appendChild(switchButtonLeft);
+        let switchButtonLeftIcon = document.createElement("img");
+        switchButtonLeftIcon.classList.add("optionsSwitchVolumeIcons");
+        switchButtonLeftIcon.src = "Game/Assets/images/menuButtons/left.svg";
+        switchButtonLeft.appendChild(switchButtonLeftIcon);
+        let soundControl = document.createElement("span");
+        soundControl.id = "optionsSoundControl_id";
+        soundControl.innerHTML = volume + "%";
+        soundControlContainer.appendChild(soundControl);
+        let switchButtonRight = document.createElement("button");
+        switchButtonRight.classList.add("optionsSwitchVolume");
+        soundControlContainer.appendChild(switchButtonRight);
+        let switchButtonRightIcon = document.createElement("img");
+        switchButtonRightIcon.classList.add("optionsSwitchVolumeIcons");
+        switchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
+        switchButtonRight.appendChild(switchButtonRightIcon);
+        switchButtonRight.addEventListener("click", () => {
+            if (volume < 100) {
+                volume += 10;
+                soundControl.innerHTML = volume + "%";
+                switchButtonLeft.style.visibility = "visible";
+            }
+            if (volume == 100) {
+                switchButtonRight.style.visibility = "hidden";
+            }
+        });
+        switchButtonLeft.addEventListener("click", () => {
+            if (volume > 0) {
+                volume -= 10;
+                soundControl.innerHTML = volume + "%";
+                switchButtonRight.style.visibility = "visible";
+            }
+            if (volume == 0) {
+                switchButtonLeft.style.visibility = "hidden";
+            }
+        });
+        let languageTag = document.createElement("span");
+        languageTag.id = "optionsLanguageTag_id";
+        languageTag.innerHTML = "Language";
+        contentContainer.appendChild(languageTag);
+        let languageControlContainer = document.createElement("div");
+        languageControlContainer.id = "optionsLanguageContainer_id";
+        contentContainer.appendChild(languageControlContainer);
+        let languageControlButton = document.createElement("button");
+        languageControlButton.id = "optionsLanguageButton_id";
+        languageControlButton.innerHTML = DiceCup.currentLanguage + "▾";
+        languageControlContainer.appendChild(languageControlButton);
+        let languageControlMenu = document.createElement("div");
+        languageControlMenu.classList.add("optionsLanguageMenu");
+        languageControlButton.appendChild(languageControlMenu);
+        for (let i = 0; i < Object.values(DiceCup.Languages).length; i++) {
+            let languageControlButton = document.createElement("button");
+            languageControlButton.classList.add("optionsLanguageMenuContent");
+            languageControlButton.innerHTML = "Languages[i]";
+            languageControlMenu.appendChild(languageControlButton);
+        }
+        languageControlButton.addEventListener("click", () => { languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages"); });
     }
     DiceCup.optionsMenu = optionsMenu;
 })(DiceCup || (DiceCup = {}));

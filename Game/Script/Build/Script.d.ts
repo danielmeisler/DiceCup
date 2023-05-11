@@ -11,6 +11,7 @@ declare namespace DiceCup {
     import ƒ = FudgeCore;
     let viewport: ƒ.Viewport;
     let viewportState: ViewportState;
+    let currentLanguage: Languages;
 }
 declare namespace DiceCup {
     class Bot {

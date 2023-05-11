@@ -4,20 +4,26 @@ namespace DiceCup {
   
   export let viewport: ƒ.Viewport;
   export let viewportState: ViewportState;
+  export let currentLanguage: Languages;
 
-  document.addEventListener("interactiveViewportStarted", <EventListener><unknown>start);
+  document.addEventListener("interactiveViewportStarted", <EventListener>start);
 
-  async function start(_event: CustomEvent): Promise<void> {
+  function start(_event: CustomEvent): void {
     viewport = _event.detail;
+    enableWakeLock();
+    load();
+  }
 
+  async function load(): Promise<void> {
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
 
-    await chooseLanguage(Languages.german);
-    enableWakeLock();
-    initMenu();
+    currentLanguage = Languages.german;
+
+    await chooseLanguage(currentLanguage);
     changeViewportState(ViewportState.menu);
+    initMenu();
   }
 
 }
