@@ -1,6 +1,6 @@
 namespace DiceCup {
 
-    let volume: number = 50;
+    let volume: number = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
 
     export function optionsMenu(): void {
         new SubMenu(MenuPage.options, "options", language.menu.settings.title);
@@ -10,14 +10,38 @@ namespace DiceCup {
         contentContainer.classList.add("lobbyContainer");
         document.getElementById("optionsMenuContent_id").appendChild(contentContainer);
 
+        let resetButton: HTMLButtonElement = document.createElement("button");
+        resetButton.id = "optionsStartButton_id";
+        resetButton.classList.add("gameMenuStartButtons");
+        resetButton.classList.add("gameMenuButtons");
+        resetButton.classList.add("diceCupButtons");
+        resetButton.innerHTML = "Reset";
+        document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
+
+        resetButton.addEventListener("click", () => {
+            localStorage.clear();
+            localStorage.setItem("optionsMenu", "true");
+            location.reload();
+        });
+
+        for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < 2; col++) {
+                let gridContainer: HTMLDivElement = document.createElement("div");
+                gridContainer.id = "optionsGrid_id_" + row + "_" + col;
+                gridContainer.classList.add("optionsRow_" + row);
+                gridContainer.classList.add("optionsColumn_" + col);
+                contentContainer.appendChild(gridContainer);
+            }
+        }
+
         let soundControlTag: HTMLSpanElement = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
-        soundControlTag.innerHTML = "Volume";
-        contentContainer.appendChild(soundControlTag);
+        soundControlTag.innerHTML = "VOLUME";
+        document.getElementById("optionsGrid_id_0_0").appendChild(soundControlTag);
     
         let soundControlContainer: HTMLDivElement = document.createElement("div");
         soundControlContainer.id = "optionsSoundControlContainer_id";
-        contentContainer.appendChild(soundControlContainer);
+        document.getElementById("optionsGrid_id_0_1").appendChild(soundControlContainer);
 
         let switchButtonLeft: HTMLButtonElement = document.createElement("button");
         switchButtonLeft.classList.add("optionsSwitchVolume");
@@ -51,6 +75,7 @@ namespace DiceCup {
             if (volume == 100) {
                 switchButtonRight.style.visibility = "hidden";
             }
+            localStorage.setItem("volume", volume.toString());
         });
         switchButtonLeft.addEventListener("click", () => {
             if (volume > 0) {
@@ -61,16 +86,23 @@ namespace DiceCup {
             if (volume == 0) {
                 switchButtonLeft.style.visibility = "hidden";
             }
+            localStorage.setItem("volume", volume.toString());
         });
+
+        if (volume == 100) {
+            switchButtonRight.style.visibility = "hidden";
+        } else if (volume == 0) {
+            switchButtonLeft.style.visibility = "hidden";
+        }
 
         let languageTag: HTMLSpanElement = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
-        languageTag.innerHTML = "Language";
-        contentContainer.appendChild(languageTag);
+        languageTag.innerHTML = "LANGUAGE";
+        document.getElementById("optionsGrid_id_1_0").appendChild(languageTag);
 
         let languageControlContainer: HTMLDivElement = document.createElement("div");
         languageControlContainer.id = "optionsLanguageContainer_id";
-        contentContainer.appendChild(languageControlContainer);
+        document.getElementById("optionsGrid_id_1_1").appendChild(languageControlContainer);
 
         let languageControlButton: HTMLButtonElement = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";
@@ -84,8 +116,10 @@ namespace DiceCup {
         for (let i = 0; i < Object.values(Languages).length; i++) {
             let languageControlButton: HTMLButtonElement = document.createElement("button");
             languageControlButton.classList.add("optionsLanguageMenuContent");
-            languageControlButton.innerHTML = "Languages[i]";
+            languageControlButton.innerHTML = Object.values(Languages)[i];
             languageControlMenu.appendChild(languageControlButton);
+
+            languageControlButton.addEventListener("click", () => { localStorage.setItem("language", Object.values(Languages)[i]), localStorage.setItem("optionsMenu", "true") , location.reload()});
         }
 
         languageControlButton.addEventListener("click", () => { languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages") } );

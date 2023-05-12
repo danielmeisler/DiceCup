@@ -1,17 +1,23 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
     let botSettings: BotDao[];
-    let botCounter: number = 0;
+    let firstBot: number = 0;
+    let botCount: number = 0;
     let chosenDifficulty: number = 1;
 
     export function singleplayerMenu(): void {
         new SubMenu(MenuPage.singleplayer, "singleplayer", language.menu.singleplayer.lobby.title);
+        let localCount: number = parseInt(localStorage.getItem("playercount")) - 1;
+        let botCounter: number = localCount ? localCount : 1;
 
         createPlayerPortrait();
-        createBotPortrait();
-        for (let index = 0; index < 4; index++) {
+        for (let index = 0; index < botCounter; index++) {
+            createBotPortrait();
+        }
+        for (let index = 0; index < (5 - botCounter); index++) {
             createAddPortrait();
         }
+
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
         settingsButton.id = "singleplayerSettingsButton_id";
@@ -41,29 +47,41 @@ namespace DiceCup {
     }
 
     function createGameSettings(): void {
-        let bots: number = document.querySelectorAll(".botContainer").length;
+        // let bots: number = document.querySelectorAll(".botContainer").length;
         botSettings = [];
-        
-        for (let i = 0; i < bots; i++) {
-            botSettings.push({botName: (<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder, difficulty: BotDifficulty.easy});
+        let ids: string[] = [];
+
+        for (let i = 0, idCounter = 0; i < 5; i++) {
+            if ((<HTMLInputElement>document.getElementById("botName_id_" + i))) {
+                ids[idCounter] = (<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder;  
+                idCounter++;
+            }
         }
-        
+
+        for (let i = 0; i < ids.length; i++) {
+            botSettings.push({botName: ids[i], difficulty: BotDifficulty.easy});
+        }
+
         gameSettings = {playerName: (<HTMLInputElement>document.getElementById("playerName_id")).placeholder, bot: botSettings};
 
         if ((<HTMLInputElement>document.getElementById("playerName_id")).value) {
             gameSettings.playerName = (<HTMLInputElement>document.getElementById("playerName_id")).value;
         }
 
-        for (let i = 0; i < bots; i++) {
-            if ((<HTMLInputElement>document.getElementById("botName_id_" + i)).value) {
-                botSettings[i].botName = (<HTMLInputElement>document.getElementById("botName_id_" + i)).value;
-            }
-            if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.easy) {
-                botSettings[i].difficulty = BotDifficulty.easy;
-            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.normal){
-                botSettings[i].difficulty = BotDifficulty.normal;
-            } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.hard) {
-                botSettings[i].difficulty = BotDifficulty.hard;
+        ids = [];
+        for (let i = 0, idCounter = 0; i < 5; i++) {
+            if ((<HTMLInputElement>document.getElementById("botName_id_" + i))) {
+                if ((<HTMLInputElement>document.getElementById("botName_id_" + i)).value) {
+                    botSettings[idCounter].botName = (<HTMLInputElement>document.getElementById("botName_id_" + i)).value;
+                }
+                if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.easy) {
+                    botSettings[idCounter].difficulty = BotDifficulty.easy;
+                } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.normal){
+                    botSettings[idCounter].difficulty = BotDifficulty.normal;
+                } else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == language.menu.singleplayer.lobby.difficulties.hard) {
+                    botSettings[idCounter].difficulty = BotDifficulty.hard;
+                }
+                idCounter++;
             }
         }
 
@@ -76,6 +94,13 @@ namespace DiceCup {
             ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
         } else {
             hideMenu();
+            for (let i = 0, j = 1; i < playerNames.length - 1; i++, j++) {
+                localStorage.setItem("playernames" + i, playerNames[i]);
+                console.log(botSettings[i].difficulty.toString());
+                localStorage.setItem("difficulties" + j, botSettings[i].difficulty.toString());
+            }
+
+            localStorage.setItem("playercount", playerNames.length.toString());
             changeGameState(GameState.init);
         }
     }
@@ -117,7 +142,7 @@ namespace DiceCup {
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = language.menu.player;
+        localStorage.getItem("playernames0") ? playerName.placeholder = localStorage.getItem("playernames0") : playerName.placeholder = language.menu.player;
         playerContainer.appendChild(playerName);
 
         let difficultySwitchHidden: HTMLDivElement = document.createElement("div");
@@ -128,23 +153,23 @@ namespace DiceCup {
 
     function createBotPortrait(): void {
         let botContainer: HTMLDivElement = document.createElement("div");
-        botContainer.id = "botContainer_id_" + botCounter;
+        botContainer.id = "botContainer_id_" + botCount;
         botContainer.classList.add("botContainer");
         botContainer.classList.add("lobbyContainer");
         botContainer.style.order = "1";
         document.getElementById("singleplayerMenuContent_id").appendChild(botContainer);
 
         let botDiv: HTMLButtonElement = document.createElement("button");
-        botDiv.id = "botPortrait_id_" + botCounter;
+        botDiv.id = "botPortrait_id_" + botCount;
         botDiv.classList.add("lobbyPortrait");
         botDiv.classList.add("lobbyPortrait_active");
         botDiv.classList.add("diceCupButtons");
         botDiv.disabled = true;
         botContainer.appendChild(botDiv);
 
-        if (botCounter > 0) {
+        if (firstBot > 0) {
             let botRemove: HTMLButtonElement = document.createElement("button");
-            botRemove.id = "botRemove_id_" + botCounter;
+            botRemove.id = "botRemove_id_" + botCount;
             botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
             botRemove.addEventListener("click", handleRemoveBot);
@@ -161,8 +186,16 @@ namespace DiceCup {
         botDiv.appendChild(botIcons);
 
         let botName: HTMLInputElement = document.createElement("input");
-        botName.id = "botName_id_" + botCounter;
-        botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
+        botName.id = "botName_id_" + botCount;
+        let localBots: number = botCount + 1;
+        console.log(botCount, localStorage.getItem("playercount"))
+        if (localStorage.getItem("playercount")) {
+            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
+                localStorage.getItem("playernames" + localBots) ? botName.placeholder = localStorage.getItem("playernames" + localBots) : botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
+            }
+        } else {
+            botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
+        }
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
 
@@ -186,9 +219,16 @@ namespace DiceCup {
 
         let difficultyText: HTMLSpanElement = document.createElement("span");
         // difficultyText.classList.add("scrollText");
-        difficultyText.id = "switchDifficultyText_id_" + botCounter;
-        // difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
-        difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
+        difficultyText.id = "switchDifficultyText_id_" + botCount;
+        if (localStorage.getItem("playercount")) {
+            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
+                console.log(BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))])
+                localStorage.getItem("difficulties" + localBots) ? difficultyText.innerHTML =  BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))] : difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+            }
+        } else {
+            difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
+        }
+
         difficultySwitchText.appendChild(difficultyText);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");
@@ -216,6 +256,8 @@ namespace DiceCup {
             }
             difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
         });
+        botCount++;
+        firstBot++;
     }
 
     function createAddPortrait(): void {
@@ -240,13 +282,14 @@ namespace DiceCup {
     }
 
     function handleAddBot(_event: Event): void {
-        botCounter++;
+        firstBot++;
         this.parentElement.remove();
         createBotPortrait();
     }
 
     function handleRemoveBot(_event: Event): void {
-        botCounter--;
+        firstBot--;
+        botCount--;
         this.parentElement.parentElement.remove();
         createAddPortrait();
     }

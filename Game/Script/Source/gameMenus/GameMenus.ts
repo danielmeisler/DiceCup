@@ -10,7 +10,12 @@ namespace DiceCup {
         optionsMenu();
         helpMenu();
         
-        switchMenu(MenuPage.main);
+        if (localStorage.getItem("optionsMenu")) {
+            switchMenu(MenuPage.options);
+            localStorage.removeItem("optionsMenu");
+        } else {
+            switchMenu(MenuPage.main);
+        }
     }
 
     export function switchMenu(_toMenuID: MenuPage ): void {

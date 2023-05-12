@@ -19,7 +19,7 @@ namespace DiceCup {
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
 
-    currentLanguage = Languages.german;
+    currentLanguage = <Languages>localStorage.getItem("language") || Languages.english;
 
     await chooseLanguage(currentLanguage);
     changeViewportState(ViewportState.menu);

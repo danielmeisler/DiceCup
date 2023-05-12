@@ -50,7 +50,7 @@ var DiceCup;
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
-        DiceCup.currentLanguage = DiceCup.Languages.german;
+        DiceCup.currentLanguage = localStorage.getItem("language") || DiceCup.Languages.english;
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         DiceCup.initMenu();
@@ -1341,7 +1341,13 @@ var DiceCup;
         DiceCup.multiplayerMenu();
         DiceCup.optionsMenu();
         DiceCup.helpMenu();
-        switchMenu(DiceCup.MenuPage.main);
+        if (localStorage.getItem("optionsMenu")) {
+            switchMenu(DiceCup.MenuPage.options);
+            localStorage.removeItem("optionsMenu");
+        }
+        else {
+            switchMenu(DiceCup.MenuPage.main);
+        }
     }
     DiceCup.initMenu = initMenu;
     function switchMenu(_toMenuID) {
@@ -1551,20 +1557,41 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    let volume = 50;
+    let volume = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
     function optionsMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.options, "options", DiceCup.language.menu.settings.title);
         let contentContainer = document.createElement("div");
         contentContainer.id = "optionsContentContainer_id";
         contentContainer.classList.add("lobbyContainer");
         document.getElementById("optionsMenuContent_id").appendChild(contentContainer);
+        let resetButton = document.createElement("button");
+        resetButton.id = "optionsStartButton_id";
+        resetButton.classList.add("gameMenuStartButtons");
+        resetButton.classList.add("gameMenuButtons");
+        resetButton.classList.add("diceCupButtons");
+        resetButton.innerHTML = "Reset";
+        document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
+        resetButton.addEventListener("click", () => {
+            localStorage.clear();
+            localStorage.setItem("optionsMenu", "true");
+            location.reload();
+        });
+        for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < 2; col++) {
+                let gridContainer = document.createElement("div");
+                gridContainer.id = "optionsGrid_id_" + row + "_" + col;
+                gridContainer.classList.add("optionsRow_" + row);
+                gridContainer.classList.add("optionsColumn_" + col);
+                contentContainer.appendChild(gridContainer);
+            }
+        }
         let soundControlTag = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
-        soundControlTag.innerHTML = "Volume";
-        contentContainer.appendChild(soundControlTag);
+        soundControlTag.innerHTML = "VOLUME";
+        document.getElementById("optionsGrid_id_0_0").appendChild(soundControlTag);
         let soundControlContainer = document.createElement("div");
         soundControlContainer.id = "optionsSoundControlContainer_id";
-        contentContainer.appendChild(soundControlContainer);
+        document.getElementById("optionsGrid_id_0_1").appendChild(soundControlContainer);
         let switchButtonLeft = document.createElement("button");
         switchButtonLeft.classList.add("optionsSwitchVolume");
         soundControlContainer.appendChild(switchButtonLeft);
@@ -1592,6 +1619,7 @@ var DiceCup;
             if (volume == 100) {
                 switchButtonRight.style.visibility = "hidden";
             }
+            localStorage.setItem("volume", volume.toString());
         });
         switchButtonLeft.addEventListener("click", () => {
             if (volume > 0) {
@@ -1602,14 +1630,21 @@ var DiceCup;
             if (volume == 0) {
                 switchButtonLeft.style.visibility = "hidden";
             }
+            localStorage.setItem("volume", volume.toString());
         });
+        if (volume == 100) {
+            switchButtonRight.style.visibility = "hidden";
+        }
+        else if (volume == 0) {
+            switchButtonLeft.style.visibility = "hidden";
+        }
         let languageTag = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
-        languageTag.innerHTML = "Language";
-        contentContainer.appendChild(languageTag);
+        languageTag.innerHTML = "LANGUAGE";
+        document.getElementById("optionsGrid_id_1_0").appendChild(languageTag);
         let languageControlContainer = document.createElement("div");
         languageControlContainer.id = "optionsLanguageContainer_id";
-        contentContainer.appendChild(languageControlContainer);
+        document.getElementById("optionsGrid_id_1_1").appendChild(languageControlContainer);
         let languageControlButton = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";
         languageControlButton.innerHTML = DiceCup.currentLanguage + "▾";
@@ -1620,8 +1655,9 @@ var DiceCup;
         for (let i = 0; i < Object.values(DiceCup.Languages).length; i++) {
             let languageControlButton = document.createElement("button");
             languageControlButton.classList.add("optionsLanguageMenuContent");
-            languageControlButton.innerHTML = "Languages[i]";
+            languageControlButton.innerHTML = Object.values(DiceCup.Languages)[i];
             languageControlMenu.appendChild(languageControlButton);
+            languageControlButton.addEventListener("click", () => { localStorage.setItem("language", Object.values(DiceCup.Languages)[i]), localStorage.setItem("optionsMenu", "true"), location.reload(); });
         }
         languageControlButton.addEventListener("click", () => { languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages"); });
     }
@@ -1631,13 +1667,18 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     let botSettings;
-    let botCounter = 0;
+    let firstBot = 0;
+    let botCount = 0;
     let chosenDifficulty = 1;
     function singleplayerMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.singleplayer, "singleplayer", DiceCup.language.menu.singleplayer.lobby.title);
+        let localCount = parseInt(localStorage.getItem("playercount")) - 1;
+        let botCounter = localCount ? localCount : 1;
         createPlayerPortrait();
-        createBotPortrait();
-        for (let index = 0; index < 4; index++) {
+        for (let index = 0; index < botCounter; index++) {
+            createBotPortrait();
+        }
+        for (let index = 0; index < (5 - botCounter); index++) {
             createAddPortrait();
         }
         let settingsButton = document.createElement("button");
@@ -1664,27 +1705,38 @@ var DiceCup;
     }
     DiceCup.singleplayerMenu = singleplayerMenu;
     function createGameSettings() {
-        let bots = document.querySelectorAll(".botContainer").length;
+        // let bots: number = document.querySelectorAll(".botContainer").length;
         botSettings = [];
-        for (let i = 0; i < bots; i++) {
-            botSettings.push({ botName: document.getElementById("botName_id_" + i).placeholder, difficulty: DiceCup.BotDifficulty.easy });
+        let ids = [];
+        for (let i = 0, idCounter = 0; i < 5; i++) {
+            if (document.getElementById("botName_id_" + i)) {
+                ids[idCounter] = document.getElementById("botName_id_" + i).placeholder;
+                idCounter++;
+            }
+        }
+        for (let i = 0; i < ids.length; i++) {
+            botSettings.push({ botName: ids[i], difficulty: DiceCup.BotDifficulty.easy });
         }
         DiceCup.gameSettings = { playerName: document.getElementById("playerName_id").placeholder, bot: botSettings };
         if (document.getElementById("playerName_id").value) {
             DiceCup.gameSettings.playerName = document.getElementById("playerName_id").value;
         }
-        for (let i = 0; i < bots; i++) {
-            if (document.getElementById("botName_id_" + i).value) {
-                botSettings[i].botName = document.getElementById("botName_id_" + i).value;
-            }
-            if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.language.menu.singleplayer.lobby.difficulties.easy) {
-                botSettings[i].difficulty = DiceCup.BotDifficulty.easy;
-            }
-            else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.language.menu.singleplayer.lobby.difficulties.normal) {
-                botSettings[i].difficulty = DiceCup.BotDifficulty.normal;
-            }
-            else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.language.menu.singleplayer.lobby.difficulties.hard) {
-                botSettings[i].difficulty = DiceCup.BotDifficulty.hard;
+        ids = [];
+        for (let i = 0, idCounter = 0; i < 5; i++) {
+            if (document.getElementById("botName_id_" + i)) {
+                if (document.getElementById("botName_id_" + i).value) {
+                    botSettings[idCounter].botName = document.getElementById("botName_id_" + i).value;
+                }
+                if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.language.menu.singleplayer.lobby.difficulties.easy) {
+                    botSettings[idCounter].difficulty = DiceCup.BotDifficulty.easy;
+                }
+                else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.language.menu.singleplayer.lobby.difficulties.normal) {
+                    botSettings[idCounter].difficulty = DiceCup.BotDifficulty.normal;
+                }
+                else if (document.getElementById("switchDifficultyText_id_" + i).innerHTML == DiceCup.language.menu.singleplayer.lobby.difficulties.hard) {
+                    botSettings[idCounter].difficulty = DiceCup.BotDifficulty.hard;
+                }
+                idCounter++;
             }
         }
         let playerNames = [DiceCup.gameSettings.playerName];
@@ -1696,6 +1748,12 @@ var DiceCup;
         }
         else {
             DiceCup.hideMenu();
+            for (let i = 0, j = 1; i < playerNames.length - 1; i++, j++) {
+                localStorage.setItem("playernames" + i, playerNames[i]);
+                console.log(botSettings[i].difficulty.toString());
+                localStorage.setItem("difficulties" + j, botSettings[i].difficulty.toString());
+            }
+            localStorage.setItem("playercount", playerNames.length.toString());
             DiceCup.changeGameState(DiceCup.GameState.init);
         }
     }
@@ -1732,7 +1790,7 @@ var DiceCup;
         let playerName = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = DiceCup.language.menu.player;
+        localStorage.getItem("playernames0") ? playerName.placeholder = localStorage.getItem("playernames0") : playerName.placeholder = DiceCup.language.menu.player;
         playerContainer.appendChild(playerName);
         let difficultySwitchHidden = document.createElement("div");
         difficultySwitchHidden.classList.add("difficultySwitch");
@@ -1741,21 +1799,21 @@ var DiceCup;
     }
     function createBotPortrait() {
         let botContainer = document.createElement("div");
-        botContainer.id = "botContainer_id_" + botCounter;
+        botContainer.id = "botContainer_id_" + botCount;
         botContainer.classList.add("botContainer");
         botContainer.classList.add("lobbyContainer");
         botContainer.style.order = "1";
         document.getElementById("singleplayerMenuContent_id").appendChild(botContainer);
         let botDiv = document.createElement("button");
-        botDiv.id = "botPortrait_id_" + botCounter;
+        botDiv.id = "botPortrait_id_" + botCount;
         botDiv.classList.add("lobbyPortrait");
         botDiv.classList.add("lobbyPortrait_active");
         botDiv.classList.add("diceCupButtons");
         botDiv.disabled = true;
         botContainer.appendChild(botDiv);
-        if (botCounter > 0) {
+        if (firstBot > 0) {
             let botRemove = document.createElement("button");
-            botRemove.id = "botRemove_id_" + botCounter;
+            botRemove.id = "botRemove_id_" + botCount;
             botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
             botRemove.addEventListener("click", handleRemoveBot);
@@ -1769,8 +1827,17 @@ var DiceCup;
         botIcons.src = "Game/Assets/images/menuButtons/bot.svg";
         botDiv.appendChild(botIcons);
         let botName = document.createElement("input");
-        botName.id = "botName_id_" + botCounter;
-        botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
+        botName.id = "botName_id_" + botCount;
+        let localBots = botCount + 1;
+        console.log(botCount, localStorage.getItem("playercount"));
+        if (localStorage.getItem("playercount")) {
+            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
+                localStorage.getItem("playernames" + localBots) ? botName.placeholder = localStorage.getItem("playernames" + localBots) : botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
+            }
+        }
+        else {
+            botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
+        }
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
         let difficultySwitch = document.createElement("div");
@@ -1789,9 +1856,16 @@ var DiceCup;
         difficultySwitch.appendChild(difficultySwitchText);
         let difficultyText = document.createElement("span");
         // difficultyText.classList.add("scrollText");
-        difficultyText.id = "switchDifficultyText_id_" + botCounter;
-        // difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
-        difficultyText.innerHTML = difficultyLanguage(DiceCup.BotDifficulty[chosenDifficulty]);
+        difficultyText.id = "switchDifficultyText_id_" + botCount;
+        if (localStorage.getItem("playercount")) {
+            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
+                console.log(DiceCup.BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))]);
+                localStorage.getItem("difficulties" + localBots) ? difficultyText.innerHTML = DiceCup.BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))] : difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+            }
+        }
+        else {
+            difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
+        }
         difficultySwitchText.appendChild(difficultyText);
         let switchButtonRight = document.createElement("button");
         switchButtonRight.classList.add("switchDifficulty");
@@ -1818,6 +1892,8 @@ var DiceCup;
             }
             difficultyText.innerHTML = difficultyLanguage(DiceCup.BotDifficulty[chosenDifficulty]);
         });
+        botCount++;
+        firstBot++;
     }
     function createAddPortrait() {
         let addContainer = document.createElement("div");
@@ -1837,12 +1913,13 @@ var DiceCup;
         addPlayerDiv.addEventListener("click", handleAddBot);
     }
     function handleAddBot(_event) {
-        botCounter++;
+        firstBot++;
         this.parentElement.remove();
         createBotPortrait();
     }
     function handleRemoveBot(_event) {
-        botCounter--;
+        firstBot--;
+        botCount--;
         this.parentElement.parentElement.remove();
         createAddPortrait();
     }

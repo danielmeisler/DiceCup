@@ -112,6 +112,14 @@
     justify-content: right;
 }
 
+#multiplayerMenuMidButtonArea_id{
+    width: 25%
+}
+
+#multiplayerMenuRightButtonArea_id{
+    width: 50%
+}
+
 .gameMenuButtons {
     height: 9vw;
     aspect-ratio: 1/1;
@@ -262,7 +270,7 @@
 }
 
 #optionsContentContainer_id {
-    background: rgba(47, 66, 96, 0.5);;
+    /* background: rgba(47, 66, 96, 0.5);; */
     border-radius: 5vh;
     overflow: hidden;
     font-family: var(--text_font);
@@ -271,8 +279,14 @@
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: repeat(auto-fill, 30%);
-    text-align: center;
+    text-align: start;
     padding: 1%;
+}
+
+.optionsColumn_0 {
+    font-family: var(--main_font);
+    text-shadow: var(--text_shadow);
+    margin-left: 25%;
 }
 
 #optionsSoundControlContainer_id {
@@ -309,33 +323,32 @@
 }
 
 #optionsLanguageButton_id {
-    width: 30%;
+    width: fit-content;
+    padding: 1% 5% 1% 5%;
     background: none;
     color: white;
     border: none;
     cursor: pointer;
     font-family: var(--text_font);
     font-size: 2.5vi;
+    border-radius: 5vh;
 }
 
 .optionsLanguageMenu {
     display: none;
     position: absolute;
-    z-index: 1;
 }
-
-.optionsLanguageMenuContent {
-    color: white;
-    background: rgba(47, 66, 96, 0.5);
-    cursor: pointer;
-    font-family: var(--text_font);
-    font-size: 2.5vi;
-    padding: 5%;
-    border: none;
-    text-decoration: none;
-    display: block;
-  }
 
 .optionsShowLanguages {
     display: block;
 }
+
+.optionsLanguageMenuContent {
+    color: white;
+    background: rgba(47, 66, 96, 0);
+    cursor: pointer;
+    font-family: var(--text_font);
+    font-size: 2vi;
+    border: none;
+    display: flex;
+  }
