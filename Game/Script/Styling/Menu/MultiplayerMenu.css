@@ -1,0 +1,12 @@
+#multiplayerLobbyMenuContent_id  {
+    display: flex;
+    justify-content: space-between;
+}
+
+#multiplayerMenuMidButtonArea_id{
+    width: 25%
+}
+
+#multiplayerMenuRightButtonArea_id{
+    width: 50%
+}

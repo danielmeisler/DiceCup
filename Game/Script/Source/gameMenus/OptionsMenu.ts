@@ -15,7 +15,7 @@ namespace DiceCup {
         resetButton.classList.add("gameMenuStartButtons");
         resetButton.classList.add("gameMenuButtons");
         resetButton.classList.add("diceCupButtons");
-        resetButton.innerHTML = "Reset";
+        resetButton.innerHTML = language.menu.settings.reset_button;
         document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
 
         resetButton.addEventListener("click", () => {
@@ -36,7 +36,7 @@ namespace DiceCup {
 
         let soundControlTag: HTMLSpanElement = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
-        soundControlTag.innerHTML = "VOLUME";
+        soundControlTag.innerHTML = language.menu.settings.volume;
         document.getElementById("optionsGrid_id_0_0").appendChild(soundControlTag);
     
         let soundControlContainer: HTMLDivElement = document.createElement("div");
@@ -97,7 +97,7 @@ namespace DiceCup {
 
         let languageTag: HTMLSpanElement = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
-        languageTag.innerHTML = "LANGUAGE";
+        languageTag.innerHTML = language.menu.settings.language.title;
         document.getElementById("optionsGrid_id_1_0").appendChild(languageTag);
 
         let languageControlContainer: HTMLDivElement = document.createElement("div");
@@ -106,7 +106,7 @@ namespace DiceCup {
 
         let languageControlButton: HTMLButtonElement = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";
-        languageControlButton.innerHTML = currentLanguage + "▾";
+        languageControlButton.innerHTML = translateLanguages(currentLanguage) + " ▾";
         languageControlContainer.appendChild(languageControlButton);
 
         let languageControlMenu: HTMLDivElement = document.createElement("div");
@@ -116,9 +116,8 @@ namespace DiceCup {
         for (let i = 0; i < Object.values(Languages).length; i++) {
             let languageControlButton: HTMLButtonElement = document.createElement("button");
             languageControlButton.classList.add("optionsLanguageMenuContent");
-            languageControlButton.innerHTML = Object.values(Languages)[i];
+            languageControlButton.innerHTML = translateLanguages(Object.values(Languages)[i]);
             languageControlMenu.appendChild(languageControlButton);
-
             languageControlButton.addEventListener("click", () => { localStorage.setItem("language", Object.values(Languages)[i]), localStorage.setItem("optionsMenu", "true") , location.reload()});
         }
 

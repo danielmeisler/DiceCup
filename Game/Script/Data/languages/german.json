@@ -35,7 +35,14 @@
             "title": "Spielanleitung"
         },
         "settings": {
-            "title": "Einstellungen"
+            "title": "Einstellungen",
+            "reset_button": "Resetten",
+            "volume": "Lautstärke",
+            "language": {
+                "title": "Sprache",
+                "english": "Englisch",
+                "german": "Deutsch"
+            }
         },
         "player": "Spieler"
     },

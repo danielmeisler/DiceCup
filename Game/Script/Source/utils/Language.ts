@@ -7,5 +7,12 @@ namespace DiceCup {
         language = await response.json();
     }
 
-    
+    export function translateLanguages(_language: Languages): string {
+        switch (_language) {
+            case Languages.english:
+                return language.menu.settings.language.english;
+            case Languages.german:
+                return language.menu.settings.language.german;
+        }
+    }
 }

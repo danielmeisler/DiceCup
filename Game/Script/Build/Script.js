@@ -1569,7 +1569,7 @@ var DiceCup;
         resetButton.classList.add("gameMenuStartButtons");
         resetButton.classList.add("gameMenuButtons");
         resetButton.classList.add("diceCupButtons");
-        resetButton.innerHTML = "Reset";
+        resetButton.innerHTML = DiceCup.language.menu.settings.reset_button;
         document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
         resetButton.addEventListener("click", () => {
             localStorage.clear();
@@ -1587,7 +1587,7 @@ var DiceCup;
         }
         let soundControlTag = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
-        soundControlTag.innerHTML = "VOLUME";
+        soundControlTag.innerHTML = DiceCup.language.menu.settings.volume;
         document.getElementById("optionsGrid_id_0_0").appendChild(soundControlTag);
         let soundControlContainer = document.createElement("div");
         soundControlContainer.id = "optionsSoundControlContainer_id";
@@ -1640,14 +1640,14 @@ var DiceCup;
         }
         let languageTag = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
-        languageTag.innerHTML = "LANGUAGE";
+        languageTag.innerHTML = DiceCup.language.menu.settings.language.title;
         document.getElementById("optionsGrid_id_1_0").appendChild(languageTag);
         let languageControlContainer = document.createElement("div");
         languageControlContainer.id = "optionsLanguageContainer_id";
         document.getElementById("optionsGrid_id_1_1").appendChild(languageControlContainer);
         let languageControlButton = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";
-        languageControlButton.innerHTML = DiceCup.currentLanguage + "▾";
+        languageControlButton.innerHTML = DiceCup.translateLanguages(DiceCup.currentLanguage) + " ▾";
         languageControlContainer.appendChild(languageControlButton);
         let languageControlMenu = document.createElement("div");
         languageControlMenu.classList.add("optionsLanguageMenu");
@@ -1655,7 +1655,7 @@ var DiceCup;
         for (let i = 0; i < Object.values(DiceCup.Languages).length; i++) {
             let languageControlButton = document.createElement("button");
             languageControlButton.classList.add("optionsLanguageMenuContent");
-            languageControlButton.innerHTML = Object.values(DiceCup.Languages)[i];
+            languageControlButton.innerHTML = DiceCup.translateLanguages(Object.values(DiceCup.Languages)[i]);
             languageControlMenu.appendChild(languageControlButton);
             languageControlButton.addEventListener("click", () => { localStorage.setItem("language", Object.values(DiceCup.Languages)[i]), localStorage.setItem("optionsMenu", "true"), location.reload(); });
         }
@@ -1948,6 +1948,15 @@ var DiceCup;
         DiceCup.language = await response.json();
     }
     DiceCup.chooseLanguage = chooseLanguage;
+    function translateLanguages(_language) {
+        switch (_language) {
+            case DiceCup.Languages.english:
+                return DiceCup.language.menu.settings.language.english;
+            case DiceCup.Languages.german:
+                return DiceCup.language.menu.settings.language.german;
+        }
+    }
+    DiceCup.translateLanguages = translateLanguages;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {

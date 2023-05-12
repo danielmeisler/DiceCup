@@ -112,14 +112,6 @@
     justify-content: right;
 }
 
-#multiplayerMenuMidButtonArea_id{
-    width: 25%
-}
-
-#multiplayerMenuRightButtonArea_id{
-    width: 50%
-}
-
 .gameMenuButtons {
     height: 9vw;
     aspect-ratio: 1/1;
@@ -138,12 +130,6 @@
     color: var(--lobby_alert_color);
     justify-content: center;
     padding: 1vi;
-}
-
-
-#singleplayerMenuContent_id, #multiplayerLobbyMenuContent_id  {
-    display: flex;
-    justify-content: space-between;
 }
 
 .lobbyPortrait {
@@ -268,87 +254,3 @@
     font-family: var(--main_font);
     font-size: var(--menu_next_buttons_fontsize);
 }
-
-#optionsContentContainer_id {
-    /* background: rgba(47, 66, 96, 0.5);; */
-    border-radius: 5vh;
-    overflow: hidden;
-    font-family: var(--text_font);
-    font-size: 2.5vi;
-    color: white;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: repeat(auto-fill, 30%);
-    text-align: start;
-    padding: 1%;
-}
-
-.optionsColumn_0 {
-    font-family: var(--main_font);
-    text-shadow: var(--text_shadow);
-    margin-left: 25%;
-}
-
-#optionsSoundControlContainer_id {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1vw;
-}
-
-.optionsSwitchVolume {
-    border-width: 0;
-    background: transparent;
-    height: 100%;
-}
-
-.optionsSwitchVolumeIcons {
-    height: 50%;
-    width: 1vw;
-}
-
-#optionsSoundControl_id {
-    width: 20%;
-    text-align: center;
-    overflow: hidden;
-}
-
-#optionsLanguageContainer_id {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-}
-
-#optionsLanguageButton_id {
-    width: fit-content;
-    padding: 1% 5% 1% 5%;
-    background: none;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-family: var(--text_font);
-    font-size: 2.5vi;
-    border-radius: 5vh;
-}
-
-.optionsLanguageMenu {
-    display: none;
-    position: absolute;
-}
-
-.optionsShowLanguages {
-    display: block;
-}
-
-.optionsLanguageMenuContent {
-    color: white;
-    background: rgba(47, 66, 96, 0);
-    cursor: pointer;
-    font-family: var(--text_font);
-    font-size: 2vi;
-    border: none;
-    display: flex;
-  }

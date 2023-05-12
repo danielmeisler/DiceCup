@@ -37,6 +37,13 @@ namespace DiceCup {
             },
             settings: {
                 title: string;
+                reset_button: string;
+                volume: string;
+                language: {
+                    title: string;
+                    english: string;
+                    german: string;
+                }
             },
             player: string;
         },

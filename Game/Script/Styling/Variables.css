@@ -21,6 +21,9 @@
     --menu_buttons_fontsize: 4vi;
     --menu_next_buttons: var(--blue_dark);
     --menu_next_buttons_fontsize: 3.5vi;
+    --menu_options_fontsize: 2.5vi;
+    --menu_options_drowdown_fontsize: 2vi;
+    --menu_options_color: var(--white);
 
     /* Lobby Variables */
     --lobby_portrait_color: var(--white);

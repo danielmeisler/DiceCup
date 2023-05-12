@@ -1,0 +1,83 @@
+
+#optionsContentContainer_id {
+    overflow: hidden;
+    display: grid;
+    text-align: start;
+    grid-template-rows: repeat(auto-fill, 30%);
+    grid-template-columns: 50% 50%;
+    border-radius: 5vh;
+    padding: 1%;
+    font-family: var(--text_font);
+    font-size: var(--menu_options_fontsize);
+    color: var(--menu_options_color);
+}
+
+.optionsColumn_0 {
+    margin-left: 25%;
+    font-family: var(--main_font);
+    text-shadow: var(--text_shadow);
+}
+
+#optionsSoundControlContainer_id {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vw;
+}
+
+.optionsSwitchVolume {
+    background: transparent;
+    height: 100%;
+    border-width: 0;
+}
+
+.optionsSwitchVolumeIcons {
+    height: 50%;
+    width: 1vw;
+}
+
+#optionsSoundControl_id {
+    text-align: center;
+    overflow: hidden;
+    width: 20%;
+}
+
+#optionsLanguageContainer_id {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#optionsLanguageButton_id {
+    width: fit-content;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 1% 5% 1% 5%;
+    border-radius: 5vh;
+    font-family: var(--text_font);
+    font-size: var(--menu_options_fontsize);
+    color: var(--menu_options_color);
+}
+
+.optionsLanguageMenu {
+    display: none;
+    position: absolute;
+}
+
+.optionsShowLanguages {
+    display: block;
+}
+
+.optionsLanguageMenuContent {
+    display: flex;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--text_font);
+    color: var(--menu_options_color);
+    font-size: var(--menu_options_drowdown_fontsize);
+  }

@@ -35,7 +35,14 @@
             "title": "How to play"
         },
         "settings": {
-            "title": "Settings"
+            "title": "Settings",
+            "reset_button": "reset",
+            "volume": "Volume",
+            "language": {
+                "title": "Language",
+                "english": "English",
+                "german": "German"
+            }
         },
         "player": "Player"
     },

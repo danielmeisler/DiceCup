@@ -296,6 +296,13 @@ declare namespace DiceCup {
             };
             settings: {
                 title: string;
+                reset_button: string;
+                volume: string;
+                language: {
+                    title: string;
+                    english: string;
+                    german: string;
+                };
             };
             player: string;
         };
@@ -354,6 +361,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     let language: LanguageDao;
     function chooseLanguage(_language: Languages): Promise<void>;
+    function translateLanguages(_language: Languages): string;
 }
 declare namespace DiceCup {
     function enableWakeLock(): Promise<boolean>;
