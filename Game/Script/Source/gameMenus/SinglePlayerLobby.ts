@@ -96,7 +96,6 @@ namespace DiceCup {
             hideMenu();
             for (let i = 0, j = 1; i < playerNames.length - 1; i++, j++) {
                 localStorage.setItem("playernames" + i, playerNames[i]);
-                console.log(botSettings[i].difficulty.toString());
                 localStorage.setItem("difficulties" + j, botSettings[i].difficulty.toString());
             }
 
