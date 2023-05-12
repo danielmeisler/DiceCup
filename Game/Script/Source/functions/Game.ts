@@ -19,9 +19,14 @@ namespace DiceCup {
         return bots;
     }
 
-    export async function rollDices(): Promise<void> {
+    export async function loadDiceColors(): Promise<RgbaDao[]> {
         let response: Response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors: RgbaDao[] = await response.json();
+        return diceColors;
+    }
+
+    export async function rollDices(): Promise<void> {
+        let diceColors: RgbaDao[] = await loadDiceColors();
         let graph: ƒ.Node = viewport.getBranch();
         let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
         diceNode.removeAllChildren();

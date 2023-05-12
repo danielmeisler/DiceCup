@@ -27,7 +27,7 @@ namespace DiceCup {
         menuDiv.appendChild(buttonDiv);
 
         let menuButtonIds: string[] = ["play_id", "shop_id", "help_id", "options_id"];
-        let menuButtonIconPaths: string[] = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/shop.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
+        let menuButtonIconPaths: string[] = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/multiplayer.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
 
         for (let i = 0; i < 4; i++) {
             let menuButtons: HTMLButtonElement = document.createElement("button");

@@ -224,8 +224,7 @@ var DiceCup;
             }
         }
         async colorDices(_colorRGBA) {
-            let response = await fetch("Game/Script/Data/diceColors.json");
-            let diceColors = await response.json();
+            let diceColors = await DiceCup.loadDiceColors();
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_colorRGBA.name == DiceCup.DiceColor.white || _colorRGBA.name == DiceCup.DiceColor.green || _colorRGBA.name == DiceCup.DiceColor.yellow) {
                 this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 2].r), this.convertDiceColor(diceColors[diceColors.length - 2].g), diceColors[diceColors.length - 2].b, diceColors[diceColors.length - 2].a); });
@@ -1188,9 +1187,14 @@ var DiceCup;
         }
         return bots;
     }
-    async function rollDices() {
+    async function loadDiceColors() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
+        return diceColors;
+    }
+    DiceCup.loadDiceColors = loadDiceColors;
+    async function rollDices() {
+        let diceColors = await loadDiceColors();
         let graph = DiceCup.viewport.getBranch();
         let diceNode = graph.getChildrenByName("Dices")[0];
         diceNode.removeAllChildren();
@@ -1305,8 +1309,7 @@ var DiceCup;
     }
     DiceCup.changeViewportState = changeViewportState;
     async function menuViewport() {
-        let response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors = await response.json();
+        let diceColors = await DiceCup.loadDiceColors();
         DiceCup.changeFloor(false);
         DiceCup.activateCover(false);
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.75, -5);
@@ -1395,7 +1398,7 @@ var DiceCup;
         buttonDiv.id = "buttonContainer_id";
         menuDiv.appendChild(buttonDiv);
         let menuButtonIds = ["play_id", "shop_id", "help_id", "options_id"];
-        let menuButtonIconPaths = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/shop.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
+        let menuButtonIconPaths = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/multiplayer.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
         for (let i = 0; i < 4; i++) {
             let menuButtons = document.createElement("button");
             menuButtons.classList.add("menuButtons");
@@ -1829,7 +1832,6 @@ var DiceCup;
         let botName = document.createElement("input");
         botName.id = "botName_id_" + botCount;
         let localBots = botCount + 1;
-        console.log(botCount, localStorage.getItem("playercount"));
         if (localStorage.getItem("playercount")) {
             if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
                 localStorage.getItem("playernames" + localBots) ? botName.placeholder = localStorage.getItem("playernames" + localBots) : botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
@@ -1859,7 +1861,6 @@ var DiceCup;
         difficultyText.id = "switchDifficultyText_id_" + botCount;
         if (localStorage.getItem("playercount")) {
             if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
-                console.log(DiceCup.BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))]);
                 localStorage.getItem("difficulties" + localBots) ? difficultyText.innerHTML = DiceCup.BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))] : difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
             }
         }

@@ -116,8 +116,7 @@ namespace DiceCup{
         }
 
         private async colorDices(_colorRGBA: RgbaDao): Promise<void> {
-            let response: Response = await fetch("Game/Script/Data/diceColors.json");
-            let diceColors: RgbaDao[] = await response.json();
+            let diceColors: RgbaDao[] = await loadDiceColors();
             
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_colorRGBA.name == DiceColor.white || _colorRGBA.name == DiceColor.green || _colorRGBA.name == DiceColor.yellow) {

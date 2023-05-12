@@ -19,8 +19,7 @@ namespace DiceCup {
     }
 
     async function menuViewport() {   
-        let response: Response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors: RgbaDao[] = await response.json();
+        let diceColors: RgbaDao[] = await loadDiceColors();
         changeFloor(false);
         activateCover(false);
         

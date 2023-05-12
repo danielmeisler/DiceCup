@@ -215,6 +215,7 @@ declare namespace DiceCup {
     let roundCounter: number;
     let maxRounds: number;
     let gameSettings: SinglePlayerSettingsDao;
+    function loadDiceColors(): Promise<RgbaDao[]>;
     function rollDices(): Promise<void>;
     function round(): Promise<void>;
     function update(_event: Event): void;

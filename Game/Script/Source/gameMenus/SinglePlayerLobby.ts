@@ -188,7 +188,6 @@ namespace DiceCup {
         let botName: HTMLInputElement = document.createElement("input");
         botName.id = "botName_id_" + botCount;
         let localBots: number = botCount + 1;
-        console.log(botCount, localStorage.getItem("playercount"))
         if (localStorage.getItem("playercount")) {
             if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
                 localStorage.getItem("playernames" + localBots) ? botName.placeholder = localStorage.getItem("playernames" + localBots) : botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
@@ -222,7 +221,6 @@ namespace DiceCup {
         difficultyText.id = "switchDifficultyText_id_" + botCount;
         if (localStorage.getItem("playercount")) {
             if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
-                console.log(BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))])
                 localStorage.getItem("difficulties" + localBots) ? difficultyText.innerHTML =  BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))] : difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
             }
         } else {
