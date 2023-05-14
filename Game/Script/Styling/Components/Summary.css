@@ -31,13 +31,13 @@
 }
 
 .summaryHidden {
-    transition: transform 1s linear;
+    transition: transform 2s linear;
     transform: translateY(200%);
     will-change: transform;
 }
 
 .summaryShown {
-    transition: transform 1s linear;
+    transition: transform 2s linear;
     transform: translateY(0%);
     will-change: transform;
 }
