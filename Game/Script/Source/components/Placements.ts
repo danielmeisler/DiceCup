@@ -37,8 +37,7 @@ namespace DiceCup {
         replayButton.appendChild(replayButtonImage);
 
         replayButton.addEventListener("click", () => {
-            gameOver();
-            switchMenu(MenuPage.singleplayer);
+            gameOver(MenuPage.singleplayer);
         });
 
         let placementPhrase: HTMLSpanElement = document.createElement("span");
@@ -56,8 +55,7 @@ namespace DiceCup {
         nextButton.appendChild(nextButtonImage);
 
         nextButton.addEventListener("click", () => {
-            gameOver();
-            switchMenu(MenuPage.main);
+            gameOver(MenuPage.main);
         });
 
         visibility("hidden");
@@ -138,7 +136,7 @@ namespace DiceCup {
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
 
             if (name[i] == gameSettings.playerName) {
-                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.alerts.part_1 + (i + 1) + ". " +  language.game.placements.alerts.part_2;
+                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.alerts.part_1 + " " + (i + 1) + ". " +  language.game.placements.alerts.part_2;
             }
         }
     }

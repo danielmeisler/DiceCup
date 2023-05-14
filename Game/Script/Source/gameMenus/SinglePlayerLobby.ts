@@ -7,8 +7,8 @@ namespace DiceCup {
 
     export function singleplayerMenu(): void {
         new SubMenu(MenuPage.singleplayer, "singleplayer", language.menu.singleplayer.lobby.title);
-        let localCount: number = parseInt(localStorage.getItem("playercount")) - 1;
-        let botCounter: number = localCount ? localCount : 1;
+        let localCount: number[] = JSON.parse(localStorage.getItem("difficulties")) ?? [1];
+        let botCounter: number = localCount.length ?? localCount[0];
 
         createPlayerPortrait();
         for (let index = 0; index < botCounter; index++) {
@@ -94,12 +94,8 @@ namespace DiceCup {
             ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
         } else {
             hideMenu();
-            for (let i = 0, j = 1; i < playerNames.length - 1; i++, j++) {
-                localStorage.setItem("playernames" + i, playerNames[i]);
-                localStorage.setItem("difficulties" + j, botSettings[i].difficulty.toString());
-            }
-
-            localStorage.setItem("playercount", playerNames.length.toString());
+            localStorage.setItem("playernames",JSON.stringify(playerNames));
+            localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
             changeGameState(GameState.init);
         }
     }
@@ -141,7 +137,8 @@ namespace DiceCup {
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        localStorage.getItem("playernames0") ? playerName.placeholder = localStorage.getItem("playernames0") : playerName.placeholder = language.menu.player;
+        let playernames: string[] = JSON.parse(localStorage.getItem("playernames")) ?? [language.menu.player];
+        playerName.placeholder = playernames[0];
         playerContainer.appendChild(playerName);
 
         let difficultySwitchHidden: HTMLDivElement = document.createElement("div");
@@ -187,13 +184,8 @@ namespace DiceCup {
         let botName: HTMLInputElement = document.createElement("input");
         botName.id = "botName_id_" + botCount;
         let localBots: number = botCount + 1;
-        if (localStorage.getItem("playercount")) {
-            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
-                localStorage.getItem("playernames" + localBots) ? botName.placeholder = localStorage.getItem("playernames" + localBots) : botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
-            }
-        } else {
-            botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
-        }
+        let playernames: string[] = JSON.parse(localStorage.getItem("playernames")) ?? [];
+        botName.placeholder = playernames[localBots] ?? "Agent" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
 
@@ -218,14 +210,9 @@ namespace DiceCup {
         let difficultyText: HTMLSpanElement = document.createElement("span");
         // difficultyText.classList.add("scrollText");
         difficultyText.id = "switchDifficultyText_id_" + botCount;
-        if (localStorage.getItem("playercount")) {
-            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
-                localStorage.getItem("difficulties" + localBots) ? difficultyText.innerHTML =  BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))] : difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
-            }
-        } else {
-            difficultyText.innerHTML = BotDifficulty[chosenDifficulty];
-        }
 
+        let difficulties: string[] = JSON.parse(localStorage.getItem("difficulties")) ?? [];
+        difficultyText.innerHTML = BotDifficulty[parseInt(difficulties[botCount])] ?? BotDifficulty[chosenDifficulty];
         difficultySwitchText.appendChild(difficultyText);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");

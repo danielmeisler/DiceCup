@@ -8,6 +8,7 @@ namespace DiceCup {
     export let roundCounter: number = 1;
     export let maxRounds: number = 12;
     export let gameSettings: SinglePlayerSettingsDao;
+    export let usedTranslations: ƒ.Vector3[] = [];
     let bots: Bot[] = [];
 
     function createBots(_bots: BotDao[]): Bot[] {

@@ -26,7 +26,7 @@ namespace DiceCup{
                 showCategories();
             break;
             case GameState.validating: 
-                // validateRound();
+                validateRound();
             break;
             case GameState.summary: 
                 showSummary();

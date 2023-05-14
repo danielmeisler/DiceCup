@@ -134,7 +134,8 @@ var DiceCup;
         dotsMat;
         arenaTranslation = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         arenaRotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
-        arenaScale = new ƒ.Vector3(0.3, 0.3, 0.3);
+        bigDice = 0.3;
+        smallDice = 0.265;
         color;
         value;
         constructor(_colorRGBA, _color, _rollDiceMode) {
@@ -153,7 +154,7 @@ var DiceCup;
             this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
-            this.diceInst.mtxLocal.scaling = this.arenaScale;
+            this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
             this.colorDices(_colorRGBA);
             this.diceNode.addChild(this.diceInst);
@@ -191,7 +192,17 @@ var DiceCup;
             this.diceRig.activate(true);
         }
         translateDice(_node) {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
+            let tempVec = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
+            if (DiceCup.usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.smallDice)) {
+                console.log("ZU NAH");
+                this.translateDice(_node);
+            }
+            else {
+                _node.mtxLocal.translation = tempVec;
+            }
+            if (DiceCup.usedTranslations.length == DiceCup.dices.length) {
+                DiceCup.usedTranslations = [];
+            }
         }
         rotateDice(_node) {
             let randomRotate = Math.random() * 360;
@@ -221,6 +232,15 @@ var DiceCup;
                     break;
                 default:
                     break;
+            }
+        }
+        async scaleDices(_colorRGBA) {
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
+            if (_colorRGBA.name == DiceCup.DiceColor.white || _colorRGBA.name == DiceCup.DiceColor.green || _colorRGBA.name == DiceCup.DiceColor.yellow) {
+                this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.smallDice, this.smallDice, this.smallDice);
+            }
+            else {
+                this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.bigDice, this.bigDice, this.bigDice);
             }
         }
         async colorDices(_colorRGBA) {
@@ -682,7 +702,7 @@ var DiceCup;
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         DiceCup.hideHudCategory(_index);
         DiceCup.updateSummary(value, _index, DiceCup.gameSettings.playerName);
-        ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
+        DiceCup.changeGameState(DiceCup.GameState.validating);
     }
     function visibility(_visibility) {
         document.getElementById("categoryBackground_id").style.visibility = _visibility;
@@ -769,8 +789,7 @@ var DiceCup;
         replayButtonImage.src = "Game/Assets/images/menuButtons/renew.svg";
         replayButton.appendChild(replayButtonImage);
         replayButton.addEventListener("click", () => {
-            DiceCup.gameOver();
-            DiceCup.switchMenu(DiceCup.MenuPage.singleplayer);
+            DiceCup.gameOver(DiceCup.MenuPage.singleplayer);
         });
         let placementPhrase = document.createElement("span");
         placementPhrase.id = "placementsPhrase_id";
@@ -784,8 +803,7 @@ var DiceCup;
         nextButtonImage.src = "Game/Assets/images/menuButtons/play.svg";
         nextButton.appendChild(nextButtonImage);
         nextButton.addEventListener("click", () => {
-            DiceCup.gameOver();
-            DiceCup.switchMenu(DiceCup.MenuPage.main);
+            DiceCup.gameOver(DiceCup.MenuPage.main);
         });
         visibility("hidden");
     }
@@ -855,7 +873,7 @@ var DiceCup;
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
             if (name[i] == DiceCup.gameSettings.playerName) {
-                document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.alerts.part_1 + (i + 1) + ". " + DiceCup.language.game.placements.alerts.part_2;
+                document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.alerts.part_1 + " " + (i + 1) + ". " + DiceCup.language.game.placements.alerts.part_2;
             }
         }
     }
@@ -1070,6 +1088,14 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    var ƒ = FudgeCore;
+    function validateRound() {
+        ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
+    }
+    DiceCup.validateRound = validateRound;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     let BotDifficulty;
     (function (BotDifficulty) {
         BotDifficulty[BotDifficulty["easy"] = 0] = "easy";
@@ -1178,6 +1204,7 @@ var DiceCup;
     DiceCup.roundTimer = 3;
     DiceCup.roundCounter = 1;
     DiceCup.maxRounds = 12;
+    DiceCup.usedTranslations = [];
     let bots = [];
     function createBots(_bots) {
         bots = [];
@@ -1234,15 +1261,20 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    function gameOver() {
+    function gameOver(_return) {
         DiceCup.lastPoints = [];
         DiceCup.firstRound = true;
         DiceCup.roundCounter = 1;
         DiceCup.playerNames = [];
         DiceCup.gameSettings = { playerName: "", bot: [] };
+        DiceCup.changeViewportState(DiceCup.ViewportState.menu);
+        let graph = DiceCup.viewport.getBranch();
+        let diceNode = graph.getChildrenByName("Dices")[0];
+        diceNode.removeAllChildren();
         while (document.getElementById("DiceCup").childNodes.length > 1) {
             document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
         }
+        DiceCup.switchMenu(_return);
     }
     DiceCup.gameOver = gameOver;
 })(DiceCup || (DiceCup = {}));
@@ -1274,7 +1306,7 @@ var DiceCup;
                 DiceCup.showCategories();
                 break;
             case DiceCup.GameState.validating:
-                // validateRound();
+                DiceCup.validateRound();
                 break;
             case DiceCup.GameState.summary:
                 DiceCup.showSummary();
@@ -1675,8 +1707,8 @@ var DiceCup;
     let chosenDifficulty = 1;
     function singleplayerMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.singleplayer, "singleplayer", DiceCup.language.menu.singleplayer.lobby.title);
-        let localCount = parseInt(localStorage.getItem("playercount")) - 1;
-        let botCounter = localCount ? localCount : 1;
+        let localCount = JSON.parse(localStorage.getItem("difficulties")) ?? [1];
+        let botCounter = localCount.length ?? localCount[0];
         createPlayerPortrait();
         for (let index = 0; index < botCounter; index++) {
             createBotPortrait();
@@ -1751,11 +1783,8 @@ var DiceCup;
         }
         else {
             DiceCup.hideMenu();
-            for (let i = 0, j = 1; i < playerNames.length - 1; i++, j++) {
-                localStorage.setItem("playernames" + i, playerNames[i]);
-                localStorage.setItem("difficulties" + j, botSettings[i].difficulty.toString());
-            }
-            localStorage.setItem("playercount", playerNames.length.toString());
+            localStorage.setItem("playernames", JSON.stringify(playerNames));
+            localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
             DiceCup.changeGameState(DiceCup.GameState.init);
         }
     }
@@ -1792,7 +1821,8 @@ var DiceCup;
         let playerName = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        localStorage.getItem("playernames0") ? playerName.placeholder = localStorage.getItem("playernames0") : playerName.placeholder = DiceCup.language.menu.player;
+        let playernames = JSON.parse(localStorage.getItem("playernames")) ?? [DiceCup.language.menu.player];
+        playerName.placeholder = playernames[0];
         playerContainer.appendChild(playerName);
         let difficultySwitchHidden = document.createElement("div");
         difficultySwitchHidden.classList.add("difficultySwitch");
@@ -1831,14 +1861,8 @@ var DiceCup;
         let botName = document.createElement("input");
         botName.id = "botName_id_" + botCount;
         let localBots = botCount + 1;
-        if (localStorage.getItem("playercount")) {
-            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
-                localStorage.getItem("playernames" + localBots) ? botName.placeholder = localStorage.getItem("playernames" + localBots) : botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
-            }
-        }
-        else {
-            botName.placeholder = "Agent" + Math.floor((Math.random() * 99));
-        }
+        let playernames = JSON.parse(localStorage.getItem("playernames")) ?? [];
+        botName.placeholder = playernames[localBots] ?? "Agent" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
         botContainer.appendChild(botName);
         let difficultySwitch = document.createElement("div");
@@ -1858,14 +1882,8 @@ var DiceCup;
         let difficultyText = document.createElement("span");
         // difficultyText.classList.add("scrollText");
         difficultyText.id = "switchDifficultyText_id_" + botCount;
-        if (localStorage.getItem("playercount")) {
-            if (localBots <= parseInt(localStorage.getItem("playercount")) - 1) {
-                localStorage.getItem("difficulties" + localBots) ? difficultyText.innerHTML = DiceCup.BotDifficulty[parseInt(localStorage.getItem("difficulties" + localBots))] : difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
-            }
-        }
-        else {
-            difficultyText.innerHTML = DiceCup.BotDifficulty[chosenDifficulty];
-        }
+        let difficulties = JSON.parse(localStorage.getItem("difficulties")) ?? [];
+        difficultyText.innerHTML = DiceCup.BotDifficulty[parseInt(difficulties[botCount])] ?? DiceCup.BotDifficulty[chosenDifficulty];
         difficultySwitchText.appendChild(difficultyText);
         let switchButtonRight = document.createElement("button");
         switchButtonRight.classList.add("switchDifficulty");

@@ -87,17 +87,19 @@ div[id^="summaryGrid"] {
     align-items: center;
     overflow: hidden;
     font-family: var(--main_font);
-    text-shadow: var(--text_shadow);
+
     color: var(--summary_text_color);
     font-size: var(--summary_text_fontsize);
 }
 
 .summaryHighlight {
     color: var(--summary_text_highlight);
+    text-shadow: var(--text_shadow);
 }
 
 .sumRow {
     color: var(--summary_text_header);
+    text-shadow: var(--text_shadow);
 }
 
 .headerRow {
@@ -107,7 +109,7 @@ div[id^="summaryGrid"] {
 }
 
 .headerRow, .headerCol {
-    text-shadow: 0vi 0vi 0vi #000000;
     color: var(--summary_text_header);
     font-family: var(--text_font);
+    text-shadow: var(--text_shadow);
 }

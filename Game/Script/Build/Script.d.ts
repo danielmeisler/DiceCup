@@ -41,7 +41,8 @@ declare namespace DiceCup {
         private dotsMat;
         private arenaTranslation;
         private arenaRotation;
-        private arenaScale;
+        private bigDice;
+        private smallDice;
         color: DiceColor;
         value: number;
         constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number);
@@ -52,6 +53,7 @@ declare namespace DiceCup {
         private rollDices;
         private translateDice;
         private rotateDice;
+        private scaleDices;
         private colorDices;
         private convertDiceColor;
     }
@@ -136,6 +138,9 @@ declare namespace DiceCup {
     function startTransition(): void;
 }
 declare namespace DiceCup {
+    function validateRound(): void;
+}
+declare namespace DiceCup {
     enum BotDifficulty {
         easy = 0,
         normal = 1,
@@ -208,6 +213,7 @@ declare namespace DiceCup {
     function activateCover(_change: boolean): void;
 }
 declare namespace DiceCup {
+    import ƒ = FudgeCore;
     let dices: Dice[];
     let firstRound: boolean;
     let highscore: number;
@@ -215,13 +221,14 @@ declare namespace DiceCup {
     let roundCounter: number;
     let maxRounds: number;
     let gameSettings: SinglePlayerSettingsDao;
+    let usedTranslations: ƒ.Vector3[];
     function loadDiceColors(): Promise<RgbaDao[]>;
     function rollDices(): Promise<void>;
     function round(): Promise<void>;
     function update(_event: Event): void;
 }
 declare namespace DiceCup {
-    function gameOver(): void;
+    function gameOver(_return: MenuPage): void;
 }
 declare namespace DiceCup {
     function changeGameState(_gameState: GameState): Promise<void>;

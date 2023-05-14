@@ -86,7 +86,7 @@ namespace DiceCup {
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         hideHudCategory(_index);
         updateSummary(value, _index, gameSettings.playerName);
-        ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
+        changeGameState(GameState.validating);
     }
 
     function visibility(_visibility: string) {

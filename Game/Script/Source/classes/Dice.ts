@@ -13,7 +13,8 @@ namespace DiceCup{
         
         private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
-        private arenaScale: ƒ.Vector3 = new ƒ.Vector3(0.3,0.3,0.3);
+        private bigDice: number = 0.3;
+        private smallDice: number = 0.265;
 
         public color: DiceColor;
         public value: number;
@@ -37,7 +38,7 @@ namespace DiceCup{
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
 
-            this.diceInst.mtxLocal.scaling = this.arenaScale;
+            this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
             this.colorDices(_colorRGBA);
 
@@ -81,7 +82,17 @@ namespace DiceCup{
         }
 
         private translateDice(_node: ƒ.Node): void {
-            _node.mtxLocal.translation = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
+            let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
+            if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.smallDice)) {
+                console.log("ZU NAH");
+                this.translateDice(_node);
+            } else {
+                _node.mtxLocal.translation = tempVec;
+            }
+
+            if (usedTranslations.length == dices.length) {
+                usedTranslations = [];
+            }
         }
 
         private rotateDice(_node: ƒ.Node): void {
@@ -112,6 +123,15 @@ namespace DiceCup{
                     break;
                 default:
                     break;
+            }
+        }
+
+        private async scaleDices(_colorRGBA: RgbaDao): Promise<void> {
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
+            if (_colorRGBA.name == DiceColor.white || _colorRGBA.name == DiceColor.green || _colorRGBA.name == DiceColor.yellow) {
+                this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.smallDice, this.smallDice, this.smallDice);
+            } else {
+                this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.bigDice, this.bigDice, this.bigDice);
             }
         }
 

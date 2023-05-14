@@ -61,7 +61,7 @@
         "placements": {
             "title": "Congratulations!",
             "alerts": {
-                "part_1": "You are",
+                "part_1": "You won the",
                 "part_2": "place!"
             } 
         }

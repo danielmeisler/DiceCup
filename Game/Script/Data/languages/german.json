@@ -61,7 +61,7 @@
         "placements": {
             "title": "Gratulation!",
             "alerts": {
-                "part_1": "Du belegst den ",
+                "part_1": "Du belegst den",
                 "part_2": "Platz!"
             } 
         }
