@@ -154,11 +154,11 @@
 }
 
 .placementsHidden {
-    transition: margin-bottom 2s linear;
-    margin-bottom: 200%;
+    transition: transform 2s linear;
+    transform: translateY(200%);
 }
 
 .placementsShown {
-    transition: margin-bottom 2s linear;
-    margin-bottom: 0%;
+    transition: transform 2s linear;
+    transform: translateY(0%);
 }

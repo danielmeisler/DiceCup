@@ -20,13 +20,13 @@
 }
 
 .categoriesHidden {
-    transition: margin-top 2s linear;
-    margin-top: 200%;
+    transition: transform 2s linear;
+    transform: translateY(200%);
 }
 
 .categoriesShown {
-    transition: margin-top 2s linear;
-    margin-top: 0%;
+    transition: transform 2s linear;
+    transform: translateY(0%);
 }
 
 #categoryHeader_id {

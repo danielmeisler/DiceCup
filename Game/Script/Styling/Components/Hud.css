@@ -38,13 +38,13 @@
 }
 
 .valuationHidden {
-  margin-top: 10%;
-  transition: margin-top 1s linear, visibility 1s linear;
+  transform: translateY(10%);
+  transition: transform 1s linear, visibility 1s linear;
 }
 
 .valuationShow {
-  margin-top: 0%;
-  transition: margin-top 1s linear;
+  transform: translateY(0%);
+  transition: transform 1s linear;
 }
 
 .valuationIcon, .valuationScore {

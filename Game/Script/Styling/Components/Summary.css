@@ -31,13 +31,13 @@
 }
 
 .summaryHidden {
-    transition: margin-bottom 2s linear;
-    margin-bottom: 200%;
+    transition: transform 1s linear;
+    transform: translateY(200%);
 }
 
 .summaryShown {
-    transition: margin-bottom 2s linear;
-    margin-bottom: 0%;
+    transition: transform 1s linear;
+    transform: translateY(0%);
 }
 
 .summaryImgContainer {
