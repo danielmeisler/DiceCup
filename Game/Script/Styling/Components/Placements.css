@@ -156,9 +156,11 @@
 .placementsHidden {
     transition: transform 2s linear;
     transform: translateY(200%);
+    will-change: transform;
 }
 
 .placementsShown {
     transition: transform 2s linear;
     transform: translateY(0%);
+    will-change: transform;
 }

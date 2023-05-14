@@ -22,11 +22,13 @@
 .categoriesHidden {
     transition: transform 2s linear;
     transform: translateY(200%);
+    will-change: transform;
 }
 
 .categoriesShown {
     transition: transform 2s linear;
     transform: translateY(0%);
+    will-change: transform;
 }
 
 #categoryHeader_id {

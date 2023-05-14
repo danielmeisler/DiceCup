@@ -40,11 +40,13 @@
 .valuationHidden {
   transform: translateY(10%);
   transition: transform 1s linear, visibility 1s linear;
+  will-change: transform;
 }
 
 .valuationShow {
   transform: translateY(0%);
   transition: transform 1s linear;
+  will-change: transform;
 }
 
 .valuationIcon, .valuationScore {
