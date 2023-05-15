@@ -38,7 +38,7 @@
 }
 
 .valuationHidden {
-  transform: translateY(10%);
+  transform: translateY(100%);
   transition: transform 1s linear, visibility 1s linear;
   will-change: transform;
 }
