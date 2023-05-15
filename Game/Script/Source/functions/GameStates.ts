@@ -4,6 +4,7 @@ namespace DiceCup{
         switch (_gameState) {
             case GameState.menu: 
                 switchMenu(MenuPage.main);
+                backgroundMusic(true);
                 changeViewportState(ViewportState.menu);
             break;
             case GameState.init: 

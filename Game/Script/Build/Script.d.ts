@@ -56,6 +56,7 @@ declare namespace DiceCup {
         private scaleDices;
         private colorDices;
         private convertDiceColor;
+        private handleDiceCollision;
     }
 }
 declare namespace DiceCup {
@@ -234,6 +235,13 @@ declare namespace DiceCup {
     function changeGameState(_gameState: GameState): Promise<void>;
 }
 declare namespace DiceCup {
+    function initBackgroundMusic(_track: number): void;
+    function backgroundMusic(_on: boolean): void;
+    function nextTrack(_track: number): void;
+    function changeVolume(): void;
+    function playSFX(_sfx: string): void;
+}
+declare namespace DiceCup {
     function changeViewportState(_viewportState: ViewportState): void;
 }
 declare namespace DiceCup {
@@ -254,6 +262,8 @@ declare namespace DiceCup {
     function multiplayerServers(): void;
 }
 declare namespace DiceCup {
+    let sfxVolume: number;
+    let musicVolume: number;
     function optionsMenu(): void;
 }
 declare namespace DiceCup {
@@ -305,7 +315,10 @@ declare namespace DiceCup {
             settings: {
                 title: string;
                 reset_button: string;
-                volume: string;
+                volume: {
+                    music: string;
+                    sfx: string;
+                };
                 language: {
                     title: string;
                     english: string;

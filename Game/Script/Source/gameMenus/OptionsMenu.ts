@@ -1,6 +1,7 @@
 namespace DiceCup {
 
-    let volume: number = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
+    export let sfxVolume: number = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
+    export let musicVolume: number = localStorage.getItem("musicVolume") ? parseInt(localStorage.getItem("musicVolume")) : 50;
 
     export function optionsMenu(): void {
         new SubMenu(MenuPage.options, "options", language.menu.settings.title);
@@ -24,7 +25,7 @@ namespace DiceCup {
             location.reload();
         });
 
-        for (let row = 0; row < 2; row++) {
+        for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer: HTMLDivElement = document.createElement("div");
                 gridContainer.id = "optionsGrid_id_" + row + "_" + col;
@@ -33,15 +34,78 @@ namespace DiceCup {
                 contentContainer.appendChild(gridContainer);
             }
         }
+    
+        let musicControlTag: HTMLSpanElement = document.createElement("span");
+        musicControlTag.id = "optionsSoundControlTag_id";
+        musicControlTag.innerHTML = language.menu.settings.volume.music;
+        document.getElementById("optionsGrid_id_0_0").appendChild(musicControlTag);
+    
+        let musicControlContainer: HTMLDivElement = document.createElement("div");
+        musicControlContainer.id = "optionsSoundControlContainer_id";
+        document.getElementById("optionsGrid_id_0_1").appendChild(musicControlContainer);
+
+        let musicSwitchButtonLeft: HTMLButtonElement = document.createElement("button");
+        musicSwitchButtonLeft.classList.add("optionsSwitchVolume");
+        musicControlContainer.appendChild(musicSwitchButtonLeft);
+
+        let musicSwitchButtonLeftIcon: HTMLImageElement = document.createElement("img");
+        musicSwitchButtonLeftIcon.classList.add("optionsSwitchVolumeIcons");
+        musicSwitchButtonLeftIcon.src = "Game/Assets/images/menuButtons/left.svg";
+        musicSwitchButtonLeft.appendChild(musicSwitchButtonLeftIcon);
+
+        let musicControl: HTMLSpanElement = document.createElement("span");
+        musicControl.id = "optionsSoundControl_id";
+        musicControl.innerHTML = musicVolume + "%";
+        musicControlContainer.appendChild(musicControl);
+
+        let musicSwitchButtonRight: HTMLButtonElement = document.createElement("button");
+        musicSwitchButtonRight.classList.add("optionsSwitchVolume");
+        musicControlContainer.appendChild(musicSwitchButtonRight);
+
+        let musicSwitchButtonRightIcon: HTMLImageElement = document.createElement("img");
+        musicSwitchButtonRightIcon.classList.add("optionsSwitchVolumeIcons");
+        musicSwitchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
+        musicSwitchButtonRight.appendChild(musicSwitchButtonRightIcon);
+
+        musicSwitchButtonRight.addEventListener("click", () => {
+            if (musicVolume < 100) {
+                musicVolume += 10;
+                musicControl.innerHTML = musicVolume + "%";
+                musicSwitchButtonLeft.style.visibility = "visible";
+                changeVolume();
+            }
+            if (musicVolume == 100) {
+                musicSwitchButtonRight.style.visibility = "hidden";
+            }
+            localStorage.setItem("musicVolume", musicVolume.toString());
+        });
+        musicSwitchButtonLeft.addEventListener("click", () => {
+            if (musicVolume > 0) {
+                musicVolume -= 10;
+                musicControl.innerHTML = musicVolume + "%";
+                musicSwitchButtonRight.style.visibility = "visible";
+                changeVolume();
+            }
+            if (musicVolume == 0) {
+                musicSwitchButtonLeft.style.visibility = "hidden";
+            }
+            localStorage.setItem("musicVolume", musicVolume.toString());
+        });
+
+        if (musicVolume == 100) {
+            musicSwitchButtonRight.style.visibility = "hidden";
+        } else if (musicVolume == 0) {
+            musicSwitchButtonLeft.style.visibility = "hidden";
+        }
 
         let soundControlTag: HTMLSpanElement = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
-        soundControlTag.innerHTML = language.menu.settings.volume;
-        document.getElementById("optionsGrid_id_0_0").appendChild(soundControlTag);
+        soundControlTag.innerHTML = language.menu.settings.volume.sfx;
+        document.getElementById("optionsGrid_id_1_0").appendChild(soundControlTag);
     
         let soundControlContainer: HTMLDivElement = document.createElement("div");
         soundControlContainer.id = "optionsSoundControlContainer_id";
-        document.getElementById("optionsGrid_id_0_1").appendChild(soundControlContainer);
+        document.getElementById("optionsGrid_id_1_1").appendChild(soundControlContainer);
 
         let switchButtonLeft: HTMLButtonElement = document.createElement("button");
         switchButtonLeft.classList.add("optionsSwitchVolume");
@@ -54,7 +118,7 @@ namespace DiceCup {
 
         let soundControl: HTMLSpanElement = document.createElement("span");
         soundControl.id = "optionsSoundControl_id";
-        soundControl.innerHTML = volume + "%";
+        soundControl.innerHTML = sfxVolume + "%";
         soundControlContainer.appendChild(soundControl);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");
@@ -67,42 +131,44 @@ namespace DiceCup {
         switchButtonRight.appendChild(switchButtonRightIcon);
 
         switchButtonRight.addEventListener("click", () => {
-            if (volume < 100) {
-                volume += 10;
-                soundControl.innerHTML = volume + "%";
+            if (sfxVolume < 100) {
+                sfxVolume += 10;
+                soundControl.innerHTML = sfxVolume + "%";
                 switchButtonLeft.style.visibility = "visible";
+                changeVolume();
             }
-            if (volume == 100) {
+            if (sfxVolume == 100) {
                 switchButtonRight.style.visibility = "hidden";
             }
-            localStorage.setItem("volume", volume.toString());
+            localStorage.setItem("volume", sfxVolume.toString());
         });
         switchButtonLeft.addEventListener("click", () => {
-            if (volume > 0) {
-                volume -= 10;
-                soundControl.innerHTML = volume + "%";
+            if (sfxVolume > 0) {
+                sfxVolume -= 10;
+                soundControl.innerHTML = sfxVolume + "%";
                 switchButtonRight.style.visibility = "visible";
+                changeVolume();
             }
-            if (volume == 0) {
+            if (sfxVolume == 0) {
                 switchButtonLeft.style.visibility = "hidden";
             }
-            localStorage.setItem("volume", volume.toString());
+            localStorage.setItem("volume", sfxVolume.toString());
         });
 
-        if (volume == 100) {
+        if (sfxVolume == 100) {
             switchButtonRight.style.visibility = "hidden";
-        } else if (volume == 0) {
+        } else if (sfxVolume == 0) {
             switchButtonLeft.style.visibility = "hidden";
         }
 
         let languageTag: HTMLSpanElement = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
         languageTag.innerHTML = language.menu.settings.language.title;
-        document.getElementById("optionsGrid_id_1_0").appendChild(languageTag);
+        document.getElementById("optionsGrid_id_2_0").appendChild(languageTag);
 
         let languageControlContainer: HTMLDivElement = document.createElement("div");
         languageControlContainer.id = "optionsLanguageContainer_id";
-        document.getElementById("optionsGrid_id_1_1").appendChild(languageControlContainer);
+        document.getElementById("optionsGrid_id_2_1").appendChild(languageControlContainer);
 
         let languageControlButton: HTMLButtonElement = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";

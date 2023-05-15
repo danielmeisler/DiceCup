@@ -69,6 +69,6 @@ namespace DiceCup {
         }
 
         viewport.draw();
-        //ƒ.AudioManager.default.update();
+        ƒ.AudioManager.default.update();
     }
 }

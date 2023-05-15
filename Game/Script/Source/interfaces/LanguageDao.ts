@@ -38,7 +38,10 @@ namespace DiceCup {
             settings: {
                 title: string;
                 reset_button: string;
-                volume: string;
+                volume: {
+                    music: string;
+                    sfx: string;
+                }
                 language: {
                     title: string;
                     english: string;

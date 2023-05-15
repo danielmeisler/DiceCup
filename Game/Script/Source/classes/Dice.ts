@@ -38,6 +38,15 @@ namespace DiceCup{
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
 
+            let test: ƒ.Node[] = [];
+            for (let i = 1, j = 0; i <=8 ; i++, j++) {
+                test[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
+            }
+            test.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision));
+            // console.log(test)
+
+            // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
+
             this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
             this.colorDices(_colorRGBA);
@@ -87,9 +96,9 @@ namespace DiceCup{
                 console.log("ZU NAH");
                 this.translateDice(_node);
             } else {
+                usedTranslations.push(tempVec);
                 _node.mtxLocal.translation = tempVec;
             }
-
             if (usedTranslations.length == dices.length) {
                 usedTranslations = [];
             }
@@ -150,6 +159,12 @@ namespace DiceCup{
             let value: number;
             value = (_value / 2.55) / 100;
             return value;
+        }
+
+        private handleDiceCollision(_event: ƒ.EventPhysics): void {
+            // let collisionNode: ƒ.Node = _event.cmpRigidbody.node;
+            let soundArray: string[] = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
+            playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
         }
     }
 

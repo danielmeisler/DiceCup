@@ -50,7 +50,11 @@ var DiceCup;
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
+        let graph = DiceCup.viewport.getBranch();
+        ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
+        ƒ.AudioManager.default.listenTo(graph);
         DiceCup.currentLanguage = localStorage.getItem("language") || DiceCup.Languages.english;
+        DiceCup.initBackgroundMusic(0);
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         DiceCup.initMenu();
@@ -154,6 +158,13 @@ var DiceCup;
             this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
+            let test = [];
+            for (let i = 1, j = 0; i <= 8; i++, j++) {
+                test[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
+            }
+            test.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.handleDiceCollision));
+            // console.log(test)
+            // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
             this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
             this.colorDices(_colorRGBA);
@@ -198,6 +209,7 @@ var DiceCup;
                 this.translateDice(_node);
             }
             else {
+                DiceCup.usedTranslations.push(tempVec);
                 _node.mtxLocal.translation = tempVec;
             }
             if (DiceCup.usedTranslations.length == DiceCup.dices.length) {
@@ -257,6 +269,11 @@ var DiceCup;
             let value;
             value = (_value / 2.55) / 100;
             return value;
+        }
+        handleDiceCollision(_event) {
+            // let collisionNode: ƒ.Node = _event.cmpRigidbody.node;
+            let soundArray = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
+            DiceCup.playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
         }
     }
     DiceCup.Dice = Dice;
@@ -1255,7 +1272,7 @@ var DiceCup;
                 break;
         }
         DiceCup.viewport.draw();
-        //ƒ.AudioManager.default.update();
+        ƒ.AudioManager.default.update();
     }
     DiceCup.update = update;
 })(DiceCup || (DiceCup = {}));
@@ -1284,6 +1301,7 @@ var DiceCup;
         switch (_gameState) {
             case DiceCup.GameState.menu:
                 DiceCup.switchMenu(DiceCup.MenuPage.main);
+                DiceCup.backgroundMusic(true);
                 DiceCup.changeViewportState(DiceCup.ViewportState.menu);
                 break;
             case DiceCup.GameState.init:
@@ -1319,6 +1337,47 @@ var DiceCup;
         DiceCup.resetTimer();
     }
     DiceCup.changeGameState = changeGameState;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    let backgroundAudio;
+    function initBackgroundMusic(_track) {
+        let soundArray = ["Audio|2023-05-15T19:01:45.890Z|78438"];
+        let track = ƒ.Project.resources[soundArray[_track]];
+        backgroundAudio = new ƒ.ComponentAudio(track, true, false);
+        backgroundAudio.connect(true);
+        backgroundAudio.volume = setVolume(DiceCup.musicVolume);
+        backgroundAudio.setAudio(track);
+        backgroundMusic(true);
+    }
+    DiceCup.initBackgroundMusic = initBackgroundMusic;
+    function backgroundMusic(_on) {
+        backgroundAudio.play(_on);
+    }
+    DiceCup.backgroundMusic = backgroundMusic;
+    function nextTrack(_track) {
+        backgroundMusic(false);
+        initBackgroundMusic(_track);
+    }
+    DiceCup.nextTrack = nextTrack;
+    function changeVolume() {
+        backgroundAudio.volume = setVolume(DiceCup.musicVolume);
+    }
+    DiceCup.changeVolume = changeVolume;
+    function playSFX(_sfx) {
+        let cmpAudio;
+        let audio = ƒ.Project.resources[_sfx];
+        cmpAudio = new ƒ.ComponentAudio(audio, false, false);
+        cmpAudio.connect(true);
+        cmpAudio.volume = setVolume(DiceCup.sfxVolume);
+        cmpAudio.setAudio(audio);
+        cmpAudio.play(true);
+    }
+    DiceCup.playSFX = playSFX;
+    function setVolume(_volume) {
+        return _volume /= 1000;
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -1592,7 +1651,8 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
-    let volume = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
+    DiceCup.sfxVolume = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
+    DiceCup.musicVolume = localStorage.getItem("musicVolume") ? parseInt(localStorage.getItem("musicVolume")) : 50;
     function optionsMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.options, "options", DiceCup.language.menu.settings.title);
         let contentContainer = document.createElement("div");
@@ -1611,7 +1671,7 @@ var DiceCup;
             localStorage.setItem("optionsMenu", "true");
             location.reload();
         });
-        for (let row = 0; row < 2; row++) {
+        for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer = document.createElement("div");
                 gridContainer.id = "optionsGrid_id_" + row + "_" + col;
@@ -1620,13 +1680,68 @@ var DiceCup;
                 contentContainer.appendChild(gridContainer);
             }
         }
+        let musicControlTag = document.createElement("span");
+        musicControlTag.id = "optionsSoundControlTag_id";
+        musicControlTag.innerHTML = DiceCup.language.menu.settings.volume.music;
+        document.getElementById("optionsGrid_id_0_0").appendChild(musicControlTag);
+        let musicControlContainer = document.createElement("div");
+        musicControlContainer.id = "optionsSoundControlContainer_id";
+        document.getElementById("optionsGrid_id_0_1").appendChild(musicControlContainer);
+        let musicSwitchButtonLeft = document.createElement("button");
+        musicSwitchButtonLeft.classList.add("optionsSwitchVolume");
+        musicControlContainer.appendChild(musicSwitchButtonLeft);
+        let musicSwitchButtonLeftIcon = document.createElement("img");
+        musicSwitchButtonLeftIcon.classList.add("optionsSwitchVolumeIcons");
+        musicSwitchButtonLeftIcon.src = "Game/Assets/images/menuButtons/left.svg";
+        musicSwitchButtonLeft.appendChild(musicSwitchButtonLeftIcon);
+        let musicControl = document.createElement("span");
+        musicControl.id = "optionsSoundControl_id";
+        musicControl.innerHTML = DiceCup.musicVolume + "%";
+        musicControlContainer.appendChild(musicControl);
+        let musicSwitchButtonRight = document.createElement("button");
+        musicSwitchButtonRight.classList.add("optionsSwitchVolume");
+        musicControlContainer.appendChild(musicSwitchButtonRight);
+        let musicSwitchButtonRightIcon = document.createElement("img");
+        musicSwitchButtonRightIcon.classList.add("optionsSwitchVolumeIcons");
+        musicSwitchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
+        musicSwitchButtonRight.appendChild(musicSwitchButtonRightIcon);
+        musicSwitchButtonRight.addEventListener("click", () => {
+            if (DiceCup.musicVolume < 100) {
+                DiceCup.musicVolume += 10;
+                musicControl.innerHTML = DiceCup.musicVolume + "%";
+                musicSwitchButtonLeft.style.visibility = "visible";
+                DiceCup.changeVolume();
+            }
+            if (DiceCup.musicVolume == 100) {
+                musicSwitchButtonRight.style.visibility = "hidden";
+            }
+            localStorage.setItem("musicVolume", DiceCup.musicVolume.toString());
+        });
+        musicSwitchButtonLeft.addEventListener("click", () => {
+            if (DiceCup.musicVolume > 0) {
+                DiceCup.musicVolume -= 10;
+                musicControl.innerHTML = DiceCup.musicVolume + "%";
+                musicSwitchButtonRight.style.visibility = "visible";
+                DiceCup.changeVolume();
+            }
+            if (DiceCup.musicVolume == 0) {
+                musicSwitchButtonLeft.style.visibility = "hidden";
+            }
+            localStorage.setItem("musicVolume", DiceCup.musicVolume.toString());
+        });
+        if (DiceCup.musicVolume == 100) {
+            musicSwitchButtonRight.style.visibility = "hidden";
+        }
+        else if (DiceCup.musicVolume == 0) {
+            musicSwitchButtonLeft.style.visibility = "hidden";
+        }
         let soundControlTag = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
-        soundControlTag.innerHTML = DiceCup.language.menu.settings.volume;
-        document.getElementById("optionsGrid_id_0_0").appendChild(soundControlTag);
+        soundControlTag.innerHTML = DiceCup.language.menu.settings.volume.sfx;
+        document.getElementById("optionsGrid_id_1_0").appendChild(soundControlTag);
         let soundControlContainer = document.createElement("div");
         soundControlContainer.id = "optionsSoundControlContainer_id";
-        document.getElementById("optionsGrid_id_0_1").appendChild(soundControlContainer);
+        document.getElementById("optionsGrid_id_1_1").appendChild(soundControlContainer);
         let switchButtonLeft = document.createElement("button");
         switchButtonLeft.classList.add("optionsSwitchVolume");
         soundControlContainer.appendChild(switchButtonLeft);
@@ -1636,7 +1751,7 @@ var DiceCup;
         switchButtonLeft.appendChild(switchButtonLeftIcon);
         let soundControl = document.createElement("span");
         soundControl.id = "optionsSoundControl_id";
-        soundControl.innerHTML = volume + "%";
+        soundControl.innerHTML = DiceCup.sfxVolume + "%";
         soundControlContainer.appendChild(soundControl);
         let switchButtonRight = document.createElement("button");
         switchButtonRight.classList.add("optionsSwitchVolume");
@@ -1646,40 +1761,42 @@ var DiceCup;
         switchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
         switchButtonRight.appendChild(switchButtonRightIcon);
         switchButtonRight.addEventListener("click", () => {
-            if (volume < 100) {
-                volume += 10;
-                soundControl.innerHTML = volume + "%";
+            if (DiceCup.sfxVolume < 100) {
+                DiceCup.sfxVolume += 10;
+                soundControl.innerHTML = DiceCup.sfxVolume + "%";
                 switchButtonLeft.style.visibility = "visible";
+                DiceCup.changeVolume();
             }
-            if (volume == 100) {
+            if (DiceCup.sfxVolume == 100) {
                 switchButtonRight.style.visibility = "hidden";
             }
-            localStorage.setItem("volume", volume.toString());
+            localStorage.setItem("volume", DiceCup.sfxVolume.toString());
         });
         switchButtonLeft.addEventListener("click", () => {
-            if (volume > 0) {
-                volume -= 10;
-                soundControl.innerHTML = volume + "%";
+            if (DiceCup.sfxVolume > 0) {
+                DiceCup.sfxVolume -= 10;
+                soundControl.innerHTML = DiceCup.sfxVolume + "%";
                 switchButtonRight.style.visibility = "visible";
+                DiceCup.changeVolume();
             }
-            if (volume == 0) {
+            if (DiceCup.sfxVolume == 0) {
                 switchButtonLeft.style.visibility = "hidden";
             }
-            localStorage.setItem("volume", volume.toString());
+            localStorage.setItem("volume", DiceCup.sfxVolume.toString());
         });
-        if (volume == 100) {
+        if (DiceCup.sfxVolume == 100) {
             switchButtonRight.style.visibility = "hidden";
         }
-        else if (volume == 0) {
+        else if (DiceCup.sfxVolume == 0) {
             switchButtonLeft.style.visibility = "hidden";
         }
         let languageTag = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
         languageTag.innerHTML = DiceCup.language.menu.settings.language.title;
-        document.getElementById("optionsGrid_id_1_0").appendChild(languageTag);
+        document.getElementById("optionsGrid_id_2_0").appendChild(languageTag);
         let languageControlContainer = document.createElement("div");
         languageControlContainer.id = "optionsLanguageContainer_id";
-        document.getElementById("optionsGrid_id_1_1").appendChild(languageControlContainer);
+        document.getElementById("optionsGrid_id_2_1").appendChild(languageControlContainer);
         let languageControlButton = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";
         languageControlButton.innerHTML = DiceCup.translateLanguages(DiceCup.currentLanguage) + " ▾";

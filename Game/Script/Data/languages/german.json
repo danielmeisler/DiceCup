@@ -37,7 +37,10 @@
         "settings": {
             "title": "Einstellungen",
             "reset_button": "Resetten",
-            "volume": "Lautstärke",
+            "volume": {
+                "music": "Musik Lautstärke",
+                "sfx": "SFX Lautstärke"
+            },
             "language": {
                 "title": "Sprache",
                 "english": "Englisch",

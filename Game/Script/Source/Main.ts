@@ -18,10 +18,16 @@ namespace DiceCup {
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
+    
+    let graph: ƒ.Node = viewport.getBranch();
+    ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
+    ƒ.AudioManager.default.listenTo(graph);
 
     currentLanguage = <Languages>localStorage.getItem("language") || Languages.english;
 
+    initBackgroundMusic(0);
     await chooseLanguage(currentLanguage);
+
     changeViewportState(ViewportState.menu);
     initMenu();
   }

@@ -37,7 +37,10 @@
         "settings": {
             "title": "Settings",
             "reset_button": "reset",
-            "volume": "Volume",
+            "volume": {
+                "music": "Volume Music",
+                "sfx": "Volume SFX"
+            },
             "language": {
                 "title": "Language",
                 "english": "English",
