@@ -2893,5 +2893,61 @@
       "name": "Theme",
       "type": "Audio"
     }
+  },
+  "Audio|2023-05-16T09:50:26.609Z|95993": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\correct.wav",
+      "idResource": "Audio|2023-05-16T09:50:26.609Z|95993",
+      "name": "Correct",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-16T12:34:49.390Z|02091": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\placements\\first_place.mp3",
+      "idResource": "Audio|2023-05-16T12:34:49.390Z|02091",
+      "name": "First_Place",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-16T12:34:58.092Z|82738": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\placements\\second_place.mp3",
+      "idResource": "Audio|2023-05-16T12:34:58.092Z|82738",
+      "name": "Second_Place",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-16T12:35:19.214Z|56855": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\placements\\third_place.mp3",
+      "idResource": "Audio|2023-05-16T12:35:19.214Z|56855",
+      "name": "Third_Place",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-16T12:36:03.734Z|74374": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\placements\\fourth_place.mp3",
+      "idResource": "Audio|2023-05-16T12:36:03.734Z|74374",
+      "name": "Fourth_Place",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-16T12:36:18.950Z|69020": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\placements\\fifth_place.mp3",
+      "idResource": "Audio|2023-05-16T12:36:18.950Z|69020",
+      "name": "Fifth_Place",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-16T12:36:31.683Z|04788": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\placements\\sixth_place.mp3",
+      "idResource": "Audio|2023-05-16T12:36:31.683Z|04788",
+      "name": "Sixth_Place",
+      "type": "Audio"
+    }
   }
 }

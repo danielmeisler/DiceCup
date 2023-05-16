@@ -1,6 +1,8 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    let place: number = 0;
+
     export function initPlacements(): void {
         let background: HTMLDivElement = document.createElement("div");
         background.id = "placementsBackground_id";
@@ -136,7 +138,8 @@ namespace DiceCup {
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
 
             if (name[i] == gameSettings.playerName) {
-                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.alerts.part_1 + " " + (i + 1) + ". " +  language.game.placements.alerts.part_2;
+                place = i + 1;
+                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.alerts.part_1 + " " + place + ". " +  language.game.placements.alerts.part_2;
             }
         }
     }
@@ -146,7 +149,7 @@ namespace DiceCup {
         document.getElementById("placementsContainer_id").classList.remove("placementsHidden");
         document.getElementById("placementsBackground_id").classList.add("emptyBackground");
         document.getElementById("placementsBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"), placementsSounds() });
     }
 
     export function hidePlacements() {
@@ -161,4 +164,9 @@ namespace DiceCup {
     function visibility(_visibility: string) {
         document.getElementById("placementsBackground_id").style.visibility = _visibility;
     }   
+
+    function placementsSounds(): void {
+        let soundArray: string[] = ["Audio|2023-05-16T12:34:49.390Z|02091", "Audio|2023-05-16T12:34:58.092Z|82738", "Audio|2023-05-16T12:35:19.214Z|56855", "Audio|2023-05-16T12:36:03.734Z|74374", "Audio|2023-05-16T12:36:18.950Z|69020", "Audio|2023-05-16T12:36:31.683Z|04788"];
+        playSFX(soundArray[place - 1]);
+    }
 }

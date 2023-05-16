@@ -25,6 +25,13 @@ namespace DiceCup {
             location.reload();
         });
 
+        document.getElementById("optionsMenuReturnButton_id").addEventListener("click", () => {
+            musicSwitchButtonRight.style.visibility = "hidden";
+            musicSwitchButtonLeft.style.visibility = "hidden";
+            switchButtonRight.style.visibility = "hidden";
+            switchButtonLeft.style.visibility = "hidden";
+        });
+
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer: HTMLDivElement = document.createElement("div");

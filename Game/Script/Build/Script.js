@@ -778,6 +778,7 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
+    let place = 0;
     function initPlacements() {
         let background = document.createElement("div");
         background.id = "placementsBackground_id";
@@ -890,7 +891,8 @@ var DiceCup;
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
             if (name[i] == DiceCup.gameSettings.playerName) {
-                document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.alerts.part_1 + " " + (i + 1) + ". " + DiceCup.language.game.placements.alerts.part_2;
+                place = i + 1;
+                document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.alerts.part_1 + " " + place + ". " + DiceCup.language.game.placements.alerts.part_2;
             }
         }
     }
@@ -900,7 +902,7 @@ var DiceCup;
         document.getElementById("placementsContainer_id").classList.remove("placementsHidden");
         document.getElementById("placementsBackground_id").classList.add("emptyBackground");
         document.getElementById("placementsBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"), placementsSounds(); });
     }
     DiceCup.showPlacements = showPlacements;
     function hidePlacements() {
@@ -914,6 +916,10 @@ var DiceCup;
     DiceCup.hidePlacements = hidePlacements;
     function visibility(_visibility) {
         document.getElementById("placementsBackground_id").style.visibility = _visibility;
+    }
+    function placementsSounds() {
+        let soundArray = ["Audio|2023-05-16T12:34:49.390Z|02091", "Audio|2023-05-16T12:34:58.092Z|82738", "Audio|2023-05-16T12:35:19.214Z|56855", "Audio|2023-05-16T12:36:03.734Z|74374", "Audio|2023-05-16T12:36:18.950Z|69020", "Audio|2023-05-16T12:36:31.683Z|04788"];
+        DiceCup.playSFX(soundArray[place - 1]);
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1107,6 +1113,7 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     function validateRound() {
+        DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
     }
     DiceCup.validateRound = validateRound;
@@ -1670,6 +1677,12 @@ var DiceCup;
             localStorage.clear();
             localStorage.setItem("optionsMenu", "true");
             location.reload();
+        });
+        document.getElementById("optionsMenuReturnButton_id").addEventListener("click", () => {
+            musicSwitchButtonRight.style.visibility = "hidden";
+            musicSwitchButtonLeft.style.visibility = "hidden";
+            switchButtonRight.style.visibility = "hidden";
+            switchButtonLeft.style.visibility = "hidden";
         });
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 2; col++) {
