@@ -158,21 +158,21 @@ var DiceCup;
             this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
-            let test = [];
-            for (let i = 1, j = 0; i <= 8; i++, j++) {
-                test[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
+            let corners = [];
+            for (let i = 1, j = 0; i <= 4; i++, j++) {
+                corners[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
             }
-            test.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.handleDiceCollision));
-            // console.log(test)
+            corners.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.handleDiceCollision));
             // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
             this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
             this.colorDices(_colorRGBA);
             this.diceNode.addChild(this.diceInst);
         }
-        validateDices() {
-            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(224), this.convertDiceColor(187), this.convertDiceColor(0), 1);
-            this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1); });
+        async validateDices() {
+            let diceColors = await DiceCup.loadDiceColors();
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
+            this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[9].r), this.convertDiceColor(diceColors[9].g), this.convertDiceColor(diceColors[9].b), diceColors[9].a); });
         }
         transparentDices() {
             let tempDices = this.diceNode.getChildren();
@@ -248,7 +248,7 @@ var DiceCup;
         }
         async scaleDices(_colorRGBA) {
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
-            if (_colorRGBA.name == DiceCup.DiceColor.white || _colorRGBA.name == DiceCup.DiceColor.green || _colorRGBA.name == DiceCup.DiceColor.yellow) {
+            if (_colorRGBA.id == DiceCup.DiceColor.white || _colorRGBA.id == DiceCup.DiceColor.green || _colorRGBA.id == DiceCup.DiceColor.yellow) {
                 this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.smallDice, this.smallDice, this.smallDice);
             }
             else {
@@ -258,11 +258,11 @@ var DiceCup;
         async colorDices(_colorRGBA) {
             let diceColors = await DiceCup.loadDiceColors();
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
-            if (_colorRGBA.name == DiceCup.DiceColor.white || _colorRGBA.name == DiceCup.DiceColor.green || _colorRGBA.name == DiceCup.DiceColor.yellow) {
-                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 2].r), this.convertDiceColor(diceColors[diceColors.length - 2].g), diceColors[diceColors.length - 2].b, diceColors[diceColors.length - 2].a); });
+            if (_colorRGBA.id == DiceCup.DiceColor.white || _colorRGBA.id == DiceCup.DiceColor.green || _colorRGBA.id == DiceCup.DiceColor.yellow) {
+                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[6].r), this.convertDiceColor(diceColors[6].g), this.convertDiceColor(diceColors[6].b), diceColors[6].a); });
             }
             else {
-                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 1].r), this.convertDiceColor(diceColors[diceColors.length - 1].g), diceColors[diceColors.length - 1].b, diceColors[diceColors.length - 1].a); });
+                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[7].r), this.convertDiceColor(diceColors[7].g), this.convertDiceColor(diceColors[7].b), diceColors[7].a); });
             }
         }
         convertDiceColor(_value) {
@@ -495,6 +495,7 @@ var DiceCup;
             returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
             returnButton.appendChild(returnIcon);
             returnButton.addEventListener("click", () => {
+                DiceCup.playSFX(DiceCup.buttonClick);
                 DiceCup.switchMenu(DiceCup.MenuPage.main);
             });
         }
@@ -674,7 +675,7 @@ var DiceCup;
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            button.addEventListener("click", handleCategory);
+            button.addEventListener("click", () => { handleCategory; DiceCup.playSFX(DiceCup.buttonClick); });
             content.appendChild(button);
             let img = document.createElement("img");
             img.src = categories[i].image;
@@ -807,6 +808,7 @@ var DiceCup;
         replayButtonImage.src = "Game/Assets/images/menuButtons/renew.svg";
         replayButton.appendChild(replayButtonImage);
         replayButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.gameOver(DiceCup.MenuPage.singleplayer);
         });
         let placementPhrase = document.createElement("span");
@@ -821,6 +823,7 @@ var DiceCup;
         nextButtonImage.src = "Game/Assets/images/menuButtons/play.svg";
         nextButton.appendChild(nextButtonImage);
         nextButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.gameOver(DiceCup.MenuPage.main);
         });
         visibility("hidden");
@@ -1094,14 +1097,16 @@ var DiceCup;
                 document.getElementById("startTransitionContainer").appendChild(text);
             }
             counter++;
-            if (_phrase[counter - 1].length <= 3) {
-                ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase); });
-            }
-            else {
-                ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase); });
-            }
+            ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase); });
+            // if (_phrase[counter - 1].length <= 3) {
+            //     ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
+            // } else {
+            //     ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase) });
+            // }
+            DiceCup.playSFX("Audio|2023-05-17T13:53:32.977Z|22534");
         }
         else {
+            DiceCup.playSFX("Audio|2023-05-17T13:53:59.644Z|31971");
             counter = 0;
             DiceCup.roundCounter++;
             document.getElementById("startTransitionContainer").remove();
@@ -1348,13 +1353,14 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
+    DiceCup.buttonClick = "Audio|2023-05-17T14:09:29.972Z|51408";
+    let themes = ["Audio|2023-05-15T19:01:45.890Z|78438"];
     let backgroundAudio;
     function initBackgroundMusic(_track) {
-        let soundArray = ["Audio|2023-05-15T19:01:45.890Z|78438"];
-        let track = ƒ.Project.resources[soundArray[_track]];
+        let track = ƒ.Project.resources[themes[_track]];
         backgroundAudio = new ƒ.ComponentAudio(track, true, false);
         backgroundAudio.connect(true);
-        backgroundAudio.volume = setVolume(DiceCup.musicVolume);
+        backgroundAudio.volume = setMusicVolume(DiceCup.musicVolume);
         backgroundAudio.setAudio(track);
         backgroundMusic(true);
     }
@@ -1368,8 +1374,17 @@ var DiceCup;
         initBackgroundMusic(_track);
     }
     DiceCup.nextTrack = nextTrack;
-    function changeVolume() {
-        backgroundAudio.volume = setVolume(DiceCup.musicVolume);
+    function changeVolume(_mode) {
+        switch (_mode) {
+            case 0:
+                backgroundAudio.volume = setMusicVolume(DiceCup.musicVolume);
+                break;
+            case 1:
+                backgroundAudio.volume = setSFXVolume(DiceCup.musicVolume);
+                break;
+            default:
+                break;
+        }
     }
     DiceCup.changeVolume = changeVolume;
     function playSFX(_sfx) {
@@ -1377,13 +1392,16 @@ var DiceCup;
         let audio = ƒ.Project.resources[_sfx];
         cmpAudio = new ƒ.ComponentAudio(audio, false, false);
         cmpAudio.connect(true);
-        cmpAudio.volume = setVolume(DiceCup.sfxVolume);
+        cmpAudio.volume = setSFXVolume(DiceCup.sfxVolume);
         cmpAudio.setAudio(audio);
         cmpAudio.play(true);
     }
     DiceCup.playSFX = playSFX;
-    function setVolume(_volume) {
+    function setMusicVolume(_volume) {
         return _volume /= 1000;
+    }
+    function setSFXVolume(_volume) {
+        return _volume /= 100;
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1509,15 +1527,19 @@ var DiceCup;
             menuButtons.appendChild(menuIcons);
         }
         document.getElementById("play_id").addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.singleplayer);
         });
         document.getElementById("shop_id").addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
         });
         document.getElementById("help_id").addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.help);
         });
         document.getElementById("options_id").addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.options);
         });
     }
@@ -1529,6 +1551,7 @@ var DiceCup;
     function multiplayerMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.multiplayerLobby, "multiplayerLobby", document.getElementById("playerName_id").placeholder + "'s " + DiceCup.language.menu.multiplayer.lobby.title);
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
         });
         let settingsButton = document.createElement("button");
@@ -1541,6 +1564,7 @@ var DiceCup;
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
         settingsButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
         });
         let startButton = document.createElement("button");
         startButton.id = "multiplayerLobbyStartButton_id";
@@ -1550,6 +1574,7 @@ var DiceCup;
         startButton.innerHTML = DiceCup.language.menu.multiplayer.lobby.start_button;
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
         startButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.hideMenu();
             // createGameSettings();
         });
@@ -1631,6 +1656,7 @@ var DiceCup;
         renewIcon.src = "Game/Assets/images/menuButtons/renew.svg";
         renewButton.appendChild(renewIcon);
         renewButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.hideMenu();
         });
         let createButton = document.createElement("button");
@@ -1641,6 +1667,7 @@ var DiceCup;
         createButton.innerHTML = DiceCup.language.menu.multiplayer.list.create_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
         createButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
         });
         let joinButton = document.createElement("button");
@@ -1651,6 +1678,7 @@ var DiceCup;
         joinButton.innerHTML = DiceCup.language.menu.multiplayer.list.join_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
         joinButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             // createGameSettings();
         });
     }
@@ -1674,15 +1702,10 @@ var DiceCup;
         resetButton.innerHTML = DiceCup.language.menu.settings.reset_button;
         document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
         resetButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             localStorage.clear();
             localStorage.setItem("optionsMenu", "true");
             location.reload();
-        });
-        document.getElementById("optionsMenuReturnButton_id").addEventListener("click", () => {
-            musicSwitchButtonRight.style.visibility = "hidden";
-            musicSwitchButtonLeft.style.visibility = "hidden";
-            switchButtonRight.style.visibility = "hidden";
-            switchButtonLeft.style.visibility = "hidden";
         });
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 2; col++) {
@@ -1719,34 +1742,42 @@ var DiceCup;
         musicSwitchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
         musicSwitchButtonRight.appendChild(musicSwitchButtonRightIcon);
         musicSwitchButtonRight.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             if (DiceCup.musicVolume < 100) {
                 DiceCup.musicVolume += 10;
                 musicControl.innerHTML = DiceCup.musicVolume + "%";
-                musicSwitchButtonLeft.style.visibility = "visible";
-                DiceCup.changeVolume();
+                musicSwitchButtonLeft.disabled = false;
+                musicSwitchButtonLeftIcon.style.opacity = "100%";
+                DiceCup.changeVolume(0);
             }
             if (DiceCup.musicVolume == 100) {
-                musicSwitchButtonRight.style.visibility = "hidden";
+                musicSwitchButtonRight.disabled = false;
+                musicSwitchButtonRightIcon.style.opacity = "0";
             }
             localStorage.setItem("musicVolume", DiceCup.musicVolume.toString());
         });
         musicSwitchButtonLeft.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             if (DiceCup.musicVolume > 0) {
                 DiceCup.musicVolume -= 10;
                 musicControl.innerHTML = DiceCup.musicVolume + "%";
-                musicSwitchButtonRight.style.visibility = "visible";
-                DiceCup.changeVolume();
+                musicSwitchButtonRight.disabled = false;
+                musicSwitchButtonRightIcon.style.opacity = "100%";
+                DiceCup.changeVolume(0);
             }
             if (DiceCup.musicVolume == 0) {
-                musicSwitchButtonLeft.style.visibility = "hidden";
+                musicSwitchButtonLeft.disabled = false;
+                musicSwitchButtonLeftIcon.style.opacity = "0";
             }
             localStorage.setItem("musicVolume", DiceCup.musicVolume.toString());
         });
         if (DiceCup.musicVolume == 100) {
-            musicSwitchButtonRight.style.visibility = "hidden";
+            musicSwitchButtonRight.disabled = false;
+            musicSwitchButtonRightIcon.style.opacity = "0";
         }
         else if (DiceCup.musicVolume == 0) {
-            musicSwitchButtonLeft.style.visibility = "hidden";
+            musicSwitchButtonLeft.disabled = false;
+            musicSwitchButtonLeftIcon.style.opacity = "0";
         }
         let soundControlTag = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
@@ -1774,34 +1805,42 @@ var DiceCup;
         switchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
         switchButtonRight.appendChild(switchButtonRightIcon);
         switchButtonRight.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             if (DiceCup.sfxVolume < 100) {
                 DiceCup.sfxVolume += 10;
                 soundControl.innerHTML = DiceCup.sfxVolume + "%";
-                switchButtonLeft.style.visibility = "visible";
-                DiceCup.changeVolume();
+                switchButtonLeft.disabled = false;
+                switchButtonLeftIcon.style.opacity = "100%";
+                DiceCup.changeVolume(1);
             }
             if (DiceCup.sfxVolume == 100) {
-                switchButtonRight.style.visibility = "hidden";
+                switchButtonRight.disabled = true;
+                switchButtonRightIcon.style.opacity = "0";
             }
             localStorage.setItem("volume", DiceCup.sfxVolume.toString());
         });
         switchButtonLeft.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             if (DiceCup.sfxVolume > 0) {
                 DiceCup.sfxVolume -= 10;
                 soundControl.innerHTML = DiceCup.sfxVolume + "%";
-                switchButtonRight.style.visibility = "visible";
-                DiceCup.changeVolume();
+                switchButtonRight.disabled = false;
+                switchButtonRightIcon.style.opacity = "100%";
+                DiceCup.changeVolume(1);
             }
             if (DiceCup.sfxVolume == 0) {
-                switchButtonLeft.style.visibility = "hidden";
+                switchButtonLeft.disabled = true;
+                switchButtonLeftIcon.style.opacity = "0";
             }
             localStorage.setItem("volume", DiceCup.sfxVolume.toString());
         });
         if (DiceCup.sfxVolume == 100) {
-            switchButtonRight.style.visibility = "hidden";
+            switchButtonRight.disabled = true;
+            switchButtonRightIcon.style.opacity = "0";
         }
         else if (DiceCup.sfxVolume == 0) {
-            switchButtonLeft.style.visibility = "hidden";
+            switchButtonLeft.disabled = true;
+            switchButtonLeftIcon.style.opacity = "0";
         }
         let languageTag = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
@@ -1822,9 +1861,17 @@ var DiceCup;
             languageControlButton.classList.add("optionsLanguageMenuContent");
             languageControlButton.innerHTML = DiceCup.translateLanguages(Object.values(DiceCup.Languages)[i]);
             languageControlMenu.appendChild(languageControlButton);
-            languageControlButton.addEventListener("click", () => { localStorage.setItem("language", Object.values(DiceCup.Languages)[i]), localStorage.setItem("optionsMenu", "true"), location.reload(); });
+            languageControlButton.addEventListener("click", () => {
+                DiceCup.playSFX(DiceCup.buttonClick);
+                localStorage.setItem("language", Object.values(DiceCup.Languages)[i]);
+                localStorage.setItem("optionsMenu", "true");
+                location.reload();
+            });
         }
-        languageControlButton.addEventListener("click", () => { languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages"); });
+        languageControlButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
+            languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages");
+        });
     }
     DiceCup.optionsMenu = optionsMenu;
 })(DiceCup || (DiceCup = {}));
@@ -1856,6 +1903,7 @@ var DiceCup;
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
         settingsButton.appendChild(settingsIcon);
         settingsButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
         });
         let startButton = document.createElement("button");
         startButton.id = "singleplayerStartButton_id";
@@ -1865,6 +1913,7 @@ var DiceCup;
         startButton.innerHTML = DiceCup.language.menu.singleplayer.lobby.start_button;
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
         startButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             createGameSettings();
         });
     }
@@ -1978,7 +2027,7 @@ var DiceCup;
             botRemove.id = "botRemove_id_" + botCount;
             botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
-            botRemove.addEventListener("click", handleRemoveBot);
+            botRemove.addEventListener("click", () => { handleRemoveBot; DiceCup.playSFX(DiceCup.buttonClick); });
             let botRemoveIcon = document.createElement("img");
             botRemoveIcon.classList.add("removeButtonIcons");
             botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
@@ -2023,6 +2072,7 @@ var DiceCup;
         switchButtonRightIcon.src = "Game/Assets/images/menuButtons/right.svg";
         switchButtonRight.appendChild(switchButtonRightIcon);
         switchButtonRight.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             if (chosenDifficulty < 2) {
                 chosenDifficulty++;
             }
@@ -2032,6 +2082,7 @@ var DiceCup;
             difficultyText.innerHTML = difficultyLanguage(DiceCup.BotDifficulty[chosenDifficulty]);
         });
         switchButtonLeft.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
             if (chosenDifficulty > 0) {
                 chosenDifficulty--;
             }
@@ -2058,7 +2109,7 @@ var DiceCup;
         addIcons.classList.add("lobbyPortraitIcons");
         addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
         addPlayerDiv.appendChild(addIcons);
-        addPlayerDiv.addEventListener("click", handleAddBot);
+        addPlayerDiv.addEventListener("click", () => { handleAddBot; DiceCup.playSFX(DiceCup.buttonClick); });
     }
     function handleAddBot(_event) {
         firstBot++;

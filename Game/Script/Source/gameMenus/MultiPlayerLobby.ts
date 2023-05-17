@@ -6,6 +6,7 @@ namespace DiceCup {
         new SubMenu(MenuPage.multiplayerLobby, "multiplayerLobby", (<HTMLInputElement>document.getElementById("playerName_id")).placeholder + "'s " + language.menu.multiplayer.lobby.title);
 
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
+            playSFX(buttonClick);
             switchMenu(MenuPage.multiplayer);
         });
 
@@ -21,6 +22,7 @@ namespace DiceCup {
         settingsButton.appendChild(settingsIcon);
 
         settingsButton.addEventListener("click", () => {
+            playSFX(buttonClick);
         });
 
         let startButton: HTMLButtonElement = document.createElement("button");
@@ -32,6 +34,7 @@ namespace DiceCup {
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
 
         startButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             hideMenu();
             // createGameSettings();
         });

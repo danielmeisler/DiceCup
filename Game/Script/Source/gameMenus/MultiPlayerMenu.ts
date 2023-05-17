@@ -15,6 +15,7 @@ namespace DiceCup {
         renewButton.appendChild(renewIcon);
 
         renewButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             hideMenu();
         });
 
@@ -27,6 +28,7 @@ namespace DiceCup {
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
 
         createButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             switchMenu(MenuPage.multiplayerLobby);
         });
 
@@ -39,6 +41,7 @@ namespace DiceCup {
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
 
         joinButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             // createGameSettings();
         });
     }

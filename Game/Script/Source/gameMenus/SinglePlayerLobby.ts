@@ -31,6 +31,7 @@ namespace DiceCup {
         settingsButton.appendChild(settingsIcon);
 
         settingsButton.addEventListener("click", () => {
+            playSFX(buttonClick);
         });
 
         let startButton: HTMLButtonElement = document.createElement("button");
@@ -42,6 +43,7 @@ namespace DiceCup {
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
 
         startButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             createGameSettings();
         });
     }
@@ -168,7 +170,7 @@ namespace DiceCup {
             botRemove.id = "botRemove_id_" + botCount;
             botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
-            botRemove.addEventListener("click", handleRemoveBot);
+            botRemove.addEventListener("click", () => {handleRemoveBot; playSFX(buttonClick)});
 
             let botRemoveIcon: HTMLImageElement = document.createElement("img");
             botRemoveIcon.classList.add("removeButtonIcons");
@@ -225,6 +227,7 @@ namespace DiceCup {
         switchButtonRight.appendChild(switchButtonRightIcon);
 
         switchButtonRight.addEventListener("click", () => {
+            playSFX(buttonClick);
             if (chosenDifficulty < 2) {
                 chosenDifficulty++;
             } else {
@@ -233,6 +236,7 @@ namespace DiceCup {
             difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
         });
         switchButtonLeft.addEventListener("click", () => {
+            playSFX(buttonClick);
             if (chosenDifficulty > 0) {
                 chosenDifficulty--;
             } else {
@@ -262,7 +266,7 @@ namespace DiceCup {
         addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
         addPlayerDiv.appendChild(addIcons);
 
-        addPlayerDiv.addEventListener("click", handleAddBot);
+        addPlayerDiv.addEventListener("click", () => {handleAddBot;playSFX(buttonClick)});
     }
 
     function handleAddBot(_event: Event): void {

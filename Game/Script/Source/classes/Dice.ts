@@ -38,12 +38,11 @@ namespace DiceCup{
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
 
-            let test: ƒ.Node[] = [];
-            for (let i = 1, j = 0; i <=8 ; i++, j++) {
-                test[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
+            let corners: ƒ.Node[] = [];
+            for (let i = 1, j = 0; i <=4 ; i++, j++) {
+                corners[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
             }
-            test.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision));
-            // console.log(test)
+            corners.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision));
 
             // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
 
@@ -54,9 +53,10 @@ namespace DiceCup{
             this.diceNode.addChild(this.diceInst);
         }
         
-        public validateDices(): void {
-            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(224), this.convertDiceColor(187), this.convertDiceColor(0), 1);
-            this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(0, 0, 0, 1) });
+        public async validateDices(): Promise<void> {
+            let diceColors: RgbaDao[] = await loadDiceColors();
+            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
+            this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[9].r), this.convertDiceColor(diceColors[9].g), this.convertDiceColor(diceColors[9].b), diceColors[9].a) });
         }
 
         public transparentDices(): void {
@@ -137,7 +137,7 @@ namespace DiceCup{
 
         private async scaleDices(_colorRGBA: RgbaDao): Promise<void> {
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
-            if (_colorRGBA.name == DiceColor.white || _colorRGBA.name == DiceColor.green || _colorRGBA.name == DiceColor.yellow) {
+            if (_colorRGBA.id == DiceColor.white || _colorRGBA.id == DiceColor.green || _colorRGBA.id == DiceColor.yellow) {
                 this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.smallDice, this.smallDice, this.smallDice);
             } else {
                 this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.bigDice, this.bigDice, this.bigDice);
@@ -148,10 +148,10 @@ namespace DiceCup{
             let diceColors: RgbaDao[] = await loadDiceColors();
             
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
-            if (_colorRGBA.name == DiceColor.white || _colorRGBA.name == DiceColor.green || _colorRGBA.name == DiceColor.yellow) {
-                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 2].r), this.convertDiceColor(diceColors[diceColors.length - 2].g), diceColors[diceColors.length - 2].b, diceColors[diceColors.length - 2].a) });
+            if (_colorRGBA.id == DiceColor.white || _colorRGBA.id == DiceColor.green || _colorRGBA.id == DiceColor.yellow) {
+                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[6].r), this.convertDiceColor(diceColors[6].g), this.convertDiceColor(diceColors[6].b), diceColors[6].a) });
             } else {
-                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[diceColors.length - 1].r), this.convertDiceColor(diceColors[diceColors.length - 1].g), diceColors[diceColors.length - 1].b, diceColors[diceColors.length - 1].a) });
+                this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[7].r), this.convertDiceColor(diceColors[7].g), this.convertDiceColor(diceColors[7].b), diceColors[7].a) });
             }
         }
         

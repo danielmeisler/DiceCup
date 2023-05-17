@@ -39,6 +39,7 @@ namespace DiceCup {
         replayButton.appendChild(replayButtonImage);
 
         replayButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             gameOver(MenuPage.singleplayer);
         });
 
@@ -57,6 +58,7 @@ namespace DiceCup {
         nextButton.appendChild(nextButtonImage);
 
         nextButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             gameOver(MenuPage.main);
         });
 

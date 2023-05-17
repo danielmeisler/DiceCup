@@ -48,7 +48,7 @@ declare namespace DiceCup {
         constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number);
         roll(): number;
         private initDice;
-        validateDices(): void;
+        validateDices(): Promise<void>;
         transparentDices(): void;
         private rollDices;
         private translateDice;
@@ -235,10 +235,11 @@ declare namespace DiceCup {
     function changeGameState(_gameState: GameState): Promise<void>;
 }
 declare namespace DiceCup {
+    let buttonClick: string;
     function initBackgroundMusic(_track: number): void;
     function backgroundMusic(_on: boolean): void;
     function nextTrack(_track: number): void;
-    function changeVolume(): void;
+    function changeVolume(_mode: number): void;
     function playSFX(_sfx: string): void;
 }
 declare namespace DiceCup {
@@ -360,7 +361,8 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     interface RgbaDao {
-        name: DiceColor;
+        name: string;
+        id: DiceColor;
         r: number;
         g: number;
         b: number;

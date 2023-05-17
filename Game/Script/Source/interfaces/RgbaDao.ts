@@ -1,6 +1,7 @@
 namespace DiceCup {
     export interface RgbaDao {
-        name: DiceColor;
+        name: string;
+        id: DiceColor;
         r: number;
         g: number;
         b: number;

@@ -67,6 +67,7 @@ namespace DiceCup{
             returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
             returnButton.appendChild(returnIcon);
             returnButton.addEventListener("click", () => {
+                playSFX(buttonClick);
                 switchMenu(MenuPage.main);
             });
         }

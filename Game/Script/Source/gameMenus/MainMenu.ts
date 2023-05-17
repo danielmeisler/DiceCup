@@ -43,19 +43,23 @@ namespace DiceCup {
         }
 
         document.getElementById("play_id").addEventListener("click", () => {
+            playSFX(buttonClick);
             switchMenu(MenuPage.singleplayer);
         });
 
         document.getElementById("shop_id").addEventListener("click", () => {
+            playSFX(buttonClick);
             switchMenu(MenuPage.multiplayer);
 
         });
 
         document.getElementById("help_id").addEventListener("click", () => {
+            playSFX(buttonClick);
             switchMenu(MenuPage.help);
         });
 
         document.getElementById("options_id").addEventListener("click", () => {
+            playSFX(buttonClick);
             switchMenu(MenuPage.options);
         });
 

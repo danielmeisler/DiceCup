@@ -45,13 +45,15 @@ namespace DiceCup {
                     document.getElementById("startTransitionContainer").appendChild(text);
                 }
                 counter++;
-                if (_phrase[counter - 1].length <= 3) {
-                    ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
-                } else {
-                    ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase) });
-                }
-
+                ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
+                // if (_phrase[counter - 1].length <= 3) {
+                //     ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
+                // } else {
+                //     ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase) });
+                // }
+                playSFX("Audio|2023-05-17T13:53:32.977Z|22534");
         } else {
+            playSFX("Audio|2023-05-17T13:53:59.644Z|31971");
             counter = 0;
             roundCounter++;
             document.getElementById("startTransitionContainer").remove();

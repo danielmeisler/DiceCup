@@ -20,16 +20,10 @@ namespace DiceCup {
         document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
 
         resetButton.addEventListener("click", () => {
+            playSFX(buttonClick);
             localStorage.clear();
             localStorage.setItem("optionsMenu", "true");
             location.reload();
-        });
-
-        document.getElementById("optionsMenuReturnButton_id").addEventListener("click", () => {
-            musicSwitchButtonRight.style.visibility = "hidden";
-            musicSwitchButtonLeft.style.visibility = "hidden";
-            switchButtonRight.style.visibility = "hidden";
-            switchButtonLeft.style.visibility = "hidden";
         });
 
         for (let row = 0; row < 3; row++) {
@@ -75,34 +69,42 @@ namespace DiceCup {
         musicSwitchButtonRight.appendChild(musicSwitchButtonRightIcon);
 
         musicSwitchButtonRight.addEventListener("click", () => {
+            playSFX(buttonClick);
             if (musicVolume < 100) {
                 musicVolume += 10;
                 musicControl.innerHTML = musicVolume + "%";
-                musicSwitchButtonLeft.style.visibility = "visible";
-                changeVolume();
+                musicSwitchButtonLeft.disabled = false;
+                musicSwitchButtonLeftIcon.style.opacity = "100%";
+                changeVolume(0);
             }
             if (musicVolume == 100) {
-                musicSwitchButtonRight.style.visibility = "hidden";
+                musicSwitchButtonRight.disabled = false;
+                musicSwitchButtonRightIcon.style.opacity = "0";
             }
             localStorage.setItem("musicVolume", musicVolume.toString());
         });
         musicSwitchButtonLeft.addEventListener("click", () => {
+            playSFX(buttonClick);
             if (musicVolume > 0) {
                 musicVolume -= 10;
                 musicControl.innerHTML = musicVolume + "%";
-                musicSwitchButtonRight.style.visibility = "visible";
-                changeVolume();
+                musicSwitchButtonRight.disabled = false;
+                musicSwitchButtonRightIcon.style.opacity = "100%";
+                changeVolume(0);
             }
             if (musicVolume == 0) {
-                musicSwitchButtonLeft.style.visibility = "hidden";
+                musicSwitchButtonLeft.disabled = false;
+                musicSwitchButtonLeftIcon.style.opacity = "0";
             }
             localStorage.setItem("musicVolume", musicVolume.toString());
         });
 
         if (musicVolume == 100) {
-            musicSwitchButtonRight.style.visibility = "hidden";
+            musicSwitchButtonRight.disabled = false;
+            musicSwitchButtonRightIcon.style.opacity = "0";
         } else if (musicVolume == 0) {
-            musicSwitchButtonLeft.style.visibility = "hidden";
+            musicSwitchButtonLeft.disabled = false;
+            musicSwitchButtonLeftIcon.style.opacity = "0";
         }
 
         let soundControlTag: HTMLSpanElement = document.createElement("span");
@@ -138,34 +140,42 @@ namespace DiceCup {
         switchButtonRight.appendChild(switchButtonRightIcon);
 
         switchButtonRight.addEventListener("click", () => {
+            playSFX(buttonClick);
             if (sfxVolume < 100) {
                 sfxVolume += 10;
                 soundControl.innerHTML = sfxVolume + "%";
-                switchButtonLeft.style.visibility = "visible";
-                changeVolume();
+                switchButtonLeft.disabled = false;
+                switchButtonLeftIcon.style.opacity = "100%";
+                changeVolume(1);
             }
             if (sfxVolume == 100) {
-                switchButtonRight.style.visibility = "hidden";
+                switchButtonRight.disabled = true;
+                switchButtonRightIcon.style.opacity = "0";
             }
             localStorage.setItem("volume", sfxVolume.toString());
         });
         switchButtonLeft.addEventListener("click", () => {
+            playSFX(buttonClick);
             if (sfxVolume > 0) {
                 sfxVolume -= 10;
                 soundControl.innerHTML = sfxVolume + "%";
-                switchButtonRight.style.visibility = "visible";
-                changeVolume();
+                switchButtonRight.disabled = false;
+                switchButtonRightIcon.style.opacity = "100%";
+                changeVolume(1);
             }
             if (sfxVolume == 0) {
-                switchButtonLeft.style.visibility = "hidden";
+                switchButtonLeft.disabled = true;
+                switchButtonLeftIcon.style.opacity = "0";
             }
             localStorage.setItem("volume", sfxVolume.toString());
         });
 
         if (sfxVolume == 100) {
-            switchButtonRight.style.visibility = "hidden";
+            switchButtonRight.disabled = true;
+            switchButtonRightIcon.style.opacity = "0";
         } else if (sfxVolume == 0) {
-            switchButtonLeft.style.visibility = "hidden";
+            switchButtonLeft.disabled = true;
+            switchButtonLeftIcon.style.opacity = "0";
         }
 
         let languageTag: HTMLSpanElement = document.createElement("span");
@@ -191,9 +201,17 @@ namespace DiceCup {
             languageControlButton.classList.add("optionsLanguageMenuContent");
             languageControlButton.innerHTML = translateLanguages(Object.values(Languages)[i]);
             languageControlMenu.appendChild(languageControlButton);
-            languageControlButton.addEventListener("click", () => { localStorage.setItem("language", Object.values(Languages)[i]), localStorage.setItem("optionsMenu", "true") , location.reload()});
+            languageControlButton.addEventListener("click", () => {                 
+                playSFX(buttonClick);
+                localStorage.setItem("language", Object.values(Languages)[i]);
+                localStorage.setItem("optionsMenu", "true");
+                location.reload()
+            });
         }
 
-        languageControlButton.addEventListener("click", () => { languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages") } );
+        languageControlButton.addEventListener("click", () => {                 
+            playSFX(buttonClick);
+            languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages") 
+        } );
     }
 }

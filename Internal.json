@@ -926,6 +926,30 @@
       "type": "Graph"
     }
   },
+  "Material|2023-05-17T11:53:41.689Z|28364": {
+    "ƒ.Material": {
+      "name": "Dice_Texture",
+      "idResource": "Material|2023-05-17T11:53:41.689Z|28364",
+      "shader": "ShaderLitTextured",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-05-17T11:47:36.855Z|29400"
+        }
+      }
+    }
+  },
+  "TextureImage|2023-05-17T11:47:36.855Z|29400": {
+    "ƒ.TextureImage": {
+      "url": "Game\\Assets\\objects\\textures\\fade.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-05-17T11:47:36.855Z|29400",
+        "name": "gray_fade",
+        "mipmap": "CRISP"
+      }
+    }
+  },
   "Graph|2023-05-10T12:08:54.682Z|33820": {
     "ƒ.Graph": {
       "name": "Dice_Graph",
@@ -982,10 +1006,10 @@
           {
             "ƒ.ComponentRigidbody": {
               "initialization": "TO_PIVOT",
-              "friction": 0.2,
-              "restitution": 0.2,
+              "friction": 0.19999999999999996,
+              "restitution": 0.6000000000000001,
               "mass": 10,
-              "dampTranslation": 0.1,
+              "dampTranslation": 0.01,
               "dampRotation": 0.1,
               "effectGravity": 1,
               "typeBody": "DYNAMIC",
@@ -2938,28 +2962,28 @@
       "type": "Audio"
     }
   },
-  "TextureImage|2023-05-17T11:47:36.855Z|29400": {
-    "ƒ.TextureImage": {
-      "url": "Game\\Assets\\objects\\textures\\fade.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-05-17T11:47:36.855Z|29400",
-        "name": "gray_fade",
-        "mipmap": "CRISP"
-      }
+  "Audio|2023-05-17T13:53:32.977Z|22534": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\countdown.mp3",
+      "idResource": "Audio|2023-05-17T13:53:32.977Z|22534",
+      "name": "Countdown",
+      "type": "Audio"
     }
   },
-  "Material|2023-05-17T11:53:41.689Z|28364": {
-    "ƒ.Material": {
-      "name": "Dice_Texture",
-      "idResource": "Material|2023-05-17T11:53:41.689Z|28364",
-      "shader": "ShaderLitTextured",
-      "coat": {
-        "ƒ.CoatTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-05-17T11:47:36.855Z|29400"
-        }
-      }
+  "Audio|2023-05-17T13:53:59.644Z|31971": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\countdown_last.mp3",
+      "idResource": "Audio|2023-05-17T13:53:59.644Z|31971",
+      "name": "Countdown_last",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-05-17T14:09:29.972Z|51408": {
+    "ƒ.Audio": {
+      "url": "Game\\Assets\\sounds\\sfx\\button.wav",
+      "idResource": "Audio|2023-05-17T14:09:29.972Z|51408",
+      "name": "Button",
+      "type": "Audio"
     }
   }
 }
