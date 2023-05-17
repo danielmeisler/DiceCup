@@ -70,18 +70,6 @@
       "url": "Game\\Assets\\objects\\dot.obj"
     }
   },
-  "Material|2023-05-10T11:47:49.294Z|98323": {
-    "ƒ.Material": {
-      "name": "Dice_color",
-      "idResource": "Material|2023-05-10T11:47:49.294Z|98323",
-      "shader": "ShaderLit",
-      "coat": {
-        "ƒ.CoatColored": {
-          "color": "[1, 1, 1, 1]"
-        }
-      }
-    }
-  },
   "Graph|2023-03-02T15:52:53.709Z|69363": {
     "ƒ.Graph": {
       "name": "Root",
@@ -938,18 +926,6 @@
       "type": "Graph"
     }
   },
-  "Material|2023-05-17T11:49:06.524Z|36853": {
-    "ƒ.Material": {
-      "name": "ShaderLit",
-      "idResource": "Material|2023-05-17T11:49:06.524Z|36853",
-      "shader": "ShaderLit",
-      "coat": {
-        "ƒ.CoatColored": {
-          "color": "[1, 1, 1, 1]"
-        }
-      }
-    }
-  },
   "Graph|2023-05-10T12:08:54.682Z|33820": {
     "ƒ.Graph": {
       "name": "Dice_Graph",
@@ -984,7 +960,7 @@
               "Component": {
                 "active": true
               },
-              "idMaterial": "Material|2023-05-17T12:18:54.483Z|81467"
+              "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
             }
           }
         ],
@@ -2968,35 +2944,20 @@
       "type": "TextureImage",
       "Texture": {
         "idResource": "TextureImage|2023-05-17T11:47:36.855Z|29400",
-        "name": "Game\\Assets\\objects\\textures\\fade.png",
+        "name": "gray_fade",
         "mipmap": "CRISP"
       }
     }
   },
   "Material|2023-05-17T11:53:41.689Z|28364": {
     "ƒ.Material": {
-      "name": "ShaderLitTextured",
+      "name": "Dice_Texture",
       "idResource": "Material|2023-05-17T11:53:41.689Z|28364",
       "shader": "ShaderLitTextured",
       "coat": {
         "ƒ.CoatTextured": {
           "color": "[1, 1, 1, 1]",
           "idTexture": "TextureImage|2023-05-17T11:47:36.855Z|29400"
-        }
-      }
-    }
-  },
-  "Material|2023-05-17T12:18:54.483Z|81467": {
-    "ƒ.Material": {
-      "name": "ShaderFlatTextured",
-      "idResource": "Material|2023-05-17T12:18:54.483Z|81467",
-      "shader": "ShaderFlatTextured",
-      "coat": {
-        "ƒ.CoatRemissiveTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-05-17T11:47:36.855Z|29400",
-          "diffuse": 1,
-          "specular": 0
         }
       }
     }
