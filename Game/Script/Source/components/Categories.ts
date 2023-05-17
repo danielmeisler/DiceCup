@@ -37,7 +37,8 @@ namespace DiceCup {
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            button.addEventListener("click", () => {handleCategory; playSFX(buttonClick);});
+            button.addEventListener("click",handleCategory);
+            button.addEventListener("click", () => {playSFX(buttonClick)});
             content.appendChild(button);
 
             let img: HTMLImageElement = document.createElement("img");

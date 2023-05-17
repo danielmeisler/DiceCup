@@ -36,8 +36,6 @@ namespace DiceCup{
             default:
                 break;
         }
-
-
     }
 
     export function playSFX(_sfx: string): void{
