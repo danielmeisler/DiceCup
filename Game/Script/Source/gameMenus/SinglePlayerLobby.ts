@@ -212,7 +212,7 @@ namespace DiceCup {
         difficultyText.id = "switchDifficultyText_id_" + botCount;
 
         let difficulties: string[] = JSON.parse(localStorage.getItem("difficulties")) ?? [];
-        difficultyText.innerHTML = BotDifficulty[parseInt(difficulties[botCount])] ?? BotDifficulty[chosenDifficulty];
+        difficultyText.innerHTML = difficultyLanguage(BotDifficulty[parseInt(difficulties[botCount])]) ?? difficultyLanguage(BotDifficulty[chosenDifficulty]);
         difficultySwitchText.appendChild(difficultyText);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");

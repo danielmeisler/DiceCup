@@ -2013,7 +2013,7 @@ var DiceCup;
         // difficultyText.classList.add("scrollText");
         difficultyText.id = "switchDifficultyText_id_" + botCount;
         let difficulties = JSON.parse(localStorage.getItem("difficulties")) ?? [];
-        difficultyText.innerHTML = DiceCup.BotDifficulty[parseInt(difficulties[botCount])] ?? DiceCup.BotDifficulty[chosenDifficulty];
+        difficultyText.innerHTML = difficultyLanguage(DiceCup.BotDifficulty[parseInt(difficulties[botCount])]) ?? difficultyLanguage(DiceCup.BotDifficulty[chosenDifficulty]);
         difficultySwitchText.appendChild(difficultyText);
         let switchButtonRight = document.createElement("button");
         switchButtonRight.classList.add("switchDifficulty");

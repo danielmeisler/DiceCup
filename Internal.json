@@ -108,13 +108,13 @@
           {
             "ƒ.ComponentLight": {
               "pivot": {
-                "translation": "[0, 5, 0]",
+                "translation": "[0, -500, 0]",
                 "rotation": "[0, 0, 0]",
                 "scaling": "[1, 1, 1]"
               },
               "light": {
                 "ƒ.LightDirectional": {
-                  "color": "[1, 1, 1, 1]"
+                  "color": "[1, 1, 1, 0.04]"
                 }
               },
               "Component": {
@@ -938,6 +938,18 @@
       "type": "Graph"
     }
   },
+  "Material|2023-05-17T11:49:06.524Z|36853": {
+    "ƒ.Material": {
+      "name": "ShaderLit",
+      "idResource": "Material|2023-05-17T11:49:06.524Z|36853",
+      "shader": "ShaderLit",
+      "coat": {
+        "ƒ.CoatColored": {
+          "color": "[1, 1, 1, 1]"
+        }
+      }
+    }
+  },
   "Graph|2023-05-10T12:08:54.682Z|33820": {
     "ƒ.Graph": {
       "name": "Dice_Graph",
@@ -972,7 +984,7 @@
               "Component": {
                 "active": true
               },
-              "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+              "idMaterial": "Material|2023-05-17T12:18:54.483Z|81467"
             }
           }
         ],
@@ -1051,7 +1063,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1059,7 +1071,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0, 1.0999999046325684, 0]",
+                      "translation": "[0, 0.9999998807907104, 0]",
                       "rotation": "[0, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1107,7 +1119,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1115,7 +1127,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0.5, 0.49999991059303284, -1.100000023841858]",
+                      "translation": "[0.5, 0.49999991059303284, -1]",
                       "rotation": "[270, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1163,7 +1175,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1171,7 +1183,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-0.5, -0.5, -1.100000023841858]",
+                      "translation": "[-0.5, -0.5, -1]",
                       "rotation": "[270, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1219,7 +1231,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1227,7 +1239,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[1.100000023841858, 0.49999991059303284, 0.5]",
+                      "translation": "[1, 0.49999991059303284, 0.5]",
                       "rotation": "[0, 0, 270]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1275,7 +1287,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1283,7 +1295,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[1.100000023841858, 0, 0]",
+                      "translation": "[1, 0, 0]",
                       "rotation": "[0, 0, 270]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1331,7 +1343,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1339,7 +1351,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[1.100000023841858, -0.5, -0.5]",
+                      "translation": "[1, -0.5, -0.5]",
                       "rotation": "[0, 0, 270]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1387,7 +1399,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1395,7 +1407,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-1.100000023841858, 0.5, -0.5]",
+                      "translation": "[-1, 0.5, -0.5]",
                       "rotation": "[0, 0, 90]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1443,7 +1455,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1451,7 +1463,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-1.100000023841858, 0.49999991059303284, 0.5]",
+                      "translation": "[-1, 0.49999991059303284, 0.5]",
                       "rotation": "[0, 0, 90]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1499,7 +1511,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1507,7 +1519,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-1.100000023841858, -0.5, 0.5]",
+                      "translation": "[-1, -0.5, 0.5]",
                       "rotation": "[0, 0, 90]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1555,7 +1567,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1563,7 +1575,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-1.100000023841858, -0.5, -0.5]",
+                      "translation": "[-1, -0.5, -0.5]",
                       "rotation": "[0, 0, 90]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1611,7 +1623,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1619,7 +1631,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-0.5, 0.5, 1.100000023841858]",
+                      "translation": "[-0.5, 0.5, 1]",
                       "rotation": "[90, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1667,7 +1679,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1675,7 +1687,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0.5, 0.5, 1.100000023841858]",
+                      "translation": "[0.5, 0.5, 1]",
                       "rotation": "[90, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1723,7 +1735,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1731,7 +1743,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-0.5, -0.5, 1.100000023841858]",
+                      "translation": "[-0.5, -0.5, 1]",
                       "rotation": "[90, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1779,7 +1791,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1787,7 +1799,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0.5, -0.5, 1.100000023841858]",
+                      "translation": "[0.5, -0.5, 1]",
                       "rotation": "[90, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1835,7 +1847,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1843,7 +1855,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0, 0, 1.100000023841858]",
+                      "translation": "[0, 0, 1]",
                       "rotation": "[90, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1891,7 +1903,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1899,7 +1911,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0.5, -1.100000023841858, 0.5]",
+                      "translation": "[0.5, -1, 0.5]",
                       "rotation": "[180, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -1947,7 +1959,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -1955,7 +1967,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0, -1.100000023841858, 0.5]",
+                      "translation": "[0, -1, 0.5]",
                       "rotation": "[180, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -2003,7 +2015,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -2011,7 +2023,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-0.5, -1.100000023841858, 0.5]",
+                      "translation": "[-0.5, -1, 0.5]",
                       "rotation": "[180, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -2059,7 +2071,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -2067,7 +2079,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0.5, -1.100000023841858, -0.5]",
+                      "translation": "[0.5, -1, -0.5]",
                       "rotation": "[180, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -2115,7 +2127,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -2123,7 +2135,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[0, -1.100000023841858, -0.5]",
+                      "translation": "[0, -1, -0.5]",
                       "rotation": "[180, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -2171,7 +2183,7 @@
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-05-10T11:47:49.294Z|98323"
+                    "idMaterial": "Material|2023-05-17T11:53:41.689Z|28364"
                   }
                 }
               ],
@@ -2179,7 +2191,7 @@
                 {
                   "ƒ.ComponentTransform": {
                     "local": {
-                      "translation": "[-0.5, -1.100000023841858, -0.5]",
+                      "translation": "[-0.5, -1, -0.5]",
                       "rotation": "[180, 0, 0]",
                       "scaling": "[0.20000000298023224, 0.20000000298023224, 0.20000000298023224]"
                     },
@@ -2948,6 +2960,45 @@
       "idResource": "Audio|2023-05-16T12:36:31.683Z|04788",
       "name": "Sixth_Place",
       "type": "Audio"
+    }
+  },
+  "TextureImage|2023-05-17T11:47:36.855Z|29400": {
+    "ƒ.TextureImage": {
+      "url": "Game\\Assets\\objects\\textures\\fade.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-05-17T11:47:36.855Z|29400",
+        "name": "Game\\Assets\\objects\\textures\\fade.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "Material|2023-05-17T11:53:41.689Z|28364": {
+    "ƒ.Material": {
+      "name": "ShaderLitTextured",
+      "idResource": "Material|2023-05-17T11:53:41.689Z|28364",
+      "shader": "ShaderLitTextured",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-05-17T11:47:36.855Z|29400"
+        }
+      }
+    }
+  },
+  "Material|2023-05-17T12:18:54.483Z|81467": {
+    "ƒ.Material": {
+      "name": "ShaderFlatTextured",
+      "idResource": "Material|2023-05-17T12:18:54.483Z|81467",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-05-17T11:47:36.855Z|29400",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
     }
   }
 }
