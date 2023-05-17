@@ -2,7 +2,7 @@ namespace DiceCup {
     import ƒ = FudgeCore;
     let counter: number = 0;
     let shortTime: number = 1000;
-    let longTime: number = 2000;
+    // let longTime: number = 2000;
 
     export function startTransition(): void {
         let container: HTMLDivElement = document.createElement("div");

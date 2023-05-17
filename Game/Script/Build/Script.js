@@ -1058,7 +1058,7 @@ var DiceCup;
     var ƒ = FudgeCore;
     let counter = 0;
     let shortTime = 1000;
-    let longTime = 2000;
+    // let longTime: number = 2000;
     function startTransition() {
         let container = document.createElement("div");
         container.classList.add("startTransitionContainer");
