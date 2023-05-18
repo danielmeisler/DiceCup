@@ -44,6 +44,7 @@ namespace DiceCup {
 
         startButton.addEventListener("click", () => {
             playSFX(buttonClick);
+            nextTrack(1);
             createGameSettings();
         });
     }
@@ -170,7 +171,8 @@ namespace DiceCup {
             botRemove.id = "botRemove_id_" + botCount;
             botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
-            botRemove.addEventListener("click", () => {handleRemoveBot; playSFX(buttonClick)});
+            botRemove.addEventListener("click", () => {playSFX(buttonClick)});
+            botRemove.addEventListener("click", handleRemoveBot);
 
             let botRemoveIcon: HTMLImageElement = document.createElement("img");
             botRemoveIcon.classList.add("removeButtonIcons");
@@ -266,7 +268,8 @@ namespace DiceCup {
         addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
         addPlayerDiv.appendChild(addIcons);
 
-        addPlayerDiv.addEventListener("click", () => {handleAddBot;playSFX(buttonClick)});
+        addPlayerDiv.addEventListener("click", handleAddBot);
+        addPlayerDiv.addEventListener("click", () => playSFX(buttonClick));
     }
 
     function handleAddBot(_event: Event): void {

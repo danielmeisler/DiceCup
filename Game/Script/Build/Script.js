@@ -922,8 +922,7 @@ var DiceCup;
         document.getElementById("placementsBackground_id").style.visibility = _visibility;
     }
     function placementsSounds() {
-        let soundArray = ["Audio|2023-05-16T12:34:49.390Z|02091", "Audio|2023-05-16T12:34:58.092Z|82738", "Audio|2023-05-16T12:35:19.214Z|56855", "Audio|2023-05-16T12:36:03.734Z|74374", "Audio|2023-05-16T12:36:18.950Z|69020", "Audio|2023-05-16T12:36:31.683Z|04788"];
-        DiceCup.playSFX(soundArray[place - 1]);
+        DiceCup.playSFX("Audio|2023-05-18T21:20:15.907Z|47241");
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1120,6 +1119,7 @@ var DiceCup;
     var ƒ = FudgeCore;
     function validateRound() {
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
+        DiceCup.nextTrack(1);
         ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
     }
     DiceCup.validateRound = validateRound;
@@ -1263,6 +1263,7 @@ var DiceCup;
     DiceCup.rollDices = rollDices;
     async function round() {
         console.clear();
+        DiceCup.nextTrack(2);
         if (DiceCup.firstRound == true) {
             createBots(DiceCup.gameSettings.bot);
             DiceCup.firstRound = false;
@@ -1355,7 +1356,7 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     DiceCup.buttonClick = "Audio|2023-05-17T14:09:29.972Z|51408";
-    let themes = ["Audio|2023-05-15T19:01:45.890Z|78438"];
+    let themes = ["Audio|2023-05-15T19:01:45.890Z|78438", "Audio|2023-05-18T18:10:25.157Z|72912", "Audio|2023-05-18T18:10:38.906Z|20682"];
     let backgroundAudio;
     function initBackgroundMusic(_track) {
         let track = ƒ.Project.resources[themes[_track]];
@@ -1915,6 +1916,7 @@ var DiceCup;
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
         startButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
+            DiceCup.nextTrack(1);
             createGameSettings();
         });
     }
@@ -2028,7 +2030,8 @@ var DiceCup;
             botRemove.id = "botRemove_id_" + botCount;
             botRemove.classList.add("removeButton");
             botDiv.appendChild(botRemove);
-            botRemove.addEventListener("click", () => { handleRemoveBot; DiceCup.playSFX(DiceCup.buttonClick); });
+            botRemove.addEventListener("click", () => { DiceCup.playSFX(DiceCup.buttonClick); });
+            botRemove.addEventListener("click", handleRemoveBot);
             let botRemoveIcon = document.createElement("img");
             botRemoveIcon.classList.add("removeButtonIcons");
             botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
@@ -2110,7 +2113,8 @@ var DiceCup;
         addIcons.classList.add("lobbyPortraitIcons");
         addIcons.src = "Game/Assets/images/menuButtons/plus.svg";
         addPlayerDiv.appendChild(addIcons);
-        addPlayerDiv.addEventListener("click", () => { handleAddBot; DiceCup.playSFX(DiceCup.buttonClick); });
+        addPlayerDiv.addEventListener("click", handleAddBot);
+        addPlayerDiv.addEventListener("click", () => DiceCup.playSFX(DiceCup.buttonClick));
     }
     function handleAddBot(_event) {
         firstBot++;

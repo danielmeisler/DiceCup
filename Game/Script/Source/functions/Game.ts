@@ -41,7 +41,8 @@ namespace DiceCup {
 
     export async function round(): Promise<void> {
         console.clear();
-        
+        nextTrack(2);
+
         if (firstRound == true) {
             createBots(gameSettings.bot);
             firstRound = false;

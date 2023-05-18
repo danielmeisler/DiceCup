@@ -168,7 +168,6 @@ namespace DiceCup {
     }   
 
     function placementsSounds(): void {
-        let soundArray: string[] = ["Audio|2023-05-16T12:34:49.390Z|02091", "Audio|2023-05-16T12:34:58.092Z|82738", "Audio|2023-05-16T12:35:19.214Z|56855", "Audio|2023-05-16T12:36:03.734Z|74374", "Audio|2023-05-16T12:36:18.950Z|69020", "Audio|2023-05-16T12:36:31.683Z|04788"];
-        playSFX(soundArray[place - 1]);
+        playSFX("Audio|2023-05-18T21:20:15.907Z|47241");
     }
 }

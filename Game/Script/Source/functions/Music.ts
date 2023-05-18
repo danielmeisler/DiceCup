@@ -2,7 +2,7 @@ namespace DiceCup{
     import ƒ = FudgeCore;
 
     export let buttonClick: string = "Audio|2023-05-17T14:09:29.972Z|51408";
-    let themes: string[] = ["Audio|2023-05-15T19:01:45.890Z|78438"];
+    let themes: string[] = ["Audio|2023-05-15T19:01:45.890Z|78438", "Audio|2023-05-18T18:10:25.157Z|72912", "Audio|2023-05-18T18:10:38.906Z|20682"];
 
     let backgroundAudio: ƒ.ComponentAudio;
 
