@@ -11,6 +11,7 @@ namespace DiceCup {
   function start(_event: CustomEvent): void {
     viewport = _event.detail;
     enableWakeLock();
+    playSFX(buttonClick);
     ƒ.Time.game.setTimer(2000, 1, load);
   }
 

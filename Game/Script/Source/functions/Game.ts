@@ -63,6 +63,7 @@ namespace DiceCup {
             muteAll();
         } else {
             changeVolume(0);
+            changeVolume(1);
         }
 
         switch (viewportState) {

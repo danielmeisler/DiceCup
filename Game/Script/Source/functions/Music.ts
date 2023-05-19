@@ -18,7 +18,7 @@ namespace DiceCup{
     }
 
     export function backgroundMusic(_on: boolean): void {
-        backgroundAudio.play(_on); 
+        backgroundAudio.play(_on);
     }
 
     export function nextTrack(_track: number): void {

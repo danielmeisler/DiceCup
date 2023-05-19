@@ -44,6 +44,7 @@ var DiceCup;
     function start(_event) {
         DiceCup.viewport = _event.detail;
         DiceCup.enableWakeLock();
+        DiceCup.playSFX(DiceCup.buttonClick);
         ƒ.Time.game.setTimer(2000, 1, load);
     }
     async function load() {
@@ -1292,6 +1293,7 @@ var DiceCup;
         }
         else {
             DiceCup.changeVolume(0);
+            DiceCup.changeVolume(1);
         }
         switch (DiceCup.viewportState) {
             case DiceCup.ViewportState.menu:
