@@ -50,7 +50,6 @@ var DiceCup;
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
-        diceCup.style.background = "black";
         let graph = DiceCup.viewport.getBranch();
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
@@ -59,7 +58,7 @@ var DiceCup;
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         await DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         await DiceCup.initMenu();
-        diceCup.style.background = "transparent";
+        // document.getElementById("loadingScreen").style.background = "transparent";
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;

@@ -18,8 +18,7 @@ namespace DiceCup {
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
-    diceCup.style.background = "black";
-    
+
     let graph: ƒ.Node = viewport.getBranch();
     ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
     ƒ.AudioManager.default.listenTo(graph);
@@ -29,7 +28,7 @@ namespace DiceCup {
     await chooseLanguage(currentLanguage);
     await changeViewportState(ViewportState.menu);
     await initMenu();
-    diceCup.style.background = "transparent";
+    // document.getElementById("loadingScreen").style.background = "transparent";
 
   }
 
