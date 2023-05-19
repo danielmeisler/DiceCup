@@ -7,6 +7,7 @@ namespace DiceCup {
         roundCounter = 1;
         playerNames = [];
         gameSettings = {playerName: "", bot: []};
+        freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         changeViewportState(ViewportState.menu);
 
         let graph: ƒ.Node = viewport.getBranch();

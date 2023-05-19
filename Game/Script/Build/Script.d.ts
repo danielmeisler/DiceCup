@@ -112,6 +112,7 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    let freePlayerCategories: number[];
     function initCategories(): Promise<void>;
     function showCategories(): void;
     function hideCategories(): void;
@@ -241,6 +242,7 @@ declare namespace DiceCup {
     function nextTrack(_track: number): void;
     function changeVolume(_mode: number): void;
     function playSFX(_sfx: string): void;
+    function muteAll(): void;
 }
 declare namespace DiceCup {
     function changeViewportState(_viewportState: ViewportState): void;

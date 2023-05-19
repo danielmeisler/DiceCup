@@ -125,11 +125,7 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
-        if (roundCounter <= maxRounds) {
-            changeGameState(GameState.ready);
-        } else {
-            changeGameState(GameState.placement);
-        }
+        changeGameState(GameState.ready);
     }
 
     function visibility(_visibility: string) {

@@ -1,6 +1,8 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    export let freePlayerCategories: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
     export async function initCategories() {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();
@@ -57,11 +59,15 @@ namespace DiceCup {
     }
 
     export function showCategories() {
-        document.getElementById("categoryContainer_id").classList.add("categoriesShown");
-        document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
-        document.getElementById("categoryBackground_id").classList.add("emptyBackground");
-        document.getElementById("categoryBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
+        if (freePlayerCategories.length == 1) {
+            addPointsToButton(freePlayerCategories[0]);
+        } else {
+            document.getElementById("categoryContainer_id").classList.add("categoriesShown");
+            document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
+            document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+            document.getElementById("categoryBackground_id").style.zIndex = "10";
+            ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
+        }
     }
 
     export function hideCategories() {
@@ -76,6 +82,9 @@ namespace DiceCup {
         let index: number = parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index"));
         document.getElementById("categoryImage_i_" + (<HTMLDivElement>_event.currentTarget).getAttribute("index")).classList.add("categoryImagesTransparent");
         this.disabled = true;
+        let tempArray: number[] = freePlayerCategories.filter((element) => element !== index);
+        freePlayerCategories = tempArray;
+        console.log(freePlayerCategories);
         hideCategories();
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index) });
     }

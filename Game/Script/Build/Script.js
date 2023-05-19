@@ -647,6 +647,7 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
+    DiceCup.freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     async function initCategories() {
         let response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories = await response.json();
@@ -693,11 +694,16 @@ var DiceCup;
     }
     DiceCup.initCategories = initCategories;
     function showCategories() {
-        document.getElementById("categoryContainer_id").classList.add("categoriesShown");
-        document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
-        document.getElementById("categoryBackground_id").classList.add("emptyBackground");
-        document.getElementById("categoryBackground_id").style.zIndex = "10";
-        ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+        if (DiceCup.freePlayerCategories.length == 1) {
+            addPointsToButton(DiceCup.freePlayerCategories[0]);
+        }
+        else {
+            document.getElementById("categoryContainer_id").classList.add("categoriesShown");
+            document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
+            document.getElementById("categoryBackground_id").classList.add("emptyBackground");
+            document.getElementById("categoryBackground_id").style.zIndex = "10";
+            ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+        }
     }
     DiceCup.showCategories = showCategories;
     function hideCategories() {
@@ -712,6 +718,9 @@ var DiceCup;
         let index = parseInt(_event.currentTarget.getAttribute("index"));
         document.getElementById("categoryImage_i_" + _event.currentTarget.getAttribute("index")).classList.add("categoryImagesTransparent");
         this.disabled = true;
+        let tempArray = DiceCup.freePlayerCategories.filter((element) => element !== index);
+        DiceCup.freePlayerCategories = tempArray;
+        console.log(DiceCup.freePlayerCategories);
         hideCategories();
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index); });
     }
@@ -1042,12 +1051,7 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
-        if (DiceCup.roundCounter <= DiceCup.maxRounds) {
-            DiceCup.changeGameState(DiceCup.GameState.ready);
-        }
-        else {
-            DiceCup.changeGameState(DiceCup.GameState.placement);
-        }
+        DiceCup.changeGameState(DiceCup.GameState.ready);
     }
     DiceCup.hideSummary = hideSummary;
     function visibility(_visibility) {
@@ -1121,7 +1125,12 @@ var DiceCup;
     function validateRound() {
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         DiceCup.nextTrack(1);
-        ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
+        if (DiceCup.roundCounter <= DiceCup.maxRounds) {
+            ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
+        }
+        else {
+            ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.placement); });
+        }
     }
     DiceCup.validateRound = validateRound;
 })(DiceCup || (DiceCup = {}));
@@ -1278,6 +1287,12 @@ var DiceCup;
     DiceCup.round = round;
     function update(_event) {
         ƒ.Physics.simulate(); // if physics is included and used
+        if (document.hidden) {
+            DiceCup.muteAll();
+        }
+        else {
+            DiceCup.changeVolume(0);
+        }
         switch (DiceCup.viewportState) {
             case DiceCup.ViewportState.menu:
                 DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.75, 0));
@@ -1299,6 +1314,7 @@ var DiceCup;
         DiceCup.roundCounter = 1;
         DiceCup.playerNames = [];
         DiceCup.gameSettings = { playerName: "", bot: [] };
+        DiceCup.freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         let graph = DiceCup.viewport.getBranch();
         let diceNode = graph.getChildrenByName("Dices")[0];
@@ -1359,6 +1375,7 @@ var DiceCup;
     DiceCup.buttonClick = "Audio|2023-05-17T14:09:29.972Z|51408";
     let themes = ["Audio|2023-05-15T19:01:45.890Z|78438", "Audio|2023-05-18T18:10:25.157Z|72912", "Audio|2023-05-18T18:10:38.906Z|20682"];
     let backgroundAudio;
+    let sfxAudio;
     function initBackgroundMusic(_track) {
         let track = ƒ.Project.resources[themes[_track]];
         backgroundAudio = new ƒ.ComponentAudio(track, true, false);
@@ -1383,7 +1400,7 @@ var DiceCup;
                 backgroundAudio.volume = setMusicVolume(DiceCup.musicVolume);
                 break;
             case 1:
-                backgroundAudio.volume = setSFXVolume(DiceCup.musicVolume);
+                sfxAudio.volume = setSFXVolume(DiceCup.sfxVolume);
                 break;
             default:
                 break;
@@ -1391,15 +1408,19 @@ var DiceCup;
     }
     DiceCup.changeVolume = changeVolume;
     function playSFX(_sfx) {
-        let cmpAudio;
         let audio = ƒ.Project.resources[_sfx];
-        cmpAudio = new ƒ.ComponentAudio(audio, false, false);
-        cmpAudio.connect(true);
-        cmpAudio.volume = setSFXVolume(DiceCup.sfxVolume);
-        cmpAudio.setAudio(audio);
-        cmpAudio.play(true);
+        sfxAudio = new ƒ.ComponentAudio(audio, false, false);
+        sfxAudio.connect(true);
+        sfxAudio.volume = setSFXVolume(DiceCup.sfxVolume);
+        sfxAudio.setAudio(audio);
+        sfxAudio.play(true);
     }
     DiceCup.playSFX = playSFX;
+    function muteAll() {
+        backgroundAudio.volume = 0;
+        sfxAudio.volume = 0;
+    }
+    DiceCup.muteAll = muteAll;
     function setMusicVolume(_volume) {
         return _volume /= 1000;
     }

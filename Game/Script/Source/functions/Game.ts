@@ -59,6 +59,12 @@ namespace DiceCup {
     export function update(_event: Event): void {
         ƒ.Physics.simulate();  // if physics is included and used
 
+        if(document.hidden){
+            muteAll();
+        } else {
+            changeVolume(0);
+        }
+
         switch (viewportState) {
             case ViewportState.menu:
                 viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.75, 0))
@@ -68,6 +74,8 @@ namespace DiceCup {
             default:
                 break;
         }
+
+
 
         viewport.draw();
         ƒ.AudioManager.default.update();

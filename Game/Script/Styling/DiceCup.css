@@ -38,7 +38,7 @@ html, body {
 @keyframes scale {
   0%, 100% {
       transform: scale(100%);
-  }
+  }  
   50% { 
       transform: scale(90%);
   }

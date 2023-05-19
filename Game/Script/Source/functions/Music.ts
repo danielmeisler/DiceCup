@@ -5,6 +5,7 @@ namespace DiceCup{
     let themes: string[] = ["Audio|2023-05-15T19:01:45.890Z|78438", "Audio|2023-05-18T18:10:25.157Z|72912", "Audio|2023-05-18T18:10:38.906Z|20682"];
 
     let backgroundAudio: ƒ.ComponentAudio;
+    let sfxAudio: ƒ.ComponentAudio;
 
     export function initBackgroundMusic(_track: number): void {
         let track: ƒ.Audio = <ƒ.Audio>ƒ.Project.resources[themes[_track]];
@@ -31,7 +32,7 @@ namespace DiceCup{
                 backgroundAudio.volume = setMusicVolume(musicVolume);
                 break;
             case 1:
-                backgroundAudio.volume = setSFXVolume(musicVolume);
+                sfxAudio.volume = setSFXVolume(sfxVolume);
                 break;
             default:
                 break;
@@ -39,14 +40,18 @@ namespace DiceCup{
     }
 
     export function playSFX(_sfx: string): void{
-        let cmpAudio: ƒ.ComponentAudio;
         let audio: ƒ.Audio = <ƒ.Audio>ƒ.Project.resources[_sfx];
-        cmpAudio = new ƒ.ComponentAudio(audio, false, false);
-        cmpAudio.connect(true);
-        cmpAudio.volume = setSFXVolume(sfxVolume);
-        cmpAudio.setAudio(audio);
+        sfxAudio = new ƒ.ComponentAudio(audio, false, false);
+        sfxAudio.connect(true);
+        sfxAudio.volume = setSFXVolume(sfxVolume);
+        sfxAudio.setAudio(audio);
 
-        cmpAudio.play(true); 
+        sfxAudio.play(true); 
+    }
+
+    export function muteAll(): void {
+        backgroundAudio.volume = 0;
+        sfxAudio.volume = 0;
     }
 
     function setMusicVolume(_volume: number): number {
