@@ -28,7 +28,6 @@ namespace DiceCup {
     await chooseLanguage(currentLanguage);
     await changeViewportState(ViewportState.menu);
     await initMenu();
-    document.getElementById("loadingScreen").remove();
   }
 
 }
