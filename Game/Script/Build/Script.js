@@ -822,7 +822,7 @@ var DiceCup;
         placementsBottomArea.appendChild(nextButton);
         let nextButtonImage = document.createElement("img");
         nextButtonImage.classList.add("diceCupButtonsIcons");
-        nextButtonImage.src = "Game/Assets/images/menuButtons/play.svg";
+        nextButtonImage.src = "Game/Assets/images/menuButtons/home.svg";
         nextButton.appendChild(nextButtonImage);
         nextButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
