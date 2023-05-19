@@ -18,12 +18,12 @@ namespace DiceCup {
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
+    diceCup.style.background = "black";
     
     let graph: ƒ.Node = viewport.getBranch();
     ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
     ƒ.AudioManager.default.listenTo(graph);
 
-    diceCup.style.background = "black";
     currentLanguage = await <Languages>localStorage.getItem("language") || Languages.english;
     await initBackgroundMusic(0);
     await chooseLanguage(currentLanguage);
