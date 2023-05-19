@@ -23,13 +23,14 @@ namespace DiceCup {
     ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
     ƒ.AudioManager.default.listenTo(graph);
 
-    currentLanguage = <Languages>localStorage.getItem("language") || Languages.english;
-
-    initBackgroundMusic(0);
+    diceCup.style.background = "black";
+    currentLanguage = await <Languages>localStorage.getItem("language") || Languages.english;
+    await initBackgroundMusic(0);
     await chooseLanguage(currentLanguage);
+    await changeViewportState(ViewportState.menu);
+    await initMenu();
+    diceCup.style.background = "transparent";
 
-    changeViewportState(ViewportState.menu);
-    initMenu();
   }
 
 }

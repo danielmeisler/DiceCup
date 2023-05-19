@@ -53,11 +53,13 @@ var DiceCup;
         let graph = DiceCup.viewport.getBranch();
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
-        DiceCup.currentLanguage = localStorage.getItem("language") || DiceCup.Languages.english;
-        DiceCup.initBackgroundMusic(0);
+        diceCup.style.background = "black";
+        DiceCup.currentLanguage = await localStorage.getItem("language") || DiceCup.Languages.english;
+        await DiceCup.initBackgroundMusic(0);
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
-        DiceCup.changeViewportState(DiceCup.ViewportState.menu);
-        DiceCup.initMenu();
+        await DiceCup.changeViewportState(DiceCup.ViewportState.menu);
+        await DiceCup.initMenu();
+        diceCup.style.background = "transparent";
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
