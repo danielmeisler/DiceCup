@@ -58,6 +58,7 @@ var DiceCup;
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         await DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         await DiceCup.initMenu();
+        document.getElementById("loadingScreen").remove();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1434,7 +1435,6 @@ var DiceCup;
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
             new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
-        document.getElementById("loadingScreen").remove();
     }
     async function transitionViewport() {
         // let response: Response = await fetch("Game/Script/Data/diceColors.json");

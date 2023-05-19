@@ -28,7 +28,6 @@ namespace DiceCup {
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
             new Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
-        document.getElementById("loadingScreen").remove();
     }
 
     async function transitionViewport() {
