@@ -44,7 +44,7 @@ var DiceCup;
     function start(_event) {
         DiceCup.viewport = _event.detail;
         DiceCup.enableWakeLock();
-        load();
+        ƒ.Time.game.setTimer(2000, 1, load);
     }
     async function load() {
         let diceCup = document.createElement("div");
