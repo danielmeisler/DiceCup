@@ -58,7 +58,7 @@ var DiceCup;
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         await DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         await DiceCup.initMenu();
-        // document.getElementById("loadingScreen").style.background = "transparent";
+        document.getElementById("loadingScreen").remove();
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;

@@ -28,7 +28,7 @@ namespace DiceCup {
     await chooseLanguage(currentLanguage);
     await changeViewportState(ViewportState.menu);
     await initMenu();
-    // document.getElementById("loadingScreen").style.background = "transparent";
+    document.getElementById("loadingScreen").remove();
 
   }
 
