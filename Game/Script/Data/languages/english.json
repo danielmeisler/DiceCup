@@ -32,7 +32,24 @@
             }
         },
         "help": {
-            "title": "How to play"
+            "title": "How to play",
+            "page": "Page",
+            "page_1": {
+                "title": "Game description",
+                "content": "The game is played in 12 rounds in which the dice fall anew each time. All see the same result and always tries to find the best scoring category for him. Each category is available only once per game! The player with the highest total score in the end wins the Dice Cup!"
+            },
+            "page_2": {
+                "title": "Game play",
+                "content": "After the countdown, the dice that you should remember well are shown for only 3 seconds. Now they are covered again and the selection of the categories begins. Here you have to weigh up which categories which brings you the most points. But remember, you can only choose these once per game! Then the dice are counted and the points awarded."
+            },
+            "page_3": {
+                "title": "Game valuation",
+                "content": "::ICONS3 ::ICONS4 ::ICONS5 ::ICONS6 ::ICONS7 ::ICONS8 The sum of each dice color. <br> ::ICONS0 ::ICONS1  ::ICONS2 The sum of each dice number.<br> ::ICONS9 Doubles with same color give 10 points. <br> ::ICONS10 The sum of all dice showing 1, 2 or 3. <br> ::ICONS11 The sum of all dice."
+            },
+            "page_4": {
+                "title": "Game example",
+                "content": "::EXAMPLE ::ICONS0 Score: 8 (2 Dice x 4 Dice number)<br> ::ICONS4 Score: 4 (Dice number 3 + Dice number 1)<br> ::ICONS9 Score: 20 (Doubles Red 10 + Doubles Green 10)<br> ::ICONS10 Score: 16 (Dice 1 + Dice 2 + Dice 3 + ...)<br> ::ICONS11 Score: 42 (Dice 1 + Dice 2 + Dice 3 + ...)"
+            }
         },
         "settings": {
             "title": "Settings",

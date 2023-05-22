@@ -18,12 +18,12 @@ html, body {
 #loadingScreen {
   width: 100%; 
   height: 100%; 
-  background: #1C1C1C; 
   display: flex; 
   flex-direction: column;
   justify-content: center; 
   align-items: center;
   z-index: 20;
+  background: var(--background_fade); 
 }
 
 #loadingImg {

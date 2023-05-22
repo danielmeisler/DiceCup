@@ -314,6 +314,23 @@ declare namespace DiceCup {
             };
             help: {
                 title: string;
+                page: string;
+                page_1: {
+                    title: string;
+                    content: string;
+                };
+                page_2: {
+                    title: string;
+                    content: string;
+                };
+                page_3: {
+                    title: string;
+                    content: string;
+                };
+                page_4: {
+                    title: string;
+                    content: string;
+                };
             };
             settings: {
                 title: string;

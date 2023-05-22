@@ -79,5 +79,5 @@
     background: none;
     font-family: var(--text_font);
     color: var(--menu_options_color);
-    font-size: var(--menu_options_drowdown_fontsize);
+    font-size: var(--menu_options_dropdown_fontsize);
   }

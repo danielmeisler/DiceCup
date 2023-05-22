@@ -1,0 +1,27 @@
+#helpMenuContent_id {
+    display: flex;
+    flex-direction: column;
+    line-height: 8vh;
+    color: var(--menu_help_color);
+    font-family: var(--text_font);
+}
+
+#helpSubtitle_id {
+    padding-bottom: 3vh;
+    text-shadow: var(--text_shadow);
+    font-size: var(--menu_help_fontsize);
+}
+
+#helpContent_id {
+    font-size: var(--menu_help_sub_fontsize);
+}
+
+.helpIcons {
+    height: var(--menu_help_sub_fontsize);
+}
+
+.exampleIcons {
+    position: absolute;
+    right: 10%;
+    height: 40%;
+}

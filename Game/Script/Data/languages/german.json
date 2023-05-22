@@ -32,7 +32,24 @@
             }
         },
         "help": {
-            "title": "Spielanleitung"
+            "title": "Spielanleitung",
+            "page": "Seite",
+            "page_1": {
+                "title": "Spielbeschreibung",
+                "content": "Gespielt werden 12 Runden, in denen die Würfel jedes Mal neu fallen. Alle sehen das gleiche Ergebnis und versuchen immer, die beste Wertungskategorie für sich zu finden. Aber jede Kategorie steht pro Spiel nur einmal zur Verfügung! Wer am Ende die höchste Punktzahl erreicht, gewinnt das Dice Cup!"
+            },
+            "page_2": {
+                "title": "Spielverlauf",
+                "content": "Nach dem Countdown werden für nur 3 Sekunden die Würfel gezeigt, die man sich gut merken sollte. Nun werden sie wieder verdeckt und die Auswahl der Kategorien beginnt. Hier muss man abwägen welche Kategorien einem die meisten Punkte bringen. Aber denk daran, du kannst diese nur einmal pro Spiel wählen! Danach werden die Würfel gezählt und die Punkte vergeben."
+            },
+            "page_3": {
+                "title": "Spielwertung",
+                "content": "::ICONS3 ::ICONS4 ::ICONS5 ::ICONS6 ::ICONS7 ::ICONS8 Die Summe der jeweiligen Würfelfarbe. <br> ::ICONS0 ::ICONS1  ::ICONS2 Die Summe der jeweiligen Augenzahlen.<br> ::ICONS9 Pasche, der gleichen Farbe, geben 10 Punkte. <br> ::ICONS10 Die Summe aller Würfel, welche 1, 2 oder 3 zeigen. <br> ::ICONS11 Die Summe aller Würfel."
+            },
+            "page_4": {
+                "title": "Spielbeispiel",
+                "content": "::EXAMPLE ::ICONS0 Punkte: 8 (2 Würfel x 4 Augenzahl)<br> ::ICONS4 Punkte: 4 (Augenzahl 3 + Augenzahl 1)<br> ::ICONS9 Punkte: 20 (Pasch Rot 10 + Pasch Grün 10)<br> ::ICONS10 Punkte: 16 (Würfel 1 + Würfel 2 + Würfel 3 +...)<br> ::ICONS11 Punkte: 42 (Würfel 1 + Würfel 2 + Würfel 3 + ...)"
+            }
         },
         "settings": {
             "title": "Einstellungen",
