@@ -1557,7 +1557,7 @@ var DiceCup;
     async function loadPages() {
         for (let i = 0; i < helpPagesContent.length; i++) {
             content[i] = document.createElement("span");
-            content[i].innerHTML = helpPagesContent[i].replace("::ICONS" + i, await loadIcon(i)).replace("::EXAMPLE", loadExample());
+            content[i].innerHTML = helpPagesContent[i];
         }
         changePage(helpPages);
     }
