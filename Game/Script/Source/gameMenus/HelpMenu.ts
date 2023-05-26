@@ -50,16 +50,14 @@ namespace DiceCup {
             playSFX(buttonClick);
             helpPages < helpPagesContent.length && changePage(helpPages+=1);
         });
-
-        loadPages();
+        changePage(helpPages);
     }
 
-    async function loadPages(): Promise<void> {
+    export async function loadPages(): Promise<void> {
         for (let i = 0; i < helpPagesContent.length; i++) {
             content[i] = document.createElement("span");
             content[i].innerHTML = helpPagesContent[i].replace("::ICONS0", await loadIcon(0)).replace("::ICONS1 ", await loadIcon(1)).replace("::ICONS2", await loadIcon(2)).replace("::ICONS3", await loadIcon(3)).replace("::ICONS4", await loadIcon(4)).replace("::ICONS5", await loadIcon(5)).replace("::ICONS6", await loadIcon(6)).replace("::ICONS7", await loadIcon(7)).replace("::ICONS8", await loadIcon(8)).replace("::ICONS9", await loadIcon(9)).replace("::ICONS10", await loadIcon(10)).replace("::ICONS11", await loadIcon(11)).replace("::EXAMPLE", loadExample());
         }
-        changePage(helpPages);
     }
 
     async function changePage(_page: number): Promise<void> {

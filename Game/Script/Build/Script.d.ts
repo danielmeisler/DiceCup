@@ -254,6 +254,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function helpMenu(): void;
+    function loadPages(): Promise<void>;
 }
 declare namespace DiceCup {
     function mainMenu(): void;

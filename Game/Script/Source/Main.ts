@@ -25,6 +25,7 @@ namespace DiceCup {
     ƒ.AudioManager.default.listenTo(graph);
 
     currentLanguage = await <Languages>localStorage.getItem("language") || Languages.english;
+    await loadPages();
     await initBackgroundMusic(0);
     await chooseLanguage(currentLanguage);
     await changeViewportState(ViewportState.menu);
