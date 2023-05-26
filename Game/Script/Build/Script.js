@@ -1512,13 +1512,10 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     let helpPages = 1;
-    let helpPagesTitle = [];
-    let helpPagesContent = [];
+    let helpPagesMax = 4;
     let splitContent;
     function helpMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.help, "help", DiceCup.language.menu.help.title);
-        helpPagesTitle = [DiceCup.language.menu.help.page_1.title, DiceCup.language.menu.help.page_2.title, DiceCup.language.menu.help.page_3.title, DiceCup.language.menu.help.page_4.title];
-        helpPagesContent = [DiceCup.language.menu.help.page_1.content, DiceCup.language.menu.help.page_2.content, DiceCup.language.menu.help.page_3.content, DiceCup.language.menu.help.page_4.content];
         let backButton = document.createElement("button");
         backButton.id = "helpNextButton_id";
         backButton.classList.add("gameMenuButtons");
@@ -1543,17 +1540,17 @@ var DiceCup;
         nextButton.appendChild(nextIcon);
         nextButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            helpPages < helpPagesContent.length && changePage(helpPages += 1);
+            helpPages < helpPagesMax && changePage(helpPages += 1);
         });
-        for (let i = 1; i <= helpPagesContent.length; i++) {
+        for (let i = 1; i <= helpPagesMax; i++) {
             loadContent(i);
         }
         changePage(helpPages);
     }
     DiceCup.helpMenu = helpMenu;
     async function changePage(_page) {
-        document.getElementById("helpAlert_id").innerHTML = DiceCup.language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
-        for (let i = 1; i <= helpPagesContent.length; i++) {
+        document.getElementById("helpAlert_id").innerHTML = DiceCup.language.menu.help.page + " " + _page + "/" + helpPagesMax;
+        for (let i = 1; i <= helpPagesMax; i++) {
             document.getElementById("helpPage_" + i).hidden = true;
         }
         document.getElementById("helpPage_" + _page).hidden = false;

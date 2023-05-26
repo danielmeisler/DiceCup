@@ -1,15 +1,11 @@
 namespace DiceCup {
 
     let helpPages: number = 1;
-    let helpPagesTitle: string[] = [];
-    let helpPagesContent: string[] = [];
+    let helpPagesMax: number = 4;
     let splitContent: string[]
 
     export function helpMenu(): void {
         new SubMenu(MenuPage.help, "help", language.menu.help.title);
-
-        helpPagesTitle = [language.menu.help.page_1.title, language.menu.help.page_2.title, language.menu.help.page_3.title, language.menu.help.page_4.title];
-        helpPagesContent = [language.menu.help.page_1.content, language.menu.help.page_2.content, language.menu.help.page_3.content, language.menu.help.page_4.content];
 
         let backButton: HTMLButtonElement = document.createElement("button");
         backButton.id = "helpNextButton_id";
@@ -40,19 +36,19 @@ namespace DiceCup {
 
         nextButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            helpPages < helpPagesContent.length && changePage(helpPages+=1);
+            helpPages < helpPagesMax && changePage(helpPages+=1);
         });
 
-        for (let i = 1; i <= helpPagesContent.length; i++) {
+        for (let i = 1; i <= helpPagesMax; i++) {
             loadContent(i);
         }
         changePage(helpPages);
     }
 
     async function changePage(_page: number): Promise<void> {
-        document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
+        document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesMax;
         
-        for (let i = 1; i <= helpPagesContent.length; i++) {
+        for (let i = 1; i <= helpPagesMax; i++) {
             document.getElementById("helpPage_" + i).hidden = true;
         }
 
