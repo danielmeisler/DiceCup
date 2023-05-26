@@ -56,6 +56,7 @@ namespace DiceCup {
 
     async function changePage(_page: number): Promise<void> {
         document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
+        document.getElementById("helpSubtitle_id").innerHTML = "";
         document.getElementById("helpContent_id").innerHTML = "";
         switch (_page) {
             case 1:

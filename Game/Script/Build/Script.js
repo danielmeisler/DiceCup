@@ -1556,6 +1556,7 @@ var DiceCup;
     DiceCup.helpMenu = helpMenu;
     async function changePage(_page) {
         document.getElementById("helpAlert_id").innerHTML = DiceCup.language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
+        document.getElementById("helpSubtitle_id").innerHTML = "";
         document.getElementById("helpContent_id").innerHTML = "";
         switch (_page) {
             case 1:
