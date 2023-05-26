@@ -1564,6 +1564,7 @@ var DiceCup;
     }
     async function changePage(_page) {
         document.getElementById("helpAlert_id").innerHTML = DiceCup.language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
+        document.getElementById("helpContent_id").innerHTML = "";
         switch (_page) {
             case 1:
                 document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_1.title;
@@ -1575,7 +1576,6 @@ var DiceCup;
                 break;
             case 3:
                 document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_3.title;
-                document.getElementById("helpContent_id").innerHTML = "";
                 splitContent = DiceCup.language.menu.help.page_3.content.split("<br>");
                 let iconLengths = [3, 6, 1, 1, 1];
                 let counter = 0;
@@ -1600,7 +1600,6 @@ var DiceCup;
                 break;
             case 4:
                 document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_4.title;
-                document.getElementById("helpContent_id").innerHTML = "";
                 splitContent = DiceCup.language.menu.help.page_4.content.split("<br>");
                 let iconArray = [0, 4, 9, 10, 11];
                 for (let i = 0; i < 5; i++) {

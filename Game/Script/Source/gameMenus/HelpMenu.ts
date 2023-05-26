@@ -64,7 +64,7 @@ namespace DiceCup {
 
     async function changePage(_page: number): Promise<void> {
         document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
-
+        document.getElementById("helpContent_id").innerHTML = "";
         switch (_page) {
             case 1:
                 document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_1.title;
@@ -76,7 +76,6 @@ namespace DiceCup {
                 break;
             case 3:
                 document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_3.title;
-                document.getElementById("helpContent_id").innerHTML = "";
 
                 splitContent = language.menu.help.page_3.content.split("<br>");
                 let iconLengths: number[] = [3, 6, 1, 1, 1];
@@ -107,7 +106,6 @@ namespace DiceCup {
                 break;
             case 4:
                 document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_4.title;
-                document.getElementById("helpContent_id").innerHTML = "";
 
                 splitContent = language.menu.help.page_4.content.split("<br>");
                 let iconArray: number[] = [0, 4, 9, 10, 11];
