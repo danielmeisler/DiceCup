@@ -1514,7 +1514,6 @@ var DiceCup;
     let helpPages = 1;
     let helpPagesTitle = [];
     let helpPagesContent = [];
-    let content = [];
     let splitContent;
     function helpMenu() {
         new DiceCup.SubMenu(DiceCup.MenuPage.help, "help", DiceCup.language.menu.help.title);
@@ -1552,16 +1551,9 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             helpPages < helpPagesContent.length && changePage(helpPages += 1);
         });
-        loadPages();
-    }
-    DiceCup.helpMenu = helpMenu;
-    async function loadPages() {
-        for (let i = 0; i < helpPagesContent.length; i++) {
-            content[i] = document.createElement("span");
-            content[i].innerHTML = helpPagesContent[i];
-        }
         changePage(helpPages);
     }
+    DiceCup.helpMenu = helpMenu;
     async function changePage(_page) {
         document.getElementById("helpAlert_id").innerHTML = DiceCup.language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
         document.getElementById("helpContent_id").innerHTML = "";

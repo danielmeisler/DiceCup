@@ -3,7 +3,6 @@ namespace DiceCup {
     let helpPages: number = 1;
     let helpPagesTitle: string[] = [];
     let helpPagesContent: string[] = [];
-    let content: HTMLSpanElement[] = [];
     let splitContent: string[]
 
     export function helpMenu(): void {
@@ -51,14 +50,7 @@ namespace DiceCup {
             playSFX(buttonClick);
             helpPages < helpPagesContent.length && changePage(helpPages+=1);
         });
-        loadPages();
-    }
 
-    async function loadPages(): Promise<void> {
-        for (let i = 0; i < helpPagesContent.length; i++) {
-            content[i] = document.createElement("span");
-            content[i].innerHTML = helpPagesContent[i];
-        }
         changePage(helpPages);
     }
 
