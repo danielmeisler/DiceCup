@@ -53,16 +53,16 @@ namespace DiceCup {
         document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
         
         for (let i = 1; i <= helpPagesContent.length; i++) {
-            document.getElementById("helpPage" + i).hidden = true;
+            document.getElementById("helpPage_" + i).hidden = true;
         }
 
-        document.getElementById("helpPage" + _page).hidden = false;
+        document.getElementById("helpPage_" + _page).hidden = false;
     }
 
     async function loadContent(_page: number): Promise<void> {
 
         let containerDiv: HTMLDivElement = document.createElement("div");
-        containerDiv.id = "helpPage" + _page;
+        containerDiv.id = "helpPage_" + _page;
         containerDiv.hidden = true;
         document.getElementById("helpMenuContent_id").appendChild(containerDiv);
 
@@ -92,7 +92,7 @@ namespace DiceCup {
 
                 for (let i = 0; i < 5; i++) {
                     let row: HTMLDivElement = document.createElement("div");
-                    row.id = "helpRow3";
+                    row.id = "helpRow_page_3";
                     content.appendChild(row);
 
                     let subContent: HTMLSpanElement = document.createElement("span");
@@ -121,7 +121,7 @@ namespace DiceCup {
 
                 for (let i = 0; i < 5; i++) {
                     let row: HTMLDivElement = document.createElement("div");
-                    row.id = "helpRow4";
+                    row.id = "helpRow_page_4";
                     content.appendChild(row);
 
                     let icon: HTMLImageElement = document.createElement("img");

@@ -18,13 +18,13 @@
     font-size: var(--menu_help_sub_fontsize);
 }
 
-#helpRow3 {
+#helpRow_page_3 {
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
-#helpRow4 {
+#helpRow_page_4 {
     display: flex;
     align-items: center;
     gap: 1vw;
