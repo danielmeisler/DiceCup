@@ -13,7 +13,28 @@
 }
 
 #helpContent_id {
+    display: flex;
+    flex-direction: column;
     font-size: var(--menu_help_sub_fontsize);
+}
+
+#helpRow3 {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#helpRow4 {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+}
+
+#helpIconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5vw;
 }
 
 .helpIcons {
@@ -22,6 +43,6 @@
 
 .exampleIcons {
     position: absolute;
-    right: 10%;
+    right: 2vw;
     height: 40%;
 }

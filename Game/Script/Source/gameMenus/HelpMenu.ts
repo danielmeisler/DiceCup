@@ -4,6 +4,7 @@ namespace DiceCup {
     let helpPagesTitle: string[] = [];
     let helpPagesContent: string[] = [];
     let content: HTMLSpanElement[] = [];
+    let splitContent: string[]
 
     export function helpMenu(): void {
         new SubMenu(MenuPage.help, "help", language.menu.help.title);
@@ -63,18 +64,85 @@ namespace DiceCup {
 
     async function changePage(_page: number): Promise<void> {
         document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
-        document.getElementById("helpSubtitle_id").innerHTML = helpPagesTitle[_page - 1]
-        document.getElementById("helpContent_id").innerHTML = content[_page - 1].innerHTML;
+
+        switch (_page) {
+            case 1:
+                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_1.title;
+                document.getElementById("helpContent_id").innerHTML = language.menu.help.page_1.content;
+                break;
+            case 2:
+                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_2.title;
+                document.getElementById("helpContent_id").innerHTML = language.menu.help.page_2.content;
+                break;
+            case 3:
+                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_3.title;
+                document.getElementById("helpContent_id").innerHTML = "";
+
+                splitContent = language.menu.help.page_3.content.split("<br>");
+                let iconLengths: number[] = [3, 6, 1, 1, 1];
+                let counter: number = 0;
+
+                for (let i = 0; i < 5; i++) {
+                    let row: HTMLDivElement = document.createElement("div");
+                    row.id = "helpRow3";
+                    document.getElementById("helpContent_id").appendChild(row);
+
+                    let subContent: HTMLSpanElement = document.createElement("span");
+                    subContent.innerHTML = "· " + splitContent[i];
+                    row.appendChild(subContent);
+
+                    let iconContainer: HTMLDivElement = document.createElement("div");
+                    iconContainer.id = "helpIconContainer";
+                    row.appendChild(iconContainer);
+
+                    for (let j = 0; j < iconLengths[i]; j++) {
+                        let icon: HTMLImageElement = document.createElement("img");
+                        icon.classList.add("helpIcons");
+                        icon.src = await loadIcon(counter + j);
+                        iconContainer.appendChild(icon);
+                    }
+
+                    counter += iconLengths[i];
+                }
+                break;
+            case 4:
+                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_4.title;
+                document.getElementById("helpContent_id").innerHTML = "";
+
+                splitContent = language.menu.help.page_4.content.split("<br>");
+                let iconArray: number[] = [0, 4, 9, 10, 11];
+
+                for (let i = 0; i < 5; i++) {
+                    let row: HTMLDivElement = document.createElement("div");
+                    row.id = "helpRow4";
+                    document.getElementById("helpContent_id").appendChild(row);
+
+                    let icon: HTMLImageElement = document.createElement("img");
+                    icon.classList.add("helpIcons");
+                    icon.src = await loadIcon(iconArray[i]);
+                    row.appendChild(icon);
+    
+                    let subContent: HTMLSpanElement = document.createElement("span");
+                    subContent.innerHTML = splitContent[i];
+                    row.appendChild(subContent);
+                }
+
+                let example: HTMLImageElement = document.createElement("img");
+                example.id = "helpExample_id";
+                example.classList.add("exampleIcons");
+                example.src = "Game/Assets/images/example.svg";
+                document.getElementById("helpContent_id").appendChild(example);
+
+                break;
+            default:
+                break;
+        }
     }
 
     async function loadIcon(_icon: number): Promise<string> {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();
 
-        return "<img src=\"" + categories[_icon].image + "\" class=\" helpIcons \">";
-    }
-
-    function loadExample(): string {
-        return "<img src=\"" + "Game/Assets/images/example.svg" + "\" class=\" exampleIcons \">";
+        return categories[_icon].image;
     }
 }
