@@ -1519,12 +1519,6 @@ var DiceCup;
         new DiceCup.SubMenu(DiceCup.MenuPage.help, "help", DiceCup.language.menu.help.title);
         helpPagesTitle = [DiceCup.language.menu.help.page_1.title, DiceCup.language.menu.help.page_2.title, DiceCup.language.menu.help.page_3.title, DiceCup.language.menu.help.page_4.title];
         helpPagesContent = [DiceCup.language.menu.help.page_1.content, DiceCup.language.menu.help.page_2.content, DiceCup.language.menu.help.page_3.content, DiceCup.language.menu.help.page_4.content];
-        let title = document.createElement("span");
-        title.id = "helpSubtitle_id";
-        document.getElementById("helpMenuContent_id").appendChild(title);
-        let content = document.createElement("span");
-        content.id = "helpContent_id";
-        document.getElementById("helpMenuContent_id").appendChild(content);
         let backButton = document.createElement("button");
         backButton.id = "helpNextButton_id";
         backButton.classList.add("gameMenuButtons");
@@ -1551,31 +1545,48 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             helpPages < helpPagesContent.length && changePage(helpPages += 1);
         });
+        for (let i = 1; i <= helpPagesContent.length; i++) {
+            loadContent(i);
+        }
         changePage(helpPages);
     }
     DiceCup.helpMenu = helpMenu;
     async function changePage(_page) {
         document.getElementById("helpAlert_id").innerHTML = DiceCup.language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
-        document.getElementById("helpSubtitle_id").innerHTML = "";
-        document.getElementById("helpContent_id").innerHTML = "";
+        for (let i = 1; i <= helpPagesContent.length; i++) {
+            document.getElementById("helpPage" + i).hidden = true;
+        }
+        document.getElementById("helpPage" + _page).hidden = false;
+    }
+    async function loadContent(_page) {
+        let containerDiv = document.createElement("div");
+        containerDiv.id = "helpPage" + _page;
+        containerDiv.hidden = true;
+        document.getElementById("helpMenuContent_id").appendChild(containerDiv);
+        let title = document.createElement("span");
+        title.id = "helpSubtitle_id";
+        containerDiv.appendChild(title);
+        let content = document.createElement("span");
+        content.id = "helpContent_id";
+        containerDiv.appendChild(content);
         switch (_page) {
             case 1:
-                document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_1.title;
-                document.getElementById("helpContent_id").innerHTML = DiceCup.language.menu.help.page_1.content;
+                title.innerHTML = DiceCup.language.menu.help.page_1.title;
+                content.innerHTML = DiceCup.language.menu.help.page_1.content;
                 break;
             case 2:
-                document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_2.title;
-                document.getElementById("helpContent_id").innerHTML = DiceCup.language.menu.help.page_2.content;
+                title.innerHTML = DiceCup.language.menu.help.page_2.title;
+                content.innerHTML = DiceCup.language.menu.help.page_2.content;
                 break;
             case 3:
-                document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_3.title;
+                title.innerHTML = DiceCup.language.menu.help.page_3.title;
                 splitContent = DiceCup.language.menu.help.page_3.content.split("<br>");
                 let iconLengths = [3, 6, 1, 1, 1];
                 let counter = 0;
                 for (let i = 0; i < 5; i++) {
                     let row = document.createElement("div");
                     row.id = "helpRow3";
-                    document.getElementById("helpContent_id").appendChild(row);
+                    content.appendChild(row);
                     let subContent = document.createElement("span");
                     subContent.innerHTML = "· " + splitContent[i];
                     row.appendChild(subContent);
@@ -1592,13 +1603,13 @@ var DiceCup;
                 }
                 break;
             case 4:
-                document.getElementById("helpSubtitle_id").innerHTML = DiceCup.language.menu.help.page_4.title;
+                title.innerHTML = DiceCup.language.menu.help.page_4.title;
                 splitContent = DiceCup.language.menu.help.page_4.content.split("<br>");
                 let iconArray = [0, 4, 9, 10, 11];
                 for (let i = 0; i < 5; i++) {
                     let row = document.createElement("div");
                     row.id = "helpRow4";
-                    document.getElementById("helpContent_id").appendChild(row);
+                    content.appendChild(row);
                     let icon = document.createElement("img");
                     icon.classList.add("helpIcons");
                     icon.src = await loadIcon(iconArray[i]);
@@ -1611,7 +1622,7 @@ var DiceCup;
                 example.id = "helpExample_id";
                 example.classList.add("exampleIcons");
                 example.src = "Game/Assets/images/example.svg";
-                document.getElementById("helpContent_id").appendChild(example);
+                content.appendChild(example);
                 break;
             default:
                 break;

@@ -11,14 +11,6 @@ namespace DiceCup {
         helpPagesTitle = [language.menu.help.page_1.title, language.menu.help.page_2.title, language.menu.help.page_3.title, language.menu.help.page_4.title];
         helpPagesContent = [language.menu.help.page_1.content, language.menu.help.page_2.content, language.menu.help.page_3.content, language.menu.help.page_4.content];
 
-        let title: HTMLSpanElement = document.createElement("span");
-        title.id = "helpSubtitle_id";
-        document.getElementById("helpMenuContent_id").appendChild(title);
-
-        let content: HTMLSpanElement = document.createElement("span");
-        content.id = "helpContent_id";
-        document.getElementById("helpMenuContent_id").appendChild(content);
-
         let backButton: HTMLButtonElement = document.createElement("button");
         backButton.id = "helpNextButton_id";
         backButton.classList.add("gameMenuButtons");
@@ -51,24 +43,48 @@ namespace DiceCup {
             helpPages < helpPagesContent.length && changePage(helpPages+=1);
         });
 
+        for (let i = 1; i <= helpPagesContent.length; i++) {
+            loadContent(i);
+        }
         changePage(helpPages);
     }
 
     async function changePage(_page: number): Promise<void> {
         document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesContent.length;
-        document.getElementById("helpSubtitle_id").innerHTML = "";
-        document.getElementById("helpContent_id").innerHTML = "";
+        
+        for (let i = 1; i <= helpPagesContent.length; i++) {
+            document.getElementById("helpPage" + i).hidden = true;
+        }
+
+        document.getElementById("helpPage" + _page).hidden = false;
+    }
+
+    async function loadContent(_page: number): Promise<void> {
+
+        let containerDiv: HTMLDivElement = document.createElement("div");
+        containerDiv.id = "helpPage" + _page;
+        containerDiv.hidden = true;
+        document.getElementById("helpMenuContent_id").appendChild(containerDiv);
+
+        let title: HTMLSpanElement = document.createElement("span");
+        title.id = "helpSubtitle_id";
+        containerDiv.appendChild(title);
+
+        let content: HTMLSpanElement = document.createElement("span");
+        content.id = "helpContent_id";
+        containerDiv.appendChild(content);
+
         switch (_page) {
             case 1:
-                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_1.title;
-                document.getElementById("helpContent_id").innerHTML = language.menu.help.page_1.content;
+                title.innerHTML = language.menu.help.page_1.title;
+                content.innerHTML = language.menu.help.page_1.content;
                 break;
             case 2:
-                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_2.title;
-                document.getElementById("helpContent_id").innerHTML = language.menu.help.page_2.content;
+                title.innerHTML = language.menu.help.page_2.title;
+                content.innerHTML = language.menu.help.page_2.content;
                 break;
             case 3:
-                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_3.title;
+                title.innerHTML = language.menu.help.page_3.title;
 
                 splitContent = language.menu.help.page_3.content.split("<br>");
                 let iconLengths: number[] = [3, 6, 1, 1, 1];
@@ -77,7 +93,7 @@ namespace DiceCup {
                 for (let i = 0; i < 5; i++) {
                     let row: HTMLDivElement = document.createElement("div");
                     row.id = "helpRow3";
-                    document.getElementById("helpContent_id").appendChild(row);
+                    content.appendChild(row);
 
                     let subContent: HTMLSpanElement = document.createElement("span");
                     subContent.innerHTML = "· " + splitContent[i];
@@ -98,7 +114,7 @@ namespace DiceCup {
                 }
                 break;
             case 4:
-                document.getElementById("helpSubtitle_id").innerHTML = language.menu.help.page_4.title;
+                title.innerHTML = language.menu.help.page_4.title;
 
                 splitContent = language.menu.help.page_4.content.split("<br>");
                 let iconArray: number[] = [0, 4, 9, 10, 11];
@@ -106,7 +122,7 @@ namespace DiceCup {
                 for (let i = 0; i < 5; i++) {
                     let row: HTMLDivElement = document.createElement("div");
                     row.id = "helpRow4";
-                    document.getElementById("helpContent_id").appendChild(row);
+                    content.appendChild(row);
 
                     let icon: HTMLImageElement = document.createElement("img");
                     icon.classList.add("helpIcons");
@@ -122,7 +138,7 @@ namespace DiceCup {
                 example.id = "helpExample_id";
                 example.classList.add("exampleIcons");
                 example.src = "Game/Assets/images/example.svg";
-                document.getElementById("helpContent_id").appendChild(example);
+                content.appendChild(example);
 
                 break;
             default:
