@@ -1,3 +1,4 @@
+/// <reference path="../../../Library/Net/Client/FudgeClient.d.ts" />
 declare namespace DiceCup {
     import ƒ = FudgeCore;
     class CustomComponentScript extends ƒ.ComponentScript {
@@ -399,6 +400,8 @@ declare namespace DiceCup {
         playerName: string;
         bot: BotDao[];
     }
+}
+declare namespace DiceCup {
 }
 declare namespace DiceCup {
     let language: LanguageDao;
