@@ -59,6 +59,7 @@ var DiceCup;
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         await DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         await DiceCup.initMenu();
+        DiceCup.startClient();
         document.getElementById("loadingScreen").remove();
     }
 })(DiceCup || (DiceCup = {}));
@@ -1654,7 +1655,7 @@ var DiceCup;
         let buttonDiv = document.createElement("div");
         buttonDiv.id = "buttonContainer_id";
         menuDiv.appendChild(buttonDiv);
-        let menuButtonIds = ["play_id", "shop_id", "help_id", "options_id"];
+        let menuButtonIds = ["play_id", "multiplayer_id", "help_id", "options_id"];
         let menuButtonIconPaths = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/multiplayer.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
         for (let i = 0; i < 4; i++) {
             let menuButtons = document.createElement("button");
@@ -1671,7 +1672,7 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.singleplayer);
         });
-        document.getElementById("shop_id").addEventListener("click", () => {
+        document.getElementById("multiplayer_id").addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
         });
@@ -1822,8 +1823,80 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             // createGameSettings();
         });
+        let contentContainer = document.createElement("div");
+        contentContainer.id = "multiplayerContentContainer_id";
+        document.getElementById("multiplayerMenuContent_id").appendChild(contentContainer);
+        let serverList = document.createElement("div");
+        serverList.id = "serverListRow_id_0";
+        serverList.classList.add("serverListRow");
+        contentContainer.appendChild(serverList);
+        initList();
     }
     DiceCup.multiplayerServers = multiplayerServers;
+    function initList() {
+        let serverList = document.getElementById("serverListRow_id_0");
+        let playerCountContainer = document.createElement("div");
+        playerCountContainer.id = "playerCountContainer_id_0";
+        playerCountContainer.classList.add("serverListContainer");
+        serverList.appendChild(playerCountContainer);
+        let gameContainer = document.createElement("div");
+        gameContainer.id = "gameContainer_id_0";
+        gameContainer.classList.add("serverListContainer");
+        serverList.appendChild(gameContainer);
+        let gamemodeContainer = document.createElement("div");
+        gamemodeContainer.id = "gamemodeContainer_id_0";
+        gamemodeContainer.classList.add("serverListContainer");
+        serverList.appendChild(gamemodeContainer);
+        let lockedContainer = document.createElement("div");
+        lockedContainer.id = "lockedContainer_id_0";
+        lockedContainer.classList.add("serverListContainer");
+        serverList.appendChild(lockedContainer);
+        let playerCount = document.createElement("img");
+        playerCount.id = "playerCount_id";
+        playerCount.classList.add("serverListIcons");
+        playerCount.src = "Game/Assets/images/menuButtons/player.svg";
+        playerCountContainer.appendChild(playerCount);
+        let game = document.createElement("img");
+        game.id = "room_id";
+        game.classList.add("serverListIcons");
+        game.src = "Game/Assets/images/menuButtons/player.svg";
+        gameContainer.appendChild(game);
+        let gamemode = document.createElement("img");
+        gamemode.id = "gamemode_id";
+        gamemode.classList.add("serverListIcons");
+        gamemode.src = "Game/Assets/images/menuButtons/player.svg";
+        gamemodeContainer.appendChild(gamemode);
+        let locked = document.createElement("img");
+        locked.id = "locked_id";
+        locked.classList.add("serverListIcons");
+        locked.src = "Game/Assets/images/menuButtons/player.svg";
+        lockedContainer.appendChild(locked);
+    }
+    async function getRooms(_rooms) {
+        let serverList = document.getElementById("multiplayerServerList_id");
+        console.log(_rooms);
+        for (let i = 0; i < _rooms.length; i++) {
+            let playerCount = document.createElement("span");
+            playerCount.id = "playerCount_id_" + i;
+            playerCount.classList.add("serverListRow");
+            serverList.appendChild(playerCount);
+            let game = document.createElement("span");
+            game.id = "room_id_" + i;
+            game.innerHTML = _rooms[i];
+            game.classList.add("serverListRow");
+            serverList.appendChild(game);
+            let gamemode = document.createElement("span");
+            gamemode.id = "gamemode_id_" + i;
+            gamemode.innerHTML = "NORMAL";
+            gamemode.classList.add("serverListRow");
+            serverList.appendChild(gamemode);
+            let locked = document.createElement("img");
+            locked.id = "locked_id_" + i;
+            locked.classList.add("serverListRow");
+            serverList.appendChild(locked);
+        }
+    }
+    DiceCup.getRooms = getRooms;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -2296,47 +2369,50 @@ var DiceCup;
     let client = new ƒClient();
     // keep a list of known clients, updated with information from the server
     let clientsKnown = {};
-    window.addEventListener("load", start);
-    async function start(_event) {
-        document.forms[0].querySelector("button#connect").addEventListener("click", connectToServer);
-        document.forms[0].querySelector("button#rename").addEventListener("click", rename);
-        document.forms[0].querySelector("button#mesh").addEventListener("click", structurePeers);
-        document.forms[0].querySelector("button#host").addEventListener("click", structurePeers);
-        document.forms[0].querySelector("button#disconnect").addEventListener("click", structurePeers);
-        document.forms[0].querySelector("fieldset#rooms").addEventListener("click", hndRoom);
-        document.forms[0].querySelector("button#reset").addEventListener("click", structurePeers);
-        document.forms[1].querySelector("fieldset").addEventListener("click", sendMessage);
-        createTable();
+    async function startClient() {
+        console.log(client);
+        console.log("Client started...");
+        document.getElementById("multiplayer_id").addEventListener("click", connectToServer);
+        document.getElementById("multiplayer_id").addEventListener("click", hndRoom);
+        document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
+        document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
+        // document.querySelector("button#rename").addEventListener("click", rename);
+        // document.querySelector("button#mesh").addEventListener("click", structurePeers);
+        // document.querySelector("button#host").addEventListener("click", structurePeers);
+        // document.querySelector("button#disconnect").addEventListener("click", structurePeers);
+        // document.querySelector("button#reset").addEventListener("click", structurePeers);
+        // document.querySelector("fieldset").addEventListener("click", sendMessage);      
+        // createTable();
     }
+    DiceCup.startClient = startClient;
     function hndRoom(_event) {
         if (!(_event.target instanceof HTMLButtonElement))
             return;
-        let command = _event.target.textContent;
+        let command = _event.target.id;
         switch (command) {
-            case "Get":
+            case "multiplayer_id":
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                 break;
-            case "Create":
+            case "multiplayerCreateButton_id":
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
                 break;
-            case "Join":
+            case "multiplayerJoinButton_id":
                 let idRoom = document.forms[0].querySelector("fieldset#rooms>input").value;
                 console.log("Enter", idRoom);
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
                 break;
-                break;
         }
     }
     async function connectToServer(_event) {
-        let domServer = document.forms[0].querySelector("input[name=server");
+        let domServer = "ws://localhost:9001";
         try {
             // connect to a server with the given url
-            client.connectToServer(domServer.value);
+            client.connectToServer(domServer);
             await delay(1000);
             // document.forms[0].querySelector("button#login").removeAttribute("disabled");
-            document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
-            document.forms[0].querySelector("button#host").removeAttribute("disabled");
-            document.forms[0].querySelector("input#id").value = client.id;
+            // document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
+            // document.forms[0].querySelector("button#host").removeAttribute("disabled");
+            // (<HTMLInputElement>document.forms[0].querySelector("input#id")).value = client.id;
             // install an event listener to be called when a message comes in
             client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage);
         }
@@ -2359,9 +2435,9 @@ var DiceCup;
                 showMessage(message);
             switch (message.command) {
                 case FudgeNet.COMMAND.SERVER_HEARTBEAT:
-                    if (client.name == undefined)
-                        proposeName();
-                    updateTable();
+                    // if (client.name == undefined)
+                    // proposeName();
+                    // updateTable();
                     // on each server heartbeat, dispatch this clients heartbeat
                     client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
                     break;
@@ -2374,7 +2450,7 @@ var DiceCup;
                     client.disconnectPeers();
                     break;
                 case FudgeNet.COMMAND.ROOM_GET_IDS:
-                    document.forms[0].querySelector("fieldset#rooms>textarea").value = message.content.rooms.toString();
+                    DiceCup.getRooms(message.content.rooms);
                     break;
                 case FudgeNet.COMMAND.ROOM_CREATE:
                     console.log("Created room", message.content.room);
@@ -2405,15 +2481,15 @@ var DiceCup;
         domProposeName.value = "Client-" + i;
     }
     function createTable() {
-        let table = document.querySelector("table");
+        let table = document.querySelector("#multiplayerMenuContent_id");
         let html = `<tr><th>&nbsp;</th><th>name</th><th>id</th><th>data</th><th>signal</th><th>connection</th><th>gather</th><th>ice</th></tr>`;
         html += `<tr><td><span>0</span></td><td>Server</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
         table.innerHTML = html;
     }
     function updateTable() {
-        let table = document.querySelector("table");
+        let table = document.querySelector("multiplayerMenuContent_id");
         let span = document.querySelector(`td>span`); // first cell is server blinker
-        blink(span);
+        // blink(span);
         for (let id in clientsKnown)
             if (!client.clientsInfoFromServer[id])
                 deleteRow(id);

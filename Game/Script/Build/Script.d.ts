@@ -264,6 +264,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function multiplayerServers(): void;
+    function getRooms(_rooms: string[]): Promise<void>;
 }
 declare namespace DiceCup {
     let sfxVolume: number;
@@ -402,6 +403,7 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    function startClient(): Promise<void>;
 }
 declare namespace DiceCup {
     let language: LanguageDao;

@@ -10,50 +10,51 @@ namespace DiceCup {
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
   
-    window.addEventListener("load", start);
-  
-    async function start(_event: Event): Promise<void> {
-      document.forms[0].querySelector("button#connect").addEventListener("click", connectToServer);
-      document.forms[0].querySelector("button#rename").addEventListener("click", rename);
-      document.forms[0].querySelector("button#mesh").addEventListener("click", structurePeers);
-      document.forms[0].querySelector("button#host").addEventListener("click", structurePeers);
-      document.forms[0].querySelector("button#disconnect").addEventListener("click", structurePeers);
-      document.forms[0].querySelector("fieldset#rooms").addEventListener("click", hndRoom);
-      document.forms[0].querySelector("button#reset").addEventListener("click", structurePeers);
-      document.forms[1].querySelector("fieldset").addEventListener("click", sendMessage);
-      createTable();
+    export async function startClient(): Promise<void> {
+      console.log(client);
+      console.log("Client started...")
+      document.getElementById("multiplayer_id").addEventListener("click", connectToServer);
+      document.getElementById("multiplayer_id").addEventListener("click", hndRoom);
+      document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
+      document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
+      // document.querySelector("button#rename").addEventListener("click", rename);
+      // document.querySelector("button#mesh").addEventListener("click", structurePeers);
+      // document.querySelector("button#host").addEventListener("click", structurePeers);
+      // document.querySelector("button#disconnect").addEventListener("click", structurePeers);
+      // document.querySelector("button#reset").addEventListener("click", structurePeers);
+      // document.querySelector("fieldset").addEventListener("click", sendMessage);      
+      // createTable();
     }
   
-    function hndRoom(_event: Event): void {
+    function hndRoom (_event: Event): void {
       if (!(_event.target instanceof HTMLButtonElement))
         return;
-      let command: string = _event.target.textContent;
+      let command: string = _event.target.id;
       switch (command) {
-        case "Get":
+        case "multiplayer_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
           break;
-        case "Create":
+        case "multiplayerCreateButton_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
           break;
-        case "Join":
+        case "multiplayerJoinButton_id":
           let idRoom: string = (<HTMLInputElement>document.forms[0].querySelector("fieldset#rooms>input")).value;
           console.log("Enter", idRoom);
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
-          break;
           break;
       }
     }
   
     async function connectToServer(_event: Event): Promise<void> {
-      let domServer: HTMLInputElement = document.forms[0].querySelector("input[name=server");
+      let domServer: string = "ws://localhost:9001";
       try {
         // connect to a server with the given url
-        client.connectToServer(domServer.value);
+        client.connectToServer(domServer);
         await delay(1000);
         // document.forms[0].querySelector("button#login").removeAttribute("disabled");
-        document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
-        document.forms[0].querySelector("button#host").removeAttribute("disabled");
-        (<HTMLInputElement>document.forms[0].querySelector("input#id")).value = client.id;
+        // document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
+        // document.forms[0].querySelector("button#host").removeAttribute("disabled");
+        // (<HTMLInputElement>document.forms[0].querySelector("input#id")).value = client.id;
         // install an event listener to be called when a message comes in
         client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage as unknown as EventListener);
       } catch (_error) {
@@ -77,9 +78,9 @@ namespace DiceCup {
           showMessage(message);
         switch (message.command) {
           case FudgeNet.COMMAND.SERVER_HEARTBEAT:
-            if (client.name == undefined)
-              proposeName();
-            updateTable();
+            // if (client.name == undefined)
+              // proposeName();
+            // updateTable();
             // on each server heartbeat, dispatch this clients heartbeat
             client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
             break;
@@ -92,7 +93,7 @@ namespace DiceCup {
             client.disconnectPeers();
             break;
           case FudgeNet.COMMAND.ROOM_GET_IDS:
-            (<HTMLTextAreaElement>document.forms[0].querySelector("fieldset#rooms>textarea")).value = message.content.rooms.toString();
+            getRooms(message.content.rooms);
             break;
           case FudgeNet.COMMAND.ROOM_CREATE:
             console.log("Created room", message.content.room);
@@ -125,16 +126,16 @@ namespace DiceCup {
     }
   
     function createTable(): void {
-      let table: HTMLTableElement = document.querySelector("table");
+      let table: HTMLTableElement = document.querySelector("#multiplayerMenuContent_id");
       let html: string = `<tr><th>&nbsp;</th><th>name</th><th>id</th><th>data</th><th>signal</th><th>connection</th><th>gather</th><th>ice</th></tr>`;
       html += `<tr><td><span>0</span></td><td>Server</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
       table.innerHTML = html;
     }
   
     function updateTable(): void {
-      let table: HTMLTableElement = document.querySelector("table");
+      let table: HTMLDivElement = document.querySelector("multiplayerMenuContent_id");
       let span: HTMLSpanElement = document.querySelector(`td>span`); // first cell is server blinker
-      blink(span);
+      // blink(span);
   
   
       for (let id in clientsKnown)

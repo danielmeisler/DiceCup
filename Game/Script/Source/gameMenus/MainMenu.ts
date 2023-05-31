@@ -26,7 +26,7 @@ namespace DiceCup {
         buttonDiv.id = "buttonContainer_id";
         menuDiv.appendChild(buttonDiv);
 
-        let menuButtonIds: string[] = ["play_id", "shop_id", "help_id", "options_id"];
+        let menuButtonIds: string[] = ["play_id", "multiplayer_id", "help_id", "options_id"];
         let menuButtonIconPaths: string[] = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/multiplayer.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
 
         for (let i = 0; i < 4; i++) {
@@ -47,7 +47,7 @@ namespace DiceCup {
             switchMenu(MenuPage.singleplayer);
         });
 
-        document.getElementById("shop_id").addEventListener("click", () => {
+        document.getElementById("multiplayer_id").addEventListener("click", () => {
             playSFX(buttonClick);
             switchMenu(MenuPage.multiplayer);
 
