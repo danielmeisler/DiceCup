@@ -263,6 +263,7 @@ declare namespace DiceCup {
     function multiplayerMenu(): void;
 }
 declare namespace DiceCup {
+    let focusedIdRoom: string;
     function multiplayerServers(): void;
     function getRooms(_rooms: string[]): Promise<void>;
 }

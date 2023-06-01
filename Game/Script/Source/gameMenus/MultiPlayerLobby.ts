@@ -81,7 +81,8 @@ namespace DiceCup {
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = language.menu.player;
+        let playernames: string[] = JSON.parse(localStorage.getItem("playernames")) ?? [language.menu.player];
+        playerName.placeholder = playernames[0];
         playerContainer.appendChild(playerName);
 
         playerCounter++;

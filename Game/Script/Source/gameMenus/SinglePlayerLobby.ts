@@ -18,7 +18,6 @@ namespace DiceCup {
             createAddPortrait();
         }
 
-
         let settingsButton: HTMLButtonElement = document.createElement("button");
         settingsButton.id = "singleplayerSettingsButton_id";
         settingsButton.classList.add("gameMenuButtons");

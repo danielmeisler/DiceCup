@@ -9,12 +9,14 @@ namespace DiceCup {
     let client: ƒClient = new ƒClient();
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
+
+    window.addEventListener("load", connectToServer);
   
     export async function startClient(): Promise<void> {
       console.log(client);
       console.log("Client started...")
-      document.getElementById("multiplayer_id").addEventListener("click", connectToServer);
       document.getElementById("multiplayer_id").addEventListener("click", hndRoom);
+      document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndRoom);
       document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
       document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
       // document.querySelector("button#rename").addEventListener("click", rename);
@@ -26,11 +28,12 @@ namespace DiceCup {
       // createTable();
     }
   
-    function hndRoom (_event: Event): void {
+    async function hndRoom (_event: Event): Promise<void> {
       if (!(_event.target instanceof HTMLButtonElement))
         return;
       let command: string = _event.target.id;
       switch (command) {
+        case "multiplayerRenewButton_id":
         case "multiplayer_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
           break;
@@ -38,7 +41,7 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
           break;
         case "multiplayerJoinButton_id":
-          let idRoom: string = (<HTMLInputElement>document.forms[0].querySelector("fieldset#rooms>input")).value;
+          let idRoom: string = focusedIdRoom;
           console.log("Enter", idRoom);
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
           break;
@@ -87,7 +90,6 @@ namespace DiceCup {
           case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
             let span: HTMLSpanElement = document.querySelector(`#${message.idSource} span`);
             blink(span);
-            break;
             break;
           case FudgeNet.COMMAND.DISCONNECT_PEERS:
             client.disconnectPeers();

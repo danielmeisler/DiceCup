@@ -1757,7 +1757,8 @@ var DiceCup;
         let playerName = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = DiceCup.language.menu.player;
+        let playernames = JSON.parse(localStorage.getItem("playernames")) ?? [DiceCup.language.menu.player];
+        playerName.placeholder = playernames[0];
         playerContainer.appendChild(playerName);
         playerCounter++;
     }
@@ -1786,6 +1787,7 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    DiceCup.focusedIdRoom = "";
     function multiplayerServers() {
         new DiceCup.SubMenu(DiceCup.MenuPage.multiplayer, "multiplayer", DiceCup.language.menu.multiplayer.list.title);
         let renewButton = document.createElement("button");
@@ -1799,7 +1801,7 @@ var DiceCup;
         renewButton.appendChild(renewIcon);
         renewButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            DiceCup.hideMenu();
+            document.getElementById("multiplayerContentContainer_id").scrollTo(0, 0);
         });
         let createButton = document.createElement("button");
         createButton.id = "multiplayerCreateButton_id";
@@ -1821,79 +1823,98 @@ var DiceCup;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
         joinButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            // createGameSettings();
+            // switchMenu(MenuPage.multiplayerLobby);
         });
         let contentContainer = document.createElement("div");
         contentContainer.id = "multiplayerContentContainer_id";
         document.getElementById("multiplayerMenuContent_id").appendChild(contentContainer);
         let serverList = document.createElement("div");
-        serverList.id = "serverListRow_id_0";
+        serverList.id = "serverListRow_id_header";
         serverList.classList.add("serverListRow");
         contentContainer.appendChild(serverList);
         initList();
     }
     DiceCup.multiplayerServers = multiplayerServers;
     function initList() {
-        let serverList = document.getElementById("serverListRow_id_0");
+        let serverList = document.getElementById("serverListRow_id_header");
         let playerCountContainer = document.createElement("div");
-        playerCountContainer.id = "playerCountContainer_id_0";
+        playerCountContainer.id = "playerCountContainer_id_header";
         playerCountContainer.classList.add("serverListContainer");
         serverList.appendChild(playerCountContainer);
-        let gameContainer = document.createElement("div");
-        gameContainer.id = "gameContainer_id_0";
-        gameContainer.classList.add("serverListContainer");
-        serverList.appendChild(gameContainer);
+        let nameContainer = document.createElement("div");
+        nameContainer.id = "nameContainer_id_header";
+        nameContainer.classList.add("serverListContainer");
+        serverList.appendChild(nameContainer);
         let gamemodeContainer = document.createElement("div");
-        gamemodeContainer.id = "gamemodeContainer_id_0";
+        gamemodeContainer.id = "gamemodeContainer_id_header";
         gamemodeContainer.classList.add("serverListContainer");
         serverList.appendChild(gamemodeContainer);
         let lockedContainer = document.createElement("div");
-        lockedContainer.id = "lockedContainer_id_0";
+        lockedContainer.id = "lockedContainer_id_header";
         lockedContainer.classList.add("serverListContainer");
         serverList.appendChild(lockedContainer);
         let playerCount = document.createElement("img");
         playerCount.id = "playerCount_id";
         playerCount.classList.add("serverListIcons");
-        playerCount.src = "Game/Assets/images/menuButtons/player.svg";
+        playerCount.src = "Game/Assets/images/serverlistIcons/playercount.svg";
         playerCountContainer.appendChild(playerCount);
-        let game = document.createElement("img");
-        game.id = "room_id";
-        game.classList.add("serverListIcons");
-        game.src = "Game/Assets/images/menuButtons/player.svg";
-        gameContainer.appendChild(game);
+        let name = document.createElement("img");
+        name.id = "room_id";
+        name.classList.add("serverListIcons");
+        name.src = "Game/Assets/images/serverlistIcons/servername.svg";
+        nameContainer.appendChild(name);
         let gamemode = document.createElement("img");
         gamemode.id = "gamemode_id";
         gamemode.classList.add("serverListIcons");
-        gamemode.src = "Game/Assets/images/menuButtons/player.svg";
+        gamemode.src = "Game/Assets/images/serverlistIcons/gamemode.svg";
         gamemodeContainer.appendChild(gamemode);
         let locked = document.createElement("img");
         locked.id = "locked_id";
         locked.classList.add("serverListIcons");
-        locked.src = "Game/Assets/images/menuButtons/player.svg";
+        locked.src = "Game/Assets/images/serverlistIcons/lock.svg";
         lockedContainer.appendChild(locked);
     }
     async function getRooms(_rooms) {
-        let serverList = document.getElementById("multiplayerServerList_id");
-        console.log(_rooms);
-        for (let i = 0; i < _rooms.length; i++) {
+        while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
+            document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
+        }
+        for (let i = _rooms.length - 1; i > 0; i--) {
+            let serverList = document.createElement("button");
+            serverList.id = "serverListRow_id_" + i;
+            serverList.classList.add("serverListRow");
+            document.getElementById("multiplayerContentContainer_id").appendChild(serverList);
+            serverList.addEventListener("click", () => DiceCup.focusedIdRoom = _rooms[i]);
+            let playerCountContainer = document.createElement("div");
+            playerCountContainer.id = "playerCountContainer_id_" + i;
+            playerCountContainer.classList.add("serverListContainer");
+            serverList.appendChild(playerCountContainer);
+            let nameContainer = document.createElement("div");
+            nameContainer.id = "nameContainer_id_" + i;
+            nameContainer.classList.add("serverListContainer");
+            serverList.appendChild(nameContainer);
+            let gamemodeContainer = document.createElement("div");
+            gamemodeContainer.id = "gamemodeContainer_id_" + i;
+            gamemodeContainer.classList.add("serverListContainer");
+            serverList.appendChild(gamemodeContainer);
+            let lockedContainer = document.createElement("div");
+            lockedContainer.id = "lockedContainer_id_" + i;
+            lockedContainer.classList.add("serverListContainer");
+            serverList.appendChild(lockedContainer);
             let playerCount = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.classList.add("serverListRow");
-            serverList.appendChild(playerCount);
+            playerCount.innerHTML = "1/1";
+            playerCountContainer.appendChild(playerCount);
             let game = document.createElement("span");
             game.id = "room_id_" + i;
             game.innerHTML = _rooms[i];
-            game.classList.add("serverListRow");
-            serverList.appendChild(game);
+            nameContainer.appendChild(game);
             let gamemode = document.createElement("span");
             gamemode.id = "gamemode_id_" + i;
             gamemode.innerHTML = "NORMAL";
-            gamemode.classList.add("serverListRow");
-            serverList.appendChild(gamemode);
+            gamemodeContainer.appendChild(gamemode);
             let locked = document.createElement("img");
             locked.id = "locked_id_" + i;
-            locked.classList.add("serverListRow");
-            serverList.appendChild(locked);
+            lockedContainer.appendChild(locked);
         }
     }
     DiceCup.getRooms = getRooms;
@@ -2369,11 +2390,12 @@ var DiceCup;
     let client = new ƒClient();
     // keep a list of known clients, updated with information from the server
     let clientsKnown = {};
+    window.addEventListener("load", connectToServer);
     async function startClient() {
         console.log(client);
         console.log("Client started...");
-        document.getElementById("multiplayer_id").addEventListener("click", connectToServer);
         document.getElementById("multiplayer_id").addEventListener("click", hndRoom);
+        document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndRoom);
         document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
         document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
         // document.querySelector("button#rename").addEventListener("click", rename);
@@ -2385,11 +2407,12 @@ var DiceCup;
         // createTable();
     }
     DiceCup.startClient = startClient;
-    function hndRoom(_event) {
+    async function hndRoom(_event) {
         if (!(_event.target instanceof HTMLButtonElement))
             return;
         let command = _event.target.id;
         switch (command) {
+            case "multiplayerRenewButton_id":
             case "multiplayer_id":
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                 break;
@@ -2397,7 +2420,7 @@ var DiceCup;
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerJoinButton_id":
-                let idRoom = document.forms[0].querySelector("fieldset#rooms>input").value;
+                let idRoom = DiceCup.focusedIdRoom;
                 console.log("Enter", idRoom);
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
                 break;
@@ -2444,7 +2467,6 @@ var DiceCup;
                 case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
                     let span = document.querySelector(`#${message.idSource} span`);
                     blink(span);
-                    break;
                     break;
                 case FudgeNet.COMMAND.DISCONNECT_PEERS:
                     client.disconnectPeers();

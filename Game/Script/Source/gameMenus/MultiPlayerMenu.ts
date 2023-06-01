@@ -1,4 +1,6 @@
 namespace DiceCup {
+    import ƒ = FudgeCore;
+    export let focusedIdRoom: string = "";
 
     export function multiplayerServers(): void {
         new SubMenu(MenuPage.multiplayer, "multiplayer", language.menu.multiplayer.list.title);
@@ -16,7 +18,7 @@ namespace DiceCup {
 
         renewButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            hideMenu();
+            document.getElementById("multiplayerContentContainer_id").scrollTo(0,0);
         });
 
         let createButton: HTMLButtonElement = document.createElement("button");
@@ -42,7 +44,7 @@ namespace DiceCup {
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            // createGameSettings();
+            // switchMenu(MenuPage.multiplayerLobby);
         });
 
         let contentContainer: HTMLDivElement = document.createElement("div");
@@ -50,7 +52,7 @@ namespace DiceCup {
         document.getElementById("multiplayerMenuContent_id").appendChild(contentContainer);
 
         let serverList: HTMLDivElement = document.createElement("div");
-        serverList.id = "serverListRow_id_0";
+        serverList.id = "serverListRow_id_header";
         serverList.classList.add("serverListRow");
         contentContainer.appendChild(serverList);
 
@@ -58,81 +60,104 @@ namespace DiceCup {
     }
 
     function initList(): void {
-        let serverList: HTMLElement = document.getElementById("serverListRow_id_0");
+        let serverList: HTMLElement = document.getElementById("serverListRow_id_header");
 
         let playerCountContainer: HTMLDivElement = document.createElement("div");
-        playerCountContainer.id = "playerCountContainer_id_0";
+        playerCountContainer.id = "playerCountContainer_id_header";
         playerCountContainer.classList.add("serverListContainer");
         serverList.appendChild(playerCountContainer);
 
-        let gameContainer: HTMLDivElement = document.createElement("div");
-        gameContainer.id = "gameContainer_id_0";
-        gameContainer.classList.add("serverListContainer");
-        serverList.appendChild(gameContainer);
+        let nameContainer: HTMLDivElement = document.createElement("div");
+        nameContainer.id = "nameContainer_id_header";
+        nameContainer.classList.add("serverListContainer");
+        serverList.appendChild(nameContainer);
 
         let gamemodeContainer: HTMLDivElement = document.createElement("div");
-        gamemodeContainer.id = "gamemodeContainer_id_0";
+        gamemodeContainer.id = "gamemodeContainer_id_header";
         gamemodeContainer.classList.add("serverListContainer");
         serverList.appendChild(gamemodeContainer);
 
         let lockedContainer: HTMLDivElement = document.createElement("div");
-        lockedContainer.id = "lockedContainer_id_0";
+        lockedContainer.id = "lockedContainer_id_header";
         lockedContainer.classList.add("serverListContainer");
         serverList.appendChild(lockedContainer);
-
 
 
         let playerCount: HTMLImageElement = document.createElement("img");
         playerCount.id = "playerCount_id";
         playerCount.classList.add("serverListIcons");
-        playerCount.src = "Game/Assets/images/menuButtons/player.svg";
+        playerCount.src = "Game/Assets/images/serverlistIcons/playercount.svg";
         playerCountContainer.appendChild(playerCount);
 
-        let game: HTMLImageElement = document.createElement("img");
-        game.id = "room_id";
-        game.classList.add("serverListIcons");
-        game.src = "Game/Assets/images/menuButtons/player.svg";
-        gameContainer.appendChild(game);
+        let name: HTMLImageElement = document.createElement("img");
+        name.id = "room_id";
+        name.classList.add("serverListIcons");
+        name.src = "Game/Assets/images/serverlistIcons/servername.svg";
+        nameContainer.appendChild(name);
 
         let gamemode: HTMLImageElement = document.createElement("img");
         gamemode.id = "gamemode_id";
         gamemode.classList.add("serverListIcons");
-        gamemode.src = "Game/Assets/images/menuButtons/player.svg";
+        gamemode.src = "Game/Assets/images/serverlistIcons/gamemode.svg";
         gamemodeContainer.appendChild(gamemode);
 
         let locked: HTMLImageElement = document.createElement("img");
         locked.id = "locked_id";
         locked.classList.add("serverListIcons");
-        locked.src = "Game/Assets/images/menuButtons/player.svg";
+        locked.src = "Game/Assets/images/serverlistIcons/lock.svg";
         lockedContainer.appendChild(locked);
     }
 
     export async function getRooms(_rooms: string[]): Promise<void> {
-        let serverList: HTMLElement = document.getElementById("multiplayerServerList_id");
+        while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
+            document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
+        }
 
-        console.log(_rooms)
-        for (let i = 0; i < _rooms.length; i++) {
+        for (let i = _rooms.length - 1; i > 0; i--) {
+            let serverList: HTMLButtonElement = document.createElement("button");
+            serverList.id = "serverListRow_id_" + i;
+            serverList.classList.add("serverListRow");
+            document.getElementById("multiplayerContentContainer_id").appendChild(serverList);
+            serverList.addEventListener("click",() => focusedIdRoom = _rooms[i]);
+
+            let playerCountContainer: HTMLDivElement = document.createElement("div");
+            playerCountContainer.id = "playerCountContainer_id_" + i;
+            playerCountContainer.classList.add("serverListContainer");
+            serverList.appendChild(playerCountContainer);
+    
+            let nameContainer: HTMLDivElement = document.createElement("div");
+            nameContainer.id = "nameContainer_id_" + i;
+            nameContainer.classList.add("serverListContainer");
+            serverList.appendChild(nameContainer);
+    
+            let gamemodeContainer: HTMLDivElement = document.createElement("div");
+            gamemodeContainer.id = "gamemodeContainer_id_" + i;
+            gamemodeContainer.classList.add("serverListContainer");
+            serverList.appendChild(gamemodeContainer);
+    
+            let lockedContainer: HTMLDivElement = document.createElement("div");
+            lockedContainer.id = "lockedContainer_id_" + i;
+            lockedContainer.classList.add("serverListContainer");
+            serverList.appendChild(lockedContainer);
+
             let playerCount: HTMLSpanElement = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.classList.add("serverListRow");
-            serverList.appendChild(playerCount);
+            playerCount.innerHTML = "1/1";
+            playerCountContainer.appendChild(playerCount);
 
             let game: HTMLSpanElement = document.createElement("span");
             game.id = "room_id_" + i;
             game.innerHTML = _rooms[i];
-            game.classList.add("serverListRow");
-            serverList.appendChild(game);
+            nameContainer.appendChild(game);
 
             let gamemode: HTMLSpanElement = document.createElement("span");
             gamemode.id = "gamemode_id_" + i;
             gamemode.innerHTML = "NORMAL";
-            gamemode.classList.add("serverListRow");
-            serverList.appendChild(gamemode);
+            gamemodeContainer.appendChild(gamemode);
 
             let locked: HTMLImageElement = document.createElement("img");
             locked.id = "locked_id_" + i;
-            locked.classList.add("serverListRow");
-            serverList.appendChild(locked);
+            lockedContainer.appendChild(locked);
         }
 
     }

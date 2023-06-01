@@ -40,6 +40,13 @@
     --lobby_names_fontsize: 1.5vi;
     --lobby_remove_button_background: var(--red_light);
 
+    /* Serverlist Variables */
+    --serverlist_background_color: rgba(47, 66, 96, 0.5);
+    --serverlist_background_color_focus: rgba(0, 0, 0, 0.2);
+    --serverlist_color: var(--white);
+    --serverlist_fontsize: 2.5vi;
+    --serverlist_cell_border: 0.0001px solid var(--blue_lighter);
+
     /* Transition Variables */
     --transition_text_color: var(--white);
     --transition_text_fontsize: 10vi;
