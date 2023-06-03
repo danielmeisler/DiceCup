@@ -17,6 +17,7 @@
     align-items: center;
     width: 100%;
     min-height: 50%;
+    overflow: hidden;
 }
 
 #multiplayerContentContainer_id {
@@ -54,6 +55,10 @@
     height: 100%;
     width: 100%;
     border: var(--serverlist_cell_border);
+}
+
+.serverListHeader {
+    /* background: var(--serverlist_background_color_focus); */
 }
 
 .serverListIcons {

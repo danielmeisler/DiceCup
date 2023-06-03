@@ -11,7 +11,7 @@ if (port == undefined)
   port = parseInt(process.argv[2]);
 
 if (!port) {
-  console.log("Syntax: 'node Server.js <port>'");
+  console.log("Syntax: 'node Server.js <port>' or use start script in Heroku");
   process.exit();
 }
 

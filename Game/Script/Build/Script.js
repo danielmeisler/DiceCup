@@ -1757,8 +1757,7 @@ var DiceCup;
         let playerName = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        let playernames = JSON.parse(localStorage.getItem("playernames")) ?? [DiceCup.language.menu.player];
-        playerName.placeholder = playernames[0];
+        playerName.placeholder = DiceCup.client.id ?? DiceCup.language.menu.player;
         playerContainer.appendChild(playerName);
         playerCounter++;
     }
@@ -1784,9 +1783,14 @@ var DiceCup;
         playerName.innerHTML = DiceCup.language.menu.multiplayer.lobby.waiting;
         waitContainer.appendChild(playerName);
     }
+    function joinRoom() {
+        DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
+    }
+    DiceCup.joinRoom = joinRoom;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    // import ƒ = FudgeCore;
     DiceCup.focusedIdRoom = "";
     function multiplayerServers() {
         new DiceCup.SubMenu(DiceCup.MenuPage.multiplayer, "multiplayer", DiceCup.language.menu.multiplayer.list.title);
@@ -1823,6 +1827,7 @@ var DiceCup;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
         joinButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
+            DiceCup.joinRoom();
             // switchMenu(MenuPage.multiplayerLobby);
         });
         let contentContainer = document.createElement("div");
@@ -1840,18 +1845,22 @@ var DiceCup;
         let playerCountContainer = document.createElement("div");
         playerCountContainer.id = "playerCountContainer_id_header";
         playerCountContainer.classList.add("serverListContainer");
+        playerCountContainer.classList.add("serverListHeader");
         serverList.appendChild(playerCountContainer);
         let nameContainer = document.createElement("div");
         nameContainer.id = "nameContainer_id_header";
         nameContainer.classList.add("serverListContainer");
+        nameContainer.classList.add("serverListHeader");
         serverList.appendChild(nameContainer);
         let gamemodeContainer = document.createElement("div");
         gamemodeContainer.id = "gamemodeContainer_id_header";
         gamemodeContainer.classList.add("serverListContainer");
+        gamemodeContainer.classList.add("serverListHeader");
         serverList.appendChild(gamemodeContainer);
         let lockedContainer = document.createElement("div");
         lockedContainer.id = "lockedContainer_id_header";
         lockedContainer.classList.add("serverListContainer");
+        lockedContainer.classList.add("serverListHeader");
         serverList.appendChild(lockedContainer);
         let playerCount = document.createElement("img");
         playerCount.id = "playerCount_id";
@@ -1902,7 +1911,7 @@ var DiceCup;
             serverList.appendChild(lockedContainer);
             let playerCount = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.innerHTML = "1/1";
+            playerCount.innerHTML = 0 + "/6";
             playerCountContainer.appendChild(playerCount);
             let game = document.createElement("span");
             game.id = "room_id_" + i;
@@ -2387,12 +2396,12 @@ var DiceCup;
     ƒ.Debug.setFilter(ƒ.DebugConsole, ƒ.DEBUG_FILTER.ALL);
     let idRoom;
     // Create a FudgeClient for this browser tab
-    let client = new ƒClient();
+    DiceCup.client = new ƒClient();
     // keep a list of known clients, updated with information from the server
     let clientsKnown = {};
     window.addEventListener("load", connectToServer);
     async function startClient() {
-        console.log(client);
+        console.log(DiceCup.client);
         console.log("Client started...");
         document.getElementById("multiplayer_id").addEventListener("click", hndRoom);
         document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndRoom);
@@ -2414,15 +2423,17 @@ var DiceCup;
         switch (command) {
             case "multiplayerRenewButton_id":
             case "multiplayer_id":
-                client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerCreateButton_id":
-                client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerJoinButton_id":
                 let idRoom = DiceCup.focusedIdRoom;
-                console.log("Enter", idRoom);
-                client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
+                console.log("Enter", DiceCup.focusedIdRoom);
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
+                console.log(DiceCup.client.idRoom);
+                document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = idRoom;
                 break;
         }
     }
@@ -2430,27 +2441,27 @@ var DiceCup;
         let domServer = "ws://localhost:9001";
         try {
             // connect to a server with the given url
-            client.connectToServer(domServer);
+            DiceCup.client.connectToServer(domServer);
             await delay(1000);
             // document.forms[0].querySelector("button#login").removeAttribute("disabled");
             // document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
             // document.forms[0].querySelector("button#host").removeAttribute("disabled");
             // (<HTMLInputElement>document.forms[0].querySelector("input#id")).value = client.id;
             // install an event listener to be called when a message comes in
-            client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage);
+            DiceCup.client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage);
         }
         catch (_error) {
             console.log(_error);
             console.log("Make sure, FudgeServer is running and accessable");
         }
     }
-    async function rename(_event) {
-        let domProposeName = document.forms[0].querySelector("input[name=proposal]");
-        let domName = document.forms[0].querySelector("input[name=name]");
-        domName.value = domProposeName.value;
-        // associate a readable name with this client id
-        client.loginToServer(domName.value);
-    }
+    // async function rename(_event: Event): Promise<void> {
+    //   let domProposeName: HTMLInputElement = document.forms[0].querySelector("input[name=proposal]");
+    //   let domName: HTMLInputElement = document.forms[0].querySelector("input[name=name]");
+    //   domName.value = domProposeName.value;
+    //   // associate a readable name with this client id
+    //   client.loginToServer(domName.value);
+    // }
     async function receiveMessage(_event) {
         if (_event instanceof MessageEvent) {
             let message = JSON.parse(_event.data);
@@ -2462,22 +2473,23 @@ var DiceCup;
                     // proposeName();
                     // updateTable();
                     // on each server heartbeat, dispatch this clients heartbeat
-                    client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
+                    DiceCup.client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
                     break;
                 case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
                     let span = document.querySelector(`#${message.idSource} span`);
                     blink(span);
                     break;
                 case FudgeNet.COMMAND.DISCONNECT_PEERS:
-                    client.disconnectPeers();
+                    DiceCup.client.disconnectPeers();
                     break;
                 case FudgeNet.COMMAND.ROOM_GET_IDS:
                     DiceCup.getRooms(message.content.rooms);
                     break;
                 case FudgeNet.COMMAND.ROOM_CREATE:
+                    document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = message.content.room;
                     console.log("Created room", message.content.room);
                 case FudgeNet.COMMAND.ROOM_ENTER:
-                    client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
+                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                     break;
                 default:
                     break;
@@ -2492,112 +2504,10 @@ var DiceCup;
             setTimeout(() => { resolve(); }, _milisec);
         });
     }
-    function proposeName() {
-        // search for a free number i to use for the proposal of the name "Client" + i
-        let domProposeName = document.forms[0].querySelector("input[name=proposal");
-        if (document.activeElement == domProposeName)
-            return; // don't interfere when user's at the element
-        let i = 0;
-        for (; Object.values(client.clientsInfoFromServer).find(_info => _info.name == "Client-" + i); i++)
-            ;
-        domProposeName.value = "Client-" + i;
-    }
-    function createTable() {
-        let table = document.querySelector("#multiplayerMenuContent_id");
-        let html = `<tr><th>&nbsp;</th><th>name</th><th>id</th><th>data</th><th>signal</th><th>connection</th><th>gather</th><th>ice</th></tr>`;
-        html += `<tr><td><span>0</span></td><td>Server</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
-        table.innerHTML = html;
-    }
-    function updateTable() {
-        let table = document.querySelector("multiplayerMenuContent_id");
-        let span = document.querySelector(`td>span`); // first cell is server blinker
-        // blink(span);
-        for (let id in clientsKnown)
-            if (!client.clientsInfoFromServer[id])
-                deleteRow(id);
-        // each client keeps information about all clients
-        clientsKnown = client.clientsInfoFromServer;
-        for (let id in clientsKnown) {
-            let name = clientsKnown[id].name;
-            let isHost = clientsKnown[id].isHost;
-            let peer = client.peers[id];
-            let row = table.querySelector(`#${id}`);
-            if (row) {
-                row.querySelector("td[name=name]").textContent = name + (isHost ? " (HOST)" : "");
-                row.querySelector("td[name=data]").textContent = peer?.dataChannel?.readyState;
-                row.querySelector("td[name=signal]").textContent = peer?.signalingState;
-                row.querySelector("td[name=connection]").textContent = peer?.connectionState;
-                row.querySelector("td[name=gather]").textContent = peer?.iceGatheringState;
-                row.querySelector("td[name=ice]").textContent = peer?.iceConnectionState;
-            }
-            else {
-                row = document.createElement("tr");
-                table.appendChild(row);
-                let html;
-                html = `<tr id="${id}"><td><span>0</span></td><td name="name">${name}</td><td name="id">${id}</td>`;
-                html += `<td name="data"></td>`;
-                html += `<td name="signal"></td>`;
-                html += `<td name="connection"></td>`;
-                html += `<td name="gather"></td>`;
-                html += `<td name="ice"></td></tr>`;
-                row.outerHTML = html;
-            }
-        }
-    }
-    function deleteRow(_id) {
-        let table = document.querySelector("table");
-        let row = table.querySelector(`tr#${_id}`);
-        table.removeChild(row.parentElement);
-    }
     function blink(_span) {
         let newSpan = document.createElement("span");
         newSpan.textContent = (parseInt(_span.textContent) + 1).toString().padStart(3, "0");
         _span.parentElement.replaceChild(newSpan, _span);
-    }
-    function structurePeers(_event) {
-        let button = _event.target;
-        switch (button.textContent) {
-            case "create mesh":
-                // creates an RTC-Mesh, where all clients are directly connected to one another
-                client.createMesh();
-                break;
-            case "become host":
-                // creates a host structure, where all other clients are connected to this client but not to each other
-                client.becomeHost();
-                break;
-            case "disconnect":
-                client.disconnectPeers();
-                break;
-            default:
-                // send a command to dismiss all RTC-connections
-                client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.DISCONNECT_PEERS, route: FudgeNet.ROUTE.VIA_SERVER });
-        }
-    }
-    function sendMessage(_event) {
-        let formdata = new FormData(document.forms[1]);
-        let protocol = formdata.get("protocol").toString();
-        let message = formdata.get("message").toString();
-        let ws = protocol == "ws";
-        let receiver = formdata.get("receiver").toString();
-        switch (_event.target.id) {
-            //TODO insert idRoom in dispatch
-            case "sendServer":
-                // send the message to the server only
-                client.dispatch({ idRoom: idRoom, route: FudgeNet.ROUTE.SERVER, content: { text: message } });
-                break;
-            case "sendHost":
-                // send the message to the host via RTC or TCP
-                client.dispatch({ idRoom: idRoom, route: ws ? FudgeNet.ROUTE.VIA_SERVER_HOST : FudgeNet.ROUTE.HOST, content: { text: message } });
-                break;
-            case "sendAll":
-                // send the message to all clients (no target specified) via RTC (no route specified) or TCP (route = via server)
-                client.dispatch({ idRoom: idRoom, route: ws ? FudgeNet.ROUTE.VIA_SERVER : undefined, content: { text: message } });
-                break;
-            case "sendClient":
-                // send the message to a specific client (target specified) via RTC (no route specified) or TCP (route = via server)
-                client.dispatch({ idRoom: idRoom, route: ws ? FudgeNet.ROUTE.VIA_SERVER : undefined, idTarget: receiver, content: { text: message } });
-                break;
-        }
     }
     function showMessage(_message) {
         console.table(_message);

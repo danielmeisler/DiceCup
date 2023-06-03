@@ -81,8 +81,7 @@ namespace DiceCup {
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        let playernames: string[] = JSON.parse(localStorage.getItem("playernames")) ?? [language.menu.player];
-        playerName.placeholder = playernames[0];
+        playerName.placeholder = client.id ?? language.menu.player;
         playerContainer.appendChild(playerName);
 
         playerCounter++;
@@ -112,5 +111,11 @@ namespace DiceCup {
         playerName.classList.add("lobbyPortrait_inactive");
         playerName.innerHTML = language.menu.multiplayer.lobby.waiting;
         waitContainer.appendChild(playerName);
+    }
+
+    export function joinRoom(): void {
+        switchMenu(MenuPage.multiplayerLobby);
+
+
     }
 }

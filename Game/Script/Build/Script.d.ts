@@ -261,6 +261,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function multiplayerMenu(): void;
+    function joinRoom(): void;
 }
 declare namespace DiceCup {
     let focusedIdRoom: string;
@@ -404,6 +405,8 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    import ƒClient = FudgeNet.FudgeClient;
+    let client: ƒClient;
     function startClient(): Promise<void>;
 }
 declare namespace DiceCup {

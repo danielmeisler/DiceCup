@@ -1,5 +1,5 @@
 namespace DiceCup {
-    import ƒ = FudgeCore;
+    // import ƒ = FudgeCore;
     export let focusedIdRoom: string = "";
 
     export function multiplayerServers(): void {
@@ -44,6 +44,7 @@ namespace DiceCup {
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
+            joinRoom();
             // switchMenu(MenuPage.multiplayerLobby);
         });
 
@@ -65,21 +66,25 @@ namespace DiceCup {
         let playerCountContainer: HTMLDivElement = document.createElement("div");
         playerCountContainer.id = "playerCountContainer_id_header";
         playerCountContainer.classList.add("serverListContainer");
+        playerCountContainer.classList.add("serverListHeader");
         serverList.appendChild(playerCountContainer);
 
         let nameContainer: HTMLDivElement = document.createElement("div");
         nameContainer.id = "nameContainer_id_header";
         nameContainer.classList.add("serverListContainer");
+        nameContainer.classList.add("serverListHeader");
         serverList.appendChild(nameContainer);
 
         let gamemodeContainer: HTMLDivElement = document.createElement("div");
         gamemodeContainer.id = "gamemodeContainer_id_header";
         gamemodeContainer.classList.add("serverListContainer");
+        gamemodeContainer.classList.add("serverListHeader");
         serverList.appendChild(gamemodeContainer);
 
         let lockedContainer: HTMLDivElement = document.createElement("div");
         lockedContainer.id = "lockedContainer_id_header";
         lockedContainer.classList.add("serverListContainer");
+        lockedContainer.classList.add("serverListHeader");
         serverList.appendChild(lockedContainer);
 
 
@@ -112,7 +117,6 @@ namespace DiceCup {
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
-
         for (let i = _rooms.length - 1; i > 0; i--) {
             let serverList: HTMLButtonElement = document.createElement("button");
             serverList.id = "serverListRow_id_" + i;
@@ -142,7 +146,7 @@ namespace DiceCup {
 
             let playerCount: HTMLSpanElement = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.innerHTML = "1/1";
+            playerCount.innerHTML = 0 + "/6";
             playerCountContainer.appendChild(playerCount);
 
             let game: HTMLSpanElement = document.createElement("span");
