@@ -1,4 +1,4 @@
-///<reference path="../../../../Library/Net/Client/FudgeClient.d.ts"/>
+///<reference path="../../../../Library/Net/Build/Client/FudgeClient.d.ts"/>
 namespace DiceCup {
     import ƒ = FudgeCore;
     import ƒClient = FudgeNet.FudgeClient;
@@ -7,6 +7,8 @@ namespace DiceCup {
   
     // Create a FudgeClient for this browser tab
     export let client: ƒClient = new ƒClient();
+    let counter: number = 0;
+    let rooms: string[] = [];
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
 
@@ -19,12 +21,13 @@ namespace DiceCup {
       document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndRoom);
       document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
       document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
+      document.getElementById("multiplayerLobbySettingsButton_id").addEventListener("click", hndRoom);
       // document.querySelector("button#rename").addEventListener("click", rename);
       // document.querySelector("button#mesh").addEventListener("click", structurePeers);
       // document.querySelector("button#host").addEventListener("click", structurePeers);
       // document.querySelector("button#disconnect").addEventListener("click", structurePeers);
       // document.querySelector("button#reset").addEventListener("click", structurePeers);
-      // document.querySelector("fieldset").addEventListener("click", sendMessage);      
+      // document.querySelector("fieldset").addEventListener("click", sendMessage);
       // createTable();
     }
   
@@ -43,11 +46,12 @@ namespace DiceCup {
         case "multiplayerJoinButton_id":
           let idRoom: string = focusedIdRoom;
           console.log("Enter", focusedIdRoom );
-
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
-          console.log(client.idRoom);
           document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = idRoom;
           break;
+        case "multiplayerLobbySettingsButton_id":
+        
+        break;
       }
     }
   
@@ -98,13 +102,20 @@ namespace DiceCup {
             client.disconnectPeers();
             break;
           case FudgeNet.COMMAND.ROOM_GET_IDS:
-            getRooms(message.content.rooms);
+            rooms = message.content.rooms;
+            console.log(rooms);
+            // rooms.map(room => client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: {room: room}}));
             break;
           case FudgeNet.COMMAND.ROOM_CREATE:
             document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = message.content.room;
             console.log("Created room", message.content.room);
           case FudgeNet.COMMAND.ROOM_ENTER:
             client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
+            break;
+          case FudgeNet.COMMAND.ROOM_INFO:
+            console.log(message.content);
+            counter = Object.keys(message.content.roomClients).length;
+            getRooms(rooms, counter);
             break;
           default:
             break;

@@ -1,4 +1,4 @@
-/// <reference path="../../../Library/Net/Client/FudgeClient.d.ts" />
+/// <reference path="../../../Library/Net/Build/Client/FudgeClient.d.ts" />
 declare namespace DiceCup {
     import ƒ = FudgeCore;
     class CustomComponentScript extends ƒ.ComponentScript {
@@ -266,7 +266,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     let focusedIdRoom: string;
     function multiplayerServers(): void;
-    function getRooms(_rooms: string[]): Promise<void>;
+    function getRooms(_rooms: string[], _counter: number): Promise<void>;
 }
 declare namespace DiceCup {
     let sfxVolume: number;

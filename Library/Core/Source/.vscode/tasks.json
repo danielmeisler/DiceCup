@@ -1,0 +1,45 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558 
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "option": "watch",
+      "problemMatcher": [
+        "$tsc-watch"
+      ]
+    },
+    {
+      "type": "shell",
+      "label": "auto-watch",
+      "command": "tsc -watch",
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "MergeShaderSources",
+      "group": "build",
+      "command": "node MergeShaderSources.mjs",
+      "options": {
+        "cwd": "Shader/"
+      },
+      "runOptions": {
+        //"runOn": "folderOpen"
+      }
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig-minimal.json",
+      "option": "watch",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "group": "build",
+      "label": "tsc: watch - tsconfig-minimal.json"
+    }
+  ]
+}
