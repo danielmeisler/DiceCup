@@ -115,8 +115,8 @@ export class FudgeServer {
         this.sendIceCandidatesToRelevantPeer(_wsConnection, message);
         break;
 
-      case FudgeNet.COMMAND.ROOM_GET_IDS:
-        this.getRoomIds(message);
+      case FudgeNet.COMMAND.ROOM_LIST:
+        this.getRoomList(message);
         break;
 
       case FudgeNet.COMMAND.ROOM_CREATE:
@@ -125,10 +125,6 @@ export class FudgeServer {
 
       case FudgeNet.COMMAND.ROOM_ENTER:
         this.enterRoom(message);
-        break;
-
-      case FudgeNet.COMMAND.ROOM_LEAVE:
-        this.leaveRoom(message);
         break;
 
       case FudgeNet.COMMAND.ROOM_INFO:
@@ -219,11 +215,6 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
-  private leaveRoom(_message: FudgeNet.Message): void {
-    _message.content = {room: "Lobby"};
-    this.enterRoom(_message);
-  }
-
   private createRoom(_message: FudgeNet.Message): void {
     let idRoom: string = this.createID();
     this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
@@ -233,19 +224,19 @@ export class FudgeServer {
     this.dispatch(message);
   }
 
-  private getRoomIds(_message: FudgeNet.Message): void {
+  private getRoomList(_message: FudgeNet.Message): void {
     let message: FudgeNet.Message = {
-      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_GET_IDS, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms) }
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
     };
     this.dispatch(message);
   }
 
   private getRoomInfo(_message: FudgeNet.Message): void {
-    let message: FudgeNet.Message = {
-      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
-    };
-    console.log(message);
-    this.dispatch(message);
+    console.log(_message.content);
+    // let message: FudgeNet.Message = {
+    //   idRoom: _message.content!.room, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { clients: "TEST" }
+    // };
+    // this.dispatch(message);
   }
 
   private async createMesh(_message: FudgeNet.Message): Promise<void> {

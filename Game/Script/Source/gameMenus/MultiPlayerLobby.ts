@@ -47,14 +47,14 @@ namespace DiceCup {
 
     function createPlayerPortrait(): void {
         let playerContainer: HTMLDivElement = document.createElement("div");
-        playerContainer.id = "playerContainer_id";
+        playerContainer.id = "playerContainer_id_" + playerCounter;
         playerContainer.classList.add("lobbyContainer");
         playerContainer.classList.add("waitContainer");
         playerContainer.style.order = "0";
         document.getElementById("multiplayerLobbyMenuContent_id").appendChild(playerContainer);
 
         let playerDiv: HTMLButtonElement = document.createElement("button");
-        playerDiv.id = "playerPortrait_id";
+        playerDiv.id = "playerPortrait_id_" + playerCounter;
         playerDiv.classList.add("lobbyPortrait");
         playerDiv.classList.add("lobbyPortrait_active");
         playerDiv.classList.add("diceCupButtons");
@@ -79,7 +79,7 @@ namespace DiceCup {
         playerDiv.appendChild(playerIcons);
 
         let playerName: HTMLInputElement = document.createElement("input");
-        playerName.id = "playerName_id";
+        playerName.id = "playerName_id_" + playerCounter;
         playerName.classList.add("nameInputs");
         playerName.placeholder = client.id ?? language.menu.player;
         playerContainer.appendChild(playerName);
@@ -113,9 +113,15 @@ namespace DiceCup {
         waitContainer.appendChild(playerName);
     }
 
-    export function joinRoom(): void {
+    export function joinRoom(_message: FudgeNet.Message): void {
+        console.log(_message);
         switchMenu(MenuPage.multiplayerLobby);
 
+        document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.room;
 
+        // for (let index = 0; index < _message.clients[i].split(",").length; index++) {
+        //     const element = array[index];
+            
+        // }
     }
 }

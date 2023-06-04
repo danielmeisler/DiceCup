@@ -7,8 +7,7 @@ namespace DiceCup {
   
     // Create a FudgeClient for this browser tab
     export let client: ƒClient = new ƒClient();
-    let counter: number = 0;
-    let rooms: string[] = [];
+
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
 
@@ -40,8 +39,7 @@ namespace DiceCup {
       switch (command) {
         case "multiplayerRenewButton_id":
         case "multiplayer_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER});
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER});
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
           break;
         case "multiplayerCreateButton_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
@@ -52,7 +50,7 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
           break;
         case "multiplayerLobbyMenuReturnButton_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER});
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: "Lobby" } });
         break;
         // case "multiplayerLobbySettingsButton_id":
         //   // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
@@ -108,7 +106,8 @@ namespace DiceCup {
           case FudgeNet.COMMAND.DISCONNECT_PEERS:
             client.disconnectPeers();
             break;
-          case FudgeNet.COMMAND.ROOM_GET_IDS:
+          case FudgeNet.COMMAND.ROOM_LIST:
+            getRooms(message.content.rooms, message.content.clients);
             break;
           case FudgeNet.COMMAND.ROOM_CREATE:
             document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = message.content.room;
@@ -116,17 +115,12 @@ namespace DiceCup {
             idRoom = message.content.room;
             client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
           case FudgeNet.COMMAND.ROOM_ENTER:
-            // console.log(idRoom);
-            // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom }});
-            break;
-          case FudgeNet.COMMAND.ROOM_LEAVE:
-            // client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: {room: idRoom}});
+            console.log("WIE OFT");
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
             break;
           case FudgeNet.COMMAND.ROOM_INFO:
-            // console.log(message.content);
             console.log(message.content);
-            // counter = Object.keys(message.content.roomClients).length;
-            getRooms(message.content.rooms, message.content.clients);
+            joinRoom(message);
             break;
           default:
             break;

@@ -36,10 +36,9 @@ export var FudgeNet;
         /** sent to the server to create a new room and return its id */
         COMMAND["ROOM_CREATE"] = "roomCreate";
         /** sent to the server and back to the calling client to retrieve an array of available room ids */
-        COMMAND["ROOM_GET_IDS"] = "roomGetIds";
+        COMMAND["ROOM_LIST"] = "roomList";
         /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */
         COMMAND["ROOM_ENTER"] = "roomEnter";
-        COMMAND["ROOM_LEAVE"] = "roomLeave";
         COMMAND["ROOM_INFO"] = "roomInfo";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**

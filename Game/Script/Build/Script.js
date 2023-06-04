@@ -1728,13 +1728,13 @@ var DiceCup;
     DiceCup.multiplayerMenu = multiplayerMenu;
     function createPlayerPortrait() {
         let playerContainer = document.createElement("div");
-        playerContainer.id = "playerContainer_id";
+        playerContainer.id = "playerContainer_id_" + playerCounter;
         playerContainer.classList.add("lobbyContainer");
         playerContainer.classList.add("waitContainer");
         playerContainer.style.order = "0";
         document.getElementById("multiplayerLobbyMenuContent_id").appendChild(playerContainer);
         let playerDiv = document.createElement("button");
-        playerDiv.id = "playerPortrait_id";
+        playerDiv.id = "playerPortrait_id_" + playerCounter;
         playerDiv.classList.add("lobbyPortrait");
         playerDiv.classList.add("lobbyPortrait_active");
         playerDiv.classList.add("diceCupButtons");
@@ -1755,7 +1755,7 @@ var DiceCup;
         playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
         playerDiv.appendChild(playerIcons);
         let playerName = document.createElement("input");
-        playerName.id = "playerName_id";
+        playerName.id = "playerName_id_" + playerCounter;
         playerName.classList.add("nameInputs");
         playerName.placeholder = DiceCup.client.id ?? DiceCup.language.menu.player;
         playerContainer.appendChild(playerName);
@@ -1783,8 +1783,13 @@ var DiceCup;
         playerName.innerHTML = DiceCup.language.menu.multiplayer.lobby.waiting;
         waitContainer.appendChild(playerName);
     }
-    function joinRoom() {
+    function joinRoom(_message) {
+        console.log(_message);
         DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
+        document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.room;
+        // for (let index = 0; index < _message.clients[i].split(",").length; index++) {
+        //     const element = array[index];
+        // }
     }
     DiceCup.joinRoom = joinRoom;
 })(DiceCup || (DiceCup = {}));
@@ -1827,8 +1832,7 @@ var DiceCup;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
         joinButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            DiceCup.joinRoom();
-            // switchMenu(MenuPage.multiplayerLobby);
+            DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
         });
         let contentContainer = document.createElement("div");
         contentContainer.id = "multiplayerContentContainer_id";
@@ -1911,8 +1915,6 @@ var DiceCup;
             serverList.appendChild(lockedContainer);
             let playerCount = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            console.log(_clients);
-            console.log(_clients[i].split(",").length);
             playerCount.innerHTML = (_clients[i] != "" ? _clients[i].split(",").length.toString() : "0") + "/6";
             playerCountContainer.appendChild(playerCount);
             let game = document.createElement("span");
@@ -2399,8 +2401,6 @@ var DiceCup;
     let idRoom = "Lobby";
     // Create a FudgeClient for this browser tab
     DiceCup.client = new ƒClient();
-    let counter = 0;
-    let rooms = [];
     // keep a list of known clients, updated with information from the server
     let clientsKnown = {};
     window.addEventListener("load", connectToServer);
@@ -2430,8 +2430,7 @@ var DiceCup;
         switch (command) {
             case "multiplayerRenewButton_id":
             case "multiplayer_id":
-                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
-                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerCreateButton_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
@@ -2442,7 +2441,7 @@ var DiceCup;
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
                 break;
             case "multiplayerLobbyMenuReturnButton_id":
-                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: "Lobby" } });
                 break;
             // case "multiplayerLobbySettingsButton_id":
             //   // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
@@ -2495,7 +2494,8 @@ var DiceCup;
                 case FudgeNet.COMMAND.DISCONNECT_PEERS:
                     DiceCup.client.disconnectPeers();
                     break;
-                case FudgeNet.COMMAND.ROOM_GET_IDS:
+                case FudgeNet.COMMAND.ROOM_LIST:
+                    DiceCup.getRooms(message.content.rooms, message.content.clients);
                     break;
                 case FudgeNet.COMMAND.ROOM_CREATE:
                     document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = message.content.room;
@@ -2503,17 +2503,12 @@ var DiceCup;
                     idRoom = message.content.room;
                     DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
                 case FudgeNet.COMMAND.ROOM_ENTER:
-                    // console.log(idRoom);
-                    // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom }});
-                    break;
-                case FudgeNet.COMMAND.ROOM_LEAVE:
-                    // client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: {room: idRoom}});
+                    console.log("WIE OFT");
+                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
                     break;
                 case FudgeNet.COMMAND.ROOM_INFO:
-                    // console.log(message.content);
                     console.log(message.content);
-                    // counter = Object.keys(message.content.roomClients).length;
-                    DiceCup.getRooms(message.content.rooms, message.content.clients);
+                    DiceCup.joinRoom(message);
                     break;
                 default:
                     break;

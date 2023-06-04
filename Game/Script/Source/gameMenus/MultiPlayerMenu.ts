@@ -44,8 +44,7 @@ namespace DiceCup {
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            joinRoom();
-            // switchMenu(MenuPage.multiplayerLobby);
+            switchMenu(MenuPage.multiplayerLobby);
         });
 
         let contentContainer: HTMLDivElement = document.createElement("div");
@@ -146,8 +145,6 @@ namespace DiceCup {
 
             let playerCount: HTMLSpanElement = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            console.log(_clients);
-            console.log(_clients[i].split(",").length);
             playerCount.innerHTML = (_clients[i] != "" ?  _clients[i].split(",").length.toString() : "0") + "/6";
             playerCountContainer.appendChild(playerCount);
 
