@@ -1883,7 +1883,7 @@ var DiceCup;
         locked.src = "Game/Assets/images/serverlistIcons/lock.svg";
         lockedContainer.appendChild(locked);
     }
-    async function getRooms(_rooms, _counter) {
+    async function getRooms(_rooms, _clients) {
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
@@ -1911,7 +1911,9 @@ var DiceCup;
             serverList.appendChild(lockedContainer);
             let playerCount = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.innerHTML = _counter + "/6";
+            console.log(_clients);
+            console.log(_clients[i].split(",").length);
+            playerCount.innerHTML = (_clients[i] != "" ? _clients[i].split(",").length.toString() : "0") + "/6";
             playerCountContainer.appendChild(playerCount);
             let game = document.createElement("span");
             game.id = "room_id_" + i;
@@ -2394,7 +2396,7 @@ var DiceCup;
     var ƒ = FudgeCore;
     var ƒClient = FudgeNet.FudgeClient;
     ƒ.Debug.setFilter(ƒ.DebugConsole, ƒ.DEBUG_FILTER.ALL);
-    let idRoom;
+    let idRoom = "Lobby";
     // Create a FudgeClient for this browser tab
     DiceCup.client = new ƒClient();
     let counter = 0;
@@ -2409,6 +2411,8 @@ var DiceCup;
         document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndRoom);
         document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
         document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
+        document.getElementById("multiplayerLobbySettingsButton_id").addEventListener("click", hndRoom);
+        document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndRoom);
         document.getElementById("multiplayerLobbySettingsButton_id").addEventListener("click", hndRoom);
         // document.querySelector("button#rename").addEventListener("click", rename);
         // document.querySelector("button#mesh").addEventListener("click", structurePeers);
@@ -2427,18 +2431,22 @@ var DiceCup;
             case "multiplayerRenewButton_id":
             case "multiplayer_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerCreateButton_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerJoinButton_id":
-                let idRoom = DiceCup.focusedIdRoom;
+                idRoom = DiceCup.focusedIdRoom;
                 console.log("Enter", DiceCup.focusedIdRoom);
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
-                document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = idRoom;
                 break;
-            case "multiplayerLobbySettingsButton_id":
+            case "multiplayerLobbyMenuReturnButton_id":
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER });
                 break;
+            // case "multiplayerLobbySettingsButton_id":
+            //   // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
+            //   break;
         }
     }
     async function connectToServer(_event) {
@@ -2478,6 +2486,7 @@ var DiceCup;
                     // updateTable();
                     // on each server heartbeat, dispatch this clients heartbeat
                     DiceCup.client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
+                    // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                     break;
                 case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
                     let span = document.querySelector(`#${message.idSource} span`);
@@ -2487,20 +2496,24 @@ var DiceCup;
                     DiceCup.client.disconnectPeers();
                     break;
                 case FudgeNet.COMMAND.ROOM_GET_IDS:
-                    rooms = message.content.rooms;
-                    console.log(rooms);
-                    // rooms.map(room => client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: {room: room}}));
                     break;
                 case FudgeNet.COMMAND.ROOM_CREATE:
                     document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = message.content.room;
                     console.log("Created room", message.content.room);
+                    idRoom = message.content.room;
+                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
                 case FudgeNet.COMMAND.ROOM_ENTER:
-                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
+                    // console.log(idRoom);
+                    // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom }});
+                    break;
+                case FudgeNet.COMMAND.ROOM_LEAVE:
+                    // client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: {room: idRoom}});
                     break;
                 case FudgeNet.COMMAND.ROOM_INFO:
+                    // console.log(message.content);
                     console.log(message.content);
-                    counter = Object.keys(message.content.roomClients).length;
-                    DiceCup.getRooms(rooms, counter);
+                    // counter = Object.keys(message.content.roomClients).length;
+                    DiceCup.getRooms(message.content.rooms, message.content.clients);
                     break;
                 default:
                     break;

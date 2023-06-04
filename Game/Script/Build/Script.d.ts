@@ -266,7 +266,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     let focusedIdRoom: string;
     function multiplayerServers(): void;
-    function getRooms(_rooms: string[], _counter: number): Promise<void>;
+    function getRooms(_rooms: string[], _clients: string[]): Promise<void>;
 }
 declare namespace DiceCup {
     let sfxVolume: number;

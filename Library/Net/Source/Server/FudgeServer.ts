@@ -127,6 +127,10 @@ export class FudgeServer {
         this.enterRoom(message);
         break;
 
+      case FudgeNet.COMMAND.ROOM_LEAVE:
+        this.leaveRoom(message);
+        break;
+
       case FudgeNet.COMMAND.ROOM_INFO:
         this.getRoomInfo(message);
         break;
@@ -215,6 +219,11 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
+  private leaveRoom(_message: FudgeNet.Message): void {
+    _message.content = {room: "Lobby"};
+    this.enterRoom(_message);
+  }
+
   private createRoom(_message: FudgeNet.Message): void {
     let idRoom: string = this.createID();
     this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
@@ -232,10 +241,10 @@ export class FudgeServer {
   }
 
   private getRoomInfo(_message: FudgeNet.Message): void {
-    console.log(_message);
     let message: FudgeNet.Message = {
-      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.content.room!, roomClients: this.rooms[_message.content.room!].clients }
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
     };
+    console.log(message);
     this.dispatch(message);
   }
 

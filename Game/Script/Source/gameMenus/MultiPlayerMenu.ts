@@ -113,7 +113,7 @@ namespace DiceCup {
         lockedContainer.appendChild(locked);
     }
 
-    export async function getRooms(_rooms: string[], _counter: number): Promise<void> {
+    export async function getRooms(_rooms: string[], _clients: string[]): Promise<void> {
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
@@ -146,7 +146,9 @@ namespace DiceCup {
 
             let playerCount: HTMLSpanElement = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.innerHTML = _counter + "/6";
+            console.log(_clients);
+            console.log(_clients[i].split(",").length);
+            playerCount.innerHTML = (_clients[i] != "" ?  _clients[i].split(",").length.toString() : "0") + "/6";
             playerCountContainer.appendChild(playerCount);
 
             let game: HTMLSpanElement = document.createElement("span");

@@ -183,11 +183,10 @@ namespace FudgeNet {
           this.idRoom = message.idRoom!;
           break;
         case FudgeNet.COMMAND.ROOM_INFO:
-          console.log(message.content);
+          // console.log(message.content);
           break;
         case FudgeNet.COMMAND.ROOM_CREATE:
-          console.log(message.content);
-          this.joinCreatedRoom(message.idRoom!);
+          // console.log(message.content);
           break;
         case FudgeNet.COMMAND.SERVER_HEARTBEAT:
           //@ts-ignore
@@ -258,10 +257,6 @@ namespace FudgeNet {
       } catch (error) {
         console.info("Unexpected Error: Sending ID Confirmation", error);
       }
-    }
-
-    private joinCreatedRoom = (_idRoom: string) => {
-      this.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: _idRoom } });
     }
 
     //#region RTC-Negotiation

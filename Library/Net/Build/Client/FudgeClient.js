@@ -40,6 +40,7 @@ var FudgeNet;
         COMMAND["ROOM_GET_IDS"] = "roomGetIds";
         /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */
         COMMAND["ROOM_ENTER"] = "roomEnter";
+        COMMAND["ROOM_LEAVE"] = "roomLeave";
         COMMAND["ROOM_INFO"] = "roomInfo";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**
@@ -325,11 +326,10 @@ var FudgeNet;
                     this.idRoom = message.idRoom;
                     break;
                 case FudgeNet.COMMAND.ROOM_INFO:
-                    console.log(message.content);
+                    // console.log(message.content);
                     break;
                 case FudgeNet.COMMAND.ROOM_CREATE:
-                    console.log(message.content);
-                    this.joinCreatedRoom(message.idRoom);
+                    // console.log(message.content);
                     break;
                 case FudgeNet.COMMAND.SERVER_HEARTBEAT:
                     //@ts-ignore
@@ -393,9 +393,6 @@ var FudgeNet;
             catch (error) {
                 console.info("Unexpected Error: Sending ID Confirmation", error);
             }
-        };
-        joinCreatedRoom = (_idRoom) => {
-            this.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: _idRoom } });
         };
         //#region RTC-Negotiation
         // cR = caller

@@ -41,6 +41,7 @@ exports.FudgeNet = void 0;
         COMMAND["ROOM_GET_IDS"] = "roomGetIds";
         /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */
         COMMAND["ROOM_ENTER"] = "roomEnter";
+        COMMAND["ROOM_LEAVE"] = "roomLeave";
         COMMAND["ROOM_INFO"] = "roomInfo";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**

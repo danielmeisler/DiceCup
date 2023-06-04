@@ -97,6 +97,9 @@ class FudgeServer {
             case Message_js_1.FudgeNet.COMMAND.ROOM_ENTER:
                 this.enterRoom(message);
                 break;
+            case Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE:
+                this.leaveRoom(message);
+                break;
             case Message_js_1.FudgeNet.COMMAND.ROOM_INFO:
                 this.getRoomInfo(message);
                 break;
@@ -176,6 +179,10 @@ class FudgeServer {
         };
         this.broadcast(message);
     }
+    leaveRoom(_message) {
+        _message.content = { room: "Lobby" };
+        this.enterRoom(_message);
+    }
     createRoom(_message) {
         let idRoom = this.createID();
         this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
@@ -191,10 +198,10 @@ class FudgeServer {
         this.dispatch(message);
     }
     getRoomInfo(_message) {
-        console.log(_message);
         let message = {
-            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.content.room, roomClients: this.rooms[_message.content.room].clients }
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
         };
+        console.log(message);
         this.dispatch(message);
     }
     async createMesh(_message) {
