@@ -50,7 +50,7 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
           break;
         case "multiplayerLobbyMenuReturnButton_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: "Lobby" } });
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER });
         break;
         // case "multiplayerLobbySettingsButton_id":
         //   // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
@@ -110,17 +110,23 @@ namespace DiceCup {
             getRooms(message.content.rooms, message.content.clients);
             break;
           case FudgeNet.COMMAND.ROOM_CREATE:
-            document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = message.content.room;
             console.log("Created room", message.content.room);
-            idRoom = message.content.room;
-            client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            break;
           case FudgeNet.COMMAND.ROOM_ENTER:
-            console.log("WIE OFT");
-            client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            break;
+          case FudgeNet.COMMAND.ROOM_LEAVE:
+            if (message.content.leaver == true) {
+              client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
+            } else {
+              client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            }
             break;
           case FudgeNet.COMMAND.ROOM_INFO:
-            console.log(message.content);
-            joinRoom(message);
+            if (message.content.room != "Lobby") {
+              joinRoom(message);
+            }
             break;
           default:
             break;

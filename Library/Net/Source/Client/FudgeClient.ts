@@ -182,6 +182,9 @@ namespace FudgeNet {
         case FudgeNet.COMMAND.ROOM_ENTER:
           this.idRoom = message.idRoom!;
           break;
+        case FudgeNet.COMMAND.ROOM_LEAVE:
+          this.idRoom = message.idRoom!;
+          break;
         case FudgeNet.COMMAND.ROOM_INFO:
           // console.log(message.content);
           break;

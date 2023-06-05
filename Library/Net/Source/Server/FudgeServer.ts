@@ -127,6 +127,10 @@ export class FudgeServer {
         this.enterRoom(message);
         break;
 
+      case FudgeNet.COMMAND.ROOM_LEAVE:
+        this.leaveRoom(message);
+        break;
+
       case FudgeNet.COMMAND.ROOM_INFO:
         this.getRoomInfo(message);
         break;
@@ -190,11 +194,26 @@ export class FudgeServer {
               console.log("Deleting from known clients: ", id);
               delete clients[id];
               this.logClients(this.rooms[idRoom]);
+              this.checkLeavedRoom(idRoom);
             }
           }
         }
       });
     });
+  }
+
+  private checkLeavedRoom(_room: string): void {
+    console.log(Object.keys(this.rooms[_room].clients).length == 0, _room);
+    if (_room != this.idLobby) {
+      if (Object.keys(this.rooms[_room].clients).length == 0) {
+        delete this.rooms[_room];
+      } else {
+        let messageRoom: FudgeNet.Message = {
+          idRoom: _room, command: FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false }
+        };
+        this.broadcast(messageRoom);
+      }
+    }
   }
 
 
@@ -204,15 +223,43 @@ export class FudgeServer {
     if (!this.rooms[_message.idRoom])
       throw (new Error(`Room unavailable ${_message.idRoom}`));
 
+    if (this.rooms[_message.content.room]) {    
+      let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
+      let room: Room = this.rooms[_message.content.room];
+      delete this.rooms[_message.idRoom].clients[_message.idSource];
+      room.clients[_message.idSource] = client;
+
+      let message: FudgeNet.Message = {
+        idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource }
+      };
+      this.broadcast(message);
+    } else {
+      console.log("ROOM EXPIRED");
+    }
+  }
+
+  private leaveRoom(_message: FudgeNet.Message): void {
+    if (!_message.idRoom || !_message.idSource)
+      throw (new Error("Message lacks idSource, idRoom"));
+    if (!this.rooms[_message.idRoom])
+      throw (new Error(`Room unavailable ${_message.idRoom}`));
+
     let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
-    let room: Room = this.rooms[_message.content.room];
+    let room: Room = this.rooms[this.idLobby];
     delete this.rooms[_message.idRoom].clients[_message.idSource];
     room.clients[_message.idSource] = client;
 
-    let message: FudgeNet.Message = {
-      idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource }
+    let messageRoom: FudgeNet.Message = {
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false }
     };
-    this.broadcast(message);
+    this.broadcast(messageRoom);
+
+    let messageClient: FudgeNet.Message = {
+      idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.idSource, content: { leaver: true }
+    };
+    this.dispatch(messageClient);
+
+    (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
   }
 
   private createRoom(_message: FudgeNet.Message): void {
@@ -232,11 +279,11 @@ export class FudgeServer {
   }
 
   private getRoomInfo(_message: FudgeNet.Message): void {
-    console.log(_message.content);
-    // let message: FudgeNet.Message = {
-    //   idRoom: _message.content!.room, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { clients: "TEST" }
-    // };
-    // this.dispatch(message);
+    let clients: Clients = this.rooms[_message.idRoom!].clients;
+    let message: FudgeNet.Message = {
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.idRoom, clients: clients }
+    };
+    this.dispatch(message);
   }
 
   private async createMesh(_message: FudgeNet.Message): Promise<void> {

@@ -37,6 +37,7 @@ export declare namespace FudgeNet {
         ROOM_LIST = "roomList",
         /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */
         ROOM_ENTER = "roomEnter",
+        ROOM_LEAVE = "roomLeave",
         ROOM_INFO = "roomInfo"
     }
     /**

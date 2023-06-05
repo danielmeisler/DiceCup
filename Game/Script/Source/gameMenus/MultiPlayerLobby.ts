@@ -1,6 +1,6 @@
 namespace DiceCup {
 
-    let playerCounter: number = 0;
+    // let playerCounter: number = 0;
 
     export function multiplayerMenu(): void {
         new SubMenu(MenuPage.multiplayerLobby, "multiplayerLobby", (<HTMLInputElement>document.getElementById("playerName_id")).placeholder + "'s " + language.menu.multiplayer.lobby.title);
@@ -39,39 +39,38 @@ namespace DiceCup {
             // createGameSettings();
         });
 
-        createPlayerPortrait();
-        for (let i = 0; i < 5; i++) {
-            createWaitPortrait();
-        }
+        // for (let i = 0; i < 6; i++) {
+        //     createWaitPortrait(i);
+        // }
     }
 
-    function createPlayerPortrait(): void {
+    function createPlayerPortrait(_client?: string): void {
         let playerContainer: HTMLDivElement = document.createElement("div");
-        playerContainer.id = "playerContainer_id_" + playerCounter;
+        playerContainer.id = "playerContainer_id";
         playerContainer.classList.add("lobbyContainer");
         playerContainer.classList.add("waitContainer");
         playerContainer.style.order = "0";
         document.getElementById("multiplayerLobbyMenuContent_id").appendChild(playerContainer);
 
         let playerDiv: HTMLButtonElement = document.createElement("button");
-        playerDiv.id = "playerPortrait_id_" + playerCounter;
+        playerDiv.id = "playerPortrait_id";
         playerDiv.classList.add("lobbyPortrait");
         playerDiv.classList.add("lobbyPortrait_active");
         playerDiv.classList.add("diceCupButtons");
         playerContainer.appendChild(playerDiv);
 
-        if (playerCounter > 0) {
-            let playerRemove: HTMLButtonElement = document.createElement("button");
-            playerRemove.id = "playerRemove_id_" + playerCounter;
-            playerRemove.classList.add("removeButton");
-            playerDiv.appendChild(playerRemove);
-            // playerRemove.addEventListener("click", );
+        // if (playerCounter > 0) {
+        //     let playerRemove: HTMLButtonElement = document.createElement("button");
+        //     playerRemove.id = "playerRemove_id_";
+        //     playerRemove.classList.add("removeButton");
+        //     playerDiv.appendChild(playerRemove);
+        //     // playerRemove.addEventListener("click", );
 
-            let botRemoveIcon: HTMLImageElement = document.createElement("img");
-            botRemoveIcon.classList.add("removeButtonIcons");
-            botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
-            playerRemove.appendChild(botRemoveIcon);
-        }
+        //     let botRemoveIcon: HTMLImageElement = document.createElement("img");
+        //     botRemoveIcon.classList.add("removeButtonIcons");
+        //     botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
+        //     playerRemove.appendChild(botRemoveIcon);
+        // }
 
         let playerIcons: HTMLImageElement = document.createElement("img");
         playerIcons.classList.add("lobbyPortraitIcons");
@@ -79,16 +78,17 @@ namespace DiceCup {
         playerDiv.appendChild(playerIcons);
 
         let playerName: HTMLInputElement = document.createElement("input");
-        playerName.id = "playerName_id_" + playerCounter;
+        playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
-        playerName.placeholder = client.id ?? language.menu.player;
+        playerName.placeholder = _client ?? language.menu.player;
         playerContainer.appendChild(playerName);
 
-        playerCounter++;
+        // playerCounter++;
     }
 
-    function createWaitPortrait(): void {
+    function createWaitPortrait(_id: number): void {
         let waitContainer: HTMLDivElement = document.createElement("div");
+        waitContainer.id = "multiplayerLobbyWaitContainer_id_" + _id;
         waitContainer.classList.add("waitContainer");
         waitContainer.classList.add("lobbyContainer");
         waitContainer.style.order = "2";
@@ -114,14 +114,19 @@ namespace DiceCup {
     }
 
     export function joinRoom(_message: FudgeNet.Message): void {
-        console.log(_message);
         switchMenu(MenuPage.multiplayerLobby);
-
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.room;
+        console.log((6 - Object.keys(_message.content.clients).length));
 
-        // for (let index = 0; index < _message.clients[i].split(",").length; index++) {
-        //     const element = array[index];
-            
-        // }
+        while (document.getElementById("multiplayerLobbyMenuContent_id").childNodes.length > 0) {
+            document.getElementById("multiplayerLobbyMenuContent_id").removeChild(document.getElementById("multiplayerLobbyMenuContent_id").lastChild);
+        }
+
+        for (let i = 0; i < Object.keys(_message.content.clients).length; i++) {
+            createPlayerPortrait(Object.keys(_message.content.clients)[i].toString());
+        }
+        for (let j = 0; j < (6 - Object.keys(_message.content.clients).length); j++) {
+            createWaitPortrait(j);
+        }
     }
 }
