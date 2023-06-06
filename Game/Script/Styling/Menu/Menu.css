@@ -44,6 +44,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     background: var(--menu_buttons_background);
     color: var(--menu_buttons_color);
     font-size: var(--menu_buttons_fontsize);
@@ -52,6 +53,73 @@
 .menuButtonsIcons {
     width: 70%;
     aspect-ratio: 1/1;
+}
+
+#play_id:focus img, #play_id:hover img{
+    animation: drive-animation 1s infinite;
+}
+
+#multiplayer_id:focus img, #multiplayer_id:hover img{
+    animation: blink-animation 1s infinite;
+}
+
+
+
+#help_id:focus img, #help_id:hover img{
+    animation: scale-animation 0.5s infinite;
+}
+
+
+
+button:focus img[src="Game/Assets/images/menuButtons/settings.svg"], button:hover img[src="Game/Assets/images/menuButtons/settings.svg"] {
+    animation: rotate-animation 2s linear infinite;
+}
+
+button:focus img[src="Game/Assets/images/menuButtons/renew.svg"], button:hover img[src="Game/Assets/images/menuButtons/renew.svg"] {
+    animation: rotate-animation 2s linear infinite;
+}
+
+@keyframes drive-animation {
+    0%, 100% {
+        transform: translateX(0%);
+    }
+    50% {
+        transform: translateX(200%);
+    }
+}
+
+@keyframes blink-animation {
+    0%, 100% {
+        opacity: 100%;
+    }
+    50% {
+        opacity: 0%;
+    }
+}
+
+@keyframes scale-animation {
+    0%, 100% {
+        transform: scale(100%);
+    }
+    50% {
+        transform: scale(80%);
+    }
+}
+
+@keyframes rotate-animation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+.menuButtons:focus img, .menuButtons:hover img {
+    /* transition: transform 1s ease-in-out;
+    transform: rotate(360deg); */
 }
 
 #onlineContainer_id {
