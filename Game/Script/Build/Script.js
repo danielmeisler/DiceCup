@@ -1684,6 +1684,17 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.options);
         });
+        let onlineContainer = document.createElement("div");
+        onlineContainer.id = "onlineContainer_id";
+        menuDiv.appendChild(onlineContainer);
+        let statusText = document.createElement("span");
+        statusText.id = "onlineStatus_id";
+        statusText.innerHTML = DiceCup.client.id ? "status: online" : "status: offline";
+        onlineContainer.appendChild(statusText);
+        let clientText = document.createElement("span");
+        clientText.id = "onlineClient_id";
+        clientText.innerHTML = DiceCup.client.id ? "client_id: " + DiceCup.client.id : "client_id: undefined";
+        onlineContainer.appendChild(clientText);
     }
     DiceCup.mainMenu = mainMenu;
 })(DiceCup || (DiceCup = {}));
@@ -1838,7 +1849,6 @@ var DiceCup;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
         joinButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
         });
         let contentContainer = document.createElement("div");
         contentContainer.id = "multiplayerContentContainer_id";
@@ -2508,7 +2518,13 @@ var DiceCup;
                     DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
                     break;
                 case FudgeNet.COMMAND.ROOM_ENTER:
-                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+                    if (message.content.expired == true) {
+                        document.getElementById("multiplayerAlert_id").innerHTML = DiceCup.language.menu.multiplayer.list.alert;
+                        ƒ.Time.game.setTimer(1000, 1, () => { document.getElementById("multiplayerAlert_id").innerHTML = ""; });
+                    }
+                    else {
+                        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+                    }
                     break;
                 case FudgeNet.COMMAND.ROOM_LEAVE:
                     if (message.content.leaver == true) {

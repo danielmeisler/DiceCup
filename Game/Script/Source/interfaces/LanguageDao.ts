@@ -24,6 +24,7 @@ namespace DiceCup {
                     title: string;
                     create_button: string;
                     join_button: string;
+                    alert: string;
                 },
                 lobby: {
                     title: string;

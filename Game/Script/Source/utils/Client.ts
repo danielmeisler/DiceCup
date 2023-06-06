@@ -114,7 +114,12 @@ namespace DiceCup {
             client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
             break;
           case FudgeNet.COMMAND.ROOM_ENTER:
-            client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            if (message.content.expired == true) {
+              document.getElementById("multiplayerAlert_id").innerHTML = language.menu.multiplayer.list.alert;
+              ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("multiplayerAlert_id").innerHTML = ""});
+            } else {
+              client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            }
             break;
           case FudgeNet.COMMAND.ROOM_LEAVE:
             if (message.content.leaver == true) {

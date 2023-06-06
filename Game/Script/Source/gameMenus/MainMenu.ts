@@ -63,5 +63,19 @@ namespace DiceCup {
             switchMenu(MenuPage.options);
         });
 
+        let onlineContainer: HTMLDivElement = document.createElement("div");
+        onlineContainer.id = "onlineContainer_id";
+        menuDiv.appendChild(onlineContainer);
+
+        let statusText: HTMLSpanElement = document.createElement("span");
+        statusText.id = "onlineStatus_id";
+        statusText.innerHTML = client.id ? "status: online" : "status: offline";
+        onlineContainer.appendChild(statusText);
+
+        let clientText: HTMLSpanElement = document.createElement("span");
+        clientText.id = "onlineClient_id";
+        clientText.innerHTML = client.id ? "client_id: " + client.id : "client_id: undefined";
+        onlineContainer.appendChild(clientText);
+
     }
 }

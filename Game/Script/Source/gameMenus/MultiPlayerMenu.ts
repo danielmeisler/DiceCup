@@ -44,7 +44,6 @@ namespace DiceCup {
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            switchMenu(MenuPage.multiplayerLobby);
         });
 
         let contentContainer: HTMLDivElement = document.createElement("div");

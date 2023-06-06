@@ -22,7 +22,8 @@
             "list": {
                 "title": "Multiplayer",
                 "create_button": "create",
-                "join_button": "join"
+                "join_button": "join",
+                "alert": "Room unavailable"
             },
             "lobby": {
                 "title": "Game",

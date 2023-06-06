@@ -54,6 +54,17 @@
     aspect-ratio: 1/1;
 }
 
+#onlineContainer_id {
+    position: absolute;
+    display: flex;
+    gap: 1vw;
+    right: 1vw;
+    bottom: 1vh;
+    color: var(--menu_online_status_color);
+    font-family: var(--text_font);
+    font-size: var(--menu_online_status_fontsize);
+
+}
 
 .subGameMenus {
     height: 100%;

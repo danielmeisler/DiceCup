@@ -22,7 +22,8 @@
             "list": {
                 "title": "Mehrspieler",
                 "create_button": "Erstellen",
-                "join_button": "Beitreten"
+                "join_button": "Beitreten",
+                "alert": "Raum ungültig!"
             },
             "lobby": {
                 "title": "Spiel",

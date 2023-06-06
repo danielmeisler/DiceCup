@@ -1,4 +1,5 @@
 :root {
+    /* Main colors */
     --white: #ffffff;
     --gray_lightest: #bbbbbb;
     --gray_lighter: #888888;
@@ -29,4 +30,9 @@
     --medal_font: #ffffff;
     --medal_main: #2F4260;
     --medal_sub: #1A2638;
+
+    /* Transparent colors */
+    --black_shadow: rgba(0, 0, 0, 0.25);
+    --white_shadow: rgba(255, 255, 255, 0.5);
+    --blue_shadow: rgba(47, 66, 96, 0.5);
 }

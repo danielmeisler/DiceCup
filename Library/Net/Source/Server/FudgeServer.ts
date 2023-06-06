@@ -234,7 +234,10 @@ export class FudgeServer {
       };
       this.broadcast(message);
     } else {
-      console.log("ROOM EXPIRED");
+      let messageClient: FudgeNet.Message = {
+        idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { expired: true }
+      };
+      this.dispatch(messageClient);
     }
   }
 
