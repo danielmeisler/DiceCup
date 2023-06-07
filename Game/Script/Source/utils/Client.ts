@@ -7,6 +7,7 @@ namespace DiceCup {
   
     // Create a FudgeClient for this browser tab
     export let client: ƒClient = new ƒClient();
+    export let host: boolean = false;
 
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
@@ -42,16 +43,15 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
           break;
         case "multiplayerCreateButton_id":
-          console.log("TEST");
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
           break;
         case "multiplayerJoinButton_id":
           idRoom = focusedIdRoom;
           console.log("Enter", focusedIdRoom );
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom } });
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false } });
           break;
         case "multiplayerLobbyMenuReturnButton_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER });
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: client.id, host: host } });
         break;
         // case "multiplayerLobbySettingsButton_id":
         //   // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
@@ -112,7 +112,8 @@ namespace DiceCup {
             break;
           case FudgeNet.COMMAND.ROOM_CREATE:
             console.log("Created room", message.content.room);
-            client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            host = message.content.host;
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room, host: host } });
             break;
           case FudgeNet.COMMAND.ROOM_ENTER:
             if (message.content.expired == true) {
@@ -124,9 +125,15 @@ namespace DiceCup {
             break;
           case FudgeNet.COMMAND.ROOM_LEAVE:
             if (message.content.leaver == true) {
+              switchMenu(MenuPage.multiplayer);
               client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
             } else {
               client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            }
+            if (message.content.newHost == client.id) {
+              host = true;
+            } else {
+              host = false;
             }
             break;
           case FudgeNet.COMMAND.ROOM_INFO:

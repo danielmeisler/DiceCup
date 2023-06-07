@@ -408,6 +408,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     import ƒClient = FudgeNet.FudgeClient;
     let client: ƒClient;
+    let host: boolean;
     function startClient(): Promise<void>;
 }
 declare namespace DiceCup {

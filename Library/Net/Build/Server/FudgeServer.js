@@ -191,8 +191,9 @@ class FudgeServer {
             delete this.rooms[_message.idRoom].clients[_message.idSource];
             room.clients[_message.idSource] = client;
             let message = {
-                idRoom: _message.content.room, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource }
+                idRoom: _message.content.room, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host }
             };
+            console.log(message);
             this.broadcast(message);
         }
         else {
@@ -203,30 +204,29 @@ class FudgeServer {
         }
     }
     leaveRoom(_message) {
-        if (!_message.idRoom || !_message.idSource)
-            throw (new Error("Message lacks idSource, idRoom"));
+        if (!_message.idRoom || !_message.content.leaver_id)
+            throw (new Error("Message lacks idSource, idRoom or content"));
         if (!this.rooms[_message.idRoom])
             throw (new Error(`Room unavailable ${_message.idRoom}`));
-        let client = this.rooms[_message.idRoom].clients[_message.idSource];
+        let client = this.rooms[_message.idRoom].clients[_message.content.leaver_id];
         let room = this.rooms[this.idLobby];
-        delete this.rooms[_message.idRoom].clients[_message.idSource];
-        room.clients[_message.idSource] = client;
+        delete this.rooms[_message.idRoom].clients[_message.content.leaver_id];
+        room.clients[_message.content.leaver_id] = client;
         let messageRoom = {
-            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false }
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0] }
         };
         this.broadcast(messageRoom);
         let messageClient = {
-            idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.idSource, content: { leaver: true }
+            idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0] }
         };
         this.dispatch(messageClient);
         (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
     }
     createRoom(_message) {
-        console.log("CREATE ROOM DRINNE");
         let idRoom = this.createID();
         this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
         let message = {
-            idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom }
+            idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom, host: true }
         };
         this.dispatch(message);
     }
