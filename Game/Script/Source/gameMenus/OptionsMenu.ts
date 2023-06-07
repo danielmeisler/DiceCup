@@ -12,12 +12,16 @@ namespace DiceCup {
         document.getElementById("optionsMenuContent_id").appendChild(contentContainer);
 
         let resetButton: HTMLButtonElement = document.createElement("button");
-        resetButton.id = "optionsStartButton_id";
+        resetButton.id = "optionsResetButton_id";
         resetButton.classList.add("gameMenuStartButtons");
         resetButton.classList.add("gameMenuButtons");
         resetButton.classList.add("diceCupButtons");
-        resetButton.innerHTML = language.menu.settings.reset_button;
         document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
+
+        let resetText: HTMLSpanElement = document.createElement("span");
+        resetText.id = "optionsResetText_id";
+        resetText.innerHTML = language.menu.settings.reset_button;
+        resetButton.appendChild(resetText);
 
         resetButton.addEventListener("click", () => {
             playSFX(buttonClick);

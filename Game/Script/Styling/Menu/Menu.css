@@ -55,36 +55,45 @@
     aspect-ratio: 1/1;
 }
 
-#play_id:focus img, #play_id:hover img{
-    animation: drive-animation 1s infinite;
+button:focus img[src="Game/Assets/images/menuButtons/play.svg"], button:hover img[src="Game/Assets/images/menuButtons/play.svg"],
+button:focus img[src="Game/Assets/images/menuButtons/right.svg"], button:hover img[src="Game/Assets/images/menuButtons/right.svg"] {
+    animation: right-animation 1s infinite;
 }
 
-#multiplayer_id:focus img, #multiplayer_id:hover img{
+button:focus img[src="Game/Assets/images/menuButtons/multiplayer.svg"], button:hover img[src="Game/Assets/images/menuButtons/multiplayer.svg"] {
     animation: blink-animation 1s infinite;
 }
 
-
-
-#help_id:focus img, #help_id:hover img{
+button:focus img[src="Game/Assets/images/menuButtons/help.svg"], button:hover img[src="Game/Assets/images/menuButtons/help.svg"],
+.gameMenuStartButtons:focus span, .gameMenuStartButtons:hover span {
     animation: scale-animation 0.5s infinite;
 }
 
-
-
-button:focus img[src="Game/Assets/images/menuButtons/settings.svg"], button:hover img[src="Game/Assets/images/menuButtons/settings.svg"] {
-    animation: rotate-animation 2s linear infinite;
-}
-
+button:focus img[src="Game/Assets/images/menuButtons/settings.svg"], button:hover img[src="Game/Assets/images/menuButtons/settings.svg"],
 button:focus img[src="Game/Assets/images/menuButtons/renew.svg"], button:hover img[src="Game/Assets/images/menuButtons/renew.svg"] {
     animation: rotate-animation 2s linear infinite;
 }
 
-@keyframes drive-animation {
+button:focus img[src="Game/Assets/images/menuButtons/return.svg"], button:hover img[src="Game/Assets/images/menuButtons/return.svg"],
+button:focus img[src="Game/Assets/images/menuButtons/left.svg"], button:hover img[src="Game/Assets/images/menuButtons/left.svg"] {
+    animation: left-animation 1s infinite;
+}
+
+@keyframes right-animation {
     0%, 100% {
         transform: translateX(0%);
     }
     50% {
         transform: translateX(200%);
+    }
+}
+
+@keyframes left-animation {
+    0%, 100% {
+        transform: translateX(0%);
+    }
+    50% {
+        transform: translateX(-200%);
     }
 }
 
@@ -198,6 +207,7 @@ button:focus img[src="Game/Assets/images/menuButtons/renew.svg"], button:hover i
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     background: var(--menu_buttons_background);
     color: var(--menu_buttons_color);
 }
@@ -288,6 +298,10 @@ button:focus img[src="Game/Assets/images/menuButtons/renew.svg"], button:hover i
     height: 100%;
 }
 
+.switchDifficulty img {
+    animation: none !important;
+}
+
 .switchButtonIcons {
     height: 50%;
     width: 1vw;
@@ -315,8 +329,12 @@ button:focus img[src="Game/Assets/images/menuButtons/renew.svg"], button:hover i
     background: var(--lobby_remove_button_background);
 }
 
-.removeButton:active {
+.removeButton:hover {
     transform: scale(0.9);
+}
+
+.removeButton:active, .removeButton:focus {
+    transform: scale(0.8);
 }
 
 .removeButtonIcons {

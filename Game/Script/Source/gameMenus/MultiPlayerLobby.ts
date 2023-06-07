@@ -30,8 +30,12 @@ namespace DiceCup {
         startButton.classList.add("gameMenuStartButtons");
         startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
-        startButton.innerHTML = language.menu.multiplayer.lobby.start_button;
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
+
+        let startText: HTMLSpanElement = document.createElement("span");
+        startText.id = "multiplayerLobbyStartText_id";
+        startText.innerHTML = language.menu.multiplayer.lobby.start_button;
+        startButton.appendChild(startText);
 
         startButton.addEventListener("click", () => {
             playSFX(buttonClick);

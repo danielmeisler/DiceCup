@@ -26,8 +26,12 @@ namespace DiceCup {
         createButton.classList.add("gameMenuStartButtons");
         createButton.classList.add("gameMenuButtons");
         createButton.classList.add("diceCupButtons");
-        createButton.innerHTML = language.menu.multiplayer.list.create_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
+
+        let createText: HTMLSpanElement = document.createElement("span");
+        createText.id = "multiplayerCreateText_id";
+        createText.innerHTML = language.menu.multiplayer.list.create_button;
+        createButton.appendChild(createText);
 
         createButton.addEventListener("click", () => {
             playSFX(buttonClick);
@@ -39,8 +43,12 @@ namespace DiceCup {
         joinButton.classList.add("gameMenuStartButtons");
         joinButton.classList.add("gameMenuButtons");
         joinButton.classList.add("diceCupButtons");
-        joinButton.innerHTML = language.menu.multiplayer.list.join_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
+
+        let joinText: HTMLSpanElement = document.createElement("span");
+        joinText.id = "multiplayerJoinText_id";
+        joinText.innerHTML = language.menu.multiplayer.list.join_button;;
+        joinButton.appendChild(joinText);
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
