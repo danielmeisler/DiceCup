@@ -222,6 +222,7 @@ class FudgeServer {
         (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
     }
     createRoom(_message) {
+        console.log("CREATE ROOM DRINNE");
         let idRoom = this.createID();
         this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
         let message = {

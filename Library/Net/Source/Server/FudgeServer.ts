@@ -266,6 +266,7 @@ export class FudgeServer {
   }
 
   private createRoom(_message: FudgeNet.Message): void {
+    console.log("CREATE ROOM DRINNE");
     let idRoom: string = this.createID();
     this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
     let message: FudgeNet.Message = {

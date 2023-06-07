@@ -65,7 +65,7 @@ button:focus img[src="Game/Assets/images/menuButtons/multiplayer.svg"], button:h
 }
 
 button:focus img[src="Game/Assets/images/menuButtons/help.svg"], button:hover img[src="Game/Assets/images/menuButtons/help.svg"],
-.gameMenuStartButtons:focus span, .gameMenuStartButtons:hover span {
+.gameMenuStartButtons:focus, .gameMenuStartButtons:hover {
     animation: scale-animation 0.5s infinite;
 }
 

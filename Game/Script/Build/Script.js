@@ -1724,11 +1724,8 @@ var DiceCup;
         startButton.classList.add("gameMenuStartButtons");
         startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
+        startButton.innerHTML = DiceCup.language.menu.multiplayer.lobby.start_button;
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
-        let startText = document.createElement("span");
-        startText.id = "multiplayerLobbyStartText_id";
-        startText.innerHTML = DiceCup.language.menu.multiplayer.lobby.start_button;
-        startButton.appendChild(startText);
         startButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.hideMenu();
@@ -1837,11 +1834,8 @@ var DiceCup;
         createButton.classList.add("gameMenuStartButtons");
         createButton.classList.add("gameMenuButtons");
         createButton.classList.add("diceCupButtons");
+        createButton.innerHTML = DiceCup.language.menu.multiplayer.list.create_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
-        let createText = document.createElement("span");
-        createText.id = "multiplayerCreateText_id";
-        createText.innerHTML = DiceCup.language.menu.multiplayer.list.create_button;
-        createButton.appendChild(createText);
         createButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
@@ -1851,12 +1845,8 @@ var DiceCup;
         joinButton.classList.add("gameMenuStartButtons");
         joinButton.classList.add("gameMenuButtons");
         joinButton.classList.add("diceCupButtons");
+        joinButton.innerHTML = DiceCup.language.menu.multiplayer.list.join_button;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
-        let joinText = document.createElement("span");
-        joinText.id = "multiplayerJoinText_id";
-        joinText.innerHTML = DiceCup.language.menu.multiplayer.list.join_button;
-        ;
-        joinButton.appendChild(joinText);
         joinButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
         });
@@ -1969,15 +1959,12 @@ var DiceCup;
         contentContainer.classList.add("lobbyContainer");
         document.getElementById("optionsMenuContent_id").appendChild(contentContainer);
         let resetButton = document.createElement("button");
-        resetButton.id = "optionsResetButton_id";
+        resetButton.id = "optionsStartButton_id";
         resetButton.classList.add("gameMenuStartButtons");
         resetButton.classList.add("gameMenuButtons");
         resetButton.classList.add("diceCupButtons");
+        resetButton.innerHTML = DiceCup.language.menu.settings.reset_button;
         document.getElementById("optionsMenuRightButtonArea_id").appendChild(resetButton);
-        let resetText = document.createElement("span");
-        resetText.id = "optionsResetText_id";
-        resetText.innerHTML = DiceCup.language.menu.settings.reset_button;
-        resetButton.appendChild(resetText);
         resetButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
             localStorage.clear();
@@ -2187,11 +2174,8 @@ var DiceCup;
         startButton.classList.add("gameMenuStartButtons");
         startButton.classList.add("gameMenuButtons");
         startButton.classList.add("diceCupButtons");
+        startButton.innerHTML = DiceCup.language.menu.singleplayer.lobby.start_button;
         document.getElementById("singleplayerMenuRightButtonArea_id").appendChild(startButton);
-        let startText = document.createElement("span");
-        startText.id = "singleplayerStartText_id";
-        startText.innerHTML = DiceCup.language.menu.singleplayer.lobby.start_button;
-        startButton.appendChild(startText);
         startButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
             DiceCup.nextTrack(1);
@@ -2465,6 +2449,7 @@ var DiceCup;
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerCreateButton_id":
+                console.log("TEST");
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerJoinButton_id":

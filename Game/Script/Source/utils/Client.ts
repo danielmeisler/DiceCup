@@ -42,6 +42,7 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
           break;
         case "multiplayerCreateButton_id":
+          console.log("TEST");
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
           break;
         case "multiplayerJoinButton_id":
