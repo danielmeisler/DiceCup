@@ -55,18 +55,21 @@
     aspect-ratio: 1/1;
 }
 
-button:focus img[src="Game/Assets/images/menuButtons/play.svg"], button:hover img[src="Game/Assets/images/menuButtons/play.svg"],
-button:focus img[src="Game/Assets/images/menuButtons/right.svg"], button:hover img[src="Game/Assets/images/menuButtons/right.svg"] {
-    animation: right-animation 1s infinite;
+button:focus img[src="Game/Assets/images/menuButtons/help.svg"], button:hover img[src="Game/Assets/images/menuButtons/help.svg"] {
+    animation: shake-animation 0.5s linear infinite;
 }
 
 button:focus img[src="Game/Assets/images/menuButtons/multiplayer.svg"], button:hover img[src="Game/Assets/images/menuButtons/multiplayer.svg"] {
-    animation: blink-animation 1s infinite;
+    animation: blink-animation 1s linear infinite;
 }
 
-button:focus img[src="Game/Assets/images/menuButtons/help.svg"], button:hover img[src="Game/Assets/images/menuButtons/help.svg"],
-.gameMenuStartButtons:focus, .gameMenuStartButtons:hover {
-    animation: scale-animation 0.5s infinite;
+button:focus img[src="Game/Assets/images/menuButtons/right.svg"], button:hover img[src="Game/Assets/images/menuButtons/right.svg"] {
+    animation: wiggle-animation 0.5s linear infinite;
+}
+
+button:focus img[src="Game/Assets/images/menuButtons/return.svg"], button:hover img[src="Game/Assets/images/menuButtons/return.svg"],
+button:focus img[src="Game/Assets/images/menuButtons/left.svg"], button:hover img[src="Game/Assets/images/menuButtons/left.svg"] {
+    animation: wiggle-animation 0.5s linear infinite;
 }
 
 button:focus img[src="Game/Assets/images/menuButtons/settings.svg"], button:hover img[src="Game/Assets/images/menuButtons/settings.svg"],
@@ -74,26 +77,42 @@ button:focus img[src="Game/Assets/images/menuButtons/renew.svg"], button:hover i
     animation: rotate-animation 2s linear infinite;
 }
 
-button:focus img[src="Game/Assets/images/menuButtons/return.svg"], button:hover img[src="Game/Assets/images/menuButtons/return.svg"],
-button:focus img[src="Game/Assets/images/menuButtons/left.svg"], button:hover img[src="Game/Assets/images/menuButtons/left.svg"] {
-    animation: left-animation 1s infinite;
+button:focus img[src="Game/Assets/images/menuButtons/play.svg"], button:hover img[src="Game/Assets/images/menuButtons/play.svg"],
+button:focus img[src="Game/Assets/images/menuButtons/plus.svg"], button:hover img[src="Game/Assets/images/menuButtons/plus.svg"] {
+    animation: scale-animation 0.5s linear infinite;
 }
 
-@keyframes right-animation {
+/* #logoContainer_id {
+    animation: scale-animation 20s linear infinite;
+} */
+
+@keyframes wiggle-animation {
     0%, 100% {
         transform: translateX(0%);
     }
+    25% {
+        transform: translateX(10%);
+    }
     50% {
-        transform: translateX(200%);
+        transform: translateX(0%);
+    }
+    75% {
+        transform: translateX(-10%);
     }
 }
 
-@keyframes left-animation {
+@keyframes shake-animation {
     0%, 100% {
-        transform: translateX(0%);
+        transform: rotate(0);
+    }
+    25% {
+        transform: rotate(20deg);
     }
     50% {
-        transform: translateX(-200%);
+        transform: rotate(0);
+    }
+    75% {
+        transform: rotate(-20deg);
     }
 }
 
