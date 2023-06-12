@@ -103,6 +103,9 @@ class FudgeServer {
             case Message_js_1.FudgeNet.COMMAND.ROOM_INFO:
                 this.getRoomInfo(message);
                 break;
+            case Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME:
+                this.assignUsername(message);
+                break;
             case Message_js_1.FudgeNet.COMMAND.CREATE_MESH:
                 this.createMesh(message);
                 break;
@@ -166,8 +169,31 @@ class FudgeServer {
             });
         });
     };
+    assignUsername(_message) {
+        let found = false;
+        Object.values(this.rooms).map(room => { Object.values(room.clients).map(client => { if (client.id == _message.content.username) {
+            found = true;
+        } }); });
+        if (found) {
+            let message = {
+                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { usernameChanged: false }
+            };
+            this.dispatch(message);
+        }
+        else {
+            let client = this.rooms[_message.idRoom].clients[_message.idSource];
+            client.name = _message.content.username;
+            let message = {
+                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { usernameChanged: true }
+            };
+            this.dispatch(message);
+            let messageRoom = {
+                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, content: { usernameChanged: true }
+            };
+            this.broadcast(messageRoom);
+        }
+    }
     checkLeavedRoom(_room) {
-        console.log(Object.keys(this.rooms[_room].clients).length == 0, _room);
         if (_room != this.idLobby) {
             if (Object.keys(this.rooms[_room].clients).length == 0) {
                 delete this.rooms[_room];
@@ -193,7 +219,6 @@ class FudgeServer {
             let message = {
                 idRoom: _message.content.room, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host }
             };
-            console.log(message);
             this.broadcast(message);
         }
         else {
@@ -223,8 +248,9 @@ class FudgeServer {
         (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
     }
     createRoom(_message) {
+        let client = this.rooms[_message.idRoom].clients[_message.idSource];
         let idRoom = this.createID();
-        this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined };
+        this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby" };
         let message = {
             idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom, host: true }
         };
@@ -232,14 +258,14 @@ class FudgeServer {
     }
     getRoomList(_message) {
         let message = {
-            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), roomNames: Object.values(this.rooms).map(room => room.name), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
         };
         this.dispatch(message);
     }
     getRoomInfo(_message) {
         let clients = this.rooms[_message.idRoom].clients;
         let message = {
-            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.idRoom, clients: clients }
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.idRoom, name: this.rooms[_message.idRoom].name, clients: clients }
         };
         this.dispatch(message);
     }

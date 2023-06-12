@@ -39,7 +39,8 @@ declare namespace FudgeNet {
         /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */
         ROOM_ENTER = "roomEnter",
         ROOM_LEAVE = "roomLeave",
-        ROOM_INFO = "roomInfo"
+        ROOM_INFO = "roomInfo",
+        ASSIGN_USERNAME = "assignUsername"
     }
     /**
      * Defines the route the message should take.

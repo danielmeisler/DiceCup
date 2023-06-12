@@ -111,7 +111,7 @@ namespace DiceCup {
         lockedContainer.appendChild(locked);
     }
 
-    export async function getRooms(_rooms: string[], _clients: string[]): Promise<void> {
+    export async function getRooms(_rooms: string[], roomNames: string[], _clients: string[]): Promise<void> {
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
@@ -149,7 +149,7 @@ namespace DiceCup {
 
             let game: HTMLSpanElement = document.createElement("span");
             game.id = "room_id_" + i;
-            game.innerHTML = _rooms[i];
+            game.innerHTML = roomNames[i];
             nameContainer.appendChild(game);
 
             let gamemode: HTMLSpanElement = document.createElement("span");

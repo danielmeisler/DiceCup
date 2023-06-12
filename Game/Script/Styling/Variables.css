@@ -39,8 +39,10 @@
     --lobby_alert_fontsize: 2.5vi;
     --lobby_text_inactive: var(--white_shadow);
     --lobby_names_background: var(--blue_light);
+    --lobby_names_background_sub: var(--blue_light);
     --lobby_names_fontsize: 1.5vi;
     --lobby_remove_button_background: var(--red_light);
+    --lobby_youindicator_background: var(--white);
 
     /* Serverlist Variables */
     --serverlist_background_color: var(--blue_shadow);

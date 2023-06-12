@@ -65,3 +65,19 @@
     height: 7vh;
     aspect-ratio: 1/1;
 }
+
+.youIndicator {
+    position: absolute;
+    width: 2.5vw;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    border-width: 0;
+    right: 0;
+    top: 0;
+    margin-right: -0.8vw;
+    margin-top: -0.8vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--lobby_youindicator_background);
+}

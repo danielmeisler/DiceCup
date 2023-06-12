@@ -43,6 +43,7 @@ exports.FudgeNet = void 0;
         COMMAND["ROOM_ENTER"] = "roomEnter";
         COMMAND["ROOM_LEAVE"] = "roomLeave";
         COMMAND["ROOM_INFO"] = "roomInfo";
+        COMMAND["ASSIGN_USERNAME"] = "assignUsername";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**
      * Defines the route the message should take.

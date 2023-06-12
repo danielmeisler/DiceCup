@@ -64,6 +64,13 @@ button {
   cursor: pointer;
 }
 
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
 .diceCupButtons {
   border-width: 0;
   border-radius: 2vw;

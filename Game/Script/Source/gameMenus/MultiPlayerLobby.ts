@@ -1,5 +1,7 @@
 namespace DiceCup {
 
+    export let username: string = "";
+
     export function multiplayerMenu(): void {
         new SubMenu(MenuPage.multiplayerLobby, "multiplayerLobby", (<HTMLInputElement>document.getElementById("playerName_id")).placeholder + "'s " + language.menu.multiplayer.lobby.title);
 
@@ -41,7 +43,7 @@ namespace DiceCup {
         // }
     }
 
-    function createPlayerPortrait(_client?: string, _id?: number): void {
+    function createPlayerPortrait(_client?: string, _name?: string, _id?: number): void {
         let playerContainer: HTMLDivElement = document.createElement("div");
         playerContainer.id = "playerContainer_id_" + _id;
         playerContainer.classList.add("lobbyContainer");
@@ -55,6 +57,11 @@ namespace DiceCup {
         playerDiv.classList.add("lobbyPortrait_active");
         playerDiv.classList.add("diceCupButtons");
         playerContainer.appendChild(playerDiv);
+
+        let youIndicator: HTMLDivElement = document.createElement("div");
+        youIndicator.classList.add("youIndicator");
+        youIndicator.style.visibility = "hidden";
+        playerDiv.appendChild(youIndicator);
 
         let playerRemove: HTMLButtonElement = document.createElement("button");
         playerRemove.id = "playerRemove_id_" + _id;
@@ -70,14 +77,46 @@ namespace DiceCup {
 
         let playerIcons: HTMLImageElement = document.createElement("img");
         playerIcons.classList.add("lobbyPortraitIcons");
-        playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
+        playerIcons.src = _id == 0 ? "Game/Assets/images/menuButtons/host.svg" : "Game/Assets/images/menuButtons/player.svg";
         playerDiv.appendChild(playerIcons);
+
+        let nameInputContainer: HTMLDivElement = document.createElement("div");
+        nameInputContainer.id = "nameInputContainer_id_" + _id;
+        nameInputContainer.classList.add("nameInputContainer");
+        playerContainer.appendChild(nameInputContainer);
 
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id_" + _id;
         playerName.classList.add("nameInputs");
-        playerName.placeholder = _client ?? language.menu.player;
-        playerContainer.appendChild(playerName);
+        playerName.value = _name ?? _client;
+        playerName.setAttribute("client_id", _client);
+        playerName.readOnly = true;
+        nameInputContainer.appendChild(playerName);
+
+        if (playerName.getAttribute("client_id") == client.id) {
+            let nameInputButton: HTMLButtonElement = document.createElement("button");
+            nameInputButton.id = "nameInputButton_id";
+            nameInputButton.classList.add("nameInputsButtons");
+            nameInputButton.innerHTML = "✔";
+            nameInputContainer.appendChild(nameInputButton);
+
+            nameInputButton.addEventListener("click", () => {
+                playSFX(buttonClick);
+                nameInputButton.style.display = "none";
+                playerName.classList.remove("nameInputsFocused");
+                username = playerName.value;
+                console.log("SADASDF")
+                // collectNames();
+            });
+
+            document.getElementById("nameInputButton_id").addEventListener("click", hndEvent);
+
+            playerName.readOnly = false;
+            youIndicator.style.visibility = "visible";
+            playerName.addEventListener("click", () => {nameInputButton.style.display = "block"; playerName.classList.add("nameInputsFocused");});
+            
+
+        }
     }
 
     function createWaitPortrait(_id: number): void {
@@ -109,7 +148,7 @@ namespace DiceCup {
 
     export function joinRoom(_message: FudgeNet.Message): void {
         switchMenu(MenuPage.multiplayerLobby);
-        document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.room;
+        document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
         console.log((6 - Object.keys(_message.content.clients).length));
 
         while (document.getElementById("multiplayerLobbyMenuContent_id").childNodes.length > 0) {
@@ -117,8 +156,7 @@ namespace DiceCup {
         }
 
         for (let i = 0; i < Object.keys(_message.content.clients).length; i++) {
-            createPlayerPortrait(Object.keys(_message.content.clients)[i].toString(), i);
-            console.log(host);
+            createPlayerPortrait(Object.keys(_message.content.clients)[i].toString(), (<any>Object.values(_message.content.clients)[i]).name, i);
             if (host == false) {
                 document.getElementById("playerRemove_id_" + i).style.display = "none";
             }

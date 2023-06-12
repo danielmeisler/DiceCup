@@ -11,6 +11,7 @@ export interface Client {
 }
 interface Room {
     id: string;
+    name?: string;
     clients: {
         [id: string]: Client;
     };
@@ -59,6 +60,7 @@ export declare class FudgeServer {
     logClients(_room: Room): void;
     protected handleMessage(_message: string, _wsConnection: WebSocket): Promise<void>;
     private addEventListeners;
+    private assignUsername;
     private checkLeavedRoom;
     private enterRoom;
     private leaveRoom;

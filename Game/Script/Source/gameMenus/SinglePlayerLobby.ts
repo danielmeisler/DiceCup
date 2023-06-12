@@ -4,6 +4,7 @@ namespace DiceCup {
     let firstBot: number = 0;
     let botCount: number = 0;
     let chosenDifficulty: number = 1;
+    let allNames: string[] = [];
 
     export function singleplayerMenu(): void {
         new SubMenu(MenuPage.singleplayer, "singleplayer", language.menu.singleplayer.lobby.title);
@@ -92,9 +93,7 @@ namespace DiceCup {
             playerNames.push(gameSettings.bot[index].botName);
         }
 
-        if (!checkPlayernames(playerNames)) {
-            ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
-        } else {
+        if (checkPlayernames(playerNames)) {
             hideMenu();
             localStorage.setItem("playernames",JSON.stringify(playerNames));
             localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
@@ -107,14 +106,40 @@ namespace DiceCup {
         for (let i = 0; i < _names.length; i++) {
             if (!/^[A-Za-z0-9]*$/.test(_names[i])) {
                 document.getElementById("singleplayerAlert_id").innerHTML = "Only alphabetic and numeric tokens!";
+                ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
                 return false;
             }
             if (doubles.length != 0) {
                 document.getElementById("singleplayerAlert_id").innerHTML = "No identical names!";
+                ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
                 return false;
             }
         }
         return true;
+    }
+
+    function collectNames(): void {
+        allNames = [];
+
+        if ((<HTMLInputElement>document.getElementById("playerName_id"))) {
+            if ((<HTMLInputElement>document.getElementById("playerName_id")).value != "") {
+                allNames.push((<HTMLInputElement>document.getElementById("playerName_id")).value);
+            } else {
+                allNames.push((<HTMLInputElement>document.getElementById("playerName_id")).placeholder);
+            }
+        }
+
+        for (let i = 0; i < 5; i++) {
+            if ((<HTMLInputElement>document.getElementById("botName_id_" + i))) {
+                if ((<HTMLInputElement>document.getElementById("botName_id_" + i)).value != "") {
+                    allNames.push((<HTMLInputElement>document.getElementById("botName_id_" + i)).value);
+                } else {
+                    allNames.push((<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder);
+                }
+            }
+        }
+
+        checkPlayernames(allNames);
     }
 
     function createPlayerPortrait(): void {
@@ -136,12 +161,32 @@ namespace DiceCup {
         playerIcons.src = "Game/Assets/images/menuButtons/player.svg";
         playerDiv.appendChild(playerIcons);
 
+        let nameInputContainer: HTMLDivElement = document.createElement("div");
+        nameInputContainer.id = "nameInputContainer_id";
+        nameInputContainer.classList.add("nameInputContainer");
+        playerContainer.appendChild(nameInputContainer);
+
         let playerName: HTMLInputElement = document.createElement("input");
         playerName.id = "playerName_id";
         playerName.classList.add("nameInputs");
         let playernames: string[] = JSON.parse(localStorage.getItem("playernames")) ?? [language.menu.player];
         playerName.placeholder = playernames[0];
-        playerContainer.appendChild(playerName);
+        nameInputContainer.appendChild(playerName);
+
+        let nameInputButton: HTMLButtonElement = document.createElement("button");
+        nameInputButton.id = "nameInputButton_id_player";
+        nameInputButton.classList.add("nameInputsButtons");
+        nameInputButton.innerHTML = "✔";
+        nameInputContainer.appendChild(nameInputButton);
+
+        playerName.addEventListener("click", () => {nameInputButton.style.display = "block"; playerName.classList.add("nameInputsFocused");});
+
+        nameInputButton.addEventListener("click", () => {
+            playSFX(buttonClick);
+            nameInputButton.style.display = "none";
+            playerName.classList.remove("nameInputsFocused");
+            collectNames();
+        });
 
         let difficultySwitchHidden: HTMLDivElement = document.createElement("div");
         difficultySwitchHidden.classList.add("difficultySwitch");
@@ -184,13 +229,33 @@ namespace DiceCup {
         botIcons.src = "Game/Assets/images/menuButtons/bot.svg";
         botDiv.appendChild(botIcons);
 
+        let nameInputContainer: HTMLDivElement = document.createElement("div");
+        nameInputContainer.id = "nameInputContainer_id" + botCount;
+        nameInputContainer.classList.add("nameInputContainer");
+        botContainer.appendChild(nameInputContainer);
+
         let botName: HTMLInputElement = document.createElement("input");
         botName.id = "botName_id_" + botCount;
         let localBots: number = botCount + 1;
         let playernames: string[] = JSON.parse(localStorage.getItem("playernames")) ?? [];
         botName.placeholder = playernames[localBots] ?? "Agent" + Math.floor((Math.random() * 99));
         botName.classList.add("nameInputs");
-        botContainer.appendChild(botName);
+        nameInputContainer.appendChild(botName);
+
+        let nameInputButton: HTMLButtonElement = document.createElement("button");
+        nameInputButton.id = "nameInputButton_id_" + botCount;
+        nameInputButton.classList.add("nameInputsButtons");
+        nameInputButton.innerHTML = "✔";
+        nameInputContainer.appendChild(nameInputButton);
+
+        botName.addEventListener("click", () => {nameInputButton.style.display = "block"; botName.classList.add("nameInputsFocused");});
+
+        nameInputButton.addEventListener("click", () => {
+            playSFX(buttonClick);
+            nameInputButton.style.display = "none";
+            botName.classList.remove("nameInputsFocused");
+            collectNames();
+        });
 
         let difficultySwitch: HTMLDivElement = document.createElement("div");
         difficultySwitch.classList.add("difficultySwitch");

@@ -260,13 +260,14 @@ declare namespace DiceCup {
     function mainMenu(): void;
 }
 declare namespace DiceCup {
+    let username: string;
     function multiplayerMenu(): void;
     function joinRoom(_message: FudgeNet.Message): void;
 }
 declare namespace DiceCup {
     let focusedIdRoom: string;
     function multiplayerServers(): void;
-    function getRooms(_rooms: string[], _clients: string[]): Promise<void>;
+    function getRooms(_rooms: string[], roomNames: string[], _clients: string[]): Promise<void>;
 }
 declare namespace DiceCup {
     let sfxVolume: number;
@@ -410,6 +411,7 @@ declare namespace DiceCup {
     let client: ƒClient;
     let host: boolean;
     function startClient(): Promise<void>;
+    function hndEvent(_event: Event): Promise<void>;
 }
 declare namespace DiceCup {
     let language: LanguageDao;

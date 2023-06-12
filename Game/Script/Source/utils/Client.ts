@@ -17,13 +17,12 @@ namespace DiceCup {
     export async function startClient(): Promise<void> {
       console.log(client);
       console.log("Client started...")
-      document.getElementById("multiplayer_id").addEventListener("click", hndRoom);
-      document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndRoom);
-      document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndRoom);
-      document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndRoom);
-      document.getElementById("multiplayerLobbySettingsButton_id").addEventListener("click", hndRoom);
-      document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndRoom);
-      document.getElementById("multiplayerLobbySettingsButton_id").addEventListener("click", hndRoom);
+      document.getElementById("multiplayer_id").addEventListener("click", hndEvent);
+      document.getElementById("multiplayerRenewButton_id").addEventListener("click", hndEvent);
+      document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndEvent);
+      document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndEvent);
+      document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndEvent);
+
       // document.querySelector("button#rename").addEventListener("click", rename);
       // document.querySelector("button#mesh").addEventListener("click", structurePeers);
       // document.querySelector("button#host").addEventListener("click", structurePeers);
@@ -33,9 +32,10 @@ namespace DiceCup {
       // createTable();
     }
   
-    async function hndRoom (_event: Event): Promise<void> {
+    export async function hndEvent (_event: Event): Promise<void> {
       if (!(_event.target instanceof HTMLButtonElement))
         return;
+  
       let command: string = _event.target.id;
       switch (command) {
         case "multiplayerRenewButton_id":
@@ -53,9 +53,12 @@ namespace DiceCup {
         case "multiplayerLobbyMenuReturnButton_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: client.id, host: host } });
         break;
-        // case "multiplayerLobbySettingsButton_id":
-        //   // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
-        //   break;
+        case "multiplayerLobbyMenuReturnButton_id":
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: client.id, host: host } });
+        break;
+        case "nameInputButton_id":
+          client.dispatch({ command: FudgeNet.COMMAND.ASSIGN_USERNAME, route: FudgeNet.ROUTE.SERVER, content: { username: username} });
+        break;
       }
     }
   
@@ -108,7 +111,7 @@ namespace DiceCup {
             client.disconnectPeers();
             break;
           case FudgeNet.COMMAND.ROOM_LIST:
-            getRooms(message.content.rooms, message.content.clients);
+            getRooms(message.content.rooms, message.content.roomNames, message.content.clients);
             break;
           case FudgeNet.COMMAND.ROOM_CREATE:
             console.log("Created room", message.content.room);
@@ -130,15 +133,18 @@ namespace DiceCup {
             } else {
               client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
             }
-            if (message.content.newHost == client.id) {
-              host = true;
-            } else {
-              host = false;
-            }
+            message.content.newHost == client.id ? host = true : host = false;
             break;
           case FudgeNet.COMMAND.ROOM_INFO:
             if (message.content.room != "Lobby") {
               joinRoom(message);
+            }
+            break;
+          case FudgeNet.COMMAND.ASSIGN_USERNAME:
+            if (message.content.usernameChanged == true) {
+              client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            } else {
+              console.log("Already in use!");
             }
             break;
           default:

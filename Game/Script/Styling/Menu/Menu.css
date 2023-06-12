@@ -280,10 +280,16 @@ button:focus img[src="Game/Assets/images/menuButtons/plus.svg"], button:hover im
     height: 18vw;
 }
 
-.nameInputs, .difficultySwitch {
+.nameInputContainer {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.3vw;
+}
+
+.nameInputs, .difficultySwitch, .nameInputsButtons {
     width: 11vw;
+    height: 2.5vw;
     border-width: 0;
-    aspect-ratio: 1/0.25;
     border-radius: 3vh;
     text-align: center;
     font-weight: bold;
@@ -296,6 +302,19 @@ button:focus img[src="Game/Assets/images/menuButtons/plus.svg"], button:hover im
 
 .nameInputs::placeholder {
     color: var(--text_placeholder);
+}
+
+.nameInputsFocused {
+    width: 8vw;
+    border-radius: 3vh 0 0 3vh;
+}
+
+.nameInputsButtons {
+    display: none;
+    height: 100%;
+    width: 2.7vw;
+    border-radius: 0 3vh 3vh 0;
+    background: var(--lobby_names_background_sub);
 }
 
 .difficultySwitch {
