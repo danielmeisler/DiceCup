@@ -89,11 +89,13 @@ namespace DiceCup {
     // }
   
     async function receiveMessage(_event: CustomEvent | MessageEvent): Promise<void> {
+      let alertMessageList: HTMLDivElement = <HTMLDivElement>document.getElementById("multiplayerAlert_id");
       if (_event instanceof MessageEvent) {
         let message: FudgeNet.Message = JSON.parse(_event.data);
         if (message.command != FudgeNet.COMMAND.SERVER_HEARTBEAT && message.command != FudgeNet.COMMAND.CLIENT_HEARTBEAT)
           showMessage(message);
         switch (message.command) {
+
           case FudgeNet.COMMAND.SERVER_HEARTBEAT:
             // if (client.name == undefined)
               // proposeName();
@@ -102,30 +104,41 @@ namespace DiceCup {
             client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
             // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
             break;
+
           case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
             let span: HTMLSpanElement = document.querySelector(`#${message.idSource} span`);
 
             blink(span);
             break;
+
           case FudgeNet.COMMAND.DISCONNECT_PEERS:
             client.disconnectPeers();
             break;
+
           case FudgeNet.COMMAND.ROOM_LIST:
             getRooms(message.content.rooms, message.content.roomNames, message.content.clients);
             break;
+
           case FudgeNet.COMMAND.ROOM_CREATE:
             console.log("Created room", message.content.room);
             host = message.content.host;
             client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room, host: host } });
             break;
+
+          case FudgeNet.COMMAND.ROOM_RENAME:
+            console.log("KOMME AN", message.idRoom);
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+            break;
+
           case FudgeNet.COMMAND.ROOM_ENTER:
             if (message.content.expired == true) {
-              document.getElementById("multiplayerAlert_id").innerHTML = language.menu.multiplayer.list.alert;
-              ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("multiplayerAlert_id").innerHTML = ""});
+              alertMessageList.innerHTML = language.menu.multiplayer.list.alert;
+              ƒ.Time.game.setTimer(1000, 1, () => {alertMessageList.innerHTML = ""});
             } else {
               client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
             }
             break;
+
           case FudgeNet.COMMAND.ROOM_LEAVE:
             if (message.content.leaver == true) {
               switchMenu(MenuPage.multiplayer);
@@ -135,17 +148,16 @@ namespace DiceCup {
             }
             message.content.newHost == client.id ? host = true : host = false;
             break;
+
           case FudgeNet.COMMAND.ROOM_INFO:
             if (message.content.room != "Lobby") {
               joinRoom(message);
             }
             break;
+
           case FudgeNet.COMMAND.ASSIGN_USERNAME:
-            if (message.content.usernameChanged == true) {
-              client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
-            } else {
-              console.log("Already in use!");
-            }
+            checkUsername(message);
+            // Checken ob wegen RoomInfo oder AssignID oder RoomRename
             break;
           default:
             break;
@@ -153,6 +165,27 @@ namespace DiceCup {
         return;
       } else
         console.table(_event);
+    }
+
+    function checkUsername(message: FudgeNet.Message): void {
+      let alertMessageLobby: HTMLDivElement = <HTMLDivElement>document.getElementById("multiplayerLobbyAlert_id");
+
+      if (message.content.message == "valid") {
+        console.log("HIER DRINNEEEE", host)
+        client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+        console.log(message.idSource)
+        if (message.idSource == client.id) {
+          host && client.dispatch({ command: FudgeNet.COMMAND.ROOM_RENAME, route: FudgeNet.ROUTE.SERVER });
+        }
+        
+      } else if (message.content.message == "alreadyTaken") {
+        alertMessageLobby.innerHTML = language.menu.singleplayer.lobby.alerts.identical_names;
+        ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
+        
+      } else if (message.content.message == "invalidTokens") {
+        alertMessageLobby.innerHTML = language.menu.singleplayer.lobby.alerts.invalid_tokes;
+        ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
+      }
     }
   
     function delay(_milisec: number): Promise<void> {

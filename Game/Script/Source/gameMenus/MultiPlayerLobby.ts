@@ -148,6 +148,7 @@ namespace DiceCup {
 
     export function joinRoom(_message: FudgeNet.Message): void {
         switchMenu(MenuPage.multiplayerLobby);
+        console.log(_message.content.name)
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
         console.log((6 - Object.keys(_message.content.clients).length));
 

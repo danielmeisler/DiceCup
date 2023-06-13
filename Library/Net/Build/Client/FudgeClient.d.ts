@@ -34,6 +34,7 @@ declare namespace FudgeNet {
         DISCONNECT_PEERS = "disconnectPeers",
         /** sent to the server to create a new room and return its id */
         ROOM_CREATE = "roomCreate",
+        ROOM_RENAME = "roomRename",
         /** sent to the server and back to the calling client to retrieve an array of available room ids */
         ROOM_LIST = "roomList",
         /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */

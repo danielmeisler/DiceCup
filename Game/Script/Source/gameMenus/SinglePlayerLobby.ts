@@ -104,7 +104,7 @@ namespace DiceCup {
     function checkPlayernames(_names: string[]): boolean {
         let doubles: string[] = _names.filter((item, index) => _names.indexOf(item) !== index);
         for (let i = 0; i < _names.length; i++) {
-            if (!/^[A-Za-z0-9]*$/.test(_names[i])) {
+            if (!/^[A-Za-z0-9_]*$/.test(_names[i])) {
                 document.getElementById("singleplayerAlert_id").innerHTML = "Only alphabetic and numeric tokens!";
                 ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("singleplayerAlert_id").innerHTML = ""});
                 return false;

@@ -61,10 +61,12 @@ export declare class FudgeServer {
     protected handleMessage(_message: string, _wsConnection: WebSocket): Promise<void>;
     private addEventListeners;
     private assignUsername;
+    private checkUsername;
     private checkLeavedRoom;
     private enterRoom;
     private leaveRoom;
     private createRoom;
+    private renameRoom;
     private getRoomList;
     private getRoomInfo;
     private createMesh;

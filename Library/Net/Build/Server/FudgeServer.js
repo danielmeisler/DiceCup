@@ -94,6 +94,9 @@ class FudgeServer {
             case Message_js_1.FudgeNet.COMMAND.ROOM_CREATE:
                 this.createRoom(message);
                 break;
+            case Message_js_1.FudgeNet.COMMAND.ROOM_RENAME:
+                this.renameRoom(message);
+                break;
             case Message_js_1.FudgeNet.COMMAND.ROOM_ENTER:
                 this.enterRoom(message);
                 break;
@@ -170,28 +173,43 @@ class FudgeServer {
         });
     };
     assignUsername(_message) {
-        let found = false;
-        Object.values(this.rooms).map(room => { Object.values(room.clients).map(client => { if (client.id == _message.content.username) {
-            found = true;
+        switch (this.checkUsername(_message.content.username)) {
+            case "alreadyTaken":
+                let messageAlreadyTaken = {
+                    idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { message: "alreadyTaken" }
+                };
+                this.dispatch(messageAlreadyTaken);
+                break;
+            case "invalidTokens":
+                let messageInvalidTokens = {
+                    idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { message: "invalidTokens" }
+                };
+                this.dispatch(messageInvalidTokens);
+                break;
+            case "valid":
+                let client = this.rooms[_message.idRoom].clients[_message.idSource];
+                client.name = _message.content.username;
+                let message = {
+                    idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idSource: _message.idSource, content: { message: "valid" }
+                };
+                this.broadcast(message);
+                break;
+            default:
+                break;
+        }
+    }
+    checkUsername(_username) {
+        let existingUsername = false;
+        Object.values(this.rooms).map(room => { Object.values(room.clients).map(client => { if (client.id == _username || client.name == _username) {
+            existingUsername = true;
         } }); });
-        if (found) {
-            let message = {
-                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { usernameChanged: false }
-            };
-            this.dispatch(message);
+        if (existingUsername) {
+            return "alreadyTaken";
         }
-        else {
-            let client = this.rooms[_message.idRoom].clients[_message.idSource];
-            client.name = _message.content.username;
-            let message = {
-                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { usernameChanged: true }
-            };
-            this.dispatch(message);
-            let messageRoom = {
-                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME, content: { usernameChanged: true }
-            };
-            this.broadcast(messageRoom);
+        if (!/^[A-Za-z0-9_]*$/.test(_username)) {
+            return "invalidTokens";
         }
+        return "valid";
     }
     checkLeavedRoom(_room) {
         if (_room != this.idLobby) {
@@ -253,6 +271,14 @@ class FudgeServer {
         this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby" };
         let message = {
             idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom, host: true }
+        };
+        this.dispatch(message);
+    }
+    renameRoom(_message) {
+        let client = this.rooms[_message.idRoom].clients[_message.idSource];
+        this.rooms[_message.idRoom].name = client.name + "'s Lobby";
+        let message = {
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_RENAME, idTarget: _message.idSource, content: { room: _message.idRoom }
         };
         this.dispatch(message);
     }
