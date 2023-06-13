@@ -7,7 +7,7 @@ namespace DiceCup{
     let backgroundAudio: ƒ.ComponentAudio;
     let sfxAudio: ƒ.ComponentAudio;
 
-    export function initBackgroundMusic(_track: number): void {
+    export async function initBackgroundMusic(_track: number): Promise<void> {
         let track: ƒ.Audio = <ƒ.Audio>ƒ.Project.resources[themes[_track]];
         backgroundAudio = new ƒ.ComponentAudio(track, true, false);
         backgroundAudio.connect(true);

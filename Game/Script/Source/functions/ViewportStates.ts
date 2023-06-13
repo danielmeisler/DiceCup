@@ -1,16 +1,16 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
-    export function changeViewportState(_viewportState: ViewportState) {
+    export async function changeViewportState(_viewportState: ViewportState): Promise<void> {
         switch (_viewportState) {
             case ViewportState.menu: 
-                menuViewport();
+                await menuViewport();
             break;
             case ViewportState.transition: 
-                transitionViewport();
+                await transitionViewport();
             break;
             case ViewportState.game: 
-                gameViewport();
+                await gameViewport();
             break;
         }
         viewportState = _viewportState;
@@ -18,7 +18,7 @@ namespace DiceCup {
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 30);
     }
 
-    async function menuViewport() {   
+    async function menuViewport(): Promise<void> {   
         let diceColors: RgbaDao[] = await loadDiceColors();
         changeFloor(false);
         activateCover(false);
@@ -30,7 +30,7 @@ namespace DiceCup {
         }
     }
 
-    async function transitionViewport() {
+    async function transitionViewport(): Promise<void> {
         // let response: Response = await fetch("Game/Script/Data/diceColors.json");
         // let diceColors: RgbaDao[] = await response.json();
         // changeFloor(false);
@@ -44,7 +44,7 @@ namespace DiceCup {
 
     }
     
-    async function gameViewport() {  
+    async function gameViewport(): Promise<void> {  
         viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
 

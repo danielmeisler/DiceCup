@@ -38,6 +38,7 @@ namespace FudgeCore {
      * Initializes offscreen-canvas, renderingcontext and hardware viewport. Call once before creating any resources like meshes or shaders
      */
     public static initialize(_antialias?: boolean, _alpha?: boolean): WebGL2RenderingContext {
+      _antialias = true;
       fudgeConfig = fudgeConfig || {};
       let contextAttributes: WebGLContextAttributes = {
         alpha: (_alpha != undefined) ? _alpha : fudgeConfig.alpha || false,

@@ -2,7 +2,7 @@ namespace DiceCup {
 
     let menuIds: string[] = Object.values(MenuPage);
 
-    export function initMenu(): void {
+    export async function initMenu(): Promise<void> {
         mainMenu();
         singleplayerMenu();
         multiplayerServers();

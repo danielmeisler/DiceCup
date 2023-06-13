@@ -238,7 +238,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     let buttonClick: string;
-    function initBackgroundMusic(_track: number): void;
+    function initBackgroundMusic(_track: number): Promise<void>;
     function backgroundMusic(_on: boolean): void;
     function nextTrack(_track: number): void;
     function changeVolume(_mode: number): void;
@@ -246,10 +246,10 @@ declare namespace DiceCup {
     function muteAll(): void;
 }
 declare namespace DiceCup {
-    function changeViewportState(_viewportState: ViewportState): void;
+    function changeViewportState(_viewportState: ViewportState): Promise<void>;
 }
 declare namespace DiceCup {
-    function initMenu(): void;
+    function initMenu(): Promise<void>;
     function switchMenu(_toMenuID: MenuPage): void;
     function hideMenu(): void;
 }

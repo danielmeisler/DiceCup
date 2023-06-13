@@ -54,7 +54,7 @@ var DiceCup;
         let graph = DiceCup.viewport.getBranch();
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
-        DiceCup.currentLanguage = await localStorage.getItem("language") || DiceCup.Languages.english;
+        DiceCup.currentLanguage = localStorage.getItem("language") || DiceCup.Languages.english;
         await DiceCup.initBackgroundMusic(0);
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
         await DiceCup.changeViewportState(DiceCup.ViewportState.menu);
@@ -1379,7 +1379,7 @@ var DiceCup;
     let themes = ["Audio|2023-05-15T19:01:45.890Z|78438", "Audio|2023-05-18T18:10:25.157Z|72912", "Audio|2023-05-18T18:10:38.906Z|20682"];
     let backgroundAudio;
     let sfxAudio;
-    function initBackgroundMusic(_track) {
+    async function initBackgroundMusic(_track) {
         let track = ƒ.Project.resources[themes[_track]];
         backgroundAudio = new ƒ.ComponentAudio(track, true, false);
         backgroundAudio.connect(true);
@@ -1434,16 +1434,16 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
-    function changeViewportState(_viewportState) {
+    async function changeViewportState(_viewportState) {
         switch (_viewportState) {
             case DiceCup.ViewportState.menu:
-                menuViewport();
+                await menuViewport();
                 break;
             case DiceCup.ViewportState.transition:
-                transitionViewport();
+                await transitionViewport();
                 break;
             case DiceCup.ViewportState.game:
-                gameViewport();
+                await gameViewport();
                 break;
         }
         DiceCup.viewportState = _viewportState;
@@ -1480,7 +1480,7 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     let menuIds = Object.values(DiceCup.MenuPage);
-    function initMenu() {
+    async function initMenu() {
         DiceCup.mainMenu();
         DiceCup.singleplayerMenu();
         DiceCup.multiplayerServers();
