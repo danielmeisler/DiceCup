@@ -125,7 +125,7 @@ namespace DiceCup {
 
         let passwordTitle: HTMLSpanElement = document.createElement("span");
         passwordTitle.classList.add("passwordTitle");
-        passwordTitle.innerHTML = "ENTER PASSWORD";
+        passwordTitle.innerHTML = language.menu.multiplayer.list.password;
         passwordInputContainer.appendChild(passwordTitle);
 
         let inputArea: HTMLDivElement = document.createElement("div");
@@ -159,6 +159,7 @@ namespace DiceCup {
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
+
         });
     }
 

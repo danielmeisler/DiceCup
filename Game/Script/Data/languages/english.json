@@ -18,7 +18,8 @@
             "list": {
                 "title": "Multiplayer",
                 "create_button": "create",
-                "join_button": "join"
+                "join_button": "join",
+                "password": "Enter Password"
             },
             "lobby": {
                 "title": "Game",

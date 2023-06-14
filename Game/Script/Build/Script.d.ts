@@ -315,6 +315,7 @@ declare namespace DiceCup {
                     title: string;
                     create_button: string;
                     join_button: string;
+                    password: string;
                 };
                 lobby: {
                     title: string;

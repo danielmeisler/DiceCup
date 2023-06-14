@@ -1950,7 +1950,7 @@ var DiceCup;
         document.getElementById("multiplayerMenu_id").appendChild(passwordInputContainer);
         let passwordTitle = document.createElement("span");
         passwordTitle.classList.add("passwordTitle");
-        passwordTitle.innerHTML = "ENTER PASSWORD";
+        passwordTitle.innerHTML = DiceCup.language.menu.multiplayer.list.password;
         passwordInputContainer.appendChild(passwordTitle);
         let inputArea = document.createElement("div");
         inputArea.classList.add("passwordInputArea");
