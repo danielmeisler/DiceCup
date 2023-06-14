@@ -39,6 +39,7 @@ namespace DiceCup {
       let command: string = _event.target.id;
       switch (command) {
         case "multiplayerRenewButton_id":
+        case "passwordReturnButton_id":
         case "multiplayer_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
           break;
@@ -54,7 +55,13 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: client.id, host: host } });
         break;
         case "nameInputButton_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ASSIGN_USERNAME, route: FudgeNet.ROUTE.SERVER, content: { username: username} });
+          client.dispatch({ command: FudgeNet.COMMAND.ASSIGN_USERNAME, route: FudgeNet.ROUTE.SERVER, content: { username: username } });
+        break;
+        case "passwordJoinButton_id":
+          idRoom = focusedIdRoom;
+          console.log("Enter", focusedIdRoom );
+          let password: string = (<HTMLInputElement>document.getElementById("passwordInput_id")).value;
+          client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false, password: password} });
         break;
       }
     }
@@ -87,6 +94,7 @@ namespace DiceCup {
   
     async function receiveMessage(_event: CustomEvent | MessageEvent): Promise<void> {
       let alertMessageList: HTMLDivElement = <HTMLDivElement>document.getElementById("multiplayerAlert_id");
+      let alertPassword: HTMLDivElement = <HTMLDivElement>document.getElementById("passwordAlert_id");
       if (_event instanceof MessageEvent) {
         let message: FudgeNet.Message = JSON.parse(_event.data);
         if (message.command != FudgeNet.COMMAND.SERVER_HEARTBEAT && message.command != FudgeNet.COMMAND.CLIENT_HEARTBEAT)
@@ -128,14 +136,25 @@ namespace DiceCup {
 
           case FudgeNet.COMMAND.ROOM_ENTER:
             if (message.content.expired != true) {
+
               if (message.content.private == true) {
                 passwordInput();
               } else {
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
               }
+
+              if (message.content.correctPassword == false) {
+                alertPassword.innerHTML = language.menu.alerts.wrong_password;
+                ƒ.Time.game.setTimer(1000, 1, () => {alertPassword.innerHTML = ""});
+              } else if (message.content.correctPassword == true) {
+                document.getElementById("passwordInputContainer_id").remove();
+              }
+
             } else {
               alertMessageList.innerHTML = language.menu.alerts.room_unavailable;
               ƒ.Time.game.setTimer(1000, 1, () => {alertMessageList.innerHTML = ""});
+              alertPassword.innerHTML = language.menu.alerts.room_unavailable;
+              ƒ.Time.game.setTimer(1000, 1, () => {alertPassword.innerHTML = ""});
             }
             break;
 

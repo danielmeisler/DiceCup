@@ -57,10 +57,6 @@
     border: var(--serverlist_cell_border);
 }
 
-.serverListHeader {
-    /* background: var(--serverlist_background_color_focus); */
-}
-
 .serverListIcons {
     height: 7vh;
     aspect-ratio: 1/1;
@@ -156,4 +152,13 @@
     color: var(--serverlist_password_color);
     font-size: var(--serverlist_password_fontsize);
     background: var(--serverlist_password_background_color);
+}
+
+#passwordAlert_id {
+    text-shadow: var(--text_shadow);
+    font-family: var(--text_font);
+    font-size: var(--lobby_alert_fontsize);
+    color: var(--lobby_alert_color);
+    justify-content: center;
+    height: 1%;
 }

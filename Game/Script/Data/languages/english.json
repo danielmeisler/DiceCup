@@ -66,6 +66,7 @@
 
             },
             "multiplayer": {
+                "password_switch": "Private Lobby", 
                 "password": "Password"
             }
         },
@@ -75,7 +76,8 @@
             "identical_names": "No identical names",
             "room_unavailable": "Room unavailable",
             "waiting": "Waiting for more players...",
-            "offline": "You are offline"
+            "offline": "You are offline",
+            "wrong_password": "Wrong password"
         }
     },
     "game": {

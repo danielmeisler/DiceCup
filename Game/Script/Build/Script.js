@@ -1956,6 +1956,7 @@ var DiceCup;
         inputArea.classList.add("passwordInputArea");
         passwordInputContainer.appendChild(inputArea);
         let returnButton = document.createElement("button");
+        returnButton.id = "passwordReturnButton_id";
         returnButton.classList.add("diceCupButtons");
         returnButton.classList.add("passwordReturnButton");
         inputArea.appendChild(returnButton);
@@ -1967,11 +1968,14 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             document.getElementById("passwordInputContainer_id").remove();
         });
+        returnButton.addEventListener("click", DiceCup.hndEvent);
         let inputContainer = document.createElement("input");
         inputContainer.maxLength = 4;
+        inputContainer.id = "passwordInput_id";
         inputContainer.classList.add("inputContainer");
         inputArea.appendChild(inputContainer);
         let joinButton = document.createElement("button");
+        joinButton.id = "passwordJoinButton_id";
         joinButton.classList.add("passwordJoinButton");
         joinButton.classList.add("diceCupButtons");
         joinButton.innerHTML = DiceCup.language.menu.multiplayer.list.join_button;
@@ -1979,6 +1983,10 @@ var DiceCup;
         joinButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
         });
+        joinButton.addEventListener("click", DiceCup.hndEvent);
+        let passwordAlert = document.createElement("span");
+        passwordAlert.id = "passwordAlert_id";
+        passwordInputContainer.appendChild(passwordAlert);
     }
     DiceCup.passwordInput = passwordInput;
     async function getRooms(_message) {
@@ -2058,7 +2066,7 @@ var DiceCup;
         }
         let roomPasswordTag = document.createElement("span");
         roomPasswordTag.id = "multiplayerGameOptionsRoomPasswordTag_id";
-        roomPasswordTag.innerHTML = DiceCup.language.menu.gamesettings.multiplayer.password;
+        roomPasswordTag.innerHTML = DiceCup.language.menu.gamesettings.multiplayer.password_switch;
         document.getElementById("multiplayerGameOptionsGrid_id_0_0").appendChild(roomPasswordTag);
         let roomPasswordContainer = document.createElement("div");
         roomPasswordContainer.id = "multiplayerGameOptionsRoomPasswordContainer_id";
@@ -2648,6 +2656,7 @@ var DiceCup;
         let command = _event.target.id;
         switch (command) {
             case "multiplayerRenewButton_id":
+            case "passwordReturnButton_id":
             case "multiplayer_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                 break;
@@ -2664,6 +2673,12 @@ var DiceCup;
                 break;
             case "nameInputButton_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ASSIGN_USERNAME, route: FudgeNet.ROUTE.SERVER, content: { username: DiceCup.username } });
+                break;
+            case "passwordJoinButton_id":
+                idRoom = DiceCup.focusedIdRoom;
+                console.log("Enter", DiceCup.focusedIdRoom);
+                let password = document.getElementById("passwordInput_id").value;
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false, password: password } });
                 break;
         }
     }
@@ -2695,6 +2710,7 @@ var DiceCup;
     // }
     async function receiveMessage(_event) {
         let alertMessageList = document.getElementById("multiplayerAlert_id");
+        let alertPassword = document.getElementById("passwordAlert_id");
         if (_event instanceof MessageEvent) {
             let message = JSON.parse(_event.data);
             if (message.command != FudgeNet.COMMAND.SERVER_HEARTBEAT && message.command != FudgeNet.COMMAND.CLIENT_HEARTBEAT)
@@ -2734,10 +2750,19 @@ var DiceCup;
                         else {
                             DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
                         }
+                        if (message.content.correctPassword == false) {
+                            alertPassword.innerHTML = DiceCup.language.menu.alerts.wrong_password;
+                            ƒ.Time.game.setTimer(1000, 1, () => { alertPassword.innerHTML = ""; });
+                        }
+                        else if (message.content.correctPassword == true) {
+                            document.getElementById("passwordInputContainer_id").remove();
+                        }
                     }
                     else {
                         alertMessageList.innerHTML = DiceCup.language.menu.alerts.room_unavailable;
                         ƒ.Time.game.setTimer(1000, 1, () => { alertMessageList.innerHTML = ""; });
+                        alertPassword.innerHTML = DiceCup.language.menu.alerts.room_unavailable;
+                        ƒ.Time.game.setTimer(1000, 1, () => { alertPassword.innerHTML = ""; });
                     }
                     break;
                 case FudgeNet.COMMAND.ROOM_LEAVE:

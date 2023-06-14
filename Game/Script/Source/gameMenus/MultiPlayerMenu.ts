@@ -133,6 +133,7 @@ namespace DiceCup {
         passwordInputContainer.appendChild(inputArea);
 
         let returnButton: HTMLButtonElement = document.createElement("button");
+        returnButton.id = "passwordReturnButton_id";
         returnButton.classList.add("diceCupButtons");
         returnButton.classList.add("passwordReturnButton");
         inputArea.appendChild(returnButton);
@@ -146,12 +147,16 @@ namespace DiceCup {
             document.getElementById("passwordInputContainer_id").remove();
         });
 
+        returnButton.addEventListener("click", hndEvent);
+
         let inputContainer: HTMLInputElement = document.createElement("input");
         inputContainer.maxLength = 4;
+        inputContainer.id = "passwordInput_id";
         inputContainer.classList.add("inputContainer");
         inputArea.appendChild(inputContainer);
 
         let joinButton: HTMLButtonElement = document.createElement("button");
+        joinButton.id = "passwordJoinButton_id";
         joinButton.classList.add("passwordJoinButton");
         joinButton.classList.add("diceCupButtons");
         joinButton.innerHTML = language.menu.multiplayer.list.join_button;
@@ -159,8 +164,13 @@ namespace DiceCup {
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
-
         });
+
+        joinButton.addEventListener("click", hndEvent);
+
+        let passwordAlert: HTMLSpanElement = document.createElement("span");
+        passwordAlert.id = "passwordAlert_id";
+        passwordInputContainer.appendChild(passwordAlert);
     }
 
     export async function getRooms(_message: FudgeNet.Message): Promise<void> {

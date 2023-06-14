@@ -360,6 +360,7 @@ declare namespace DiceCup {
                 title: string;
                 gameSettings: {};
                 multiplayer: {
+                    password_switch: string;
                     password: string;
                 };
             };
@@ -370,6 +371,7 @@ declare namespace DiceCup {
                 room_unavailable: string;
                 waiting: string;
                 offline: string;
+                wrong_password: string;
             };
         };
         game: {

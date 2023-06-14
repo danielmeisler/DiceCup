@@ -27,7 +27,7 @@ namespace DiceCup {
 
         let roomPasswordTag: HTMLSpanElement = document.createElement("span");
         roomPasswordTag.id = "multiplayerGameOptionsRoomPasswordTag_id";
-        roomPasswordTag.innerHTML = language.menu.gamesettings.multiplayer.password;
+        roomPasswordTag.innerHTML = language.menu.gamesettings.multiplayer.password_switch;
         document.getElementById("multiplayerGameOptionsGrid_id_0_0").appendChild(roomPasswordTag);
     
         let roomPasswordContainer: HTMLDivElement = document.createElement("div");

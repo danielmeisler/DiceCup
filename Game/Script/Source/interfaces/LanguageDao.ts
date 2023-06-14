@@ -67,6 +67,7 @@ namespace DiceCup {
 
                 },
                 multiplayer: {
+                    password_switch: string;
                     password: string;
                 }
             },
@@ -77,6 +78,7 @@ namespace DiceCup {
                 room_unavailable: string;
                 waiting: string;
                 offline: string;
+                wrong_password: string;
             }
         },
         game: {

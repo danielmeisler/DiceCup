@@ -289,28 +289,63 @@ export class FudgeServer {
     if (!this.rooms[_message.idRoom])
       throw (new Error(`Room unavailable ${_message.idRoom}`));
 
-    if (this.rooms[_message.content.room]) {    
+
+
+    if (this.rooms[_message.content.room]) {  
+
+
       if (this.rooms[_message.content.room].private) {
-        let messageClient: FudgeNet.Message = {
-          idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { private: true }
-        };
-        this.dispatch(messageClient);
+
+        if (_message.content.password) {
+          if (_message.content.password == this.rooms[_message.content.room].password) {
+            let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
+            let room: Room = this.rooms[_message.content.room];
+            delete this.rooms[_message.idRoom].clients[_message.idSource];
+            room.clients[_message.idSource] = client;
+      
+            let message: FudgeNet.Message = {
+              idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host, correctPassword: true }
+            };
+            this.broadcast(message);
+          } else {
+            let messageClient: FudgeNet.Message = {
+              idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { correctPassword: false }
+            };
+            this.dispatch(messageClient);
+          }
+          
+        } else {
+          let messageClient: FudgeNet.Message = {
+            idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { private: true }
+          };
+          this.dispatch(messageClient);
+        }
+
       } else {
+
         let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
         let room: Room = this.rooms[_message.content.room];
         delete this.rooms[_message.idRoom].clients[_message.idSource];
         room.clients[_message.idSource] = client;
   
         let message: FudgeNet.Message = {
-          idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host }
+          idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host, correctPassword: false }
         };
         this.broadcast(message);
+
+
       }
+
+
     } else {
+
+
       let messageClient: FudgeNet.Message = {
         idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { expired: true }
       };
       this.dispatch(messageClient);
+
+
     }
   }
 
