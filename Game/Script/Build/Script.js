@@ -2654,7 +2654,6 @@ var DiceCup;
     function checkUsername(message) {
         let alertMessageLobby = document.getElementById("multiplayerLobbyAlert_id");
         if (message.content.message == "valid") {
-            console.log("HIER DRINNEEEE", DiceCup.host);
             DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
             console.log(message.idSource);
             if (message.idSource == DiceCup.client.id) {
@@ -2664,10 +2663,12 @@ var DiceCup;
         else if (message.content.message == "alreadyTaken") {
             alertMessageLobby.innerHTML = DiceCup.language.menu.alerts.identical_names;
             ƒ.Time.game.setTimer(1000, 1, () => { alertMessageLobby.innerHTML = ""; });
+            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
         }
         else if (message.content.message == "invalidTokens") {
             alertMessageLobby.innerHTML = DiceCup.language.menu.alerts.invalid_tokes;
             ƒ.Time.game.setTimer(1000, 1, () => { alertMessageLobby.innerHTML = ""; });
+            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
         }
     }
     function delay(_milisec) {

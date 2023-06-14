@@ -171,7 +171,6 @@ namespace DiceCup {
       let alertMessageLobby: HTMLDivElement = <HTMLDivElement>document.getElementById("multiplayerLobbyAlert_id");
 
       if (message.content.message == "valid") {
-        console.log("HIER DRINNEEEE", host)
         client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
         console.log(message.idSource)
         if (message.idSource == client.id) {
@@ -181,10 +180,12 @@ namespace DiceCup {
       } else if (message.content.message == "alreadyTaken") {
         alertMessageLobby.innerHTML = language.menu.alerts.identical_names;
         ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
+        client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
         
       } else if (message.content.message == "invalidTokens") {
         alertMessageLobby.innerHTML = language.menu.alerts.invalid_tokes;
         ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
+        client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
       }
     }
   
