@@ -290,10 +290,6 @@ declare namespace DiceCup {
                 lobby: {
                     title: string;
                     start_button: string;
-                    alerts: {
-                        invalid_tokes: string;
-                        identical_names: string;
-                    };
                     difficulties: {
                         easy: string;
                         normal: string;
@@ -309,11 +305,9 @@ declare namespace DiceCup {
                     title: string;
                     create_button: string;
                     join_button: string;
-                    alert: string;
                 };
                 lobby: {
                     title: string;
-                    alert: string;
                     waiting: string;
                     start_button: string;
                 };
@@ -352,6 +346,13 @@ declare namespace DiceCup {
                 };
             };
             player: string;
+            alerts: {
+                invalid_tokes: string;
+                identical_names: string;
+                room_unavailable: string;
+                waiting: string;
+                offline: string;
+            };
         };
         game: {
             transition: {
@@ -367,7 +368,7 @@ declare namespace DiceCup {
             };
             placements: {
                 title: string;
-                alerts: {
+                placement: {
                     part_1: string;
                     part_2: string;
                 };

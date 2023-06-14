@@ -4,10 +4,6 @@
             "lobby": {
                 "title": "Singleplayer",
                 "start_button": "Start",
-                "alerts": {
-                    "invalid_tokes": "Only alphabetic and numeric tokens",
-                    "identical_names": "No identical names!"
-                },
                 "difficulties": {
                     "easy": "easy",
                     "normal": "normal",
@@ -22,12 +18,10 @@
             "list": {
                 "title": "Multiplayer",
                 "create_button": "create",
-                "join_button": "join",
-                "alert": "Room unavailable"
+                "join_button": "join"
             },
             "lobby": {
                 "title": "Game",
-                "alert": "Waiting for more players...",
                 "waiting": "Waiting...",
                 "start_button": "Start"
             }
@@ -65,7 +59,14 @@
                 "german": "German"
             }
         },
-        "player": "Player"
+        "player": "Player",
+        "alerts": {
+            "invalid_tokes": "Only alphabetic and numeric tokens",
+            "identical_names": "No identical names",
+            "room_unavailable": "Room unavailable",
+            "waiting": "Waiting for more players...",
+            "offline": "You are offline"
+        }
     },
     "game": {
         "transition": {
@@ -81,7 +82,7 @@
         },
         "placements": {
             "title": "Congratulations!",
-            "alerts": {
+            "placement": {
                 "part_1": "You won the",
                 "part_2": "place!"
             } 

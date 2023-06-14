@@ -27,6 +27,7 @@ namespace DiceCup {
         createButton.classList.add("gameMenuButtons");
         createButton.classList.add("diceCupButtons");
         createButton.innerHTML = language.menu.multiplayer.list.create_button;
+        client.id ? createButton.disabled = false : createButton.disabled = true;     
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(createButton);
 
         createButton.addEventListener("click", () => {
@@ -40,11 +41,16 @@ namespace DiceCup {
         joinButton.classList.add("gameMenuButtons");
         joinButton.classList.add("diceCupButtons");
         joinButton.innerHTML = language.menu.multiplayer.list.join_button;
+        client.id ? joinButton.disabled = false : joinButton.disabled = true;
         document.getElementById("multiplayerMenuRightButtonArea_id").appendChild(joinButton);
 
         joinButton.addEventListener("click", () => {
             playSFX(buttonClick);
         });
+
+        if (!client.id) {
+            document.getElementById("multiplayerAlert_id").innerHTML = language.menu.alerts.offline;
+        }
 
         let contentContainer: HTMLDivElement = document.createElement("div");
         contentContainer.id = "multiplayerContentContainer_id";

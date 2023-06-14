@@ -141,7 +141,7 @@ namespace DiceCup {
 
             if (name[i] == gameSettings.playerName) {
                 place = i + 1;
-                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.alerts.part_1 + " " + place + ". " +  language.game.placements.alerts.part_2;
+                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
             }
         }
     }

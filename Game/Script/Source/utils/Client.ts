@@ -132,7 +132,7 @@ namespace DiceCup {
 
           case FudgeNet.COMMAND.ROOM_ENTER:
             if (message.content.expired == true) {
-              alertMessageList.innerHTML = language.menu.multiplayer.list.alert;
+              alertMessageList.innerHTML = language.menu.alerts.room_unavailable;
               ƒ.Time.game.setTimer(1000, 1, () => {alertMessageList.innerHTML = ""});
             } else {
               client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
@@ -179,11 +179,11 @@ namespace DiceCup {
         }
         
       } else if (message.content.message == "alreadyTaken") {
-        alertMessageLobby.innerHTML = language.menu.singleplayer.lobby.alerts.identical_names;
+        alertMessageLobby.innerHTML = language.menu.alerts.identical_names;
         ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
         
       } else if (message.content.message == "invalidTokens") {
-        alertMessageLobby.innerHTML = language.menu.singleplayer.lobby.alerts.invalid_tokes;
+        alertMessageLobby.innerHTML = language.menu.alerts.invalid_tokes;
         ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
       }
     }

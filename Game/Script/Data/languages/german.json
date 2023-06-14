@@ -4,10 +4,6 @@
             "lobby": {
                 "title": "Einzelspieler",
                 "start_button": "Start",
-                "alerts": {
-                    "invalid_tokes": "Nur alphabetische oder numerische Zeichen!",
-                    "identical_names": "Keine identischen Namen!"
-                },
                 "difficulties": {
                     "easy": "leicht",
                     "normal": "mittel",
@@ -22,12 +18,10 @@
             "list": {
                 "title": "Mehrspieler",
                 "create_button": "Erstellen",
-                "join_button": "Beitreten",
-                "alert": "Raum ungültig!"
+                "join_button": "Beitreten"
             },
             "lobby": {
                 "title": "Spiel",
-                "alert": "Auf Spieler warten...",
                 "waiting": "Warten...",
                 "start_button": "Start"
             }
@@ -65,7 +59,14 @@
                 "german": "Deutsch"
             }
         },
-        "player": "Spieler"
+        "player": "Spieler",
+        "alerts": {
+            "invalid_tokes": "Nur alphabetische oder numerische Zeichen!",
+            "identical_names": "Keine identischen Namen!",
+            "room_unavailable": "Raum ungültig!",
+            "waiting": "Auf Spieler warten...",
+            "offline": "Du bist offline!"
+        }
     },
     "game": {
         "transition": {
@@ -81,7 +82,7 @@
         },
         "placements": {
             "title": "Gratulation!",
-            "alerts": {
+            "placement": {
                 "part_1": "Du belegst den",
                 "part_2": "Platz!"
             } 
