@@ -243,14 +243,22 @@ class FudgeServer {
         if (!this.rooms[_message.idRoom])
             throw (new Error(`Room unavailable ${_message.idRoom}`));
         if (this.rooms[_message.content.room]) {
-            let client = this.rooms[_message.idRoom].clients[_message.idSource];
-            let room = this.rooms[_message.content.room];
-            delete this.rooms[_message.idRoom].clients[_message.idSource];
-            room.clients[_message.idSource] = client;
-            let message = {
-                idRoom: _message.content.room, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host }
-            };
-            this.broadcast(message);
+            if (this.rooms[_message.content.room].private) {
+                let messageClient = {
+                    idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { private: true }
+                };
+                this.dispatch(messageClient);
+            }
+            else {
+                let client = this.rooms[_message.idRoom].clients[_message.idSource];
+                let room = this.rooms[_message.content.room];
+                delete this.rooms[_message.idRoom].clients[_message.idSource];
+                room.clients[_message.idSource] = client;
+                let message = {
+                    idRoom: _message.content.room, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host }
+                };
+                this.broadcast(message);
+            }
         }
         else {
             let messageClient = {

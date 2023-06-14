@@ -117,9 +117,50 @@ namespace DiceCup {
         lockedContainer.appendChild(locked);
     }
 
-    // function passwordInput(): void {
+    export function passwordInput(): void {
+        let passwordInputContainer: HTMLDivElement = document.createElement("div");
+        passwordInputContainer.id = "passwordInputContainer_id";
+        passwordInputContainer.classList.add("passwordInputContainer");
+        document.getElementById("multiplayerMenu_id").appendChild(passwordInputContainer);
 
-    // }
+        let passwordTitle: HTMLSpanElement = document.createElement("span");
+        passwordTitle.classList.add("passwordTitle");
+        passwordTitle.innerHTML = "ENTER PASSWORD";
+        passwordInputContainer.appendChild(passwordTitle);
+
+        let inputArea: HTMLDivElement = document.createElement("div");
+        inputArea.classList.add("passwordInputArea");
+        passwordInputContainer.appendChild(inputArea);
+
+        let returnButton: HTMLButtonElement = document.createElement("button");
+        returnButton.classList.add("diceCupButtons");
+        returnButton.classList.add("passwordReturnButton");
+        inputArea.appendChild(returnButton);
+
+        let returnIcon: HTMLImageElement = document.createElement("img");
+        returnIcon.classList.add("diceCupButtonsIcons");
+        returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
+        returnButton.appendChild(returnIcon);
+        returnButton.addEventListener("click", () => {
+            playSFX(buttonClick);
+            document.getElementById("passwordInputContainer_id").remove();
+        });
+
+        let inputContainer: HTMLInputElement = document.createElement("input");
+        inputContainer.maxLength = 4;
+        inputContainer.classList.add("inputContainer");
+        inputArea.appendChild(inputContainer);
+
+        let joinButton: HTMLButtonElement = document.createElement("button");
+        joinButton.classList.add("passwordJoinButton");
+        joinButton.classList.add("diceCupButtons");
+        joinButton.innerHTML = language.menu.multiplayer.list.join_button;
+        inputArea.appendChild(joinButton);
+
+        joinButton.addEventListener("click", () => {
+            playSFX(buttonClick);
+        });
+    }
 
     export async function getRooms(_message: FudgeNet.Message): Promise<void> {
 

@@ -269,6 +269,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     let focusedIdRoom: string;
     function multiplayerServers(): void;
+    function passwordInput(): void;
     function getRooms(_message: FudgeNet.Message): Promise<void>;
 }
 declare namespace DiceCup {

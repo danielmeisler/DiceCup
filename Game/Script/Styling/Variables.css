@@ -50,6 +50,10 @@
     --serverlist_color: var(--white);
     --serverlist_fontsize: 2.5vi;
     --serverlist_cell_border: 0.001vh solid var(--blue_lighter);
+    --serverlist_password_background_color: var(--blue);
+    --serverlist_password_fontsize: 4vi;
+    --serverlist_password_color: var(--white);
+    --serverlist_password_color_sub: var(--blue);
 
     /* Transition Variables */
     --transition_text_color: var(--white);

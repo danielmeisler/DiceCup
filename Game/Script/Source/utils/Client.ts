@@ -127,11 +127,15 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.ROOM_ENTER:
-            if (message.content.expired == true) {
+            if (message.content.expired != true) {
+              if (message.content.private == true) {
+                passwordInput();
+              } else {
+                client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+              }
+            } else {
               alertMessageList.innerHTML = language.menu.alerts.room_unavailable;
               ƒ.Time.game.setTimer(1000, 1, () => {alertMessageList.innerHTML = ""});
-            } else {
-              client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
             }
             break;
 

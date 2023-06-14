@@ -1943,8 +1943,44 @@ var DiceCup;
         locked.src = "Game/Assets/images/serverlistIcons/lock.svg";
         lockedContainer.appendChild(locked);
     }
-    // function passwordInput(): void {
-    // }
+    function passwordInput() {
+        let passwordInputContainer = document.createElement("div");
+        passwordInputContainer.id = "passwordInputContainer_id";
+        passwordInputContainer.classList.add("passwordInputContainer");
+        document.getElementById("multiplayerMenu_id").appendChild(passwordInputContainer);
+        let passwordTitle = document.createElement("span");
+        passwordTitle.classList.add("passwordTitle");
+        passwordTitle.innerHTML = "ENTER PASSWORD";
+        passwordInputContainer.appendChild(passwordTitle);
+        let inputArea = document.createElement("div");
+        inputArea.classList.add("passwordInputArea");
+        passwordInputContainer.appendChild(inputArea);
+        let returnButton = document.createElement("button");
+        returnButton.classList.add("diceCupButtons");
+        returnButton.classList.add("passwordReturnButton");
+        inputArea.appendChild(returnButton);
+        let returnIcon = document.createElement("img");
+        returnIcon.classList.add("diceCupButtonsIcons");
+        returnIcon.src = "Game/Assets/images/menuButtons/return.svg";
+        returnButton.appendChild(returnIcon);
+        returnButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
+            document.getElementById("passwordInputContainer_id").remove();
+        });
+        let inputContainer = document.createElement("input");
+        inputContainer.maxLength = 4;
+        inputContainer.classList.add("inputContainer");
+        inputArea.appendChild(inputContainer);
+        let joinButton = document.createElement("button");
+        joinButton.classList.add("passwordJoinButton");
+        joinButton.classList.add("diceCupButtons");
+        joinButton.innerHTML = DiceCup.language.menu.multiplayer.list.join_button;
+        inputArea.appendChild(joinButton);
+        joinButton.addEventListener("click", () => {
+            DiceCup.playSFX(DiceCup.buttonClick);
+        });
+    }
+    DiceCup.passwordInput = passwordInput;
     async function getRooms(_message) {
         //_rooms: string[], roomNames: string[], _clients: string[], _private: boolean
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
@@ -2691,12 +2727,17 @@ var DiceCup;
                     DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
                     break;
                 case FudgeNet.COMMAND.ROOM_ENTER:
-                    if (message.content.expired == true) {
-                        alertMessageList.innerHTML = DiceCup.language.menu.alerts.room_unavailable;
-                        ƒ.Time.game.setTimer(1000, 1, () => { alertMessageList.innerHTML = ""; });
+                    if (message.content.expired != true) {
+                        if (message.content.private == true) {
+                            DiceCup.passwordInput();
+                        }
+                        else {
+                            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+                        }
                     }
                     else {
-                        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+                        alertMessageList.innerHTML = DiceCup.language.menu.alerts.room_unavailable;
+                        ƒ.Time.game.setTimer(1000, 1, () => { alertMessageList.innerHTML = ""; });
                     }
                     break;
                 case FudgeNet.COMMAND.ROOM_LEAVE:

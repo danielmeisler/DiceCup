@@ -81,3 +81,77 @@
     align-items: center;
     background: var(--lobby_youindicator_background);
 }
+
+.passwordInputContainer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    gap: 5%;
+    background: var(--background_fade);
+    box-shadow: var(--box_shadow);
+}
+
+.inputTag {
+    box-shadow: var(--box_shadow);
+    font-family: var(--main_font);
+    font-size: var(--serverlist_password_fontsize);
+    color: var(--serverlist_password_color);
+}
+
+.passwordTitle {
+    font-family: var(--text_font);
+    text-shadow: var(--text_shadow);
+    color: var(--serverlist_password_color);
+    font-size: var(--serverlist_password_fontsize);
+}
+
+.passwordInputArea {
+    display: flex;
+    justify-content: center;
+    gap: 1%;
+    height: 15%;
+    width: 100%;
+}
+
+.inputContainer {
+    height: 100%;
+    width: 15%;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 3vh;
+    text-align: center;
+    box-shadow: var(--box_shadow);
+    font-family: var(--text_font);
+    color: var(--serverlist_password_color_sub);
+    font-size: var(--serverlist_password_fontsize);
+}
+
+.passwordReturnButton {
+    height: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 3vh;
+    background: var(--serverlist_password_background_color);
+}
+
+.passwordJoinButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 15%;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    border-radius: 3vh;
+    font-family: var(--main_font);
+    box-shadow: var(--box_shadow);
+    color: var(--serverlist_password_color);
+    font-size: var(--serverlist_password_fontsize);
+    background: var(--serverlist_password_background_color);
+}
