@@ -5,8 +5,10 @@ namespace DiceCup {
     export async function initMenu(): Promise<void> {
         mainMenu();
         singleplayerMenu();
+        singleplayerGameOptions();
         multiplayerServers();
         multiplayerMenu();
+        multiplayerGameOptions();
         optionsMenu();
         helpMenu();
         

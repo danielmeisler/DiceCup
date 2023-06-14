@@ -59,6 +59,9 @@
                 "german": "Deutsch"
             }
         },
+        "gamesettings": {
+            "title": "Spieleinstellungen"
+        },
         "player": "Spieler",
         "alerts": {
             "invalid_tokes": "Nur alphabetische oder numerische Zeichen!",

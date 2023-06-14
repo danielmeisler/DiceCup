@@ -182,8 +182,10 @@ declare namespace DiceCup {
     enum MenuPage {
         main = "mainMenu_id",
         singleplayer = "singleplayerMenu_id",
+        singleplayerGameOptions = "singleplayerGameOptions_id",
         multiplayer = "multiplayerMenu_id",
         multiplayerLobby = "multiplayerLobby_id",
+        multiplayerGameOptions = "multiplayerGameOptions_id",
         options = "optionsMenu_id",
         help = "helpMenu_id"
     }
@@ -270,12 +272,18 @@ declare namespace DiceCup {
     function getRooms(_rooms: string[], roomNames: string[], _clients: string[]): Promise<void>;
 }
 declare namespace DiceCup {
+    function multiplayerGameOptions(): void;
+}
+declare namespace DiceCup {
     let sfxVolume: number;
     let musicVolume: number;
     function optionsMenu(): void;
 }
 declare namespace DiceCup {
     function singleplayerMenu(): void;
+}
+declare namespace DiceCup {
+    function singleplayerGameOptions(): void;
 }
 declare namespace DiceCup {
     interface BotDao {
@@ -344,6 +352,9 @@ declare namespace DiceCup {
                     english: string;
                     german: string;
                 };
+            };
+            gamesettings: {
+                title: string;
             };
             player: string;
             alerts: {

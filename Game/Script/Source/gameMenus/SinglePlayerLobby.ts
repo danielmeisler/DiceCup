@@ -32,6 +32,7 @@ namespace DiceCup {
 
         settingsButton.addEventListener("click", () => {
             playSFX(buttonClick);
+            switchMenu(MenuPage.singleplayerGameOptions);
         });
 
         let startButton: HTMLButtonElement = document.createElement("button");

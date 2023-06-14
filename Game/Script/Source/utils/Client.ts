@@ -53,9 +53,6 @@ namespace DiceCup {
         case "multiplayerLobbyMenuReturnButton_id":
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: client.id, host: host } });
         break;
-        case "multiplayerLobbyMenuReturnButton_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: client.id, host: host } });
-        break;
         case "nameInputButton_id":
           client.dispatch({ command: FudgeNet.COMMAND.ASSIGN_USERNAME, route: FudgeNet.ROUTE.SERVER, content: { username: username} });
         break;
@@ -126,7 +123,6 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.ROOM_RENAME:
-            console.log("KOMME AN", message.idRoom);
             client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
             break;
 
@@ -172,7 +168,6 @@ namespace DiceCup {
 
       if (message.content.message == "valid") {
         client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
-        console.log(message.idSource)
         if (message.idSource == client.id) {
           host && client.dispatch({ command: FudgeNet.COMMAND.ROOM_RENAME, route: FudgeNet.ROUTE.SERVER });
         }

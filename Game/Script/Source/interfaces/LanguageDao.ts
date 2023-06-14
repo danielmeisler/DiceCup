@@ -60,6 +60,9 @@ namespace DiceCup {
                     german: string;
                 }
             },
+            gamesettings: {
+                title: string;
+            },
             player: string;
             alerts: {
                 invalid_tokes: string;
