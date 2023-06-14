@@ -80,4 +80,32 @@
     font-family: var(--text_font);
     color: var(--menu_options_color);
     font-size: var(--menu_options_dropdown_fontsize);
-  }
+}
+
+
+/* Game Settings */
+
+
+#multiplayerGameOptionsContentContainer_id {
+    overflow: hidden;
+    display: grid;
+    text-align: start;
+    grid-template-rows: repeat(auto-fill, 30%);
+    grid-template-columns: 50% 50%;
+    border-radius: 5vh;
+    padding: 1%;
+    font-family: var(--text_font);
+    font-size: var(--menu_options_fontsize);
+    color: var(--menu_options_color);
+}
+
+.multiplayerGameOptionsColumn_0 {
+    margin-left: 25%;
+    font-family: var(--main_font);
+    text-shadow: var(--text_shadow);
+}
+
+.multiplayerGameOptionsColumn_1 {
+    display: flex;
+    justify-content: center;
+}

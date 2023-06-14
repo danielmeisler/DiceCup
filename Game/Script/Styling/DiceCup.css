@@ -64,6 +64,24 @@ button {
   cursor: pointer;
 }
 
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--white);
+  margin: 0;
+  font: inherit;
+  color: var(--white);
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid var(--white);
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--black);
+}
+
 input:focus,
 select:focus,
 textarea:focus,

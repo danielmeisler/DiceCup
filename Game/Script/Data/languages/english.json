@@ -60,7 +60,13 @@
             }
         },
         "gamesettings": {
-            "title": "Game Settings"
+            "title": "Game Settings",
+            "gameSettings": {
+
+            },
+            "multiplayer": {
+                "password": "Password"
+            }
         },
         "player": "Player",
         "alerts": {

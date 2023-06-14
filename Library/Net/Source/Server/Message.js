@@ -42,6 +42,7 @@ export var FudgeNet;
         COMMAND["ROOM_ENTER"] = "roomEnter";
         COMMAND["ROOM_LEAVE"] = "roomLeave";
         COMMAND["ROOM_INFO"] = "roomInfo";
+        COMMAND["ROOM_PASSWORD"] = "roomPassword";
         COMMAND["ASSIGN_USERNAME"] = "assignUsername";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**

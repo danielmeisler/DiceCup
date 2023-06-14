@@ -41,6 +41,7 @@ namespace FudgeNet {
     ROOM_ENTER = "roomEnter",
     ROOM_LEAVE = "roomLeave",
     ROOM_INFO = "roomInfo",
+    ROOM_PASSWORD = "roomPassword",
     ASSIGN_USERNAME = "assignUsername"
   }
 

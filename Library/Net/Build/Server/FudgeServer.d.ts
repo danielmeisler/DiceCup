@@ -16,6 +16,8 @@ interface Room {
         [id: string]: Client;
     };
     idHost: string | undefined;
+    private: boolean;
+    password?: string;
 }
 type Rooms = {
     [id: string]: Room;
@@ -63,6 +65,7 @@ export declare class FudgeServer {
     private assignUsername;
     private checkUsername;
     private checkLeavedRoom;
+    private setRoomPassword;
     private enterRoom;
     private leaveRoom;
     private createRoom;

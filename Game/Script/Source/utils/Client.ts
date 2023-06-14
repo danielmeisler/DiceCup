@@ -113,7 +113,7 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.ROOM_LIST:
-            getRooms(message.content.rooms, message.content.roomNames, message.content.clients);
+            getRooms(message);
             break;
 
           case FudgeNet.COMMAND.ROOM_CREATE:

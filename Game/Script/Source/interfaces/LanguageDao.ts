@@ -62,6 +62,12 @@ namespace DiceCup {
             },
             gamesettings: {
                 title: string;
+                gameSettings: {
+
+                },
+                multiplayer: {
+                    password: string;
+                }
             },
             player: string;
             alerts: {

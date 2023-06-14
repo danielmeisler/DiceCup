@@ -117,16 +117,22 @@ namespace DiceCup {
         lockedContainer.appendChild(locked);
     }
 
-    export async function getRooms(_rooms: string[], roomNames: string[], _clients: string[]): Promise<void> {
+    // function passwordInput(): void {
+
+    // }
+
+    export async function getRooms(_message: FudgeNet.Message): Promise<void> {
+
+        //_rooms: string[], roomNames: string[], _clients: string[], _private: boolean
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
-        for (let i = _rooms.length - 1; i > 0; i--) {
+        for (let i = _message.content.rooms.length - 1; i > 0; i--) {
             let serverList: HTMLButtonElement = document.createElement("button");
             serverList.id = "serverListRow_id_" + i;
             serverList.classList.add("serverListRow");
             document.getElementById("multiplayerContentContainer_id").appendChild(serverList);
-            serverList.addEventListener("click",() => focusedIdRoom = _rooms[i]);
+            serverList.addEventListener("click",() => focusedIdRoom = _message.content.rooms[i]);
 
             let playerCountContainer: HTMLDivElement = document.createElement("div");
             playerCountContainer.id = "playerCountContainer_id_" + i;
@@ -148,14 +154,22 @@ namespace DiceCup {
             lockedContainer.classList.add("serverListContainer");
             serverList.appendChild(lockedContainer);
 
+            if (_message.content.private[i]) {
+                let locked: HTMLImageElement = document.createElement("img");
+                locked.id = "locked_id" + i;
+                locked.classList.add("serverListIcons");
+                locked.src = "Game/Assets/images/serverlistIcons/lock.svg";
+                lockedContainer.appendChild(locked);
+            }
+
             let playerCount: HTMLSpanElement = document.createElement("span");
             playerCount.id = "playerCount_id_" + i;
-            playerCount.innerHTML = (_clients[i] != "" ?  _clients[i].split(",").length.toString() : "0") + "/6";
+            playerCount.innerHTML = (_message.content.clients[i] != "" ?  _message.content.clients[i].split(",").length.toString() : "0") + "/6";
             playerCountContainer.appendChild(playerCount);
 
             let game: HTMLSpanElement = document.createElement("span");
             game.id = "room_id_" + i;
-            game.innerHTML = roomNames[i];
+            game.innerHTML = _message.content.roomNames[i];
             nameContainer.appendChild(game);
 
             let gamemode: HTMLSpanElement = document.createElement("span");

@@ -17,6 +17,8 @@ interface Room {
   name?: string;
   clients: { [id: string]: Client };
   idHost: string | undefined;
+  private: boolean;
+  password?: string;
 }
 
 type Clients = { [id: string]: Client; };
@@ -41,7 +43,7 @@ export class FudgeServer {
    * Starts the server on the given port, installs the appropriate event-listeners and starts the heartbeat
    */
   public startUp = (_port: number = 8080) => {
-    this.rooms[this.idLobby] = { id: this.idLobby, clients: {}, idHost: undefined }; // create lobby to collect newly connected clients
+    this.rooms[this.idLobby] = { id: this.idLobby, clients: {}, idHost: undefined, private: false }; // create lobby to collect newly connected clients
     console.log(_port);
     this.socket = new WebSocket.Server({ port: _port });
     this.addEventListeners();
@@ -126,6 +128,10 @@ export class FudgeServer {
 
       case FudgeNet.COMMAND.ROOM_RENAME:
         this.renameRoom(message);
+        break;
+
+      case FudgeNet.COMMAND.ROOM_PASSWORD:
+        this.setRoomPassword(message);
         break;
 
       case FudgeNet.COMMAND.ROOM_ENTER:
@@ -267,6 +273,15 @@ export class FudgeServer {
     }
   }
 
+  private setRoomPassword(_message: FudgeNet.Message): void {
+    if (_message.content!.private) {
+      this.rooms[_message.idRoom!].private = true;
+      this.rooms[_message.idRoom!].password = _message.content!.password;
+    } else {
+      this.rooms[_message.idRoom!].private = false;
+      this.rooms[_message.idRoom!].password ?? delete this.rooms[_message.idRoom!].password;
+    }
+  }
 
   private enterRoom(_message: FudgeNet.Message): void {
     if (!_message.idRoom || !_message.idSource || !_message.content)
@@ -275,6 +290,7 @@ export class FudgeServer {
       throw (new Error(`Room unavailable ${_message.idRoom}`));
 
     if (this.rooms[_message.content.room]) {    
+    
       let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
       let room: Room = this.rooms[_message.content.room];
       delete this.rooms[_message.idRoom].clients[_message.idSource];
@@ -284,6 +300,7 @@ export class FudgeServer {
         idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host }
       };
       this.broadcast(message);
+
     } else {
       let messageClient: FudgeNet.Message = {
         idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { expired: true }
@@ -319,7 +336,7 @@ export class FudgeServer {
   private createRoom(_message: FudgeNet.Message): void {
     let client: Client = this.rooms[_message.idRoom!].clients[_message.idSource!];
     let idRoom: string = this.createID();
-    this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby" };
+    this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby", private: false};
     let message: FudgeNet.Message = {
       idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom, host: true }
     };
@@ -337,7 +354,7 @@ export class FudgeServer {
 
   private getRoomList(_message: FudgeNet.Message): void {
     let message: FudgeNet.Message = {
-      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), roomNames: Object.values(this.rooms).map(room => room.name), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()) }
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), roomNames: Object.values(this.rooms).map(room => room.name), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()), private: Object.values(this.rooms).map(room => room.private) }
     };
     this.dispatch(message);
   }
