@@ -7,7 +7,8 @@ namespace DiceCup {
     export let roundTimer: number = 3;
     export let roundCounter: number = 1;
     export let maxRounds: number = 12;
-    export let gameSettings: SinglePlayerSettingsDao;
+    export let gameSettings_sp: SinglePlayerSettingsDao;
+    export let gameSettings_mp: MultiPlayerSettingsDao;
     export let usedTranslations: ƒ.Vector3[] = [];
     let bots: Bot[] = [];
 
@@ -26,7 +27,22 @@ namespace DiceCup {
         return diceColors;
     }
 
-    export async function rollDices(): Promise<void> {
+    export async function rollDices(_message?: FudgeNet.Message): Promise<void> {
+        if (playerMode == PlayerMode.singlelpayer || (playerMode == PlayerMode.multiplayer && host == true)) {
+            let diceColors: RgbaDao[] = await loadDiceColors();
+            let graph: ƒ.Node = viewport.getBranch();
+            let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
+            diceNode.removeAllChildren();
+    
+            dices = [];
+
+            for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+                dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
+            }
+        }
+    }
+
+    export async function getRolledDices(_message: FudgeNet.Message): Promise<void> {
         let diceColors: RgbaDao[] = await loadDiceColors();
         let graph: ƒ.Node = viewport.getBranch();
         let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
@@ -35,25 +51,27 @@ namespace DiceCup {
         dices = [];
 
         for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
-            dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
+            dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 3, _message.content.dice[i]));
         }
     }
 
     export async function round(): Promise<void> {
-        console.clear();
+        // console.clear();
         nextTrack(2);
 
-        if (firstRound == true) {
-            createBots(gameSettings.bot);
-            firstRound = false;
-        }
-
-        for (let index = 0; index < bots.length; index++) {
-            bots[index].botsTurn();
+        if (playerMode == PlayerMode.singlelpayer) {
+            if (firstRound == true) {
+                createBots(gameSettings_sp.bot);
+                firstRound = false;
+            }
+    
+            for (let index = 0; index < bots.length; index++) {
+                bots[index].botsTurn();
+            }
         }
 
         new TimerBar("hudTimer_id", roundTimer);
-        ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing)});
+        ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing) });
     }
 
     export function update(_event: Event): void {

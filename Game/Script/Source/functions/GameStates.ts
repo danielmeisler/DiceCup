@@ -20,8 +20,8 @@ namespace DiceCup{
                 await rollDices();
             break;
             case GameState.counting: 
-                round();
                 changeViewportState(ViewportState.game);
+                round();
             break;
             case GameState.choosing: 
                 showCategories();

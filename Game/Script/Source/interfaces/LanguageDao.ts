@@ -93,6 +93,9 @@ namespace DiceCup {
             summary: {
                 sum: string;
             },
+            validation: {
+                wait_for_validation: string;
+            },
             placements: {
                 title: string;
                 placement: {

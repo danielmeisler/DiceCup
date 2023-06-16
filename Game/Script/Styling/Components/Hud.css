@@ -61,3 +61,19 @@
   width: 75%;
   aspect-ratio: 1/1;
 }
+
+#waitAlert_id {
+  top: 10vh;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  color: var(--hud_alert_color);
+  font-family: var(--text_font);
+  font-size: var(--hud_alert_fontsize);
+  text-shadow: var(--text_shadow);
+}
+
+#waitAlert_id::after {
+  content: "";
+  animation: dot-animation 3s linear infinite;
+}

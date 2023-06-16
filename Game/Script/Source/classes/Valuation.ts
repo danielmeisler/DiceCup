@@ -59,7 +59,7 @@ namespace DiceCup {
 
         private calculateNumber(_number: number, _number2?: number, _number3?: number): number {
             let value: number = 0;
-            this.player && dices[value].transparentDices();
+            this.player && this.dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].value === _number || this.dices[i].value === _number2 || this.dices[i].value === _number3) {
@@ -80,7 +80,8 @@ namespace DiceCup {
 
         private calculateColor(_color: DiceColor): number {
             let value: number = 0;
-            this.player && dices[value].transparentDices();
+            console.log(this.player, dices[value]);
+            this.player && this.dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
@@ -96,7 +97,7 @@ namespace DiceCup {
         
         private calculateDoubles(): number {
             let value: number = 0;
-            this.player && dices[value].transparentDices();
+            this.player && this.dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length-1; i++) {
                 if (this.dices[i].color === this.dices[i+1].color && this.dices[i].value === this.dices[i+1].value) {
@@ -113,7 +114,7 @@ namespace DiceCup {
 
         private calculateDiceCup(): number {
             let value: number = 0;
-            this.player && dices[value].transparentDices();
+            this.player && this.dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;

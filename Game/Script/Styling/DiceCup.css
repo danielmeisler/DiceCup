@@ -125,12 +125,12 @@ button:focus {
 
 .scrollText {
   transform: translateX(0);
-  -moz-animation: horizontalScroll 5s linear infinite;
-  -webkit-animation: horizontalScroll 5s linear infinite;
-  animation: horizontalScroll 5s linear infinite;
+  -moz-animation: horizontal-scroll 5s linear infinite;
+  -webkit-animation: horizontal-scroll 5s linear infinite;
+  animation: horizontal-scroll 5s linear infinite;
 }
 
-@keyframes horizontalScroll {
+@keyframes horizontal-scroll {
   0% {
     transform: translateX(100%);
   }
@@ -139,6 +139,21 @@ button:focus {
   }
   100% {
     transform: translateX(100%);
+  }
+}
+
+@keyframes dot-animation {
+  0%, 100% {
+      content: "";
+  }
+  25% {
+      content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+      content: "...";
   }
 }
 

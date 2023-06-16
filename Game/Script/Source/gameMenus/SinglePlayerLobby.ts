@@ -66,10 +66,10 @@ namespace DiceCup {
             botSettings.push({botName: ids[i], difficulty: BotDifficulty.easy});
         }
 
-        gameSettings = {playerName: (<HTMLInputElement>document.getElementById("playerName_id")).placeholder, bot: botSettings};
+        gameSettings_sp = {playerName: (<HTMLInputElement>document.getElementById("playerName_id")).placeholder, bot: botSettings};
 
         if ((<HTMLInputElement>document.getElementById("playerName_id")).value) {
-            gameSettings.playerName = (<HTMLInputElement>document.getElementById("playerName_id")).value;
+            gameSettings_sp.playerName = (<HTMLInputElement>document.getElementById("playerName_id")).value;
         }
 
         ids = [];
@@ -89,15 +89,16 @@ namespace DiceCup {
             }
         }
 
-        let playerNames: string[] = [gameSettings.playerName];
-        for (let index = 0; index < gameSettings.bot.length; index++) {
-            playerNames.push(gameSettings.bot[index].botName);
+        let playerNames: string[] = [gameSettings_sp.playerName];
+        for (let index = 0; index < gameSettings_sp.bot.length; index++) {
+            playerNames.push(gameSettings_sp.bot[index].botName);
         }
 
         if (checkPlayernames(playerNames)) {
             hideMenu();
             localStorage.setItem("playernames",JSON.stringify(playerNames));
             localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
+            playerMode = PlayerMode.singlelpayer;
             changeGameState(GameState.init);
         }
     }

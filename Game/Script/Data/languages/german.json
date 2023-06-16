@@ -23,7 +23,7 @@
             },
             "lobby": {
                 "title": "Spiel",
-                "waiting": "Warten...",
+                "waiting": "Warten",
                 "start_button": "Start"
             }
         },
@@ -75,7 +75,7 @@
             "invalid_tokes": "Nur alphabetische oder numerische Zeichen!",
             "identical_names": "Keine identischen Namen!",
             "room_unavailable": "Raum ungültig!",
-            "waiting": "Auf Spieler warten...",
+            "waiting": "Auf Spieler warten",
             "offline": "Du bist offline!",
             "wrong_password": "Falsches Passwort"
         }
@@ -91,6 +91,9 @@
         },
         "summary": {
             "sum": "Summe"
+        },
+        "validation": {
+            "wait_for_validation": "Warte bis alle Spieler gewählt haben..."
         },
         "placements": {
             "title": "Gratulation!",

@@ -34,15 +34,25 @@ namespace FudgeNet {
 
     /** sent to the server to create a new room and return its id */
     ROOM_CREATE = "roomCreate",
+    /** sent to the server to rename the given room, not its id */
     ROOM_RENAME = "roomRename",
-    /** sent to the server and back to the calling client to retrieve an array of available room ids */
+    /** sent to the server and back to the calling client to retrieve an array of available room names */
     ROOM_LIST = "roomList",
     /** sent to the server to join the calling client to the room given with the id, sent back to all clients in the room after */
     ROOM_ENTER = "roomEnter",
+    /** sent to the server to leave the calling client to the room given with the id, sent back to all clients in the leaved room */
     ROOM_LEAVE = "roomLeave",
+    /** sent to the server to get information like id, roomname and clients about the room given with the id */
     ROOM_INFO = "roomInfo",
+    /** sent to the server to set or remove a room password */
     ROOM_PASSWORD = "roomPassword",
-    ASSIGN_USERNAME = "assignUsername"
+    /** sent to the server to set a temporary username besides the client id and check if its available */
+    ASSIGN_USERNAME = "assignUsername",
+
+    /** sent to the server to start the game with the connected clients */
+    START_GAME = "startGame",
+
+    SEND_DICE = "sendDice"
   }
 
   /**

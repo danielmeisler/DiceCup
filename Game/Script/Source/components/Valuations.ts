@@ -5,12 +5,26 @@ namespace DiceCup {
         playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         nextTrack(1);
 
+        if (playerMode == PlayerMode.multiplayer) {
+            document.getElementById("waitAlert_id").remove();
+        }
+
         if (roundCounter <= maxRounds) {
             ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
         } else {
             ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.placement) });
         }
 
+
+    }
+
+    export function waitForPlayerValidation(): void {
+        if (playerMode == PlayerMode.multiplayer) {
+            let waitAlert: HTMLSpanElement = document.createElement("span");
+            waitAlert.id = "waitAlert_id";
+            waitAlert.innerHTML = language.game.validation.wait_for_validation;
+            document.getElementById("hud_id").appendChild(waitAlert);
+        }
     }
 
 }

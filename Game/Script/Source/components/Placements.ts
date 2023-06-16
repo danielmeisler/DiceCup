@@ -104,7 +104,7 @@ namespace DiceCup {
     export function updatePlacements(): void {
         let name: string[] = [];
         let points: number[] = [];
-        let bots: BotDao[] = gameSettings.bot;
+        let bots: BotDao[] = gameSettings_sp.bot;
 
         for (let i = 0; i < playerNames.length; i++) {
             name[i] = document.querySelector("#summaryText_id_" + playerNames[i] + "_playerNames").innerHTML;
@@ -139,7 +139,7 @@ namespace DiceCup {
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
 
-            if (name[i] == gameSettings.playerName) {
+            if (name[i] == gameSettings_sp.playerName) {
                 place = i + 1;
                 document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
             }

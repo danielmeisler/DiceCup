@@ -23,7 +23,7 @@
             },
             "lobby": {
                 "title": "Game",
-                "waiting": "Waiting...",
+                "waiting": "Waiting",
                 "start_button": "Start"
             }
         },
@@ -75,7 +75,7 @@
             "invalid_tokes": "Only alphabetic and numeric tokens",
             "identical_names": "No identical names",
             "room_unavailable": "Room unavailable",
-            "waiting": "Waiting for more players...",
+            "waiting": "Waiting for more players",
             "offline": "You are offline",
             "wrong_password": "Wrong password"
         }
@@ -91,6 +91,9 @@
         },
         "summary": {
             "sum": "sum"
+        },
+        "validation": {
+            "wait_for_validation": "Wait for all player to choose"
         },
         "placements": {
             "title": "Congratulations!",

@@ -7,6 +7,8 @@ namespace DiceCup {
 
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             playSFX(buttonClick);
+            startButton.style.visibility = "hidden";
+            settingsButton.style.visibility = "hidden";
         });
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
@@ -14,6 +16,7 @@ namespace DiceCup {
         settingsButton.classList.add("gameMenuButtons");
         settingsButton.classList.add("diceCupButtons");
         document.getElementById("multiplayerLobbyMenuLeftButtonArea_id").appendChild(settingsButton);
+        settingsButton.style.visibility = "hidden";
 
         let settingsIcon: HTMLImageElement = document.createElement("img");
         settingsIcon.classList.add("diceCupButtonsIcons");
@@ -32,10 +35,12 @@ namespace DiceCup {
         startButton.classList.add("diceCupButtons");
         startButton.innerHTML = language.menu.multiplayer.lobby.start_button;
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
+        startButton.style.visibility = "hidden";
 
         startButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            hideMenu();
+            startButton.style.visibility = "hidden";
+            settingsButton.style.visibility = "hidden";
             // createGameSettings();
         });
 
@@ -60,8 +65,8 @@ namespace DiceCup {
         playerContainer.appendChild(playerDiv);
 
         let youIndicator: HTMLDivElement = document.createElement("div");
+        youIndicator.id = "playerIndicator_id";
         youIndicator.classList.add("youIndicator");
-        youIndicator.style.visibility = "hidden";
         playerDiv.appendChild(youIndicator);
 
         let playerRemove: HTMLButtonElement = document.createElement("button");
@@ -113,10 +118,11 @@ namespace DiceCup {
             document.getElementById("nameInputButton_id").addEventListener("click", hndEvent);
 
             playerName.readOnly = false;
-            youIndicator.style.visibility = "visible";
             playerName.addEventListener("click", () => {nameInputButton.style.display = "block"; playerName.classList.add("nameInputsFocused");});
             
 
+        } else {
+            youIndicator.style.visibility = "hidden";
         }
     }
 
@@ -149,9 +155,7 @@ namespace DiceCup {
 
     export function joinRoom(_message: FudgeNet.Message): void {
         switchMenu(MenuPage.multiplayerLobby);
-        console.log(_message.content.name)
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
-        console.log((6 - Object.keys(_message.content.clients).length));
 
         while (document.getElementById("multiplayerLobbyMenuContent_id").childNodes.length > 0) {
             document.getElementById("multiplayerLobbyMenuContent_id").removeChild(document.getElementById("multiplayerLobbyMenuContent_id").lastChild);
@@ -165,6 +169,11 @@ namespace DiceCup {
         }
         for (let j = 0; j < (6 - Object.keys(_message.content.clients).length); j++) {
             createWaitPortrait(j);
+        }
+
+        if (host) {
+            document.getElementById("multiplayerLobbyStartButton_id").style.visibility = "visible";
+            document.getElementById("multiplayerLobbySettingsButton_id").style.visibility = "visible";
         }
     }
 }

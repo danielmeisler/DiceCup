@@ -69,9 +69,17 @@ namespace DiceCup {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();
         let content: string[][] = [];
-        playerNames= [gameSettings.playerName];
-        for (let index = 0; index < gameSettings.bot.length; index++) {
-            playerNames.push(gameSettings.bot[index].botName);
+
+        if (playerMode == PlayerMode.singlelpayer) {
+            playerNames = [gameSettings_sp.playerName];
+            for (let index = 0; index < gameSettings_sp.bot.length; index++) {
+                playerNames.push(gameSettings_sp.bot[index].botName);
+            }
+        } else if (playerMode == PlayerMode.multiplayer) {
+            for (let index = 0; index < gameSettings_mp.playerNames.length; index++) {
+                playerNames.push(gameSettings_mp.playerNames[index]);
+            }
+
         }
 
         for (let row = 0; row < 7; row++) {

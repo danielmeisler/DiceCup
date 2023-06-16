@@ -72,6 +72,8 @@ export declare class FudgeServer {
     private renameRoom;
     private getRoomList;
     private getRoomInfo;
+    private startGame;
+    private sendDice;
     private createMesh;
     private connectHost;
     private addUserOnValidLoginRequest;

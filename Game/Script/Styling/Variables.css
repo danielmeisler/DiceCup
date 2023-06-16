@@ -64,6 +64,8 @@
     --hud_background: var(--black);
     --hud_timer_background: var(--black);
     --hud_timer_color: var(--blue_highlight);
+    --hud_alert_color: var(--white);
+    --hud_alert_fontsize: 3vi;
 
     /* Category Panel Variables */
     --category_background: var(--black);

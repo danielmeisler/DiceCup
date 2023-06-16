@@ -5,6 +5,7 @@ namespace DiceCup {
   export let viewport: ƒ.Viewport;
   export let viewportState: ViewportState;
   export let currentLanguage: Languages;
+  export let playerMode: PlayerMode;
 
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 

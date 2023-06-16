@@ -13,6 +13,7 @@ declare namespace DiceCup {
     let viewport: ƒ.Viewport;
     let viewportState: ViewportState;
     let currentLanguage: Languages;
+    let playerMode: PlayerMode;
 }
 declare namespace DiceCup {
     class Bot {
@@ -40,13 +41,15 @@ declare namespace DiceCup {
         private diceRig;
         private dots;
         private dotsMat;
+        private sendDice;
+        private getDice;
         private arenaTranslation;
         private arenaRotation;
         private bigDice;
         private smallDice;
         color: DiceColor;
         value: number;
-        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number);
+        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message);
         roll(): number;
         private initDice;
         validateDices(): Promise<void>;
@@ -142,6 +145,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function validateRound(): void;
+    function waitForPlayerValidation(): void;
 }
 declare namespace DiceCup {
     enum BotDifficulty {
@@ -191,6 +195,12 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    enum PlayerMode {
+        singlelpayer = 0,
+        multiplayer = 1
+    }
+}
+declare namespace DiceCup {
     enum ScoringCategory {
         fours = 0,
         fives = 1,
@@ -225,10 +235,12 @@ declare namespace DiceCup {
     let roundTimer: number;
     let roundCounter: number;
     let maxRounds: number;
-    let gameSettings: SinglePlayerSettingsDao;
+    let gameSettings_sp: SinglePlayerSettingsDao;
+    let gameSettings_mp: MultiPlayerSettingsDao;
     let usedTranslations: ƒ.Vector3[];
     function loadDiceColors(): Promise<RgbaDao[]>;
-    function rollDices(): Promise<void>;
+    function rollDices(_message?: FudgeNet.Message): Promise<void>;
+    function getRolledDices(_message: FudgeNet.Message): Promise<void>;
     function round(): Promise<void>;
     function update(_event: Event): void;
 }
@@ -386,6 +398,9 @@ declare namespace DiceCup {
             summary: {
                 sum: string;
             };
+            validation: {
+                wait_for_validation: string;
+            };
             placements: {
                 title: string;
                 placement: {
@@ -394,6 +409,11 @@ declare namespace DiceCup {
                 };
             };
         };
+    }
+}
+declare namespace DiceCup {
+    interface MultiPlayerSettingsDao {
+        playerNames: string[];
     }
 }
 declare namespace DiceCup {
@@ -422,6 +442,14 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    import ƒ = FudgeCore;
+    interface SendDiceDao {
+        value: number;
+        translation: ƒ.Vector3;
+        rotation: ƒ.Vector3;
+    }
+}
+declare namespace DiceCup {
     interface SinglePlayerSettingsDao {
         playerName: string;
         bot: BotDao[];
@@ -431,6 +459,7 @@ declare namespace DiceCup {
     import ƒClient = FudgeNet.FudgeClient;
     let client: ƒClient;
     let host: boolean;
+    let clientPlayerNumber: number;
     function startClient(): Promise<void>;
     function hndEvent(_event: Event): Promise<void>;
 }

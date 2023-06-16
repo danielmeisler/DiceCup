@@ -10,6 +10,8 @@ namespace DiceCup{
         private diceRig: ƒ.ComponentRigidbody;
         private dots: ƒ.Node[];
         private dotsMat: ƒ.ComponentMaterial[];
+        private sendDice: SendDiceDao[] = [];
+        private getDice: SendDiceDao = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)};
         
         private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
@@ -19,10 +21,9 @@ namespace DiceCup{
         public color: DiceColor;
         public value: number;
     
-        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number) {
+        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message) {
             this.color = _color;
-            this.value = this.roll();
-            this.initDice(_colorRGBA, _rollDiceMode);
+            this.initDice(_colorRGBA, _rollDiceMode, _hostDice);
         }
 
         public roll(): number {
@@ -30,7 +31,7 @@ namespace DiceCup{
             return this.value;
         }
 
-        private async initDice(_colorRGBA: RgbaDao, _rollDiceMode?: number): Promise<void> {
+        private async initDice(_colorRGBA: RgbaDao, _rollDiceMode?: number, _hostDice?: FudgeNet.Message): Promise<void> {
             this.diceGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
             this.diceInst = await ƒ.Project.createGraphInstance(this.diceGraph);
             this.diceMat = this.diceInst.getComponent(ƒ.ComponentMaterial);
@@ -45,6 +46,21 @@ namespace DiceCup{
             corners.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision));
 
             // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
+
+            if (_rollDiceMode == 3) {
+                this.getDice.translation.x = (<any>(<any>_hostDice).translation).data[0];
+                this.getDice.translation.y = (<any>(<any>_hostDice).translation).data[1];
+                this.getDice.translation.z = (<any>(<any>_hostDice).translation).data[2];
+
+                this.getDice.rotation.x = (<any>(<any>_hostDice).rotation).data[0];
+                this.getDice.rotation.y = (<any>(<any>_hostDice).rotation).data[1];
+                this.getDice.rotation.z = (<any>(<any>_hostDice).rotation).data[2];
+
+                this.getDice.value = (<any>_hostDice).value;
+                this.value = this.getDice.value;
+            } else {
+                this.value = this.roll();
+            }
 
             this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
@@ -69,7 +85,7 @@ namespace DiceCup{
             tempDotsMat.map(dot => dot.map(dot => dot.clrPrimary.a = 0.2));
         }
 
-        private rollDices(_mode: number): void {
+        private async rollDices(_mode: number): Promise<void> {
             this.diceRig.activate(false);
             switch (_mode) {
                 case 0:
@@ -77,12 +93,16 @@ namespace DiceCup{
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 1:
-                    this.rotateDice(this.diceInst);
-                    this.translateDice(this.diceInst);
+                    await this.rotateDice(this.diceInst);
+                    await this.translateDice(this.diceInst);
                     break;
                 case 2:
                     this.diceInst.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, Math.random() * 3 + 3, (Math.random() * 2) - 1);
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
+                    break;
+                case 3:
+                    this.diceInst.mtxLocal.translation = this.getDice.translation;
+                    this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     break;
                 default:
                     break;
@@ -90,21 +110,32 @@ namespace DiceCup{
             this.diceRig.activate(true);
         }
 
-        private translateDice(_node: ƒ.Node): void {
+        private async translateDice(_node: ƒ.Node): Promise<void> {
             let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
             if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.smallDice)) {
-                console.log("ZU NAH");
                 this.translateDice(_node);
             } else {
                 usedTranslations.push(tempVec);
                 _node.mtxLocal.translation = tempVec;
+
             }
             if (usedTranslations.length == dices.length) {
+                if (playerMode == PlayerMode.multiplayer && host == true) {
+                    for (let index = 0; index < dices.length; index++) {
+                        this.sendDice[index] = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)}
+                        this.sendDice[index].value = dices[index].value;
+                        this.sendDice[index].translation = dices[index].arenaTranslation;
+                        this.sendDice[index].rotation = dices[index].arenaRotation;
+                    }
+                    console.log(this.sendDice);
+                    console.log(dices);
+                    client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
+                }
                 usedTranslations = [];
             }
         }
 
-        private rotateDice(_node: ƒ.Node): void {
+        private async rotateDice(_node: ƒ.Node): Promise<void> {
             let randomRotate: number = Math.random() * 360;
             switch (this.value) {
                 case 1:

@@ -112,6 +112,12 @@ class FudgeServer {
             case Message_js_1.FudgeNet.COMMAND.ASSIGN_USERNAME:
                 this.assignUsername(message);
                 break;
+            case Message_js_1.FudgeNet.COMMAND.START_GAME:
+                this.startGame(message);
+                break;
+            case Message_js_1.FudgeNet.COMMAND.SEND_DICE:
+                this.sendDice(message);
+                break;
             case Message_js_1.FudgeNet.COMMAND.CREATE_MESH:
                 this.createMesh(message);
                 break;
@@ -335,6 +341,20 @@ class FudgeServer {
             idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.idRoom, name: this.rooms[_message.idRoom].name, clients: clients }
         };
         this.dispatch(message);
+    }
+    startGame(_message) {
+        let clients = this.rooms[_message.idRoom].clients;
+        let message = {
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.START_GAME, content: { clients: clients }
+        };
+        this.broadcast(message);
+    }
+    sendDice(_message) {
+        console.log(_message);
+        let message = {
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.SEND_DICE, content: { dice: _message.content.dice }
+        };
+        this.broadcast(message);
     }
     async createMesh(_message) {
         let room = this.rooms[_message.idRoom];

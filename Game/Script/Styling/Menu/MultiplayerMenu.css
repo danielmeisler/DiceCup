@@ -62,6 +62,11 @@
     aspect-ratio: 1/1;
 }
 
+#playerName_id::after {
+    content: "";
+    animation: dot-animation 3s linear infinite;
+}
+
 .youIndicator {
     position: absolute;
     width: 2.5vw;

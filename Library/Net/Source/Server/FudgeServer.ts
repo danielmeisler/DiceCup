@@ -150,6 +150,14 @@ export class FudgeServer {
         this.assignUsername(message);
         break;
 
+      case FudgeNet.COMMAND.START_GAME:
+        this.startGame(message);
+        break;
+
+      case FudgeNet.COMMAND.SEND_DICE:
+        this.sendDice(message);
+        break;
+
       case FudgeNet.COMMAND.CREATE_MESH:
         this.createMesh(message);
         break;
@@ -405,6 +413,23 @@ export class FudgeServer {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_INFO, idTarget: _message.idSource, content: { room: _message.idRoom, name: this.rooms[_message.idRoom!].name, clients: clients }
     };
     this.dispatch(message);
+  }
+
+
+  private startGame(_message: FudgeNet.Message): void {
+    let clients: Clients = this.rooms[_message.idRoom!].clients;
+    let message: FudgeNet.Message = {
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.START_GAME, content: {clients: clients}
+    };
+    this.broadcast(message);
+  }
+
+  private sendDice(_message: FudgeNet.Message): void {
+    console.log(_message)
+    let message: FudgeNet.Message = {
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_DICE, content: {dice: _message.content!.dice }
+    };
+    this.broadcast(message);
   }
 
   private async createMesh(_message: FudgeNet.Message): Promise<void> {

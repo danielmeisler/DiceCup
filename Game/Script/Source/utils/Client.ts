@@ -8,6 +8,7 @@ namespace DiceCup {
     // Create a FudgeClient for this browser tab
     export let client: ƒClient = new ƒClient();
     export let host: boolean = false;
+    export let clientPlayerNumber: number;
 
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
@@ -22,7 +23,7 @@ namespace DiceCup {
       document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndEvent);
       document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndEvent);
       document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndEvent);
-
+      document.getElementById("multiplayerLobbyStartButton_id").addEventListener("click", hndEvent);
       // document.querySelector("button#rename").addEventListener("click", rename);
       // document.querySelector("button#mesh").addEventListener("click", structurePeers);
       // document.querySelector("button#host").addEventListener("click", structurePeers);
@@ -62,6 +63,11 @@ namespace DiceCup {
           console.log("Enter", focusedIdRoom );
           let password: string = (<HTMLInputElement>document.getElementById("passwordInput_id")).value;
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false, password: password} });
+        break;
+
+
+        case "multiplayerLobbyStartButton_id": 
+          client.dispatch({ command: FudgeNet.COMMAND.START_GAME, route: FudgeNet.ROUTE.SERVER });
         break;
       }
     }
@@ -144,8 +150,10 @@ namespace DiceCup {
               }
 
               if (message.content.correctPassword == false) {
-                alertPassword.innerHTML = language.menu.alerts.wrong_password;
-                ƒ.Time.game.setTimer(1000, 1, () => {alertPassword.innerHTML = ""});
+                if (alertPassword) {
+                  alertPassword.innerHTML = language.menu.alerts.wrong_password;
+                  ƒ.Time.game.setTimer(1000, 1, () => {alertPassword.innerHTML = ""});
+                }
               } else if (message.content.correctPassword == true) {
                 document.getElementById("passwordInputContainer_id").remove();
               }
@@ -176,14 +184,41 @@ namespace DiceCup {
 
           case FudgeNet.COMMAND.ASSIGN_USERNAME:
             checkUsername(message);
-            // Checken ob wegen RoomInfo oder AssignID oder RoomRename
             break;
+
+          case FudgeNet.COMMAND.START_GAME:
+            playerMode = PlayerMode.multiplayer;
+            await setGameSettings(message);
+            hideMenu();
+            changeGameState(GameState.init);
+            break;
+
+          case FudgeNet.COMMAND.SEND_DICE:
+            console.log(message);
+            // dices = message.content.dice;
+            if (!host) {
+              getRolledDices(message);
+            }
+            break;
+
           default:
             break;
         }
         return;
       } else
         console.table(_event);
+    }
+
+    async function setGameSettings(message: FudgeNet.Message): Promise<void> {
+      gameSettings_mp = {playerNames: ["", "", "", "", "", ""]};
+      let playerNumber: number = (<any>Object.keys(message.content.clients)).length;
+
+      for (let index = 0; index < playerNumber; index++) {
+        (<any>Object.values(message.content.clients)[index]).name ? gameSettings_mp.playerNames[index] = (<any>Object.values(message.content.clients)[index]).name : gameSettings_mp.playerNames[index] = (<any>Object.values(message.content.clients)[index]).id;
+        if (client.id == (<any>Object.values(message.content.clients)[index]).id) {
+          clientPlayerNumber = index;
+        }
+      }
     }
 
     function checkUsername(message: FudgeNet.Message): void {

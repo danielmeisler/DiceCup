@@ -139,22 +139,23 @@ var DiceCup;
         diceRig;
         dots;
         dotsMat;
+        sendDice = [];
+        getDice = { value: 0, rotation: new ƒ.Vector3(0, 0, 0), translation: new ƒ.Vector3(0, 0, 0) };
         arenaTranslation = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         arenaRotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
         bigDice = 0.3;
         smallDice = 0.265;
         color;
         value;
-        constructor(_colorRGBA, _color, _rollDiceMode) {
+        constructor(_colorRGBA, _color, _rollDiceMode, _hostDice) {
             this.color = _color;
-            this.value = this.roll();
-            this.initDice(_colorRGBA, _rollDiceMode);
+            this.initDice(_colorRGBA, _rollDiceMode, _hostDice);
         }
         roll() {
             this.value = Math.floor((Math.random() * 6) + 1);
             return this.value;
         }
-        async initDice(_colorRGBA, _rollDiceMode) {
+        async initDice(_colorRGBA, _rollDiceMode, _hostDice) {
             this.diceGraph = ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
             this.diceInst = await ƒ.Project.createGraphInstance(this.diceGraph);
             this.diceMat = this.diceInst.getComponent(ƒ.ComponentMaterial);
@@ -167,6 +168,19 @@ var DiceCup;
             }
             corners.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.handleDiceCollision));
             // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
+            if (_rollDiceMode == 3) {
+                this.getDice.translation.x = _hostDice.translation.data[0];
+                this.getDice.translation.y = _hostDice.translation.data[1];
+                this.getDice.translation.z = _hostDice.translation.data[2];
+                this.getDice.rotation.x = _hostDice.rotation.data[0];
+                this.getDice.rotation.y = _hostDice.rotation.data[1];
+                this.getDice.rotation.z = _hostDice.rotation.data[2];
+                this.getDice.value = _hostDice.value;
+                this.value = this.getDice.value;
+            }
+            else {
+                this.value = this.roll();
+            }
             this.scaleDices(_colorRGBA);
             this.rollDices(_rollDiceMode);
             this.colorDices(_colorRGBA);
@@ -185,7 +199,7 @@ var DiceCup;
             tempMat.map(dice => dice.clrPrimary.a = 0.2);
             tempDotsMat.map(dot => dot.map(dot => dot.clrPrimary.a = 0.2));
         }
-        rollDices(_mode) {
+        async rollDices(_mode) {
             this.diceRig.activate(false);
             switch (_mode) {
                 case 0:
@@ -193,22 +207,25 @@ var DiceCup;
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 1:
-                    this.rotateDice(this.diceInst);
-                    this.translateDice(this.diceInst);
+                    await this.rotateDice(this.diceInst);
+                    await this.translateDice(this.diceInst);
                     break;
                 case 2:
                     this.diceInst.mtxLocal.translation = new ƒ.Vector3((Math.random() * 2) - 1, Math.random() * 3 + 3, (Math.random() * 2) - 1);
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
+                    break;
+                case 3:
+                    this.diceInst.mtxLocal.translation = this.getDice.translation;
+                    this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     break;
                 default:
                     break;
             }
             this.diceRig.activate(true);
         }
-        translateDice(_node) {
+        async translateDice(_node) {
             let tempVec = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
             if (DiceCup.usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.smallDice)) {
-                console.log("ZU NAH");
                 this.translateDice(_node);
             }
             else {
@@ -216,10 +233,21 @@ var DiceCup;
                 _node.mtxLocal.translation = tempVec;
             }
             if (DiceCup.usedTranslations.length == DiceCup.dices.length) {
+                if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer && DiceCup.host == true) {
+                    for (let index = 0; index < DiceCup.dices.length; index++) {
+                        this.sendDice[index] = { value: 0, rotation: new ƒ.Vector3(0, 0, 0), translation: new ƒ.Vector3(0, 0, 0) };
+                        this.sendDice[index].value = DiceCup.dices[index].value;
+                        this.sendDice[index].translation = DiceCup.dices[index].arenaTranslation;
+                        this.sendDice[index].rotation = DiceCup.dices[index].arenaRotation;
+                    }
+                    console.log(this.sendDice);
+                    console.log(DiceCup.dices);
+                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
+                }
                 DiceCup.usedTranslations = [];
             }
         }
-        rotateDice(_node) {
+        async rotateDice(_node) {
             let randomRotate = Math.random() * 360;
             switch (this.value) {
                 case 1:
@@ -589,7 +617,7 @@ var DiceCup;
         }
         calculateNumber(_number, _number2, _number3) {
             let value = 0;
-            this.player && DiceCup.dices[value].transparentDices();
+            this.player && this.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].value === _number || this.dices[i].value === _number2 || this.dices[i].value === _number3) {
                     value += this.dices[i].value;
@@ -607,7 +635,8 @@ var DiceCup;
         }
         calculateColor(_color) {
             let value = 0;
-            this.player && DiceCup.dices[value].transparentDices();
+            console.log(this.player, DiceCup.dices[value]);
+            this.player && this.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
                     value += this.dices[i].value;
@@ -620,7 +649,7 @@ var DiceCup;
         }
         calculateDoubles() {
             let value = 0;
-            this.player && DiceCup.dices[value].transparentDices();
+            this.player && this.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length - 1; i++) {
                 if (this.dices[i].color === this.dices[i + 1].color && this.dices[i].value === this.dices[i + 1].value) {
                     value += 10;
@@ -634,7 +663,7 @@ var DiceCup;
         }
         calculateDiceCup() {
             let value = 0;
-            this.player && DiceCup.dices[value].transparentDices();
+            this.player && this.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 value += this.dices[i].value;
                 this.player && this.dices[i].validateDices();
@@ -650,6 +679,9 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     DiceCup.freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    let categoryTime = 10;
+    let timerOver = false;
+    let timerID;
     async function initCategories() {
         let response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories = await response.json();
@@ -679,6 +711,7 @@ var DiceCup;
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
+            button.addEventListener("click", () => { ƒ.Time.game.deleteTimer(timerID); });
             button.addEventListener("click", handleCategory);
             button.addEventListener("click", () => { DiceCup.playSFX(DiceCup.buttonClick); });
             content.appendChild(button);
@@ -705,6 +738,17 @@ var DiceCup;
             document.getElementById("categoryBackground_id").classList.add("emptyBackground");
             document.getElementById("categoryBackground_id").style.zIndex = "10";
             ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
+            new DiceCup.TimerBar("categoryTimer_id", categoryTime);
+            timerOver = false;
+            timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
+                document.getElementById("categoryButtons_id_" + DiceCup.freePlayerCategories[Math.floor(Math.random() * DiceCup.freePlayerCategories.length)]).click();
+                timerOver = true;
+            });
+            ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
+                if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+                    DiceCup.changeGameState(DiceCup.GameState.validating);
+                }
+            });
         }
     }
     DiceCup.showCategories = showCategories;
@@ -716,6 +760,9 @@ var DiceCup;
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
     }
     DiceCup.hideCategories = hideCategories;
+    function visibility(_visibility) {
+        document.getElementById("categoryBackground_id").style.visibility = _visibility;
+    }
     function handleCategory(_event) {
         let index = parseInt(_event.currentTarget.getAttribute("index"));
         document.getElementById("categoryImage_i_" + _event.currentTarget.getAttribute("index")).classList.add("categoryImagesTransparent");
@@ -724,19 +771,27 @@ var DiceCup;
         DiceCup.freePlayerCategories = tempArray;
         console.log(DiceCup.freePlayerCategories);
         hideCategories();
+        DiceCup.waitForPlayerValidation();
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index); });
     }
     function addPointsToButton(_index) {
         let valuation = new DiceCup.Valuation(_index, DiceCup.dices, true);
         let value = valuation.chooseScoringCategory();
+        value = timerOver ? 0 : value;
+        timerOver = false;
+        ƒ.Time.game.deleteTimer(timerID);
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         DiceCup.hideHudCategory(_index);
-        DiceCup.updateSummary(value, _index, DiceCup.gameSettings.playerName);
-        DiceCup.changeGameState(DiceCup.GameState.validating);
-    }
-    function visibility(_visibility) {
-        document.getElementById("categoryBackground_id").style.visibility = _visibility;
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            DiceCup.updateSummary(value, _index, DiceCup.gameSettings_sp.playerName);
+        }
+        else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            DiceCup.updateSummary(value, _index, DiceCup.gameSettings_mp.playerNames[DiceCup.clientPlayerNumber]);
+        }
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            DiceCup.changeGameState(DiceCup.GameState.validating);
+        }
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -875,7 +930,7 @@ var DiceCup;
     function updatePlacements() {
         let name = [];
         let points = [];
-        let bots = DiceCup.gameSettings.bot;
+        let bots = DiceCup.gameSettings_sp.bot;
         for (let i = 0; i < DiceCup.playerNames.length; i++) {
             name[i] = document.querySelector("#summaryText_id_" + DiceCup.playerNames[i] + "_playerNames").innerHTML;
             points[i] = parseInt(document.querySelector("#summaryText_id_" + DiceCup.playerNames[i] + "_sum").innerHTML);
@@ -906,7 +961,7 @@ var DiceCup;
             document.getElementById("playerName_id_" + i).innerHTML = name[i];
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
-            if (name[i] == DiceCup.gameSettings.playerName) {
+            if (name[i] == DiceCup.gameSettings_sp.playerName) {
                 place = i + 1;
                 document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.placement.part_1 + " " + place + ". " + DiceCup.language.game.placements.placement.part_2;
             }
@@ -1000,9 +1055,16 @@ var DiceCup;
         let response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories = await response.json();
         let content = [];
-        DiceCup.playerNames = [DiceCup.gameSettings.playerName];
-        for (let index = 0; index < DiceCup.gameSettings.bot.length; index++) {
-            DiceCup.playerNames.push(DiceCup.gameSettings.bot[index].botName);
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            DiceCup.playerNames = [DiceCup.gameSettings_sp.playerName];
+            for (let index = 0; index < DiceCup.gameSettings_sp.bot.length; index++) {
+                DiceCup.playerNames.push(DiceCup.gameSettings_sp.bot[index].botName);
+            }
+        }
+        else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            for (let index = 0; index < DiceCup.gameSettings_mp.playerNames.length; index++) {
+                DiceCup.playerNames.push(DiceCup.gameSettings_mp.playerNames[index]);
+            }
         }
         for (let row = 0; row < 7; row++) {
             content[row] = [];
@@ -1127,6 +1189,9 @@ var DiceCup;
     function validateRound() {
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         DiceCup.nextTrack(1);
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            document.getElementById("waitAlert_id").remove();
+        }
         if (DiceCup.roundCounter <= DiceCup.maxRounds) {
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
         }
@@ -1135,6 +1200,15 @@ var DiceCup;
         }
     }
     DiceCup.validateRound = validateRound;
+    function waitForPlayerValidation() {
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            let waitAlert = document.createElement("span");
+            waitAlert.id = "waitAlert_id";
+            waitAlert.innerHTML = DiceCup.language.game.validation.wait_for_validation;
+            document.getElementById("hud_id").appendChild(waitAlert);
+        }
+    }
+    DiceCup.waitForPlayerValidation = waitForPlayerValidation;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -1192,6 +1266,14 @@ var DiceCup;
         MenuPage["options"] = "optionsMenu_id";
         MenuPage["help"] = "helpMenu_id";
     })(MenuPage = DiceCup.MenuPage || (DiceCup.MenuPage = {}));
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    let PlayerMode;
+    (function (PlayerMode) {
+        PlayerMode[PlayerMode["singlelpayer"] = 0] = "singlelpayer";
+        PlayerMode[PlayerMode["multiplayer"] = 1] = "multiplayer";
+    })(PlayerMode = DiceCup.PlayerMode || (DiceCup.PlayerMode = {}));
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -1264,26 +1346,41 @@ var DiceCup;
         return diceColors;
     }
     DiceCup.loadDiceColors = loadDiceColors;
-    async function rollDices() {
+    async function rollDices(_message) {
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer || (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer && DiceCup.host == true)) {
+            let diceColors = await loadDiceColors();
+            let graph = DiceCup.viewport.getBranch();
+            let diceNode = graph.getChildrenByName("Dices")[0];
+            diceNode.removeAllChildren();
+            DiceCup.dices = [];
+            for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+                DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
+            }
+        }
+    }
+    DiceCup.rollDices = rollDices;
+    async function getRolledDices(_message) {
         let diceColors = await loadDiceColors();
         let graph = DiceCup.viewport.getBranch();
         let diceNode = graph.getChildrenByName("Dices")[0];
         diceNode.removeAllChildren();
         DiceCup.dices = [];
         for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
-            DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
+            DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 3, _message.content.dice[i]));
         }
     }
-    DiceCup.rollDices = rollDices;
+    DiceCup.getRolledDices = getRolledDices;
     async function round() {
-        console.clear();
+        // console.clear();
         DiceCup.nextTrack(2);
-        if (DiceCup.firstRound == true) {
-            createBots(DiceCup.gameSettings.bot);
-            DiceCup.firstRound = false;
-        }
-        for (let index = 0; index < bots.length; index++) {
-            bots[index].botsTurn();
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            if (DiceCup.firstRound == true) {
+                createBots(DiceCup.gameSettings_sp.bot);
+                DiceCup.firstRound = false;
+            }
+            for (let index = 0; index < bots.length; index++) {
+                bots[index].botsTurn();
+            }
         }
         new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
         ƒ.Time.game.setTimer(DiceCup.roundTimer * 1000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.choosing); });
@@ -1318,7 +1415,7 @@ var DiceCup;
         DiceCup.firstRound = true;
         DiceCup.roundCounter = 1;
         DiceCup.playerNames = [];
-        DiceCup.gameSettings = { playerName: "", bot: [] };
+        DiceCup.gameSettings_sp = { playerName: "", bot: [] };
         DiceCup.freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         let graph = DiceCup.viewport.getBranch();
@@ -1353,8 +1450,8 @@ var DiceCup;
                 await DiceCup.rollDices();
                 break;
             case DiceCup.GameState.counting:
-                DiceCup.round();
                 DiceCup.changeViewportState(DiceCup.ViewportState.game);
+                DiceCup.round();
                 break;
             case DiceCup.GameState.choosing:
                 DiceCup.showCategories();
@@ -1709,12 +1806,15 @@ var DiceCup;
         new DiceCup.SubMenu(DiceCup.MenuPage.multiplayerLobby, "multiplayerLobby", document.getElementById("playerName_id").placeholder + "'s " + DiceCup.language.menu.multiplayer.lobby.title);
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
+            startButton.style.visibility = "hidden";
+            settingsButton.style.visibility = "hidden";
         });
         let settingsButton = document.createElement("button");
         settingsButton.id = "multiplayerLobbySettingsButton_id";
         settingsButton.classList.add("gameMenuButtons");
         settingsButton.classList.add("diceCupButtons");
         document.getElementById("multiplayerLobbyMenuLeftButtonArea_id").appendChild(settingsButton);
+        settingsButton.style.visibility = "hidden";
         let settingsIcon = document.createElement("img");
         settingsIcon.classList.add("diceCupButtonsIcons");
         settingsIcon.src = "Game/Assets/images/menuButtons/settings.svg";
@@ -1730,9 +1830,11 @@ var DiceCup;
         startButton.classList.add("diceCupButtons");
         startButton.innerHTML = DiceCup.language.menu.multiplayer.lobby.start_button;
         document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
+        startButton.style.visibility = "hidden";
         startButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            DiceCup.hideMenu();
+            startButton.style.visibility = "hidden";
+            settingsButton.style.visibility = "hidden";
             // createGameSettings();
         });
         // for (let i = 0; i < 6; i++) {
@@ -1754,8 +1856,8 @@ var DiceCup;
         playerDiv.classList.add("diceCupButtons");
         playerContainer.appendChild(playerDiv);
         let youIndicator = document.createElement("div");
+        youIndicator.id = "playerIndicator_id";
         youIndicator.classList.add("youIndicator");
-        youIndicator.style.visibility = "hidden";
         playerDiv.appendChild(youIndicator);
         let playerRemove = document.createElement("button");
         playerRemove.id = "playerRemove_id_" + _id;
@@ -1798,8 +1900,10 @@ var DiceCup;
             });
             document.getElementById("nameInputButton_id").addEventListener("click", DiceCup.hndEvent);
             playerName.readOnly = false;
-            youIndicator.style.visibility = "visible";
             playerName.addEventListener("click", () => { nameInputButton.style.display = "block"; playerName.classList.add("nameInputsFocused"); });
+        }
+        else {
+            youIndicator.style.visibility = "hidden";
         }
     }
     function createWaitPortrait(_id) {
@@ -1827,9 +1931,7 @@ var DiceCup;
     }
     function joinRoom(_message) {
         DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
-        console.log(_message.content.name);
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
-        console.log((6 - Object.keys(_message.content.clients).length));
         while (document.getElementById("multiplayerLobbyMenuContent_id").childNodes.length > 0) {
             document.getElementById("multiplayerLobbyMenuContent_id").removeChild(document.getElementById("multiplayerLobbyMenuContent_id").lastChild);
         }
@@ -1841,6 +1943,10 @@ var DiceCup;
         }
         for (let j = 0; j < (6 - Object.keys(_message.content.clients).length); j++) {
             createWaitPortrait(j);
+        }
+        if (DiceCup.host) {
+            document.getElementById("multiplayerLobbyStartButton_id").style.visibility = "visible";
+            document.getElementById("multiplayerLobbySettingsButton_id").style.visibility = "visible";
         }
     }
     DiceCup.joinRoom = joinRoom;
@@ -2344,9 +2450,9 @@ var DiceCup;
         for (let i = 0; i < ids.length; i++) {
             botSettings.push({ botName: ids[i], difficulty: DiceCup.BotDifficulty.easy });
         }
-        DiceCup.gameSettings = { playerName: document.getElementById("playerName_id").placeholder, bot: botSettings };
+        DiceCup.gameSettings_sp = { playerName: document.getElementById("playerName_id").placeholder, bot: botSettings };
         if (document.getElementById("playerName_id").value) {
-            DiceCup.gameSettings.playerName = document.getElementById("playerName_id").value;
+            DiceCup.gameSettings_sp.playerName = document.getElementById("playerName_id").value;
         }
         ids = [];
         for (let i = 0, idCounter = 0; i < 5; i++) {
@@ -2366,14 +2472,15 @@ var DiceCup;
                 idCounter++;
             }
         }
-        let playerNames = [DiceCup.gameSettings.playerName];
-        for (let index = 0; index < DiceCup.gameSettings.bot.length; index++) {
-            playerNames.push(DiceCup.gameSettings.bot[index].botName);
+        let playerNames = [DiceCup.gameSettings_sp.playerName];
+        for (let index = 0; index < DiceCup.gameSettings_sp.bot.length; index++) {
+            playerNames.push(DiceCup.gameSettings_sp.bot[index].botName);
         }
         if (checkPlayernames(playerNames)) {
             DiceCup.hideMenu();
             localStorage.setItem("playernames", JSON.stringify(playerNames));
             localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
+            DiceCup.playerMode = DiceCup.PlayerMode.singlelpayer;
             DiceCup.changeGameState(DiceCup.GameState.init);
         }
     }
@@ -2641,6 +2748,7 @@ var DiceCup;
         document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndEvent);
         document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndEvent);
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndEvent);
+        document.getElementById("multiplayerLobbyStartButton_id").addEventListener("click", hndEvent);
         // document.querySelector("button#rename").addEventListener("click", rename);
         // document.querySelector("button#mesh").addEventListener("click", structurePeers);
         // document.querySelector("button#host").addEventListener("click", structurePeers);
@@ -2679,6 +2787,9 @@ var DiceCup;
                 console.log("Enter", DiceCup.focusedIdRoom);
                 let password = document.getElementById("passwordInput_id").value;
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false, password: password } });
+                break;
+            case "multiplayerLobbyStartButton_id":
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.START_GAME, route: FudgeNet.ROUTE.SERVER });
                 break;
         }
     }
@@ -2751,8 +2862,10 @@ var DiceCup;
                             DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
                         }
                         if (message.content.correctPassword == false) {
-                            alertPassword.innerHTML = DiceCup.language.menu.alerts.wrong_password;
-                            ƒ.Time.game.setTimer(1000, 1, () => { alertPassword.innerHTML = ""; });
+                            if (alertPassword) {
+                                alertPassword.innerHTML = DiceCup.language.menu.alerts.wrong_password;
+                                ƒ.Time.game.setTimer(1000, 1, () => { alertPassword.innerHTML = ""; });
+                            }
                         }
                         else if (message.content.correctPassword == true) {
                             document.getElementById("passwordInputContainer_id").remove();
@@ -2782,7 +2895,19 @@ var DiceCup;
                     break;
                 case FudgeNet.COMMAND.ASSIGN_USERNAME:
                     checkUsername(message);
-                    // Checken ob wegen RoomInfo oder AssignID oder RoomRename
+                    break;
+                case FudgeNet.COMMAND.START_GAME:
+                    DiceCup.playerMode = DiceCup.PlayerMode.multiplayer;
+                    await setGameSettings(message);
+                    DiceCup.hideMenu();
+                    DiceCup.changeGameState(DiceCup.GameState.init);
+                    break;
+                case FudgeNet.COMMAND.SEND_DICE:
+                    console.log(message);
+                    // dices = message.content.dice;
+                    if (!DiceCup.host) {
+                        DiceCup.getRolledDices(message);
+                    }
                     break;
                 default:
                     break;
@@ -2791,6 +2916,16 @@ var DiceCup;
         }
         else
             console.table(_event);
+    }
+    async function setGameSettings(message) {
+        DiceCup.gameSettings_mp = { playerNames: ["", "", "", "", "", ""] };
+        let playerNumber = Object.keys(message.content.clients).length;
+        for (let index = 0; index < playerNumber; index++) {
+            Object.values(message.content.clients)[index].name ? DiceCup.gameSettings_mp.playerNames[index] = Object.values(message.content.clients)[index].name : DiceCup.gameSettings_mp.playerNames[index] = Object.values(message.content.clients)[index].id;
+            if (DiceCup.client.id == Object.values(message.content.clients)[index].id) {
+                DiceCup.clientPlayerNumber = index;
+            }
+        }
     }
     function checkUsername(message) {
         let alertMessageLobby = document.getElementById("multiplayerLobbyAlert_id");
