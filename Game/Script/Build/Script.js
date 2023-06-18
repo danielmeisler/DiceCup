@@ -186,6 +186,17 @@ var DiceCup;
             this.colorDices(_colorRGBA);
             this.diceNode.addChild(this.diceInst);
         }
+        async sendDiceToServer() {
+            if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer && DiceCup.host == true) {
+                for (let index = 0; index < DiceCup.dices.length; index++) {
+                    this.sendDice[index] = { value: 0, rotation: new ƒ.Vector3(0, 0, 0), translation: new ƒ.Vector3(0, 0, 0) };
+                    this.sendDice[index].value = DiceCup.dices[index].value;
+                    this.sendDice[index].translation = DiceCup.usedTranslations[index];
+                    this.sendDice[index].rotation = DiceCup.usedRotations[index];
+                }
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
+            }
+        }
         async validateDices() {
             let diceColors = await DiceCup.loadDiceColors();
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
@@ -216,7 +227,7 @@ var DiceCup;
                     break;
                 case 3:
                     console.log(this.getDice);
-                    await this.rotateDice(this.diceInst);
+                    this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     this.diceInst.mtxLocal.translation = this.getDice.translation;
                     break;
                 default:
@@ -233,18 +244,7 @@ var DiceCup;
                 DiceCup.usedTranslations.push(tempVec);
                 _node.mtxLocal.translation = tempVec;
             }
-            if (DiceCup.usedTranslations.length == DiceCup.dices.length) {
-                if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer && DiceCup.host == true) {
-                    for (let index = 0; index < DiceCup.dices.length; index++) {
-                        this.sendDice[index] = { value: 0, rotation: new ƒ.Vector3(0, 0, 0), translation: new ƒ.Vector3(0, 0, 0) };
-                        this.sendDice[index].value = DiceCup.dices[index].value;
-                        this.sendDice[index].translation = DiceCup.usedTranslations[index];
-                        this.sendDice[index].rotation = DiceCup.dices[index].arenaRotation;
-                    }
-                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
-                }
-                DiceCup.usedTranslations = [];
-            }
+            this.clearUsedArrays();
         }
         async rotateDice(_node) {
             let randomRotate = Math.random() * 360;
@@ -275,6 +275,8 @@ var DiceCup;
                 default:
                     break;
             }
+            DiceCup.usedRotations.push(_node.mtxLocal.rotation);
+            this.clearUsedArrays();
         }
         async scaleDices(_colorRGBA) {
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
@@ -304,6 +306,13 @@ var DiceCup;
             // let collisionNode: ƒ.Node = _event.cmpRigidbody.node;
             let soundArray = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
             DiceCup.playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
+        }
+        async clearUsedArrays() {
+            if (DiceCup.usedTranslations.length == DiceCup.dices.length && DiceCup.usedRotations.length == DiceCup.dices.length) {
+                await this.sendDiceToServer();
+                DiceCup.usedTranslations = [];
+                DiceCup.usedRotations = [];
+            }
         }
     }
     DiceCup.Dice = Dice;
@@ -1330,6 +1339,7 @@ var DiceCup;
     DiceCup.roundCounter = 1;
     DiceCup.maxRounds = 12;
     DiceCup.usedTranslations = [];
+    DiceCup.usedRotations = [];
     let bots = [];
     function createBots(_bots) {
         bots = [];

@@ -52,6 +52,7 @@ declare namespace DiceCup {
         constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message);
         roll(): number;
         private initDice;
+        private sendDiceToServer;
         validateDices(): Promise<void>;
         transparentDices(): void;
         private rollDices;
@@ -61,6 +62,7 @@ declare namespace DiceCup {
         private colorDices;
         private convertDiceColor;
         private handleDiceCollision;
+        private clearUsedArrays;
     }
 }
 declare namespace DiceCup {
@@ -238,6 +240,7 @@ declare namespace DiceCup {
     let gameSettings_sp: SinglePlayerSettingsDao;
     let gameSettings_mp: MultiPlayerSettingsDao;
     let usedTranslations: ƒ.Vector3[];
+    let usedRotations: ƒ.Vector3[];
     function loadDiceColors(): Promise<RgbaDao[]>;
     function rollDices(_message?: FudgeNet.Message): Promise<void>;
     function getRolledDices(_message: FudgeNet.Message): Promise<void>;

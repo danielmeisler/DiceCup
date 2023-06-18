@@ -10,6 +10,8 @@ namespace DiceCup {
     export let gameSettings_sp: SinglePlayerSettingsDao;
     export let gameSettings_mp: MultiPlayerSettingsDao;
     export let usedTranslations: ƒ.Vector3[] = [];
+    export let usedRotations: ƒ.Vector3[] = [];
+    
     let bots: Bot[] = [];
 
     function createBots(_bots: BotDao[]): Bot[] {

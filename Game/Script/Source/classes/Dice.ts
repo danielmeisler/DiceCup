@@ -68,6 +68,18 @@ namespace DiceCup{
 
             this.diceNode.addChild(this.diceInst);
         }
+
+        private async sendDiceToServer(): Promise<void> {
+            if (playerMode == PlayerMode.multiplayer && host == true) {
+                for (let index = 0; index < dices.length; index++) {
+                    this.sendDice[index] = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)}
+                    this.sendDice[index].value = dices[index].value;
+                    this.sendDice[index].translation = usedTranslations[index];
+                    this.sendDice[index].rotation = usedRotations[index];
+                }
+                client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
+            }
+        }
         
         public async validateDices(): Promise<void> {
             let diceColors: RgbaDao[] = await loadDiceColors();
@@ -102,7 +114,7 @@ namespace DiceCup{
                     break;
                 case 3:
                     console.log(this.getDice);
-                    await this.rotateDice(this.diceInst);
+                    this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     this.diceInst.mtxLocal.translation = this.getDice.translation;
                     break;
                 default:
@@ -120,18 +132,7 @@ namespace DiceCup{
                 _node.mtxLocal.translation = tempVec;
 
             }
-            if (usedTranslations.length == dices.length) {
-                if (playerMode == PlayerMode.multiplayer && host == true) {
-                    for (let index = 0; index < dices.length; index++) {
-                        this.sendDice[index] = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)}
-                        this.sendDice[index].value = dices[index].value;
-                        this.sendDice[index].translation = usedTranslations[index];
-                        this.sendDice[index].rotation = dices[index].arenaRotation;
-                    }
-                    client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
-                }
-                usedTranslations = [];
-            }
+            this.clearUsedArrays()
         }
 
         private async rotateDice(_node: ƒ.Node): Promise<void> {
@@ -163,6 +164,9 @@ namespace DiceCup{
                 default:
                     break;
             }
+
+            usedRotations.push(_node.mtxLocal.rotation);
+            this.clearUsedArrays();
         }
 
         private async scaleDices(_colorRGBA: RgbaDao): Promise<void> {
@@ -195,6 +199,14 @@ namespace DiceCup{
             // let collisionNode: ƒ.Node = _event.cmpRigidbody.node;
             let soundArray: string[] = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
             playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
+        }
+
+        private async clearUsedArrays(): Promise<void> {
+            if (usedTranslations.length == dices.length && usedRotations.length == dices.length) {
+                await this.sendDiceToServer();
+                usedTranslations = [];
+                usedRotations = [];
+            }
         }
     }
 
