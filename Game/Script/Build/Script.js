@@ -215,8 +215,9 @@ var DiceCup;
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 3:
+                    console.log(this.getDice);
+                    await this.rotateDice(this.diceInst);
                     this.diceInst.mtxLocal.translation = this.getDice.translation;
-                    this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     break;
                 default:
                     break;
@@ -237,9 +238,10 @@ var DiceCup;
                     for (let index = 0; index < DiceCup.dices.length; index++) {
                         this.sendDice[index] = { value: 0, rotation: new ƒ.Vector3(0, 0, 0), translation: new ƒ.Vector3(0, 0, 0) };
                         this.sendDice[index].value = DiceCup.dices[index].value;
-                        this.sendDice[index].translation = DiceCup.dices[index].arenaTranslation;
+                        this.sendDice[index].translation = DiceCup.usedTranslations[index];
                         this.sendDice[index].rotation = DiceCup.dices[index].arenaRotation;
                     }
+                    console.log(DiceCup.usedTranslations);
                     console.log(this.sendDice);
                     console.log(DiceCup.dices);
                     DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });

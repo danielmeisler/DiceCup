@@ -101,8 +101,9 @@ namespace DiceCup{
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 3:
+                    console.log(this.getDice);
+                    await this.rotateDice(this.diceInst);
                     this.diceInst.mtxLocal.translation = this.getDice.translation;
-                    this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     break;
                 default:
                     break;
@@ -124,9 +125,10 @@ namespace DiceCup{
                     for (let index = 0; index < dices.length; index++) {
                         this.sendDice[index] = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)}
                         this.sendDice[index].value = dices[index].value;
-                        this.sendDice[index].translation = dices[index].arenaTranslation;
+                        this.sendDice[index].translation = usedTranslations[index];
                         this.sendDice[index].rotation = dices[index].arenaRotation;
                     }
+                    console.log(usedTranslations)
                     console.log(this.sendDice);
                     console.log(dices);
                     client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
