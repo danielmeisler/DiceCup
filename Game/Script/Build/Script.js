@@ -241,9 +241,6 @@ var DiceCup;
                         this.sendDice[index].translation = DiceCup.usedTranslations[index];
                         this.sendDice[index].rotation = DiceCup.dices[index].arenaRotation;
                     }
-                    console.log(DiceCup.usedTranslations);
-                    console.log(this.sendDice);
-                    console.log(DiceCup.dices);
                     DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
                 }
                 DiceCup.usedTranslations = [];

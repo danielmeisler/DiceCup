@@ -128,9 +128,6 @@ namespace DiceCup{
                         this.sendDice[index].translation = usedTranslations[index];
                         this.sendDice[index].rotation = dices[index].arenaRotation;
                     }
-                    console.log(usedTranslations)
-                    console.log(this.sendDice);
-                    console.log(dices);
                     client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
                 }
                 usedTranslations = [];
