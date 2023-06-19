@@ -92,7 +92,7 @@ namespace DiceCup {
         playerContainer.appendChild(nameInputContainer);
 
         let playerName: HTMLInputElement = document.createElement("input");
-        playerName.id = "playerName_id_" + _id;
+        playerName.id = "multiplayerName_id_" + _id;
         playerName.classList.add("nameInputs");
         playerName.value = _name ?? _client;
         playerName.setAttribute("client_id", _client);

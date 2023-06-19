@@ -99,6 +99,7 @@ namespace DiceCup {
             localStorage.setItem("playernames",JSON.stringify(playerNames));
             localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
             playerMode = PlayerMode.singlelpayer;
+            inGame = true;
             changeGameState(GameState.init);
         }
     }

@@ -9,6 +9,7 @@ namespace DiceCup {
     export let client: ƒClient = new ƒClient();
     export let host: boolean = false;
     export let clientPlayerNumber: number;
+    export let numberOfPlayers: number;
 
     // keep a list of known clients, updated with information from the server
     let clientsKnown: { [id: string]: { name?: string; isHost?: boolean; } } = {};
@@ -171,7 +172,11 @@ namespace DiceCup {
               switchMenu(MenuPage.multiplayer);
               client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
             } else {
-              client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+              if (!inGame) {
+                client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+              } else {
+                changeGameSettings();
+              }
             }
             message.content.newHost == client.id ? host = true : host = false;
             break;
@@ -188,6 +193,7 @@ namespace DiceCup {
 
           case FudgeNet.COMMAND.START_GAME:
             playerMode = PlayerMode.multiplayer;
+            inGame = true;
             await setGameSettings(message);
             hideMenu();
             changeGameState(GameState.init);
@@ -201,6 +207,16 @@ namespace DiceCup {
             }
             break;
 
+          case FudgeNet.COMMAND.SEND_SCORE:
+            console.log(message);
+            console.log(message.content.value[0]);
+            console.log(message.content.index[0]);
+            console.log(message.content.name[0]);
+
+              for (let index = 0; index < message.content.value.length; index++) {
+                updateSummary(message.content.value[index], message.content.index[index], message.content.name[index]);
+              }
+            break;
           default:
             break;
         }
@@ -219,6 +235,11 @@ namespace DiceCup {
           clientPlayerNumber = index;
         }
       }
+      numberOfPlayers = gameSettings_mp.playerNames.filter(name => name != "").length;
+    }
+
+    function changeGameSettings(): void {
+      numberOfPlayers--;
     }
 
     function checkUsername(message: FudgeNet.Message): void {

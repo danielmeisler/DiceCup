@@ -158,6 +158,10 @@ export class FudgeServer {
         this.sendDice(message);
         break;
 
+      case FudgeNet.COMMAND.SEND_SCORE:
+        this.sendScore(message);
+        break;
+
       case FudgeNet.COMMAND.CREATE_MESH:
         this.createMesh(message);
         break;
@@ -274,7 +278,7 @@ export class FudgeServer {
         delete this.rooms[_room];
       } else {
         let messageRoom: FudgeNet.Message = {
-          idRoom: _room, command: FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false }
+          idRoom: _room, command: FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false, newHost: Object.keys(this.rooms[_room].clients)[0]}
         };
         this.broadcast(messageRoom);
       }
@@ -425,11 +429,33 @@ export class FudgeServer {
   }
 
   private sendDice(_message: FudgeNet.Message): void {
-    console.log(_message)
     let message: FudgeNet.Message = {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_DICE, content: {dice: _message.content!.dice }
     };
     this.broadcast(message);
+  }
+
+  private values: number[] = [];
+  private indices: number[] = [];
+  private names: string[] = [];
+
+  private sendScore(_message: FudgeNet.Message): void {
+    console.log(_message);
+    let clients: Clients = this.rooms[_message.idRoom!].clients;
+
+    this.values.push(_message.content!.value);
+    this.indices.push(_message.content!.index);
+    this.names.push(_message.content!.name);
+
+    if (this.values.length == Object.keys(clients).length) {
+      let message: FudgeNet.Message = {
+        idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_SCORE, content: { value: this.values, index: this.indices, name: this.names}
+      };
+      this.broadcast(message);
+      this.values = [];
+      this.indices = [];
+      this.names = [];
+    }
   }
 
   private async createMesh(_message: FudgeNet.Message): Promise<void> {

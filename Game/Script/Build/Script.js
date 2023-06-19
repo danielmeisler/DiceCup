@@ -40,6 +40,7 @@ var DiceCup;
 (function (DiceCup) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
+    DiceCup.inGame = false;
     document.addEventListener("interactiveViewportStarted", start);
     function start(_event) {
         DiceCup.viewport = _event.detail;
@@ -643,7 +644,6 @@ var DiceCup;
         }
         calculateColor(_color) {
             let value = 0;
-            console.log(this.player, DiceCup.dices[value]);
             this.player && this.dices[value].transparentDices();
             for (let i = 0; i < this.dices.length; i++) {
                 if (this.dices[i].color === _color) {
@@ -736,9 +736,12 @@ var DiceCup;
         visibility("hidden");
     }
     DiceCup.initCategories = initCategories;
-    function showCategories() {
+    async function showCategories() {
         if (DiceCup.freePlayerCategories.length == 1) {
-            addPointsToButton(DiceCup.freePlayerCategories[0]);
+            await addPointsToButton(DiceCup.freePlayerCategories[0]);
+            if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+                DiceCup.changeGameState(DiceCup.GameState.validating);
+            }
         }
         else {
             document.getElementById("categoryContainer_id").classList.add("categoriesShown");
@@ -771,13 +774,12 @@ var DiceCup;
     function visibility(_visibility) {
         document.getElementById("categoryBackground_id").style.visibility = _visibility;
     }
-    function handleCategory(_event) {
+    async function handleCategory(_event) {
         let index = parseInt(_event.currentTarget.getAttribute("index"));
         document.getElementById("categoryImage_i_" + _event.currentTarget.getAttribute("index")).classList.add("categoryImagesTransparent");
         this.disabled = true;
         let tempArray = DiceCup.freePlayerCategories.filter((element) => element !== index);
         DiceCup.freePlayerCategories = tempArray;
-        console.log(DiceCup.freePlayerCategories);
         hideCategories();
         DiceCup.waitForPlayerValidation();
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index); });
@@ -791,12 +793,7 @@ var DiceCup;
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         DiceCup.hideHudCategory(_index);
-        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
-            DiceCup.updateSummary(value, _index, DiceCup.gameSettings_sp.playerName);
-        }
-        else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
-            DiceCup.updateSummary(value, _index, DiceCup.gameSettings_mp.playerNames[DiceCup.clientPlayerNumber]);
-        }
+        DiceCup.handleSummary(value, _index);
         if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
             DiceCup.changeGameState(DiceCup.GameState.validating);
         }
@@ -938,11 +935,20 @@ var DiceCup;
     function updatePlacements() {
         let name = [];
         let points = [];
-        let bots = DiceCup.gameSettings_sp.bot;
+        let bots = [];
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            bots = DiceCup.gameSettings_sp.bot;
+            console.log(DiceCup.playerNames);
+        }
+        else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            DiceCup.playerNames = DiceCup.playerNames.filter(name => name != "");
+            console.log(DiceCup.playerNames);
+        }
         for (let i = 0; i < DiceCup.playerNames.length; i++) {
             name[i] = document.querySelector("#summaryText_id_" + DiceCup.playerNames[i] + "_playerNames").innerHTML;
             points[i] = parseInt(document.querySelector("#summaryText_id_" + DiceCup.playerNames[i] + "_sum").innerHTML);
         }
+        console.log(name);
         for (let i = 0; i < points.length; i++) {
             for (let j = 0; j < points.length; j++) {
                 if (points[j] < points[j + 1]) {
@@ -969,9 +975,17 @@ var DiceCup;
             document.getElementById("playerName_id_" + i).innerHTML = name[i];
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
-            if (name[i] == DiceCup.gameSettings_sp.playerName) {
-                place = i + 1;
-                document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.placement.part_1 + " " + place + ". " + DiceCup.language.game.placements.placement.part_2;
+            if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+                if (name[i] == DiceCup.gameSettings_sp.playerName) {
+                    place = i + 1;
+                    document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.placement.part_1 + " " + place + ". " + DiceCup.language.game.placements.placement.part_2;
+                }
+            }
+            else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+                if (name[i] == DiceCup.gameSettings_mp.playerNames[DiceCup.clientPlayerNumber]) {
+                    place = i + 1;
+                    document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.placement.part_1 + " " + place + ". " + DiceCup.language.game.placements.placement.part_2;
+                }
             }
         }
     }
@@ -1005,12 +1019,17 @@ var DiceCup;
     var ƒ = FudgeCore;
     DiceCup.playerNames = [];
     DiceCup.lastPoints = [];
+    let summaryTime = 5;
+    let timerID;
     async function initSummary() {
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
         background.id = "summaryBackground_id";
-        background.addEventListener("click", hideSummary);
         document.getElementById("DiceCup").appendChild(background);
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            background.addEventListener("click", hideSummary);
+            background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
+        }
         let container = document.createElement("div");
         container.classList.add("summaryHidden");
         container.id = "summaryContainer_id";
@@ -1056,6 +1075,9 @@ var DiceCup;
                 }
             }
         }
+        let timer = document.createElement("div");
+        timer.id = "summaryTimer_id";
+        document.getElementById("summaryGrid_id_0_0").appendChild(timer);
         visibility("hidden");
     }
     DiceCup.initSummary = initSummary;
@@ -1092,10 +1114,28 @@ var DiceCup;
         console.log(content);
         return content;
     }
-    function updateSummary(_points, _category, _name) {
-        if (DiceCup.lastPoints.length - DiceCup.playerNames.length >= 0) {
-            document.getElementById(DiceCup.lastPoints[DiceCup.lastPoints.length - DiceCup.playerNames.length]).classList.remove("summaryHighlight");
+    function handleSummary(_value, _index) {
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            updateSummary(_value, _index, DiceCup.gameSettings_sp.playerName);
         }
+        else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SEND_SCORE, route: FudgeNet.ROUTE.SERVER, content: { value: _value, index: _index, name: DiceCup.gameSettings_mp.playerNames[DiceCup.clientPlayerNumber] } });
+        }
+    }
+    DiceCup.handleSummary = handleSummary;
+    function updateSummary(_points, _category, _name) {
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            if (DiceCup.lastPoints.length - DiceCup.playerNames.length >= 0) {
+                document.getElementById(DiceCup.lastPoints[DiceCup.lastPoints.length - DiceCup.playerNames.length]).classList.remove("summaryHighlight");
+            }
+        }
+        else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            if (DiceCup.lastPoints.length - DiceCup.numberOfPlayers >= 0) {
+                document.getElementById(DiceCup.lastPoints[DiceCup.lastPoints.length - DiceCup.numberOfPlayers]).classList.remove("summaryHighlight");
+            }
+        }
+        console.log(_points);
+        console.log(_name);
         document.getElementById("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]).innerHTML = _points.toString();
         document.getElementById("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]).classList.add("summaryHighlight");
         DiceCup.lastPoints.push("summaryText_id_" + _name + "_" + DiceCup.ScoringCategory[_category]);
@@ -1114,7 +1154,10 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
-        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
+        new DiceCup.TimerBar("summaryTimer_id", summaryTime);
+        timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
+            hideSummary();
+        });
     }
     DiceCup.showSummary = showSummary;
     function hideSummary() {
@@ -1185,7 +1228,6 @@ var DiceCup;
         else {
             DiceCup.playSFX("Audio|2023-05-17T13:53:59.644Z|31971");
             counter = 0;
-            DiceCup.roundCounter++;
             document.getElementById("startTransitionContainer").remove();
             DiceCup.changeGameState(DiceCup.GameState.counting);
         }
@@ -1197,13 +1239,20 @@ var DiceCup;
     function validateRound() {
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         DiceCup.nextTrack(1);
+        console.log("HIER BIN ICH");
+        DiceCup.roundCounter++;
         if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
-            document.getElementById("waitAlert_id").remove();
+            if (document.getElementById("waitAlert_id")) {
+                document.getElementById("waitAlert_id").remove();
+            }
         }
+        console.log(DiceCup.roundCounter + "/" + DiceCup.maxRounds);
         if (DiceCup.roundCounter <= DiceCup.maxRounds) {
+            console.log("Next round");
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
         }
         else {
+            console.log("Placements");
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.placement); });
         }
     }
@@ -1336,7 +1385,7 @@ var DiceCup;
     DiceCup.firstRound = true;
     DiceCup.highscore = 0;
     DiceCup.roundTimer = 3;
-    DiceCup.roundCounter = 1;
+    DiceCup.roundCounter = 12;
     DiceCup.maxRounds = 12;
     DiceCup.usedTranslations = [];
     DiceCup.usedRotations = [];
@@ -1420,11 +1469,13 @@ var DiceCup;
 var DiceCup;
 (function (DiceCup) {
     function gameOver(_return) {
+        DiceCup.inGame = false;
         DiceCup.lastPoints = [];
         DiceCup.firstRound = true;
         DiceCup.roundCounter = 1;
         DiceCup.playerNames = [];
         DiceCup.gameSettings_sp = { playerName: "", bot: [] };
+        DiceCup.gameSettings_mp = { playerNames: [] };
         DiceCup.freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         DiceCup.changeViewportState(DiceCup.ViewportState.menu);
         let graph = DiceCup.viewport.getBranch();
@@ -1887,7 +1938,7 @@ var DiceCup;
         nameInputContainer.classList.add("nameInputContainer");
         playerContainer.appendChild(nameInputContainer);
         let playerName = document.createElement("input");
-        playerName.id = "playerName_id_" + _id;
+        playerName.id = "multiplayerName_id_" + _id;
         playerName.classList.add("nameInputs");
         playerName.value = _name ?? _client;
         playerName.setAttribute("client_id", _client);
@@ -2490,6 +2541,7 @@ var DiceCup;
             localStorage.setItem("playernames", JSON.stringify(playerNames));
             localStorage.setItem("difficulties", JSON.stringify(botSettings.map(elem => elem.difficulty)));
             DiceCup.playerMode = DiceCup.PlayerMode.singlelpayer;
+            DiceCup.inGame = true;
             DiceCup.changeGameState(DiceCup.GameState.init);
         }
     }
@@ -2893,7 +2945,12 @@ var DiceCup;
                         DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                     }
                     else {
-                        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+                        if (!DiceCup.inGame) {
+                            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+                        }
+                        else {
+                            changeGameSettings();
+                        }
                     }
                     message.content.newHost == DiceCup.client.id ? DiceCup.host = true : DiceCup.host = false;
                     break;
@@ -2907,6 +2964,7 @@ var DiceCup;
                     break;
                 case FudgeNet.COMMAND.START_GAME:
                     DiceCup.playerMode = DiceCup.PlayerMode.multiplayer;
+                    DiceCup.inGame = true;
                     await setGameSettings(message);
                     DiceCup.hideMenu();
                     DiceCup.changeGameState(DiceCup.GameState.init);
@@ -2916,6 +2974,15 @@ var DiceCup;
                     // dices = message.content.dice;
                     if (!DiceCup.host) {
                         DiceCup.getRolledDices(message);
+                    }
+                    break;
+                case FudgeNet.COMMAND.SEND_SCORE:
+                    console.log(message);
+                    console.log(message.content.value[0]);
+                    console.log(message.content.index[0]);
+                    console.log(message.content.name[0]);
+                    for (let index = 0; index < message.content.value.length; index++) {
+                        DiceCup.updateSummary(message.content.value[index], message.content.index[index], message.content.name[index]);
                     }
                     break;
                 default:
@@ -2935,6 +3002,10 @@ var DiceCup;
                 DiceCup.clientPlayerNumber = index;
             }
         }
+        DiceCup.numberOfPlayers = DiceCup.gameSettings_mp.playerNames.filter(name => name != "").length;
+    }
+    function changeGameSettings() {
+        DiceCup.numberOfPlayers--;
     }
     function checkUsername(message) {
         let alertMessageLobby = document.getElementById("multiplayerLobbyAlert_id");

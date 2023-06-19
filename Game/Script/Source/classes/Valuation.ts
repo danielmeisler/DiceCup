@@ -80,7 +80,6 @@ namespace DiceCup {
 
         private calculateColor(_color: DiceColor): number {
             let value: number = 0;
-            console.log(this.player, dices[value]);
             this.player && this.dices[value].transparentDices();
 
             for (let i = 0; i < this.dices.length; i++) {

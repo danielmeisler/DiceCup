@@ -54,6 +54,7 @@ exports.FudgeNet = void 0;
         /** sent to the server to start the game with the connected clients */
         COMMAND["START_GAME"] = "startGame";
         COMMAND["SEND_DICE"] = "sendDice";
+        COMMAND["SEND_SCORE"] = "sendScore";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**
      * Defines the route the message should take.

@@ -62,9 +62,12 @@ namespace DiceCup {
         visibility("hidden");
     }
 
-    export function showCategories() {
+    export async function showCategories() {
         if (freePlayerCategories.length == 1) {
-            addPointsToButton(freePlayerCategories[0]);
+            await addPointsToButton(freePlayerCategories[0]);
+            if (playerMode == PlayerMode.multiplayer) {
+                changeGameState(GameState.validating);
+            }
         } else {
             document.getElementById("categoryContainer_id").classList.add("categoriesShown");
             document.getElementById("categoryContainer_id").classList.remove("categoriesHidden");
@@ -97,13 +100,12 @@ namespace DiceCup {
         document.getElementById("categoryBackground_id").style.visibility = _visibility;
     }
 
-    function handleCategory(_event: Event): void {
+    async function handleCategory(_event: Event): Promise<void> {
         let index: number = parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index"));
         document.getElementById("categoryImage_i_" + (<HTMLDivElement>_event.currentTarget).getAttribute("index")).classList.add("categoryImagesTransparent");
         this.disabled = true;
         let tempArray: number[] = freePlayerCategories.filter((element) => element !== index);
         freePlayerCategories = tempArray;
-        console.log(freePlayerCategories);
         hideCategories();
         waitForPlayerValidation();
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index) });
@@ -118,15 +120,13 @@ namespace DiceCup {
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         hideHudCategory(_index);
-        if (playerMode == PlayerMode.singlelpayer) {
-            updateSummary(value, _index, gameSettings_sp.playerName);
-        } else if (playerMode == PlayerMode.multiplayer) {
-            updateSummary(value, _index, gameSettings_mp.playerNames[clientPlayerNumber]);
-        }
+
+        handleSummary(value, _index);
 
         if (playerMode == PlayerMode.singlelpayer) {
             changeGameState(GameState.validating);
         }
 
     }
+    
 }

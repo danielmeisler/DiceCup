@@ -2,11 +2,13 @@ namespace DiceCup {
     import ƒ = FudgeCore;
 
     export function gameOver(_return: MenuPage): void {
+        inGame = false;
         lastPoints = [];
         firstRound = true;
         roundCounter = 1;
         playerNames = [];
         gameSettings_sp = {playerName: "", bot: []};
+        gameSettings_mp = {playerNames: []};
         freePlayerCategories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         changeViewportState(ViewportState.menu);
 

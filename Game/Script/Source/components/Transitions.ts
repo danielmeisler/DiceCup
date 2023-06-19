@@ -55,7 +55,6 @@ namespace DiceCup {
         } else {
             playSFX("Audio|2023-05-17T13:53:59.644Z|31971");
             counter = 0;
-            roundCounter++;
             document.getElementById("startTransitionContainer").remove();
             changeGameState(GameState.counting);
         }

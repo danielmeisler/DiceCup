@@ -3,14 +3,20 @@ namespace DiceCup {
 
     export let playerNames: string[] = [];
     export let lastPoints: string[] = [];
+    let summaryTime: number = 5;
+    let timerID: number;
 
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
 
         let background: HTMLDivElement = document.createElement("div");
         background.id = "summaryBackground_id";
-        background.addEventListener("click", hideSummary);
         document.getElementById("DiceCup").appendChild(background);
+
+        if (playerMode == PlayerMode.singlelpayer) {
+            background.addEventListener("click", hideSummary);
+            background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
+        }
 
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("summaryHidden");
@@ -62,6 +68,10 @@ namespace DiceCup {
             }
         }
 
+        let timer: HTMLDivElement = document.createElement("div");
+        timer.id = "summaryTimer_id";
+        document.getElementById("summaryGrid_id_0_0").appendChild(timer);
+
         visibility("hidden");
     }
 
@@ -100,11 +110,27 @@ namespace DiceCup {
         return content;
     }
 
+    export function handleSummary(_value: number, _index: number): void{
+        if (playerMode == PlayerMode.singlelpayer) {
+            updateSummary(_value, _index, gameSettings_sp.playerName);
+        } else if (playerMode == PlayerMode.multiplayer) {
+            client.dispatch({ command: FudgeNet.COMMAND.SEND_SCORE, route: FudgeNet.ROUTE.SERVER, content: { value: _value, index: _index, name: gameSettings_mp.playerNames[clientPlayerNumber]} });
+        }
+    }
+
     export function updateSummary(_points: number, _category: number, _name: string): void {
-        if (lastPoints.length - playerNames.length >= 0) {
-            document.getElementById(lastPoints[lastPoints.length - playerNames.length]).classList.remove("summaryHighlight");
+        if (playerMode == PlayerMode.singlelpayer) {
+            if (lastPoints.length - playerNames.length >= 0) {
+                document.getElementById(lastPoints[lastPoints.length - playerNames.length]).classList.remove("summaryHighlight");
+            }
+        } else if (playerMode == PlayerMode.multiplayer) {
+            if (lastPoints.length - numberOfPlayers >= 0) {
+                document.getElementById(lastPoints[lastPoints.length - numberOfPlayers]).classList.remove("summaryHighlight");
+            }
         }
 
+        console.log(_points);
+        console.log(_name);
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).classList.add("summaryHighlight");
         lastPoints.push("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
@@ -124,7 +150,10 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
-        // ƒ.Time.game.setTimer(5000, 1, () => { hideSummary() });
+        new TimerBar("summaryTimer_id", summaryTime);
+        timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
+                hideSummary();
+        });
     }
 
     export function hideSummary() {

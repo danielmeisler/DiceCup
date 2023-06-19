@@ -104,12 +104,20 @@ namespace DiceCup {
     export function updatePlacements(): void {
         let name: string[] = [];
         let points: number[] = [];
-        let bots: BotDao[] = gameSettings_sp.bot;
+        let bots: BotDao[] = [];
+        if (playerMode == PlayerMode.singlelpayer) {
+            bots = gameSettings_sp.bot;
+            console.log(playerNames);
+        } else if (playerMode == PlayerMode.multiplayer) {
+            playerNames = playerNames.filter(name => name != "");
+            console.log(playerNames);
+        }
 
         for (let i = 0; i < playerNames.length; i++) {
             name[i] = document.querySelector("#summaryText_id_" + playerNames[i] + "_playerNames").innerHTML;
             points[i] = parseInt(document.querySelector("#summaryText_id_" + playerNames[i] + "_sum").innerHTML);
         }
+        console.log(name);
 
         for (let i = 0; i < points.length; i++) {
             for (let j = 0; j < points.length; j++) {
@@ -139,10 +147,18 @@ namespace DiceCup {
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
 
-            if (name[i] == gameSettings_sp.playerName) {
-                place = i + 1;
-                document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
+            if (playerMode == PlayerMode.singlelpayer) {
+                if (name[i] == gameSettings_sp.playerName) {
+                    place = i + 1;
+                    document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
+                }
+            } else if (playerMode == PlayerMode.multiplayer) {
+                if (name[i] == gameSettings_mp.playerNames[clientPlayerNumber]) {
+                    place = i + 1;
+                    document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
+                }
             }
+
         }
     }
 

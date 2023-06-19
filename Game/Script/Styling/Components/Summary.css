@@ -77,6 +77,16 @@ div[id^="summaryGrid"] {
     z-index: 2;
 }
 
+#summaryText_id__playerNames {
+    position: absolute;
+}
+
+#summaryTimer_id {
+    width: 100%;
+    height: 100%;
+    background: var(--category_header);
+}
+
 #summaryGrid_id_1_1 {
     border-top: var(--summary_border);
 }

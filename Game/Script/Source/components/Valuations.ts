@@ -4,14 +4,21 @@ namespace DiceCup {
     export function validateRound(): void {
         playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         nextTrack(1);
+        console.log("HIER BIN ICH");
+        roundCounter++;
 
         if (playerMode == PlayerMode.multiplayer) {
-            document.getElementById("waitAlert_id").remove();
-        }
-
+            if (document.getElementById("waitAlert_id")) {
+                document.getElementById("waitAlert_id").remove();
+            }
+        }        
+        
+        console.log(roundCounter + "/" + maxRounds);
         if (roundCounter <= maxRounds) {
+            console.log("Next round");
             ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
         } else {
+            console.log("Placements");
             ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.placement) });
         }
 

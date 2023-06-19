@@ -14,6 +14,7 @@ declare namespace DiceCup {
     let viewportState: ViewportState;
     let currentLanguage: Languages;
     let playerMode: PlayerMode;
+    let inGame: boolean;
 }
 declare namespace DiceCup {
     class Bot {
@@ -120,7 +121,7 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     let freePlayerCategories: number[];
     function initCategories(): Promise<void>;
-    function showCategories(): void;
+    function showCategories(): Promise<void>;
     function hideCategories(): void;
 }
 declare namespace DiceCup {
@@ -138,6 +139,7 @@ declare namespace DiceCup {
     let playerNames: string[];
     let lastPoints: string[];
     function initSummary(): Promise<void>;
+    function handleSummary(_value: number, _index: number): void;
     function updateSummary(_points: number, _category: number, _name: string): void;
     function showSummary(): void;
     function hideSummary(): void;
@@ -463,6 +465,7 @@ declare namespace DiceCup {
     let client: ƒClient;
     let host: boolean;
     let clientPlayerNumber: number;
+    let numberOfPlayers: number;
     function startClient(): Promise<void>;
     function hndEvent(_event: Event): Promise<void>;
 }

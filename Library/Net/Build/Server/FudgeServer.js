@@ -118,6 +118,9 @@ class FudgeServer {
             case Message_js_1.FudgeNet.COMMAND.SEND_DICE:
                 this.sendDice(message);
                 break;
+            case Message_js_1.FudgeNet.COMMAND.SEND_SCORE:
+                this.sendScore(message);
+                break;
             case Message_js_1.FudgeNet.COMMAND.CREATE_MESH:
                 this.createMesh(message);
                 break;
@@ -227,7 +230,7 @@ class FudgeServer {
             }
             else {
                 let messageRoom = {
-                    idRoom: _room, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false }
+                    idRoom: _room, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false, newHost: Object.keys(this.rooms[_room].clients)[0] }
                 };
                 this.broadcast(messageRoom);
             }
@@ -350,11 +353,29 @@ class FudgeServer {
         this.broadcast(message);
     }
     sendDice(_message) {
-        console.log(_message);
         let message = {
             idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.SEND_DICE, content: { dice: _message.content.dice }
         };
         this.broadcast(message);
+    }
+    values = [];
+    indices = [];
+    names = [];
+    sendScore(_message) {
+        console.log(_message);
+        let clients = this.rooms[_message.idRoom].clients;
+        this.values.push(_message.content.value);
+        this.indices.push(_message.content.index);
+        this.names.push(_message.content.name);
+        if (this.values.length == Object.keys(clients).length) {
+            let message = {
+                idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.SEND_SCORE, content: { value: this.values, index: this.indices, name: this.names }
+            };
+            this.broadcast(message);
+            this.values = [];
+            this.indices = [];
+            this.names = [];
+        }
     }
     async createMesh(_message) {
         let room = this.rooms[_message.idRoom];
