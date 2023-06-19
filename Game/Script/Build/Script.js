@@ -1895,11 +1895,7 @@ var DiceCup;
             DiceCup.playSFX(DiceCup.buttonClick);
             startButton.style.visibility = "hidden";
             settingsButton.style.visibility = "hidden";
-            // createGameSettings();
         });
-        // for (let i = 0; i < 6; i++) {
-        //     createWaitPortrait(i);
-        // }
     }
     DiceCup.multiplayerMenu = multiplayerMenu;
     function createPlayerPortrait(_client, _name, _id) {

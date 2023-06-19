@@ -41,12 +41,7 @@ namespace DiceCup {
             playSFX(buttonClick);
             startButton.style.visibility = "hidden";
             settingsButton.style.visibility = "hidden";
-            // createGameSettings();
         });
-
-        // for (let i = 0; i < 6; i++) {
-        //     createWaitPortrait(i);
-        // }
     }
 
     function createPlayerPortrait(_client?: string, _name?: string, _id?: number): void {
