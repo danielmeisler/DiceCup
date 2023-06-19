@@ -1955,8 +1955,6 @@ var DiceCup;
                 nameInputButton.style.display = "none";
                 playerName.classList.remove("nameInputsFocused");
                 DiceCup.username = playerName.value;
-                console.log("SADASDF");
-                // collectNames();
             });
             document.getElementById("nameInputButton_id").addEventListener("click", DiceCup.hndEvent);
             playerName.readOnly = false;

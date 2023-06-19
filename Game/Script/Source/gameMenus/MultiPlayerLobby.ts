@@ -111,16 +111,11 @@ namespace DiceCup {
                 nameInputButton.style.display = "none";
                 playerName.classList.remove("nameInputsFocused");
                 username = playerName.value;
-                console.log("SADASDF")
-                // collectNames();
             });
 
             document.getElementById("nameInputButton_id").addEventListener("click", hndEvent);
-
             playerName.readOnly = false;
             playerName.addEventListener("click", () => {nameInputButton.style.display = "block"; playerName.classList.add("nameInputsFocused");});
-            
-
         } else {
             youIndicator.style.visibility = "hidden";
         }
