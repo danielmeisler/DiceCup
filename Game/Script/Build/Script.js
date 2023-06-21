@@ -1241,11 +1241,6 @@ var DiceCup;
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         DiceCup.nextTrack(1);
         DiceCup.roundCounter++;
-        // if (playerMode == PlayerMode.multiplayer) {
-        //     if (document.getElementById("waitAlert_id")) {
-        //         document.getElementById("waitAlert_id").remove();
-        //     }
-        // }        
         if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
         }

@@ -6,12 +6,6 @@ namespace DiceCup {
         nextTrack(1);
         roundCounter++;
 
-        // if (playerMode == PlayerMode.multiplayer) {
-        //     if (document.getElementById("waitAlert_id")) {
-        //         document.getElementById("waitAlert_id").remove();
-        //     }
-        // }        
-
         if (playerMode == PlayerMode.singlelpayer) {
             ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
         }
