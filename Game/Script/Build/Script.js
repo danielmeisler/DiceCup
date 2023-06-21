@@ -1173,7 +1173,12 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden"); });
-        DiceCup.changeGameState(DiceCup.GameState.ready);
+        if (DiceCup.roundCounter <= DiceCup.maxRounds) {
+            DiceCup.changeGameState(DiceCup.GameState.ready);
+        }
+        else {
+            ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.placement); });
+        }
     }
     DiceCup.hideSummary = hideSummary;
     function visibility(_visibility) {
@@ -1253,15 +1258,7 @@ var DiceCup;
                 document.getElementById("waitAlert_id").remove();
             }
         }
-        console.log(DiceCup.roundCounter + "/" + DiceCup.maxRounds);
-        if (DiceCup.roundCounter <= DiceCup.maxRounds) {
-            console.log("Next round");
-            ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
-        }
-        else {
-            console.log("Placements");
-            ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.placement); });
-        }
+        ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
     }
     DiceCup.validateRound = validateRound;
     function waitForPlayerValidation() {

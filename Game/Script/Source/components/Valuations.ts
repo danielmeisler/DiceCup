@@ -12,17 +12,8 @@ namespace DiceCup {
                 document.getElementById("waitAlert_id").remove();
             }
         }        
-        
-        console.log(roundCounter + "/" + maxRounds);
-        if (roundCounter <= maxRounds) {
-            console.log("Next round");
-            ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
-        } else {
-            console.log("Placements");
-            ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.placement) });
-        }
 
-
+        ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.summary) });
     }
 
     export function waitForPlayerValidation(): void {
