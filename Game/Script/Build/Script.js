@@ -738,7 +738,7 @@ var DiceCup;
     DiceCup.initCategories = initCategories;
     async function showCategories() {
         if (DiceCup.freePlayerCategories.length == 1) {
-            await addPointsToButton(DiceCup.freePlayerCategories[0]);
+            addPointsToButton(DiceCup.freePlayerCategories[0]);
             if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
                 DiceCup.changeGameState(DiceCup.GameState.validating);
             }

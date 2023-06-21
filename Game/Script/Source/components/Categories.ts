@@ -64,7 +64,7 @@ namespace DiceCup {
 
     export async function showCategories() {
         if (freePlayerCategories.length == 1) {
-            await addPointsToButton(freePlayerCategories[0]);
+            addPointsToButton(freePlayerCategories[0]);
             if (playerMode == PlayerMode.multiplayer) {
                 changeGameState(GameState.validating);
             }
