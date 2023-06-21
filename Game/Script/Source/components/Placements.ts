@@ -40,7 +40,13 @@ namespace DiceCup {
 
         replayButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            gameOver(MenuPage.singleplayer);
+            if (playerMode == PlayerMode.singlelpayer) {
+                gameOver(MenuPage.singleplayer);
+            } else if (playerMode == PlayerMode.multiplayer) {
+                client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: currentRoom } });
+                gameOver(MenuPage.multiplayerLobby);
+            }
+
         });
 
         let placementPhrase: HTMLSpanElement = document.createElement("span");
@@ -59,6 +65,7 @@ namespace DiceCup {
 
         nextButton.addEventListener("click", () => {
             playSFX(buttonClick);
+            clientLeavesRoom();
             gameOver(MenuPage.main);
         });
 

@@ -466,8 +466,10 @@ declare namespace DiceCup {
     let host: boolean;
     let clientPlayerNumber: number;
     let numberOfPlayers: number;
+    let currentRoom: string;
     function startClient(): Promise<void>;
     function hndEvent(_event: Event): Promise<void>;
+    function clientLeavesRoom(): void;
 }
 declare namespace DiceCup {
     let language: LanguageDao;

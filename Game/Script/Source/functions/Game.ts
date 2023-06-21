@@ -5,7 +5,7 @@ namespace DiceCup {
     export let firstRound: boolean = true;
     export let highscore: number = 0;
     export let roundTimer: number = 3;
-    export let roundCounter: number = 12;
+    export let roundCounter: number = 1;
     export let maxRounds: number = 12;
     export let gameSettings_sp: SinglePlayerSettingsDao;
     export let gameSettings_mp: MultiPlayerSettingsDao;

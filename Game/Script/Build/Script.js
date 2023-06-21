@@ -882,7 +882,13 @@ var DiceCup;
         replayButton.appendChild(replayButtonImage);
         replayButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            DiceCup.gameOver(DiceCup.MenuPage.singleplayer);
+            if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+                DiceCup.gameOver(DiceCup.MenuPage.singleplayer);
+            }
+            else if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: DiceCup.currentRoom } });
+                DiceCup.gameOver(DiceCup.MenuPage.multiplayerLobby);
+            }
         });
         let placementPhrase = document.createElement("span");
         placementPhrase.id = "placementsPhrase_id";
@@ -897,6 +903,7 @@ var DiceCup;
         nextButton.appendChild(nextButtonImage);
         nextButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
+            DiceCup.clientLeavesRoom();
             DiceCup.gameOver(DiceCup.MenuPage.main);
         });
         visibility("hidden");
@@ -1385,7 +1392,7 @@ var DiceCup;
     DiceCup.firstRound = true;
     DiceCup.highscore = 0;
     DiceCup.roundTimer = 3;
-    DiceCup.roundCounter = 12;
+    DiceCup.roundCounter = 1;
     DiceCup.maxRounds = 12;
     DiceCup.usedTranslations = [];
     DiceCup.usedRotations = [];
@@ -2788,10 +2795,10 @@ var DiceCup;
     var ƒ = FudgeCore;
     var ƒClient = FudgeNet.FudgeClient;
     ƒ.Debug.setFilter(ƒ.DebugConsole, ƒ.DEBUG_FILTER.ALL);
-    let idRoom = "Lobby";
     // Create a FudgeClient for this browser tab
     DiceCup.client = new ƒClient();
     DiceCup.host = false;
+    DiceCup.currentRoom = "Lobby";
     // keep a list of known clients, updated with information from the server
     let clientsKnown = {};
     window.addEventListener("load", connectToServer);
@@ -2804,6 +2811,9 @@ var DiceCup;
         document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndEvent);
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndEvent);
         document.getElementById("multiplayerLobbyStartButton_id").addEventListener("click", hndEvent);
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            document.getElementById("replayButton_id").addEventListener("click", hndEvent);
+        }
         // document.querySelector("button#rename").addEventListener("click", rename);
         // document.querySelector("button#mesh").addEventListener("click", structurePeers);
         // document.querySelector("button#host").addEventListener("click", structurePeers);
@@ -2827,21 +2837,22 @@ var DiceCup;
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerJoinButton_id":
-                idRoom = DiceCup.focusedIdRoom;
+                DiceCup.currentRoom = DiceCup.focusedIdRoom;
                 console.log("Enter", DiceCup.focusedIdRoom);
-                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false } });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: DiceCup.currentRoom, host: false } });
                 break;
             case "multiplayerLobbyMenuReturnButton_id":
+                DiceCup.currentRoom = "Lobby";
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: DiceCup.client.id, host: DiceCup.host } });
                 break;
             case "nameInputButton_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ASSIGN_USERNAME, route: FudgeNet.ROUTE.SERVER, content: { username: DiceCup.username } });
                 break;
             case "passwordJoinButton_id":
-                idRoom = DiceCup.focusedIdRoom;
+                DiceCup.currentRoom = DiceCup.focusedIdRoom;
                 console.log("Enter", DiceCup.focusedIdRoom);
                 let password = document.getElementById("passwordInput_id").value;
-                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: idRoom, host: false, password: password } });
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: DiceCup.currentRoom, host: false, password: password } });
                 break;
             case "multiplayerLobbyStartButton_id":
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.START_GAME, route: FudgeNet.ROUTE.SERVER });
@@ -2887,7 +2898,7 @@ var DiceCup;
                     // proposeName();
                     // updateTable();
                     // on each server heartbeat, dispatch this clients heartbeat
-                    DiceCup.client.dispatch({ idRoom: idRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
+                    DiceCup.client.dispatch({ idRoom: DiceCup.currentRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
                     // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                     break;
                 case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
@@ -2987,6 +2998,10 @@ var DiceCup;
         else
             console.table(_event);
     }
+    function clientLeavesRoom() {
+        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: DiceCup.client.id, host: DiceCup.host } });
+    }
+    DiceCup.clientLeavesRoom = clientLeavesRoom;
     async function setGameSettings(message) {
         DiceCup.gameSettings_mp = { playerNames: ["", "", "", "", "", ""] };
         let playerNumber = Object.keys(message.content.clients).length;
