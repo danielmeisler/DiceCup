@@ -7,6 +7,7 @@ export interface Client {
     id: string;
     name?: string;
     socket?: WebSocket;
+    ready: boolean;
     peers: string[];
 }
 interface Room {
@@ -72,6 +73,7 @@ export declare class FudgeServer {
     private renameRoom;
     private getRoomList;
     private getRoomInfo;
+    private clientReady;
     private startGame;
     private sendDice;
     private values;

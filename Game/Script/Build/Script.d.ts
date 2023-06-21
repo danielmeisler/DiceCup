@@ -247,6 +247,7 @@ declare namespace DiceCup {
     function rollDices(_message?: FudgeNet.Message): Promise<void>;
     function getRolledDices(_message: FudgeNet.Message): Promise<void>;
     function round(): Promise<void>;
+    function lastRound(): void;
     function update(_event: Event): void;
 }
 declare namespace DiceCup {
@@ -338,6 +339,8 @@ declare namespace DiceCup {
                     title: string;
                     waiting: string;
                     start_button: string;
+                    ready_button: string;
+                    not_ready_button: string;
                 };
             };
             help: {
@@ -389,6 +392,8 @@ declare namespace DiceCup {
                 waiting: string;
                 offline: string;
                 wrong_password: string;
+                not_ready: string;
+                min_player: string;
             };
         };
         game: {

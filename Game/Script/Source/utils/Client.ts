@@ -24,7 +24,6 @@ namespace DiceCup {
       document.getElementById("multiplayerJoinButton_id").addEventListener("click", hndEvent);
       document.getElementById("multiplayerCreateButton_id").addEventListener("click", hndEvent);
       document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", hndEvent);
-      document.getElementById("multiplayerLobbyStartButton_id").addEventListener("click", hndEvent);
 
       if (playerMode == PlayerMode.multiplayer) {
         document.getElementById("replayButton_id").addEventListener("click", hndEvent);
@@ -71,7 +70,6 @@ namespace DiceCup {
           let password: string = (<HTMLInputElement>document.getElementById("passwordInput_id")).value;
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_ENTER, route: FudgeNet.ROUTE.SERVER, content: { room: currentRoom, host: false, password: password} });
         break;
-
 
         case "multiplayerLobbyStartButton_id": 
           client.dispatch({ command: FudgeNet.COMMAND.START_GAME, route: FudgeNet.ROUTE.SERVER });
@@ -191,6 +189,10 @@ namespace DiceCup {
             if (message.content.room != "Lobby") {
               joinRoom(message);
             }
+            break;
+
+          case FudgeNet.COMMAND.CLIENT_READY:
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: currentRoom } });
             break;
 
           case FudgeNet.COMMAND.ASSIGN_USERNAME:

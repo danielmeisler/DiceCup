@@ -46,6 +46,9 @@ namespace FudgeNet {
     ROOM_INFO = "roomInfo",
     /** sent to the server to set or remove a room password */
     ROOM_PASSWORD = "roomPassword",
+
+    CLIENT_READY = "clientReady",
+
     /** sent to the server to set a temporary username besides the client id and check if its available */
     ASSIGN_USERNAME = "assignUsername",
 

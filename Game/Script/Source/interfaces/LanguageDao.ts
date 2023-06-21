@@ -26,6 +26,8 @@ namespace DiceCup {
                     title: string;
                     waiting: string;
                     start_button: string;
+                    ready_button: string;
+                    not_ready_button: string;
                 }
             },
             help: {
@@ -79,6 +81,8 @@ namespace DiceCup {
                 waiting: string;
                 offline: string;
                 wrong_password: string;
+                not_ready: string;
+                min_player: string;
             }
         },
         game: {

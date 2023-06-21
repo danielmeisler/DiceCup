@@ -128,9 +128,7 @@ namespace DiceCup {
                 document.getElementById(lastPoints[lastPoints.length - numberOfPlayers]).classList.remove("summaryHighlight");
             }
         }
-
-        console.log(_points);
-        console.log(_name);
+        
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).classList.add("summaryHighlight");
         lastPoints.push("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
@@ -162,11 +160,7 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
-        if (roundCounter <= maxRounds) {
-            changeGameState(GameState.ready);
-        } else {
-            ƒ.Time.game.setTimer(2000, 1, () => { changeGameState(GameState.placement) });
-        }
+        lastRound();
     }
 
     function visibility(_visibility: string) {

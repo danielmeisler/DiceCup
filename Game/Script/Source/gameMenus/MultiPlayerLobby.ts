@@ -1,5 +1,5 @@
 namespace DiceCup {
-
+    import ƒ = FudgeCore;
     export let username: string = "";
 
     export function multiplayerMenu(): void {
@@ -7,8 +7,6 @@ namespace DiceCup {
 
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             playSFX(buttonClick);
-            startButton.style.visibility = "hidden";
-            settingsButton.style.visibility = "hidden";
         });
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
@@ -16,7 +14,6 @@ namespace DiceCup {
         settingsButton.classList.add("gameMenuButtons");
         settingsButton.classList.add("diceCupButtons");
         document.getElementById("multiplayerLobbyMenuLeftButtonArea_id").appendChild(settingsButton);
-        settingsButton.style.visibility = "hidden";
 
         let settingsIcon: HTMLImageElement = document.createElement("img");
         settingsIcon.classList.add("diceCupButtonsIcons");
@@ -25,26 +22,50 @@ namespace DiceCup {
 
         settingsButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            switchMenu(MenuPage.multiplayerGameOptions);
-        });
-
-        let startButton: HTMLButtonElement = document.createElement("button");
-        startButton.id = "multiplayerLobbyStartButton_id";
-        startButton.classList.add("gameMenuStartButtons");
-        startButton.classList.add("gameMenuButtons");
-        startButton.classList.add("diceCupButtons");
-        startButton.innerHTML = language.menu.multiplayer.lobby.start_button;
-        document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
-        startButton.style.visibility = "hidden";
-
-        startButton.addEventListener("click", () => {
-            playSFX(buttonClick);
-            startButton.style.visibility = "hidden";
-            settingsButton.style.visibility = "hidden";
+            console.log(host)
+            host && switchMenu(MenuPage.multiplayerGameOptions);
         });
     }
 
-    function createPlayerPortrait(_client?: string, _name?: string, _id?: number): void {
+    function createLobbyButtons(_host: boolean, _ready?: boolean): void {
+        if (_host) {
+            while (document.getElementById("multiplayerLobbyMenuRightButtonArea_id").childNodes.length > 0) {
+                document.getElementById("multiplayerLobbyMenuRightButtonArea_id").removeChild(document.getElementById("multiplayerLobbyMenuRightButtonArea_id").lastChild);
+            }
+
+            let startButton: HTMLButtonElement = document.createElement("button");
+            startButton.id = "multiplayerLobbyStartButton_id";
+            startButton.classList.add("gameMenuStartButtons");
+            startButton.classList.add("gameMenuButtons");
+            startButton.classList.add("diceCupButtons");
+            startButton.innerHTML = language.menu.multiplayer.lobby.start_button;
+            document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(startButton);
+
+
+            
+        } else {
+            while (document.getElementById("multiplayerLobbyMenuRightButtonArea_id").childNodes.length > 0) {
+                document.getElementById("multiplayerLobbyMenuRightButtonArea_id").removeChild(document.getElementById("multiplayerLobbyMenuRightButtonArea_id").lastChild);
+            }
+
+            let readyButton: HTMLButtonElement = document.createElement("button");
+            readyButton.id = "multiplayerLobbyReadyButton_id";
+            readyButton.classList.add("gameMenuStartButtons");
+            readyButton.classList.add("gameMenuButtons");
+            readyButton.classList.add("diceCupButtons");
+            document.getElementById("multiplayerLobbyMenuRightButtonArea_id").appendChild(readyButton);
+
+            document.getElementById("multiplayerLobbyReadyButton_id").addEventListener("click", () => {
+                playSFX(buttonClick);
+                console.log("clicke");
+                client.dispatch({ command: FudgeNet.COMMAND.CLIENT_READY, route: FudgeNet.ROUTE.SERVER });
+            });
+
+            _ready ? document.getElementById("multiplayerLobbyReadyButton_id").innerHTML = language.menu.multiplayer.lobby.ready_button : document.getElementById("multiplayerLobbyReadyButton_id").innerHTML = language.menu.multiplayer.lobby.not_ready_button;
+        }
+    }
+
+    function createPlayerPortrait(_client?: string, _name?: string, _id?: number, _ready?: boolean): void {
         let playerContainer: HTMLDivElement = document.createElement("div");
         playerContainer.id = "playerContainer_id_" + _id;
         playerContainer.classList.add("lobbyContainer");
@@ -93,6 +114,12 @@ namespace DiceCup {
         playerName.setAttribute("client_id", _client);
         playerName.readOnly = true;
         nameInputContainer.appendChild(playerName);
+
+        if (!_ready) {
+            playerDiv.classList.add("lobbyPortrait_inactive");
+            playerIcons.classList.add("lobbyPortraitIcons_inactive");
+            playerName.classList.add("lobbyPortrait_inactive");
+        }
 
         if (playerName.getAttribute("client_id") == client.id) {
             let nameInputButton: HTMLButtonElement = document.createElement("button");
@@ -143,6 +170,28 @@ namespace DiceCup {
         waitContainer.appendChild(playerName);
     }
 
+    function checkLobbyStart(_everybodyReady: boolean, lobbySize: number): void {
+        let startButton: HTMLButtonElement = <HTMLButtonElement>document.getElementById("multiplayerLobbyStartButton_id");
+        if (!_everybodyReady) {
+            startButton.addEventListener("click", () => {
+                document.getElementById("multiplayerLobbyAlert_id").innerHTML = language.menu.alerts.not_ready;
+                ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("multiplayerLobbyAlert_id").innerHTML = ""});
+                playSFX(buttonClick);
+            });
+        } else if (lobbySize < 2) {
+            startButton.addEventListener("click", () => {
+                document.getElementById("multiplayerLobbyAlert_id").innerHTML = language.menu.alerts.min_player;
+                ƒ.Time.game.setTimer(1000, 1, () => {document.getElementById("multiplayerLobbyAlert_id").innerHTML = ""});
+                playSFX(buttonClick);
+            });
+        } else {
+            startButton.addEventListener("click", () => {
+                playSFX(buttonClick);
+            });
+            startButton.addEventListener("click", hndEvent);
+        }
+    }
+
     export function joinRoom(_message: FudgeNet.Message): void {
         switchMenu(MenuPage.multiplayerLobby);
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
@@ -151,8 +200,10 @@ namespace DiceCup {
             document.getElementById("multiplayerLobbyMenuContent_id").removeChild(document.getElementById("multiplayerLobbyMenuContent_id").lastChild);
         }
 
+        createLobbyButtons(host, (<any>Object.values(_message.content.clients)[Object.keys(_message.content.clients).indexOf(client.id)]).ready);
+
         for (let i = 0; i < Object.keys(_message.content.clients).length; i++) {
-            createPlayerPortrait(Object.keys(_message.content.clients)[i].toString(), (<any>Object.values(_message.content.clients)[i]).name, i);
+            createPlayerPortrait(Object.keys(_message.content.clients)[i].toString(), (<any>Object.values(_message.content.clients)[i]).name, i, (<any>Object.values(_message.content.clients)[i]).ready);
             if (host == false) {
                 document.getElementById("playerRemove_id_" + i).style.display = "none";
             }
@@ -161,9 +212,14 @@ namespace DiceCup {
             createWaitPortrait(j);
         }
 
-        if (host) {
-            document.getElementById("multiplayerLobbyStartButton_id").style.visibility = "visible";
-            document.getElementById("multiplayerLobbySettingsButton_id").style.visibility = "visible";
+        let allReady: boolean[] = [];
+        for (let index = 0; index < (<any>Object.values(_message.content.clients)).length; index++) {
+            allReady[index] = (<any>Object.values(_message.content.clients)[index]).ready;
         }
+
+        if (host) {
+            checkLobbyStart(allReady.every(x => x), Object.keys(_message.content.clients).length);
+        }
+
     }
 }

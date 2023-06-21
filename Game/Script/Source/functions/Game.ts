@@ -58,7 +58,7 @@ namespace DiceCup {
     }
 
     export async function round(): Promise<void> {
-        // console.clear();
+        console.clear();
         nextTrack(2);
 
         if (playerMode == PlayerMode.singlelpayer) {
@@ -74,6 +74,14 @@ namespace DiceCup {
 
         new TimerBar("hudTimer_id", roundTimer);
         ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing) });
+    }
+
+    export function lastRound(): void {
+        if (roundCounter <= maxRounds) {
+            changeGameState(GameState.ready);
+        } else {
+            changeGameState(GameState.placement);
+        }
     }
 
     export function update(_event: Event): void {

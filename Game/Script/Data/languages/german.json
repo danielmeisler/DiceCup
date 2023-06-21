@@ -24,7 +24,9 @@
             "lobby": {
                 "title": "Spiel",
                 "waiting": "Warten",
-                "start_button": "Start"
+                "start_button": "Start",
+                "ready_button": "Bereit!",
+                "not_ready_button": "Bereit?"
             }
         },
         "help": {
@@ -77,7 +79,9 @@
             "room_unavailable": "Raum ungültig!",
             "waiting": "Auf Spieler warten",
             "offline": "Du bist offline!",
-            "wrong_password": "Falsches Passwort"
+            "wrong_password": "Falsches Passwort",
+            "not_ready": "Spieler nicht bereit.",
+            "min_player": "Mindestens zwei Spieler."
         }
     },
     "game": {
