@@ -754,11 +754,7 @@ var DiceCup;
             timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
                 document.getElementById("categoryButtons_id_" + DiceCup.freePlayerCategories[Math.floor(Math.random() * DiceCup.freePlayerCategories.length)]).click();
                 timerOver = true;
-            });
-            ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
-                if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
-                    DiceCup.changeGameState(DiceCup.GameState.validating);
-                }
+                DiceCup.changeGameState(DiceCup.GameState.validating);
             });
         }
     }
@@ -1244,14 +1240,15 @@ var DiceCup;
     function validateRound() {
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         DiceCup.nextTrack(1);
-        console.log("HIER BIN ICH");
         DiceCup.roundCounter++;
-        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
-            if (document.getElementById("waitAlert_id")) {
-                document.getElementById("waitAlert_id").remove();
-            }
+        // if (playerMode == PlayerMode.multiplayer) {
+        //     if (document.getElementById("waitAlert_id")) {
+        //         document.getElementById("waitAlert_id").remove();
+        //     }
+        // }        
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
         }
-        ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
     }
     DiceCup.validateRound = validateRound;
     function waitForPlayerValidation() {
@@ -1467,6 +1464,7 @@ var DiceCup;
             default:
                 break;
         }
+        console.log(ƒ.Time.game.getTimers());
         DiceCup.viewport.draw();
         ƒ.AudioManager.default.update();
     }
@@ -3032,13 +3030,13 @@ var DiceCup;
                     }
                     break;
                 case FudgeNet.COMMAND.SEND_SCORE:
-                    console.log(message);
-                    console.log(message.content.value[0]);
-                    console.log(message.content.index[0]);
-                    console.log(message.content.name[0]);
                     for (let index = 0; index < message.content.value.length; index++) {
                         DiceCup.updateSummary(message.content.value[index], message.content.index[index], message.content.name[index]);
                     }
+                    if (document.getElementById("waitAlert_id")) {
+                        document.getElementById("waitAlert_id").remove();
+                    }
+                    DiceCup.changeGameState(DiceCup.GameState.summary);
                     break;
                 default:
                     break;

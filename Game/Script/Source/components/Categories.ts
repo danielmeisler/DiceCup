@@ -79,11 +79,7 @@ namespace DiceCup {
             timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => { 
                 document.getElementById("categoryButtons_id_" + freePlayerCategories[Math.floor(Math.random() * freePlayerCategories.length)]).click();
                 timerOver = true;
-            });
-            ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => { 
-                if (playerMode == PlayerMode.multiplayer) {
-                    changeGameState(GameState.validating);
-                }
+                changeGameState(GameState.validating);
             });
         }
     }

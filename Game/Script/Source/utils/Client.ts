@@ -216,14 +216,13 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.SEND_SCORE:
-            console.log(message);
-            console.log(message.content.value[0]);
-            console.log(message.content.index[0]);
-            console.log(message.content.name[0]);
-
               for (let index = 0; index < message.content.value.length; index++) {
                 updateSummary(message.content.value[index], message.content.index[index], message.content.name[index]);
               }
+              if (document.getElementById("waitAlert_id")) {
+                document.getElementById("waitAlert_id").remove();
+              }
+              changeGameState(GameState.summary);
             break;
           default:
             break;

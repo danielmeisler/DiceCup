@@ -104,7 +104,7 @@ namespace DiceCup {
                 break;
         }
 
-
+        console.log(ƒ.Time.game.getTimers());
 
         viewport.draw();
         ƒ.AudioManager.default.update();
