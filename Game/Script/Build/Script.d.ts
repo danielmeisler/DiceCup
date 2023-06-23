@@ -83,6 +83,7 @@ declare namespace DiceCup {
         private diceCupProbabilities;
         private sumProbabilities;
         private sortProbabilities;
+        private balanceCategories;
         private binomial;
     }
 }
@@ -248,7 +249,6 @@ declare namespace DiceCup {
     function getRolledDices(_message: FudgeNet.Message): Promise<void>;
     function round(): Promise<void>;
     function lastRound(): void;
-    function update(_event: Event): void;
 }
 declare namespace DiceCup {
     function gameOver(_return: MenuPage): void;
@@ -264,6 +264,9 @@ declare namespace DiceCup {
     function changeVolume(_mode: number): void;
     function playSFX(_sfx: string): void;
     function muteAll(): void;
+}
+declare namespace DiceCup {
+    function update(_event: Event): void;
 }
 declare namespace DiceCup {
     function changeViewportState(_viewportState: ViewportState): Promise<void>;

@@ -116,30 +116,8 @@ namespace DiceCup {
             return this.diceCupProbs.get(key);
         }
 
-        private sortProbabilities(): void {
-            this.allProbs.map(function(elem) {
-                elem.value = elem.points;
-
-                if (elem.category == ScoringCategory.fours) {
-                    elem.value -= 8;
-                } else if (elem.category == ScoringCategory.fives) {
-                    elem.value -= 10;
-                } else if (elem.category == ScoringCategory.sixes) {
-                    elem.value -= 12;
-                } else if (elem.category == ScoringCategory.doubles) {
-                    elem.value /= 5;
-                } else if (elem.category == ScoringCategory.oneToThree) {
-                    elem.value -= 12;
-                } else if (elem.category == ScoringCategory.diceCup) {
-                    elem.value -= 42;
-                } else {
-                    elem.value -= 7;
-                }
-                
-                if (elem.points == 0) {
-                    elem.value = Number.NEGATIVE_INFINITY;
-                }
-            })
+        private async sortProbabilities(): Promise<void> {
+            await this.balanceCategories();
             this.allProbs.sort( function(a,b){
                 if(a.value < b.value) return 1;
                 if(a.value > b.value) return -1;
@@ -149,6 +127,46 @@ namespace DiceCup {
                 }
                 return 0;
             });
+        }
+
+        private async balanceCategories(): Promise<void> {
+            let expectedValue_Fours: number = 8;
+            let expectedValue_Fives: number = 10;
+            let expectedValue_Sixes: number = 12;
+            let expectedValue_Color: number = 7;
+            let expectedValue_Doubles: number = 10;
+            let expectedValue_OneToThree: number = 18;
+            let expectedValue_DiceCup: number = 42;
+
+            let multiplier_Fours: number = 0.6;
+            let multiplier_Fives: number = 0.6;
+            let multiplier_Sixes: number = 0.6;
+            let multiplier_Color: number = 1;
+            let multiplier_Doubles: number = 0.3;
+            let multiplier_OneToThree: number = 0.4;
+            let multiplier_DiceCup: number = 0.1;
+            
+            this.allProbs.map(function(elem) {
+                if (elem.category == ScoringCategory.fours) {
+                    elem.value = (multiplier_Fours * expectedValue_Fours) + (elem.points - expectedValue_Fours);
+                } else if (elem.category == ScoringCategory.fives) {
+                    elem.value = (multiplier_Fives * expectedValue_Fives) + (elem.points - expectedValue_Fives);
+                } else if (elem.category == ScoringCategory.sixes) {
+                    elem.value = (multiplier_Sixes * expectedValue_Sixes) + (elem.points - expectedValue_Sixes);
+                } else if (elem.category == ScoringCategory.doubles) {
+                    elem.value = (multiplier_Doubles * expectedValue_Doubles) + (elem.points - expectedValue_Doubles);
+                } else if (elem.category == ScoringCategory.oneToThree) {
+                    elem.value = (multiplier_OneToThree * expectedValue_OneToThree) + (elem.points - expectedValue_OneToThree);
+                } else if (elem.category == ScoringCategory.diceCup) {
+                    elem.value = (multiplier_DiceCup * expectedValue_DiceCup) + (elem.points - expectedValue_DiceCup);
+                } else {
+                    elem.value = (multiplier_Color * expectedValue_Color) + (elem.points - expectedValue_Color);
+                }
+                
+                if (elem.points == 0) {
+                    elem.value = Number.NEGATIVE_INFINITY;
+                }
+            })
         }
 
         private binomial(n: number, k: number): number {

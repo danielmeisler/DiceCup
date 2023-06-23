@@ -424,34 +424,8 @@ var DiceCup;
                 this.diceCupProbs.set(key, calculate(nDices, sum, dice_numbers));
             return this.diceCupProbs.get(key);
         }
-        sortProbabilities() {
-            this.allProbs.map(function (elem) {
-                elem.value = elem.points;
-                if (elem.category == DiceCup.ScoringCategory.fours) {
-                    elem.value -= 8;
-                }
-                else if (elem.category == DiceCup.ScoringCategory.fives) {
-                    elem.value -= 10;
-                }
-                else if (elem.category == DiceCup.ScoringCategory.sixes) {
-                    elem.value -= 12;
-                }
-                else if (elem.category == DiceCup.ScoringCategory.doubles) {
-                    elem.value /= 5;
-                }
-                else if (elem.category == DiceCup.ScoringCategory.oneToThree) {
-                    elem.value -= 12;
-                }
-                else if (elem.category == DiceCup.ScoringCategory.diceCup) {
-                    elem.value -= 42;
-                }
-                else {
-                    elem.value -= 7;
-                }
-                if (elem.points == 0) {
-                    elem.value = Number.NEGATIVE_INFINITY;
-                }
-            });
+        async sortProbabilities() {
+            await this.balanceCategories();
             this.allProbs.sort(function (a, b) {
                 if (a.value < b.value)
                     return 1;
@@ -464,6 +438,48 @@ var DiceCup;
                         return -1;
                 }
                 return 0;
+            });
+        }
+        async balanceCategories() {
+            let expectedValue_Fours = 8;
+            let expectedValue_Fives = 10;
+            let expectedValue_Sixes = 12;
+            let expectedValue_Color = 7;
+            let expectedValue_Doubles = 10;
+            let expectedValue_OneToThree = 18;
+            let expectedValue_DiceCup = 42;
+            let multiplier_Fours = 0.6;
+            let multiplier_Fives = 0.6;
+            let multiplier_Sixes = 0.6;
+            let multiplier_Color = 1;
+            let multiplier_Doubles = 0.3;
+            let multiplier_OneToThree = 0.4;
+            let multiplier_DiceCup = 0.1;
+            this.allProbs.map(function (elem) {
+                if (elem.category == DiceCup.ScoringCategory.fours) {
+                    elem.value = (multiplier_Fours * expectedValue_Fours) + (elem.points - expectedValue_Fours);
+                }
+                else if (elem.category == DiceCup.ScoringCategory.fives) {
+                    elem.value = (multiplier_Fives * expectedValue_Fives) + (elem.points - expectedValue_Fives);
+                }
+                else if (elem.category == DiceCup.ScoringCategory.sixes) {
+                    elem.value = (multiplier_Sixes * expectedValue_Sixes) + (elem.points - expectedValue_Sixes);
+                }
+                else if (elem.category == DiceCup.ScoringCategory.doubles) {
+                    elem.value = (multiplier_Doubles * expectedValue_Doubles) + (elem.points - expectedValue_Doubles);
+                }
+                else if (elem.category == DiceCup.ScoringCategory.oneToThree) {
+                    elem.value = (multiplier_OneToThree * expectedValue_OneToThree) + (elem.points - expectedValue_OneToThree);
+                }
+                else if (elem.category == DiceCup.ScoringCategory.diceCup) {
+                    elem.value = (multiplier_DiceCup * expectedValue_DiceCup) + (elem.points - expectedValue_DiceCup);
+                }
+                else {
+                    elem.value = (multiplier_Color * expectedValue_Color) + (elem.points - expectedValue_Color);
+                }
+                if (elem.points == 0) {
+                    elem.value = Number.NEGATIVE_INFINITY;
+                }
             });
         }
         binomial(n, k) {
@@ -1442,28 +1458,6 @@ var DiceCup;
         }
     }
     DiceCup.lastRound = lastRound;
-    function update(_event) {
-        ƒ.Physics.simulate(); // if physics is included and used
-        if (document.hidden) {
-            DiceCup.muteAll();
-        }
-        else {
-            DiceCup.changeVolume(0);
-            DiceCup.changeVolume(1);
-        }
-        switch (DiceCup.viewportState) {
-            case DiceCup.ViewportState.menu:
-                DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.75, 0));
-                DiceCup.viewport.camera.mtxPivot.translateX(0.02);
-                break;
-            default:
-                break;
-        }
-        console.log(ƒ.Time.game.getTimers());
-        DiceCup.viewport.draw();
-        ƒ.AudioManager.default.update();
-    }
-    DiceCup.update = update;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -1588,6 +1582,31 @@ var DiceCup;
     function setSFXVolume(_volume) {
         return _volume /= 100;
     }
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    var ƒ = FudgeCore;
+    function update(_event) {
+        ƒ.Physics.simulate(); // if physics is included and used
+        if (document.hidden) {
+            DiceCup.muteAll();
+        }
+        else {
+            DiceCup.changeVolume(0);
+            DiceCup.changeVolume(1);
+        }
+        switch (DiceCup.viewportState) {
+            case DiceCup.ViewportState.menu:
+                DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.75, 0));
+                DiceCup.viewport.camera.mtxPivot.translateX(0.02);
+                break;
+            default:
+                break;
+        }
+        DiceCup.viewport.draw();
+        ƒ.AudioManager.default.update();
+    }
+    DiceCup.update = update;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
