@@ -13,10 +13,9 @@ namespace DiceCup {
         background.id = "summaryBackground_id";
         document.getElementById("DiceCup").appendChild(background);
 
-        // if (playerMode == PlayerMode.singlelpayer) {
-        //     background.addEventListener("click", hideSummary);
-        //     background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
-        // }
+        if (playerMode == PlayerMode.singlelpayer) {
+            background.addEventListener("click", hideSummary);
+        }
 
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("summaryHidden");
@@ -71,6 +70,9 @@ namespace DiceCup {
         let timer: HTMLDivElement = document.createElement("div");
         timer.id = "summaryTimer_id";
         document.getElementById("summaryGrid_id_0_0").appendChild(timer);
+        if (playerMode == PlayerMode.singlelpayer) {
+            document.getElementById("summaryTimer_id").style.visibility = "hidden";
+        }
 
         visibility("hidden");
     }
@@ -146,10 +148,13 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
-        new TimerBar("summaryTimer_id", summaryTime);
-        ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
-                hideSummary();
-        });
+
+        if (playerMode == PlayerMode.multiplayer) {
+            new TimerBar("summaryTimer_id", summaryTime);
+            ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
+                    hideSummary();
+            });
+        }
     }
 
     export function hideSummary() {

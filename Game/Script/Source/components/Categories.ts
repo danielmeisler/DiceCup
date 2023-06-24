@@ -74,13 +74,17 @@ namespace DiceCup {
             document.getElementById("categoryBackground_id").classList.add("emptyBackground");
             document.getElementById("categoryBackground_id").style.zIndex = "10";
             ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
-            new TimerBar("categoryTimer_id", categoryTime);
-            timerOver = false;
-            timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => { 
-                document.getElementById("categoryButtons_id_" + freePlayerCategories[Math.floor(Math.random() * freePlayerCategories.length)]).click();
-                timerOver = true;
-                changeGameState(GameState.validating);
-            });
+
+            if (playerMode == PlayerMode.multiplayer) {
+                new TimerBar("categoryTimer_id", categoryTime);
+                timerOver = false;
+                timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => { 
+                    document.getElementById("categoryButtons_id_" + freePlayerCategories[Math.floor(Math.random() * freePlayerCategories.length)]).click();
+                    timerOver = true;
+                    changeGameState(GameState.validating);
+                });
+            }
+
         }
     }
 

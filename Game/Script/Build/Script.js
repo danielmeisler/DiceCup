@@ -754,13 +754,15 @@ var DiceCup;
             document.getElementById("categoryBackground_id").classList.add("emptyBackground");
             document.getElementById("categoryBackground_id").style.zIndex = "10";
             ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
-            new DiceCup.TimerBar("categoryTimer_id", categoryTime);
-            timerOver = false;
-            timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
-                document.getElementById("categoryButtons_id_" + DiceCup.freePlayerCategories[Math.floor(Math.random() * DiceCup.freePlayerCategories.length)]).click();
-                timerOver = true;
-                DiceCup.changeGameState(DiceCup.GameState.validating);
-            });
+            if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+                new DiceCup.TimerBar("categoryTimer_id", categoryTime);
+                timerOver = false;
+                timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
+                    document.getElementById("categoryButtons_id_" + DiceCup.freePlayerCategories[Math.floor(Math.random() * DiceCup.freePlayerCategories.length)]).click();
+                    timerOver = true;
+                    DiceCup.changeGameState(DiceCup.GameState.validating);
+                });
+            }
         }
     }
     DiceCup.showCategories = showCategories;
@@ -1032,10 +1034,9 @@ var DiceCup;
         let background = document.createElement("div");
         background.id = "summaryBackground_id";
         document.getElementById("DiceCup").appendChild(background);
-        // if (playerMode == PlayerMode.singlelpayer) {
-        //     background.addEventListener("click", hideSummary);
-        //     background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
-        // }
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            background.addEventListener("click", hideSummary);
+        }
         let container = document.createElement("div");
         container.classList.add("summaryHidden");
         container.id = "summaryContainer_id";
@@ -1084,6 +1085,9 @@ var DiceCup;
         let timer = document.createElement("div");
         timer.id = "summaryTimer_id";
         document.getElementById("summaryGrid_id_0_0").appendChild(timer);
+        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            document.getElementById("summaryTimer_id").style.visibility = "hidden";
+        }
         visibility("hidden");
     }
     DiceCup.initSummary = initSummary;
@@ -1156,10 +1160,12 @@ var DiceCup;
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
-        new DiceCup.TimerBar("summaryTimer_id", summaryTime);
-        ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
-            hideSummary();
-        });
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            new DiceCup.TimerBar("summaryTimer_id", summaryTime);
+            ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
+                hideSummary();
+            });
+        }
     }
     DiceCup.showSummary = showSummary;
     function hideSummary() {
