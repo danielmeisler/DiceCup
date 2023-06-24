@@ -4,7 +4,7 @@ namespace DiceCup {
     export let playerNames: string[] = [];
     export let lastPoints: string[] = [];
     let summaryTime: number = 5;
-    let timerID: number;
+    // let timerID: number;
 
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
@@ -13,10 +13,10 @@ namespace DiceCup {
         background.id = "summaryBackground_id";
         document.getElementById("DiceCup").appendChild(background);
 
-        if (playerMode == PlayerMode.singlelpayer) {
-            background.addEventListener("click", hideSummary);
-            background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
-        }
+        // if (playerMode == PlayerMode.singlelpayer) {
+        //     background.addEventListener("click", hideSummary);
+        //     background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
+        // }
 
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("summaryHidden");
@@ -106,7 +106,6 @@ namespace DiceCup {
                 content[row][0] = playerNames[row - 1];
             }
         }
-        console.log(content);
         return content;
     }
 
@@ -139,7 +138,6 @@ namespace DiceCup {
         }
         _points += temp;
         document.getElementById("summaryText_id_" + _name + "_sum").innerHTML = _points.toString();
-        console.log("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
     }
 
     export function showSummary() { 
@@ -149,7 +147,7 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
         new TimerBar("summaryTimer_id", summaryTime);
-        timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
+        ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
                 hideSummary();
         });
     }

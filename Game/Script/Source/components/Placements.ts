@@ -114,17 +114,14 @@ namespace DiceCup {
         let bots: BotDao[] = [];
         if (playerMode == PlayerMode.singlelpayer) {
             bots = gameSettings_sp.bot;
-            console.log(playerNames);
         } else if (playerMode == PlayerMode.multiplayer) {
             playerNames = playerNames.filter(name => name != "");
-            console.log(playerNames);
         }
 
         for (let i = 0; i < playerNames.length; i++) {
             name[i] = document.querySelector("#summaryText_id_" + playerNames[i] + "_playerNames").innerHTML;
             points[i] = parseInt(document.querySelector("#summaryText_id_" + playerNames[i] + "_sum").innerHTML);
         }
-        console.log(name);
 
         for (let i = 0; i < points.length; i++) {
             for (let j = 0; j < points.length; j++) {

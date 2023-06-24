@@ -68,12 +68,6 @@ namespace DiceCup {
                 }
             }
 
-            if (_number2 && _number3){ 
-                console.log(_number + "" + _number2 + "" + _number3 + ": " + value);
-            } else {
-                console.log(_number + ": " + value);
-            }
-
             highscore += value;
             return value;
         }
@@ -90,7 +84,6 @@ namespace DiceCup {
             }
 
             highscore += value;
-            console.log(DiceColor[_color] + " color: " + value);
             return value;
         }
         
@@ -107,7 +100,6 @@ namespace DiceCup {
             }
 
             highscore += value;
-            console.log("Doubles: " + value);
             return value;
         }
 
@@ -121,7 +113,6 @@ namespace DiceCup {
             }
 
             highscore += value;
-            console.log("DiceCup: " + value);
             return value;
         }
 
