@@ -16,7 +16,6 @@ namespace DiceCup {
 
     function createBots(_bots: BotDao[]): Bot[] {
         bots = [];
-        console.log(dices);
         for (let index = 0; index < _bots.length; index++) {
             bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
         }

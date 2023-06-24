@@ -22,7 +22,6 @@ namespace DiceCup {
 
         settingsButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            console.log(host)
             host && switchMenu(MenuPage.multiplayerGameOptions);
         });
     }
@@ -57,7 +56,6 @@ namespace DiceCup {
 
             document.getElementById("multiplayerLobbyReadyButton_id").addEventListener("click", () => {
                 playSFX(buttonClick);
-                console.log("clicke");
                 client.dispatch({ command: FudgeNet.COMMAND.CLIENT_READY, route: FudgeNet.ROUTE.SERVER });
             });
 

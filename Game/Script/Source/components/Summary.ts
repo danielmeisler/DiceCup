@@ -106,7 +106,6 @@ namespace DiceCup {
                 content[row][0] = playerNames[row - 1];
             }
         }
-        console.log(content);
         return content;
     }
 
@@ -139,7 +138,6 @@ namespace DiceCup {
         }
         _points += temp;
         document.getElementById("summaryText_id_" + _name + "_sum").innerHTML = _points.toString();
-        console.log("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
     }
 
     export function showSummary() { 

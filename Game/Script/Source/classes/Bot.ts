@@ -30,7 +30,6 @@ namespace DiceCup {
             let tempArray: number[] = this.freeCategories.filter((element) => element !== pickedCategory);
             this.freeCategories = tempArray;
             this.categoryCounter--;
-            console.log(this.freeCategories);
         }
 
         private chooseDifficulty(_categories: ProbabilitiesDao[]): number {
