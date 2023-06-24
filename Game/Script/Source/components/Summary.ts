@@ -4,7 +4,7 @@ namespace DiceCup {
     export let playerNames: string[] = [];
     export let lastPoints: string[] = [];
     let summaryTime: number = 5;
-    let timerID: number;
+    // let timerID: number;
 
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
@@ -149,7 +149,7 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
         new TimerBar("summaryTimer_id", summaryTime);
-        timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
+        ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
                 hideSummary();
         });
     }

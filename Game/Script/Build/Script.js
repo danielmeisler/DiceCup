@@ -1040,7 +1040,7 @@ var DiceCup;
     DiceCup.playerNames = [];
     DiceCup.lastPoints = [];
     let summaryTime = 5;
-    let timerID;
+    // let timerID: number;
     async function initSummary() {
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
@@ -1173,7 +1173,7 @@ var DiceCup;
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
         new DiceCup.TimerBar("summaryTimer_id", summaryTime);
-        timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
+        ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
             hideSummary();
         });
     }
