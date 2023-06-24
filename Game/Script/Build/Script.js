@@ -735,7 +735,7 @@ var DiceCup;
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            button.addEventListener("click", () => { ƒ.Time.game.deleteTimer(timerID); });
+            // button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
             button.addEventListener("click", handleCategory);
             button.addEventListener("click", () => { DiceCup.playSFX(DiceCup.buttonClick); });
             content.appendChild(button);
@@ -1046,10 +1046,10 @@ var DiceCup;
         let background = document.createElement("div");
         background.id = "summaryBackground_id";
         document.getElementById("DiceCup").appendChild(background);
-        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
-            background.addEventListener("click", hideSummary);
-            background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
-        }
+        // if (playerMode == PlayerMode.singlelpayer) {
+        //     background.addEventListener("click", hideSummary);
+        //     background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
+        // }
         let container = document.createElement("div");
         container.classList.add("summaryHidden");
         container.id = "summaryContainer_id";

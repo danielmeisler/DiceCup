@@ -42,7 +42,7 @@ namespace DiceCup {
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
+            // button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
             button.addEventListener("click", handleCategory );
             button.addEventListener("click", () => {playSFX(buttonClick)});
             content.appendChild(button);

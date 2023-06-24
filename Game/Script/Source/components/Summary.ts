@@ -13,10 +13,10 @@ namespace DiceCup {
         background.id = "summaryBackground_id";
         document.getElementById("DiceCup").appendChild(background);
 
-        if (playerMode == PlayerMode.singlelpayer) {
-            background.addEventListener("click", hideSummary);
-            background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
-        }
+        // if (playerMode == PlayerMode.singlelpayer) {
+        //     background.addEventListener("click", hideSummary);
+        //     background.addEventListener("click", () => ƒ.Time.game.deleteTimer(timerID));
+        // }
 
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("summaryHidden");
