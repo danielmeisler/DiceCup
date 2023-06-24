@@ -113,7 +113,6 @@ namespace DiceCup{
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 3:
-                    console.log(this.getDice);
                     this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     this.diceInst.mtxLocal.translation = this.getDice.translation;
                     break;

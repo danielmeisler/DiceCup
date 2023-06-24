@@ -226,7 +226,6 @@ var DiceCup;
                     this.diceInst.mtxLocal.rotation = this.arenaRotation;
                     break;
                 case 3:
-                    console.log(this.getDice);
                     this.diceInst.mtxLocal.rotation = this.getDice.rotation;
                     this.diceInst.mtxLocal.translation = this.getDice.translation;
                     break;
@@ -760,7 +759,6 @@ var DiceCup;
                 timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => {
                     document.getElementById("categoryButtons_id_" + DiceCup.freePlayerCategories[Math.floor(Math.random() * DiceCup.freePlayerCategories.length)]).click();
                     timerOver = true;
-                    DiceCup.changeGameState(DiceCup.GameState.validating);
                 });
             }
         }
@@ -797,9 +795,7 @@ var DiceCup;
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         DiceCup.hideHudCategory(_index);
         DiceCup.handleSummary(value, _index);
-        if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
-            DiceCup.changeGameState(DiceCup.GameState.validating);
-        }
+        DiceCup.changeGameState(DiceCup.GameState.validating);
     }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
@@ -1248,6 +1244,7 @@ var DiceCup;
         DiceCup.playSFX("Audio|2023-05-16T09:50:26.609Z|95993");
         DiceCup.nextTrack(1);
         DiceCup.roundCounter++;
+        console.log(DiceCup.roundCounter);
         if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
             ƒ.Time.game.setTimer(2000, 1, () => { DiceCup.changeGameState(DiceCup.GameState.summary); });
         }
@@ -1424,7 +1421,7 @@ var DiceCup;
     }
     DiceCup.getRolledDices = getRolledDices;
     async function round() {
-        console.clear();
+        // console.clear();
         DiceCup.nextTrack(2);
         if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
             if (DiceCup.firstRound == true) {
@@ -2907,8 +2904,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        let domServer = "ws://localhost:9001";
-        // let domServer: string = "wss://dice-cup.onrender.com";
+        // let domServer: string = "ws://localhost:9001";
+        let domServer = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);

@@ -81,7 +81,6 @@ namespace DiceCup {
                 timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => { 
                     document.getElementById("categoryButtons_id_" + freePlayerCategories[Math.floor(Math.random() * freePlayerCategories.length)]).click();
                     timerOver = true;
-                    changeGameState(GameState.validating);
                 });
             }
 
@@ -123,9 +122,9 @@ namespace DiceCup {
 
         handleSummary(value, _index);
 
-        if (playerMode == PlayerMode.singlelpayer) {
-            changeGameState(GameState.validating);
-        }
+
+        changeGameState(GameState.validating);
+
 
     }
     
