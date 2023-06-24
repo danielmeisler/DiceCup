@@ -1005,6 +1005,7 @@ var DiceCup;
                     place = i + 1;
                     document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.placement.part_1 + " " + place + ". " + DiceCup.language.game.placements.placement.part_2;
                 }
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.END_GAME, route: FudgeNet.ROUTE.SERVER });
             }
         }
     }
@@ -2217,7 +2218,6 @@ var DiceCup;
     }
     DiceCup.passwordInput = passwordInput;
     async function getRooms(_message) {
-        //_rooms: string[], roomNames: string[], _clients: string[], _private: boolean
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
@@ -2920,7 +2920,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        let domServer = "ws://localhost:9001";
+        // let domServer: string = "ws://localhost:9001";
+        let domServer = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);
@@ -2994,6 +2995,10 @@ var DiceCup;
                         }
                         else if (message.content.correctPassword == true) {
                             document.getElementById("passwordInputContainer_id").remove();
+                        }
+                        if (message.content.ingame == true) {
+                            alertMessageList.innerHTML = DiceCup.language.menu.alerts.ingame;
+                            ƒ.Time.game.setTimer(1000, 1, () => { alertMessageList.innerHTML = ""; });
                         }
                     }
                     else {

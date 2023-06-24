@@ -78,6 +78,7 @@ namespace DiceCup {
                 invalid_tokes: string;
                 identical_names: string;
                 room_unavailable: string;
+                ingame: string;
                 waiting: string;
                 offline: string;
                 wrong_password: string;

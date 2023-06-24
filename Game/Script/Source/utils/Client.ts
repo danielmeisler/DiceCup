@@ -78,7 +78,8 @@ namespace DiceCup {
     }
   
     async function connectToServer(_event: Event): Promise<void> {
-      let domServer: string = "ws://localhost:9001";
+      // let domServer: string = "ws://localhost:9001";
+      let domServer: string = "wss://dice-cup.onrender.com";
       try {
         // connect to a server with the given url
         client.connectToServer(domServer);
@@ -161,6 +162,11 @@ namespace DiceCup {
                 }
               } else if (message.content.correctPassword == true) {
                 document.getElementById("passwordInputContainer_id").remove();
+              }
+
+              if (message.content.ingame == true) {
+                alertMessageList.innerHTML = language.menu.alerts.ingame;
+                ƒ.Time.game.setTimer(1000, 1, () => {alertMessageList.innerHTML = ""});
               }
 
             } else {

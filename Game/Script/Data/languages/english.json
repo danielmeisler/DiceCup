@@ -77,6 +77,7 @@
             "invalid_tokes": "Only alphabetic and numeric tokens",
             "identical_names": "No identical names",
             "room_unavailable": "Room unavailable",
+            "ingame": "Game already started",
             "waiting": "Waiting for more players",
             "offline": "You are offline",
             "wrong_password": "Wrong password",

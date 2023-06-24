@@ -174,11 +174,10 @@ namespace DiceCup {
     }
 
     export async function getRooms(_message: FudgeNet.Message): Promise<void> {
-
-        //_rooms: string[], roomNames: string[], _clients: string[], _private: boolean
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
         }
+
         for (let i = _message.content.rooms.length - 1; i > 0; i--) {
             let serverList: HTMLButtonElement = document.createElement("button");
             serverList.id = "serverListRow_id_" + i;

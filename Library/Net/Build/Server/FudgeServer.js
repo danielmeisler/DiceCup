@@ -24,7 +24,7 @@ class FudgeServer {
      * Starts the server on the given port, installs the appropriate event-listeners and starts the heartbeat
      */
     startUp = (_port = 8080) => {
-        this.rooms[this.idLobby] = { id: this.idLobby, clients: {}, idHost: undefined, private: false }; // create lobby to collect newly connected clients
+        this.rooms[this.idLobby] = { id: this.idLobby, clients: {}, idHost: undefined, private: false, ingame: false }; // create lobby to collect newly connected clients
         console.log(_port);
         this.socket = new ws_1.default.Server({ port: _port });
         this.addEventListeners();
@@ -117,6 +117,9 @@ class FudgeServer {
                 break;
             case Message_js_1.FudgeNet.COMMAND.START_GAME:
                 this.startGame(message);
+                break;
+            case Message_js_1.FudgeNet.COMMAND.END_GAME:
+                this.endGame(message);
                 break;
             case Message_js_1.FudgeNet.COMMAND.SEND_DICE:
                 this.sendDice(message);
@@ -282,6 +285,12 @@ class FudgeServer {
                     this.dispatch(messageClient);
                 }
             }
+            else if (this.rooms[_message.content.room].ingame) {
+                let messageClient = {
+                    idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { ingame: true }
+                };
+                this.dispatch(messageClient);
+            }
             else {
                 let client = this.rooms[_message.idRoom].clients[_message.idSource];
                 let room = this.rooms[_message.content.room];
@@ -324,7 +333,7 @@ class FudgeServer {
     createRoom(_message) {
         let client = this.rooms[_message.idRoom].clients[_message.idSource];
         let idRoom = this.createID();
-        this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby", private: false };
+        this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby", private: false, ingame: false };
         client.ready = true;
         let message = {
             idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom, host: true }
@@ -341,7 +350,7 @@ class FudgeServer {
     }
     getRoomList(_message) {
         let message = {
-            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), roomNames: Object.values(this.rooms).map(room => room.name), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()), private: Object.values(this.rooms).map(room => room.private) }
+            idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), roomNames: Object.values(this.rooms).map(room => room.name), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()), private: Object.values(this.rooms).map(room => room.private), ingame: Object.values(this.rooms).map(room => room.ingame) }
         };
         this.dispatch(message);
     }
@@ -367,10 +376,14 @@ class FudgeServer {
                 client.ready = false;
             }
         });
+        this.rooms[_message.idRoom].ingame = true;
         let message = {
             idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.START_GAME, content: { clients: clients }
         };
         this.broadcast(message);
+    }
+    endGame(_message) {
+        this.rooms[_message.idRoom].ingame = false;
     }
     sendDice(_message) {
         let message = {

@@ -164,6 +164,7 @@ namespace DiceCup {
                     place = i + 1;
                     document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
                 }
+                client.dispatch({ command: FudgeNet.COMMAND.END_GAME, route: FudgeNet.ROUTE.SERVER });
             }
 
         }

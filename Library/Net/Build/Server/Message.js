@@ -54,6 +54,7 @@ exports.FudgeNet = void 0;
         COMMAND["ASSIGN_USERNAME"] = "assignUsername";
         /** sent to the server to start the game with the connected clients */
         COMMAND["START_GAME"] = "startGame";
+        COMMAND["END_GAME"] = "endGame";
         COMMAND["SEND_DICE"] = "sendDice";
         COMMAND["SEND_SCORE"] = "sendScore";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));

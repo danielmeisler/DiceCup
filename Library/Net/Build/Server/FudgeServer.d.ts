@@ -17,6 +17,7 @@ interface Room {
         [id: string]: Client;
     };
     idHost: string | undefined;
+    ingame: boolean;
     private: boolean;
     password?: string;
 }
@@ -75,6 +76,7 @@ export declare class FudgeServer {
     private getRoomInfo;
     private clientReady;
     private startGame;
+    private endGame;
     private sendDice;
     private values;
     private indices;

@@ -55,6 +55,8 @@ namespace FudgeNet {
     /** sent to the server to start the game with the connected clients */
     START_GAME = "startGame",
 
+    END_GAME = "endGame",
+
     SEND_DICE = "sendDice",
 
     SEND_SCORE = "sendScore"

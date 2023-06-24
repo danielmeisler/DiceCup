@@ -77,6 +77,7 @@
             "invalid_tokes": "Nur alphabetische oder numerische Zeichen!",
             "identical_names": "Keine identischen Namen!",
             "room_unavailable": "Raum ungültig!",
+            "ingame": "Spiel läuft bereits!",
             "waiting": "Auf Spieler warten",
             "offline": "Du bist offline!",
             "wrong_password": "Falsches Passwort",
