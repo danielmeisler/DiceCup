@@ -15,9 +15,9 @@ namespace DiceCup {
 
         public fillProbabilities(): ProbabilitiesDao[] {
             for (let i = 0; i < this.freeCategories.length; i++) {
-                this.allProbs.push({stringCategory: null, category: null, points: null, probability: null, value: null});
+                this.allProbs.push({name: null, category: null, points: null, probability: null, value: null});
                 this.allProbs[i].points = this.values[i][1];
-                this.allProbs[i].stringCategory = ScoringCategory[this.freeCategories[i]];
+                this.allProbs[i].name = ScoringCategory[this.freeCategories[i]];
                 this.allProbs[i].category = this.freeCategories[i];
                 this.allProbs[i].probability = this.values[i][1] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }

@@ -1,6 +1,6 @@
 namespace DiceCup {
     export interface ProbabilitiesDao {
-        stringCategory: string;
+        name: string;
         category: ScoringCategory;
         points: number;
         probability: number;
