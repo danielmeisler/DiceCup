@@ -20,6 +20,7 @@ namespace DiceCup {
             document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
         }
 
+        nextTrack(0);
         switchMenu(_return);
     }
     
