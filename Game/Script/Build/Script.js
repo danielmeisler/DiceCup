@@ -41,6 +41,7 @@ var DiceCup;
     var ƒ = FudgeCore;
     ƒ.Debug.info("Dice Cup is running!");
     DiceCup.inGame = false;
+    DiceCup.helpCategoryHud = true;
     document.addEventListener("interactiveViewportStarted", start);
     function start(_event) {
         DiceCup.viewport = _event.detail;
@@ -814,6 +815,7 @@ var DiceCup;
         timerContainer.appendChild(timer);
         let valuationContainer = document.createElement("div");
         valuationContainer.id = "valuationContainer_id";
+        valuationContainer.style.visibility = DiceCup.helpCategoryHud ? "visibie" : "hidden";
         domHud.appendChild(valuationContainer);
         for (let i = 0; i < 12; i++) {
             let valuationButton = document.createElement("div");
@@ -1464,6 +1466,7 @@ var DiceCup;
         while (document.getElementById("DiceCup").childNodes.length > 1) {
             document.getElementById("DiceCup").removeChild(document.getElementById("DiceCup").lastChild);
         }
+        DiceCup.nextTrack(0);
         DiceCup.switchMenu(_return);
     }
     DiceCup.gameOver = gameOver;
@@ -2328,7 +2331,7 @@ var DiceCup;
             localStorage.setItem("optionsMenu", "true");
             location.reload();
         });
-        for (let row = 0; row < 3; row++) {
+        for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer = document.createElement("div");
                 gridContainer.id = "optionsGrid_id_" + row + "_" + col;
@@ -2492,6 +2495,37 @@ var DiceCup;
         languageControlButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
             languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages");
+        });
+        let helpCategory = document.createElement("span");
+        helpCategory.id = "optionsHelpCategory_id";
+        helpCategory.innerHTML = DiceCup.language.menu.settings.help_category_hud.title;
+        document.getElementById("optionsGrid_id_3_0").appendChild(helpCategory);
+        let helpCategoryContainer = document.createElement("div");
+        helpCategoryContainer.id = "optionsHelpCategoryContainer_id";
+        document.getElementById("optionsGrid_id_3_1").appendChild(helpCategoryContainer);
+        let helpCategoryCheckbox = document.createElement("input");
+        helpCategoryCheckbox.type = "checkbox";
+        if (localStorage.getItem("helpCategoryHud")) {
+            if (localStorage.getItem("helpCategoryHud") === "true") {
+                helpCategoryCheckbox.checked = true;
+            }
+            else if (localStorage.getItem("helpCategoryHud") === "false") {
+                helpCategoryCheckbox.checked = false;
+            }
+        }
+        else {
+            helpCategoryCheckbox.checked = true;
+        }
+        helpCategoryContainer.appendChild(helpCategoryCheckbox);
+        helpCategoryCheckbox.addEventListener("change", function () {
+            if (this.checked) {
+                DiceCup.helpCategoryHud = true;
+                localStorage.setItem("helpCategoryHud", "true");
+            }
+            else {
+                DiceCup.helpCategoryHud = false;
+                localStorage.setItem("helpCategoryHud", "false");
+            }
         });
     }
     DiceCup.optionsMenu = optionsMenu;
@@ -2904,8 +2938,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        // let domServer: string = "ws://localhost:9001";
-        let domServer = "wss://dice-cup.onrender.com";
+        let domServer = "ws://localhost:9001";
+        // let domServer: string = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);

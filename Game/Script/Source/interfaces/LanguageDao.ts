@@ -61,6 +61,9 @@ namespace DiceCup {
                     title: string;
                     english: string;
                     german: string;
+                },
+                help_category_hud: {
+                    title: string;
                 }
             },
             gamesettings: {

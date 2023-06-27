@@ -15,6 +15,7 @@ declare namespace DiceCup {
     let currentLanguage: Languages;
     let playerMode: PlayerMode;
     let inGame: boolean;
+    let helpCategoryHud: boolean;
 }
 declare namespace DiceCup {
     class Bot {
@@ -377,6 +378,9 @@ declare namespace DiceCup {
                     title: string;
                     english: string;
                     german: string;
+                };
+                help_category_hud: {
+                    title: string;
                 };
             };
             gamesettings: {

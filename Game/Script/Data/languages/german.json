@@ -60,6 +60,9 @@
                 "title": "Sprache",
                 "english": "Englisch",
                 "german": "Deutsch"
+            },
+            "help_category_hud": {
+                "title": "Kategorie Übersicht"
             }
         },
         "gamesettings": {

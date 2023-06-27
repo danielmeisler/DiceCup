@@ -18,6 +18,7 @@ namespace DiceCup {
 
         let valuationContainer: HTMLDivElement = document.createElement("div");
         valuationContainer.id = "valuationContainer_id";
+        valuationContainer.style.visibility = helpCategoryHud ? "visibie" : "hidden";
         domHud.appendChild(valuationContainer);
 
         for (let i: number = 0; i < 12; i++) {

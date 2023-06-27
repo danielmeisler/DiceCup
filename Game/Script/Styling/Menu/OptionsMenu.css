@@ -7,6 +7,7 @@
     grid-template-columns: 50% 50%;
     border-radius: 5vh;
     padding: 1%;
+    overflow-y: scroll;
     font-family: var(--text_font);
     font-size: var(--menu_options_fontsize);
     color: var(--menu_options_color);
@@ -80,6 +81,11 @@
     font-family: var(--text_font);
     color: var(--menu_options_color);
     font-size: var(--menu_options_dropdown_fontsize);
+}
+
+#optionsHelpCategoryContainer_id {
+    display: flex;
+    justify-content: center;
 }
 
 

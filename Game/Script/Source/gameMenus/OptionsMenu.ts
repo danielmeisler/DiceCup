@@ -26,7 +26,7 @@ namespace DiceCup {
             location.reload();
         });
 
-        for (let row = 0; row < 3; row++) {
+        for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer: HTMLDivElement = document.createElement("div");
                 gridContainer.id = "optionsGrid_id_" + row + "_" + col;
@@ -213,5 +213,39 @@ namespace DiceCup {
             playSFX(buttonClick);
             languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages") 
         } );
+
+        let helpCategory: HTMLSpanElement = document.createElement("span");
+        helpCategory.id = "optionsHelpCategory_id";
+        helpCategory.innerHTML = language.menu.settings.help_category_hud.title;
+        document.getElementById("optionsGrid_id_3_0").appendChild(helpCategory);
+
+        let helpCategoryContainer: HTMLDivElement = document.createElement("div");
+        helpCategoryContainer.id = "optionsHelpCategoryContainer_id";
+        document.getElementById("optionsGrid_id_3_1").appendChild(helpCategoryContainer);
+
+        let helpCategoryCheckbox: HTMLInputElement = document.createElement("input");
+        helpCategoryCheckbox.type = "checkbox";
+        if (localStorage.getItem("helpCategoryHud")) {
+            if (localStorage.getItem("helpCategoryHud") === "true") {
+                helpCategoryCheckbox.checked = true;
+            } else if (localStorage.getItem("helpCategoryHud") === "false") {
+                helpCategoryCheckbox.checked = false;
+            }
+        } else {
+            helpCategoryCheckbox.checked = true;
+        }
+        helpCategoryContainer.appendChild(helpCategoryCheckbox);
+
+        helpCategoryCheckbox.addEventListener("change", function() {
+            if (this.checked) {
+                helpCategoryHud = true;
+                localStorage.setItem("helpCategoryHud", "true");
+            } else {
+                helpCategoryHud = false;
+                localStorage.setItem("helpCategoryHud", "false");
+            }
+        });
+
     }
+
 }

@@ -7,6 +7,7 @@ namespace DiceCup {
   export let currentLanguage: Languages;
   export let playerMode: PlayerMode;
   export let inGame: boolean = false;
+  export let helpCategoryHud: boolean = true;
 
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 
