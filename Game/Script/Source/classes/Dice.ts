@@ -82,9 +82,20 @@ namespace DiceCup{
         }
         
         public async validateDices(): Promise<void> {
-            let diceColors: RgbaDao[] = await loadDiceColors();
-            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
-            this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[9].r), this.convertDiceColor(diceColors[9].g), this.convertDiceColor(diceColors[9].b), diceColors[9].a) });
+            let validateMode: number = 1;
+            switch (validateMode) {
+                case 0:
+                    let diceColors: RgbaDao[] = await loadDiceColors();
+                    this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
+                    this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[9].r), this.convertDiceColor(diceColors[9].g), this.convertDiceColor(diceColors[9].b), diceColors[9].a) });
+                    break;
+                case 1:
+                    this.diceMat.clrPrimary.a = 1;
+                    this.dotsMat.map(dot => { dot.clrPrimary.a = 1});
+                    break;
+                default:
+                    break;
+            }
         }
 
         public transparentDices(): void {

@@ -199,9 +199,20 @@ var DiceCup;
             }
         }
         async validateDices() {
-            let diceColors = await DiceCup.loadDiceColors();
-            this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
-            this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[9].r), this.convertDiceColor(diceColors[9].g), this.convertDiceColor(diceColors[9].b), diceColors[9].a); });
+            let validateMode = 1;
+            switch (validateMode) {
+                case 0:
+                    let diceColors = await DiceCup.loadDiceColors();
+                    this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[8].r), this.convertDiceColor(diceColors[8].g), this.convertDiceColor(diceColors[8].b), diceColors[8].a);
+                    this.dotsMat.map(dot => { dot.clrPrimary = new ƒ.Color(this.convertDiceColor(diceColors[9].r), this.convertDiceColor(diceColors[9].g), this.convertDiceColor(diceColors[9].b), diceColors[9].a); });
+                    break;
+                case 1:
+                    this.diceMat.clrPrimary.a = 1;
+                    this.dotsMat.map(dot => { dot.clrPrimary.a = 1; });
+                    break;
+                default:
+                    break;
+            }
         }
         transparentDices() {
             let tempDices = this.diceNode.getChildren();
@@ -2938,8 +2949,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        let domServer = "ws://localhost:9001";
-        // let domServer: string = "wss://dice-cup.onrender.com";
+        // let domServer: string = "ws://localhost:9001";
+        let domServer = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);
