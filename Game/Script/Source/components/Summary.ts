@@ -6,6 +6,7 @@ namespace DiceCup {
     let summaryTime: number = 20;
     let skipCounter: number = 0;
     let timerID: number;
+    let timerBar: TimerBar;
 
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
@@ -71,9 +72,8 @@ namespace DiceCup {
             }
         }
 
-        if (playerMode == PlayerMode.multiplayer) {
-            document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
-        }
+
+        document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
 
         let timer: HTMLDivElement = document.createElement("div");
         timer.id = "summaryTimer_id";
@@ -116,7 +116,6 @@ namespace DiceCup {
                 content[row][0] = playerNames[row - 1];
             }
         }
-        console.log(content);
         return content;
     }
 
@@ -139,7 +138,6 @@ namespace DiceCup {
             }
         }
         
-        console.log(_name);
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).classList.add("summaryHighlight");
         lastPoints.push("summaryText_id_" + _name + "_" + ScoringCategory[_category]);
@@ -157,10 +155,7 @@ namespace DiceCup {
         document.getElementById("summaryText_skipCounter_id").innerHTML = skipCounter + "/" + numberOfPlayers;
 
         if (skipCounter == numberOfPlayers) {
-            skipCounter = 0;
             hideSummary();
-            ƒ.Time.game.deleteTimer(timerID);
-            document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
         }
     }
 
@@ -170,18 +165,23 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.add("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "10";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
-
         if (playerMode == PlayerMode.multiplayer) {
-            new TimerBar("summaryTimer_id", summaryTime);
+            timerBar = new TimerBar("summaryTimer_id", summaryTime);
             timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
                     hideSummary();
             });
-
-            document.getElementById("summaryBackground_id").addEventListener("click", function skip () {
-                client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
-                document.getElementById("summaryBackground_id").removeEventListener("click", skip);
-            });
+            document.getElementById("summaryBackground_id").addEventListener("click", skip );
         }
+    }
+
+    function skip(_event: Event): void {
+        client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
+        document.getElementById("summaryBackground_id").removeEventListener("click", skip);
+    }
+
+    function resetSkip(): void {
+        skipCounter = 0;
+        document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
     }
 
     export function hideSummary() {
@@ -190,6 +190,11 @@ namespace DiceCup {
         document.getElementById("summaryBackground_id").classList.remove("emptyBackground");
         document.getElementById("summaryBackground_id").style.zIndex = "0";
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
+        ƒ.Time.game.deleteTimer(timerID);
+        if (playerMode ?? PlayerMode.multiplayer) {
+            timerBar.resetTimer();
+        }
+        resetSkip();
         lastRound();
     }
 

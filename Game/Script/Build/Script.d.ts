@@ -104,6 +104,7 @@ declare namespace DiceCup {
         private time;
         private percentage;
         private id;
+        private timerID;
         constructor(_id: string, _time: number);
         resetTimer(): void;
         private getTimerPercentage;

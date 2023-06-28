@@ -55,7 +55,7 @@ namespace DiceCup {
     }
 
     export async function round(): Promise<void> {
-        // console.clear();
+        console.clear();
         nextTrack(2);
 
         if (playerMode == PlayerMode.singlelpayer) {

@@ -5,6 +5,7 @@ namespace DiceCup {
     let categoryTime: number = 10;
     let timerOver: boolean = false;
     let timerID: number;
+    let timerBar: TimerBar;
 
     export async function initCategories() {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
@@ -43,7 +44,7 @@ namespace DiceCup {
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
             if (playerMode == PlayerMode.multiplayer) {
-                timerID ?? button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
+                timerID ?? button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID), timerBar.resetTimer();});
             }
             button.addEventListener("click", handleCategory );
             button.addEventListener("click", () => {playSFX(buttonClick), blockClicks()});
@@ -90,7 +91,7 @@ namespace DiceCup {
             ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
 
             if (playerMode == PlayerMode.multiplayer) {
-                new TimerBar("categoryTimer_id", categoryTime);
+                timerBar = new TimerBar("categoryTimer_id", categoryTime);
                 timerOver = false;
                 timerID = ƒ.Time.game.setTimer(categoryTime * 1000, 1, () => { 
                     document.getElementById("categoryButtons_id_" + freePlayerCategories[Math.floor(Math.random() * freePlayerCategories.length)]).click();
@@ -130,6 +131,9 @@ namespace DiceCup {
         value = timerOver ? 0 : value;
         timerOver = false;
         timerID ?? ƒ.Time.game.deleteTimer(timerID);
+        if (playerMode ?? PlayerMode.multiplayer) {
+            timerBar.resetTimer();
+        }
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         hideHudCategory(_index);
