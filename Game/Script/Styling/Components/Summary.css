@@ -77,8 +77,18 @@ div[id^="summaryGrid"] {
     z-index: 2;
 }
 
-#summaryText_id__playerNames {
+#summaryGrid_id_0_0 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#summaryText_skipCounter_id {
     position: absolute;
+    width: 100%;
+    height: 100%;
+    font-family: var(--text_font);
+    font-size: var(--summary_skip_fontsize);
 }
 
 #summaryTimer_id {

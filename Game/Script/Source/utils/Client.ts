@@ -205,6 +205,11 @@ namespace DiceCup {
               }
               changeGameState(GameState.summary);
             break;
+
+          case FudgeNet.COMMAND.SKIP_SUMMARY:
+              updateSummarySkipCounter();
+            break;
+
           default:
             break;
         }

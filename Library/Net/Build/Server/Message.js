@@ -57,6 +57,7 @@ exports.FudgeNet = void 0;
         COMMAND["END_GAME"] = "endGame";
         COMMAND["SEND_DICE"] = "sendDice";
         COMMAND["SEND_SCORE"] = "sendScore";
+        COMMAND["SKIP_SUMMARY"] = "skipSummary";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**
      * Defines the route the message should take.

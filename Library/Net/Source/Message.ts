@@ -59,7 +59,9 @@ namespace FudgeNet {
 
     SEND_DICE = "sendDice",
 
-    SEND_SCORE = "sendScore"
+    SEND_SCORE = "sendScore",
+
+    SKIP_SUMMARY = "skipSummary"
   }
 
   /**

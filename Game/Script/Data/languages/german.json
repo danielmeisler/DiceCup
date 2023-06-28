@@ -93,7 +93,8 @@
             "title": "Wähle eine Kategorie"
         },
         "summary": {
-            "sum": "Summe"
+            "sum": "Summe",
+            "skip": "Überspringen?"
         },
         "validation": {
             "wait_for_validation": "Warte bis alle Spieler gewählt haben..."

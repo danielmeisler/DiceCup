@@ -53,7 +53,8 @@ declare namespace FudgeNet {
         START_GAME = "startGame",
         END_GAME = "endGame",
         SEND_DICE = "sendDice",
-        SEND_SCORE = "sendScore"
+        SEND_SCORE = "sendScore",
+        SKIP_SUMMARY = "skipSummary"
     }
     /**
      * Defines the route the message should take.

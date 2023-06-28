@@ -3,8 +3,9 @@ namespace DiceCup {
 
     export let playerNames: string[] = [];
     export let lastPoints: string[] = [];
-    let summaryTime: number = 5;
-    // let timerID: number;
+    let summaryTime: number = 20;
+    let skipCounter: number = 0;
+    let timerID: number;
 
     export async function initSummary() {
         let summaryContent: string[][] = await createSummaryContent();
@@ -62,9 +63,16 @@ namespace DiceCup {
                     } else if (col == 1) {
                         text.classList.add("sumRow");
                     }
+                    if (row == 0 && col == 0) {
+                        text.id = "summaryText_skipCounter_id";
+                    }
                 }
                 
             }
+        }
+
+        if (playerMode == PlayerMode.multiplayer) {
+            document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
         }
 
         let timer: HTMLDivElement = document.createElement("div");
@@ -144,6 +152,18 @@ namespace DiceCup {
         document.getElementById("summaryText_id_" + _name + "_sum").innerHTML = _points.toString();
     }
 
+    export function updateSummarySkipCounter(): void {
+        skipCounter++;
+        document.getElementById("summaryText_skipCounter_id").innerHTML = skipCounter + "/" + numberOfPlayers;
+
+        if (skipCounter == numberOfPlayers) {
+            skipCounter = 0;
+            hideSummary();
+            ƒ.Time.game.deleteTimer(timerID);
+            document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
+        }
+    }
+
     export function showSummary() { 
         document.getElementById("summaryContainer_id").classList.add("summaryShown");
         document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
@@ -153,8 +173,13 @@ namespace DiceCup {
 
         if (playerMode == PlayerMode.multiplayer) {
             new TimerBar("summaryTimer_id", summaryTime);
-            ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
+            timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => { 
                     hideSummary();
+            });
+
+            document.getElementById("summaryBackground_id").addEventListener("click", function skip () {
+                client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
+                document.getElementById("summaryBackground_id").removeEventListener("click", skip);
             });
         }
     }

@@ -84,6 +84,7 @@ export declare class FudgeServer {
     private endGame;
     private sendDice;
     private sendScore;
+    private skipSummary;
     private createMesh;
     private connectHost;
     private addUserOnValidLoginRequest;

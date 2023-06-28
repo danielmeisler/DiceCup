@@ -1046,8 +1046,9 @@ var DiceCup;
     var ƒ = FudgeCore;
     DiceCup.playerNames = [];
     DiceCup.lastPoints = [];
-    let summaryTime = 5;
-    // let timerID: number;
+    let summaryTime = 20;
+    let skipCounter = 0;
+    let timerID;
     async function initSummary() {
         let summaryContent = await createSummaryContent();
         let background = document.createElement("div");
@@ -1098,8 +1099,14 @@ var DiceCup;
                     else if (col == 1) {
                         text.classList.add("sumRow");
                     }
+                    if (row == 0 && col == 0) {
+                        text.id = "summaryText_skipCounter_id";
+                    }
                 }
             }
+        }
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            document.getElementById("summaryText_skipCounter_id").innerHTML = DiceCup.language.game.summary.skip;
         }
         let timer = document.createElement("div");
         timer.id = "summaryTimer_id";
@@ -1175,6 +1182,17 @@ var DiceCup;
         document.getElementById("summaryText_id_" + _name + "_sum").innerHTML = _points.toString();
     }
     DiceCup.updateSummary = updateSummary;
+    function updateSummarySkipCounter() {
+        skipCounter++;
+        document.getElementById("summaryText_skipCounter_id").innerHTML = skipCounter + "/" + DiceCup.numberOfPlayers;
+        if (skipCounter == DiceCup.numberOfPlayers) {
+            skipCounter = 0;
+            hideSummary();
+            ƒ.Time.game.deleteTimer(timerID);
+            document.getElementById("summaryText_skipCounter_id").innerHTML = DiceCup.language.game.summary.skip;
+        }
+    }
+    DiceCup.updateSummarySkipCounter = updateSummarySkipCounter;
     function showSummary() {
         document.getElementById("summaryContainer_id").classList.add("summaryShown");
         document.getElementById("summaryContainer_id").classList.remove("summaryHidden");
@@ -1183,8 +1201,12 @@ var DiceCup;
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"); });
         if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
             new DiceCup.TimerBar("summaryTimer_id", summaryTime);
-            ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
+            timerID = ƒ.Time.game.setTimer(summaryTime * 1000, 1, () => {
                 hideSummary();
+            });
+            document.getElementById("summaryBackground_id").addEventListener("click", function skip() {
+                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
+                document.getElementById("summaryBackground_id").removeEventListener("click", skip);
             });
         }
     }
@@ -3209,6 +3231,9 @@ var DiceCup;
                         document.getElementById("waitAlert_id").remove();
                     }
                     DiceCup.changeGameState(DiceCup.GameState.summary);
+                    break;
+                case FudgeNet.COMMAND.SKIP_SUMMARY:
+                    DiceCup.updateSummarySkipCounter();
                     break;
                 default:
                     break;

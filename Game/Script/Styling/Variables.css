@@ -86,6 +86,7 @@
     --summary_text_highlight: var(--white);
     --summary_text_color: var(--gray_lighter);
     --summary_text_fontsize: 2.5vi;
+    --summary_skip_fontsize: 1.8vi;
 
     /* Placements Panel Variables */
     --placements_title_color: var(--white);

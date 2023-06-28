@@ -93,7 +93,8 @@
             "title": "Choose a category"
         },
         "summary": {
-            "sum": "sum"
+            "sum": "sum",
+            "skip": "Skip?"
         },
         "validation": {
             "wait_for_validation": "Wait for all player to choose"

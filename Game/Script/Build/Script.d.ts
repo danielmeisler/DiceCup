@@ -145,6 +145,7 @@ declare namespace DiceCup {
     function initSummary(): Promise<void>;
     function handleSummary(_value: number, _index: number): void;
     function updateSummary(_points: number, _category: number, _name: string): void;
+    function updateSummarySkipCounter(): void;
     function showSummary(): void;
     function hideSummary(): void;
 }
@@ -412,6 +413,7 @@ declare namespace DiceCup {
             };
             summary: {
                 sum: string;
+                skip: string;
             };
             validation: {
                 wait_for_validation: string;

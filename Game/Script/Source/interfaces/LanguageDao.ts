@@ -95,6 +95,7 @@ namespace DiceCup {
             },
             summary: {
                 sum: string;
+                skip: string;
             },
             validation: {
                 wait_for_validation: string;

@@ -176,6 +176,10 @@ export class FudgeServer {
       case FudgeNet.COMMAND.SEND_SCORE:
         this.sendScore(message);
         break;
+
+      case FudgeNet.COMMAND.SKIP_SUMMARY:
+        this.skipSummary(message);
+        break;
       
 
       case FudgeNet.COMMAND.CREATE_MESH:
@@ -493,7 +497,6 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
-
   private sendScore(_message: FudgeNet.Message): void {
     let clients: Clients = this.rooms[_message.idRoom!].clients;
 
@@ -527,6 +530,13 @@ export class FudgeServer {
         delete client.summary.value;
       });
     }
+  }
+
+  private skipSummary(_message: FudgeNet.Message): void {
+    let message: FudgeNet.Message = {
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.SKIP_SUMMARY, content: { name: _message.idSource, ready: true }
+    };
+    this.broadcast(message);
   }
 
   private async createMesh(_message: FudgeNet.Message): Promise<void> {
