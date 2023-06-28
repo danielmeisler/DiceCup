@@ -72,6 +72,7 @@
         "player": "Spieler",
         "alerts": {
             "invalid_tokes": "Nur alphabetische oder numerische Zeichen!",
+            "invalid_length": "Der Name darf nur 3-8 Zeichen lang sein.",
             "identical_names": "Keine identischen Namen!",
             "room_unavailable": "Raum ungültig!",
             "ingame": "Spiel läuft bereits!",

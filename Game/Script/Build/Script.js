@@ -56,6 +56,8 @@ var DiceCup;
         let graph = DiceCup.viewport.getBranch();
         ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
         ƒ.AudioManager.default.listenTo(graph);
+        DiceCup.categoriesLength = Object.keys(DiceCup.ScoringCategory).length / 2;
+        DiceCup.dicesLength = Object.keys(DiceCup.DiceColor).length;
         DiceCup.currentLanguage = localStorage.getItem("language") || DiceCup.Languages.english;
         await DiceCup.initBackgroundMusic(0);
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
@@ -724,15 +726,17 @@ var DiceCup;
         let content = document.createElement("div");
         content.id = "categoryContent_id";
         container.appendChild(content);
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < DiceCup.categoriesLength; i++) {
             let button = document.createElement("button");
             button.classList.add("categoryButtons");
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            // button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
+            if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+                timerID ?? button.addEventListener("click", () => { ƒ.Time.game.deleteTimer(timerID); });
+            }
             button.addEventListener("click", handleCategory);
-            button.addEventListener("click", () => { DiceCup.playSFX(DiceCup.buttonClick); });
+            button.addEventListener("click", () => { DiceCup.playSFX(DiceCup.buttonClick), blockClicks(); });
             content.appendChild(button);
             let img = document.createElement("img");
             img.src = categories[i].image;
@@ -747,6 +751,16 @@ var DiceCup;
         visibility("hidden");
     }
     DiceCup.initCategories = initCategories;
+    function blockClicks() {
+        for (let i = 0; i < DiceCup.categoriesLength; i++) {
+            document.getElementById("categoryButtons_id_" + i).disabled = true;
+        }
+    }
+    function unblockClicks() {
+        for (let i = 0; i < DiceCup.freePlayerCategories.length; i++) {
+            document.getElementById("categoryButtons_id_" + DiceCup.freePlayerCategories[i]).disabled = false;
+        }
+    }
     async function showCategories() {
         if (DiceCup.freePlayerCategories.length == 1) {
             addPointsToButton(DiceCup.freePlayerCategories[0]);
@@ -797,11 +811,12 @@ var DiceCup;
         let value = valuation.chooseScoringCategory();
         value = timerOver ? 0 : value;
         timerOver = false;
-        ƒ.Time.game.deleteTimer(timerID);
+        timerID ?? ƒ.Time.game.deleteTimer(timerID);
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         DiceCup.hideHudCategory(_index);
         DiceCup.handleSummary(value, _index);
+        unblockClicks();
         DiceCup.changeGameState(DiceCup.GameState.validating);
     }
 })(DiceCup || (DiceCup = {}));
@@ -823,7 +838,7 @@ var DiceCup;
         valuationContainer.id = "valuationContainer_id";
         valuationContainer.style.visibility = DiceCup.helpCategoryHud ? "visibie" : "hidden";
         domHud.appendChild(valuationContainer);
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < DiceCup.categoriesLength; i++) {
             let valuationButton = document.createElement("div");
             valuationButton.classList.add("valuation");
             valuationButton.classList.add("valuationShow");
@@ -844,7 +859,7 @@ var DiceCup;
     }
     DiceCup.initHud = initHud;
     function showHud() {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < DiceCup.categoriesLength; i++) {
             document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
             document.getElementById("valuation_id_" + i).classList.add("valuationShow");
         }
@@ -1410,7 +1425,7 @@ var DiceCup;
             let diceNode = graph.getChildrenByName("Dices")[0];
             diceNode.removeAllChildren();
             DiceCup.dices = [];
-            for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+            for (let i = 0, color = 0; i < DiceCup.dicesLength; i++, color += 0.5) {
                 DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
             }
         }
@@ -1422,7 +1437,7 @@ var DiceCup;
         let diceNode = graph.getChildrenByName("Dices")[0];
         diceNode.removeAllChildren();
         DiceCup.dices = [];
-        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+        for (let i = 0, color = 0; i < DiceCup.dicesLength; i++, color += 0.5) {
             DiceCup.dices.push(new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 3, _message.content.dice[i]));
         }
     }
@@ -1626,7 +1641,7 @@ var DiceCup;
         DiceCup.changeFloor(false);
         DiceCup.activateCover(false);
         DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.75, -5);
-        for (let i = 0, color = 0; i < 12; i++, color += 0.5) {
+        for (let i = 0, color = 0; i < DiceCup.dicesLength; i++, color += 0.5) {
             new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
     }
@@ -1636,7 +1651,7 @@ var DiceCup;
         // changeFloor(false);
         // activateCover(false);
         // viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.8, -5);
-        // for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+        // for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
         //     dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 2));
         // }
     }
@@ -3035,13 +3050,6 @@ var DiceCup;
         if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
             document.getElementById("replayButton_id").addEventListener("click", hndEvent);
         }
-        // document.querySelector("button#rename").addEventListener("click", rename);
-        // document.querySelector("button#mesh").addEventListener("click", structurePeers);
-        // document.querySelector("button#host").addEventListener("click", structurePeers);
-        // document.querySelector("button#disconnect").addEventListener("click", structurePeers);
-        // document.querySelector("button#reset").addEventListener("click", structurePeers);
-        // document.querySelector("fieldset").addEventListener("click", sendMessage);
-        // createTable();
     }
     DiceCup.startClient = startClient;
     async function hndEvent(_event) {
@@ -3088,11 +3096,6 @@ var DiceCup;
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);
             await delay(1000);
-            // document.forms[0].querySelector("button#login").removeAttribute("disabled");
-            // document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
-            // document.forms[0].querySelector("button#host").removeAttribute("disabled");
-            // (<HTMLInputElement>document.forms[0].querySelector("input#id")).value = client.id;
-            // install an event listener to be called when a message comes in
             DiceCup.client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage);
         }
         catch (_error) {
@@ -3100,13 +3103,6 @@ var DiceCup;
             console.log("Make sure, FudgeServer is running and accessable");
         }
     }
-    // async function rename(_event: Event): Promise<void> {
-    //   let domProposeName: HTMLInputElement = document.forms[0].querySelector("input[name=proposal]");
-    //   let domName: HTMLInputElement = document.forms[0].querySelector("input[name=name]");
-    //   domName.value = domProposeName.value;
-    //   // associate a readable name with this client id
-    //   client.loginToServer(domName.value);
-    // }
     async function receiveMessage(_event) {
         let alertMessageList = document.getElementById("multiplayerAlert_id");
         let alertPassword = document.getElementById("passwordAlert_id");
@@ -3116,12 +3112,7 @@ var DiceCup;
                 showMessage(message);
             switch (message.command) {
                 case FudgeNet.COMMAND.SERVER_HEARTBEAT:
-                    // if (client.name == undefined)
-                    // proposeName();
-                    // updateTable();
-                    // on each server heartbeat, dispatch this clients heartbeat
                     DiceCup.client.dispatch({ idRoom: DiceCup.currentRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
-                    // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
                     break;
                 case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
                     let span = document.querySelector(`#${message.idSource} span`);
@@ -3205,7 +3196,6 @@ var DiceCup;
                     break;
                 case FudgeNet.COMMAND.SEND_DICE:
                     console.log(message);
-                    // dices = message.content.dice;
                     if (!DiceCup.host) {
                         DiceCup.getRolledDices(message);
                     }
@@ -3262,6 +3252,11 @@ var DiceCup;
         }
         else if (message.content.message == "invalidTokens") {
             alertMessageLobby.innerHTML = DiceCup.language.menu.alerts.invalid_tokes;
+            ƒ.Time.game.setTimer(1000, 1, () => { alertMessageLobby.innerHTML = ""; });
+            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+        }
+        else if (message.content.message == "invalidLength") {
+            alertMessageLobby.innerHTML = DiceCup.language.menu.alerts.invalid_length;
             ƒ.Time.game.setTimer(1000, 1, () => { alertMessageLobby.innerHTML = ""; });
             DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
         }

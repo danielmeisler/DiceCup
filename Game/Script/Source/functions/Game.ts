@@ -35,7 +35,7 @@ namespace DiceCup {
     
             dices = [];
 
-            for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+            for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
                 dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
             }
         }
@@ -49,7 +49,7 @@ namespace DiceCup {
 
         dices = [];
 
-        for (let i = 0, color = 0; i < 12; i++, color+=0.5) {
+        for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
             dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 3, _message.content.dice[i]));
         }
     }

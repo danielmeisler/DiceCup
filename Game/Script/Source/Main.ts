@@ -8,6 +8,8 @@ namespace DiceCup {
   export let playerMode: PlayerMode;
   export let inGame: boolean = false;
   export let helpCategoryHud: boolean = true;
+  export let categoriesLength: number;
+  export let dicesLength: number;
 
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 
@@ -27,6 +29,8 @@ namespace DiceCup {
     ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
     ƒ.AudioManager.default.listenTo(graph);
 
+    categoriesLength = Object.keys(ScoringCategory).length / 2;
+    dicesLength = Object.keys(DiceColor).length;
     currentLanguage = <Languages>localStorage.getItem("language") || Languages.english;
     await initBackgroundMusic(0);
     await chooseLanguage(currentLanguage);

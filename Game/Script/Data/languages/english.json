@@ -72,6 +72,7 @@
         "player": "Player",
         "alerts": {
             "invalid_tokes": "Only alphabetic and numeric tokens",
+            "invalid_length": "Name must be 3-8 characters long",
             "identical_names": "No identical names",
             "room_unavailable": "Room unavailable",
             "ingame": "Game already started",

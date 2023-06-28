@@ -16,6 +16,8 @@ declare namespace DiceCup {
     let playerMode: PlayerMode;
     let inGame: boolean;
     let helpCategoryHud: boolean;
+    let categoriesLength: number;
+    let dicesLength: number;
 }
 declare namespace DiceCup {
     class Bot {
@@ -388,6 +390,7 @@ declare namespace DiceCup {
             player: string;
             alerts: {
                 invalid_tokes: string;
+                invalid_length: string;
                 identical_names: string;
                 room_unavailable: string;
                 ingame: string;

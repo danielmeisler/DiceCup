@@ -36,15 +36,17 @@ namespace DiceCup {
         content.id = "categoryContent_id";
         container.appendChild(content);
 
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < categoriesLength; i++) {
             let button: HTMLButtonElement = document.createElement("button");
             button.classList.add("categoryButtons");
             button.classList.add("diceCupButtons");
             button.id = "categoryButtons_id_" + i;
             button.setAttribute("index", i.toString());
-            // button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
+            if (playerMode == PlayerMode.multiplayer) {
+                timerID ?? button.addEventListener("click", () => {ƒ.Time.game.deleteTimer(timerID)});
+            }
             button.addEventListener("click", handleCategory );
-            button.addEventListener("click", () => {playSFX(buttonClick)});
+            button.addEventListener("click", () => {playSFX(buttonClick), blockClicks()});
             content.appendChild(button);
 
             let img: HTMLImageElement = document.createElement("img");
@@ -60,6 +62,18 @@ namespace DiceCup {
         }
 
         visibility("hidden");
+    }
+
+    function blockClicks(): void {
+        for (let i = 0; i < categoriesLength; i++) {
+            (<HTMLButtonElement>document.getElementById("categoryButtons_id_" + i)).disabled = true;
+        }
+    }
+
+    function unblockClicks(): void {
+        for (let i = 0; i < freePlayerCategories.length; i++) {
+            (<HTMLButtonElement>document.getElementById("categoryButtons_id_" + freePlayerCategories[i])).disabled = false;
+        }
     }
 
     export async function showCategories() {
@@ -115,17 +129,13 @@ namespace DiceCup {
         let value: number = valuation.chooseScoringCategory();
         value = timerOver ? 0 : value;
         timerOver = false;
-        ƒ.Time.game.deleteTimer(timerID);
+        timerID ?? ƒ.Time.game.deleteTimer(timerID);
         document.getElementById("categoryPoints_id_" + _index).innerHTML = value.toString();
         document.getElementById("categoryImage_i_" + _index).classList.add("categoryImagesTransparent");
         hideHudCategory(_index);
-
         handleSummary(value, _index);
-
-
+        unblockClicks();
         changeGameState(GameState.validating);
-
-
     }
     
 }

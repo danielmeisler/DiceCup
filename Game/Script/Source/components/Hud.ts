@@ -21,7 +21,7 @@ namespace DiceCup {
         valuationContainer.style.visibility = helpCategoryHud ? "visibie" : "hidden";
         domHud.appendChild(valuationContainer);
 
-        for (let i: number = 0; i < 12; i++) {
+        for (let i: number = 0; i < categoriesLength; i++) {
             let valuationButton: HTMLDivElement = document.createElement("div");
             valuationButton.classList.add("valuation");
             valuationButton.classList.add("valuationShow");
@@ -46,7 +46,7 @@ namespace DiceCup {
     }
 
     export function showHud(): void {
-        for (let i: number = 0; i < 12; i++) {
+        for (let i: number = 0; i < categoriesLength; i++) {
         document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
         document.getElementById("valuation_id_" + i).classList.add("valuationShow");
         }

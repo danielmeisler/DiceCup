@@ -73,6 +73,7 @@ namespace DiceCup {
             player: string;
             alerts: {
                 invalid_tokes: string;
+                invalid_length: string;
                 identical_names: string;
                 room_unavailable: string;
                 ingame: string;

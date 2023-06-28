@@ -28,14 +28,6 @@ namespace DiceCup {
       if (playerMode == PlayerMode.multiplayer) {
         document.getElementById("replayButton_id").addEventListener("click", hndEvent);
       }
-      
-      // document.querySelector("button#rename").addEventListener("click", rename);
-      // document.querySelector("button#mesh").addEventListener("click", structurePeers);
-      // document.querySelector("button#host").addEventListener("click", structurePeers);
-      // document.querySelector("button#disconnect").addEventListener("click", structurePeers);
-      // document.querySelector("button#reset").addEventListener("click", structurePeers);
-      // document.querySelector("fieldset").addEventListener("click", sendMessage);
-      // createTable();
     }
   
     export async function hndEvent (_event: Event): Promise<void> {
@@ -84,25 +76,13 @@ namespace DiceCup {
         // connect to a server with the given url
         client.connectToServer(domServer);
         await delay(1000);
-        // document.forms[0].querySelector("button#login").removeAttribute("disabled");
-        // document.forms[0].querySelector("button#mesh").removeAttribute("disabled");
-        // document.forms[0].querySelector("button#host").removeAttribute("disabled");
-        // (<HTMLInputElement>document.forms[0].querySelector("input#id")).value = client.id;
-        // install an event listener to be called when a message comes in
+
         client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage as unknown as EventListener);
       } catch (_error) {
         console.log(_error);
         console.log("Make sure, FudgeServer is running and accessable");
       }
     }
-  
-    // async function rename(_event: Event): Promise<void> {
-    //   let domProposeName: HTMLInputElement = document.forms[0].querySelector("input[name=proposal]");
-    //   let domName: HTMLInputElement = document.forms[0].querySelector("input[name=name]");
-    //   domName.value = domProposeName.value;
-    //   // associate a readable name with this client id
-    //   client.loginToServer(domName.value);
-    // }
   
     async function receiveMessage(_event: CustomEvent | MessageEvent): Promise<void> {
       let alertMessageList: HTMLDivElement = <HTMLDivElement>document.getElementById("multiplayerAlert_id");
@@ -114,12 +94,7 @@ namespace DiceCup {
         switch (message.command) {
 
           case FudgeNet.COMMAND.SERVER_HEARTBEAT:
-            // if (client.name == undefined)
-              // proposeName();
-            // updateTable();
-            // on each server heartbeat, dispatch this clients heartbeat
             client.dispatch({ idRoom: currentRoom, command: FudgeNet.COMMAND.CLIENT_HEARTBEAT });
-            // client.dispatch({ command: FudgeNet.COMMAND.ROOM_GET_IDS, route: FudgeNet.ROUTE.SERVER });
             break;
 
           case FudgeNet.COMMAND.CLIENT_HEARTBEAT:
@@ -215,14 +190,13 @@ namespace DiceCup {
 
           case FudgeNet.COMMAND.SEND_DICE:
             console.log(message);
-            // dices = message.content.dice;
             if (!host) {
               getRolledDices(message);
             }
             break;
 
           case FudgeNet.COMMAND.SEND_SCORE:
-            console.log(message)
+            console.log(message);
               for (let index = 0; index < message.content.value.length; index++) {
                 updateSummary(message.content.value[index], message.content.index[index], message.content.name[index]);
               }
@@ -279,7 +253,11 @@ namespace DiceCup {
         alertMessageLobby.innerHTML = language.menu.alerts.invalid_tokes;
         ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
         client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
-      }
+      } else if (message.content.message == "invalidLength") {
+        alertMessageLobby.innerHTML = language.menu.alerts.invalid_length;
+        ƒ.Time.game.setTimer(1000, 1, () => {alertMessageLobby.innerHTML = ""});
+        client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
+    }
     }
   
     function delay(_milisec: number): Promise<void> {

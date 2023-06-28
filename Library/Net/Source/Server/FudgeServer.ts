@@ -11,6 +11,11 @@ export interface Client {
   socket?: WebSocket;
   ready: boolean;
   peers: string[];
+  summary: {
+    name?: string;
+    index?: number;
+    value?: number;
+  }
 }
 
 interface Room {
@@ -40,10 +45,6 @@ export class FudgeServer {
   public socket!: WebSocket.Server;
   public rooms: Rooms = {};
   private idLobby: string = "Lobby";
-
-  private values: number[] = [];
-  private indices: number[] = [];
-  private names: string[] = [];
 
   /**
    * Starts the server on the given port, installs the appropriate event-listeners and starts the heartbeat
@@ -212,7 +213,7 @@ export class FudgeServer {
 
       try {
         const id: string = this.createID();
-        const client: Client = { socket: _socket, id: id, peers: [], ready: false };
+        const client: Client = { socket: _socket, id: id, peers: [], ready: false, summary: {} };
         // TODO: client connects -> send a list of available roomss
         console.log(this.rooms[this.idLobby]);
         this.rooms[this.idLobby].clients[id] = client;
@@ -259,6 +260,12 @@ export class FudgeServer {
         };
         this.dispatch(messageInvalidTokens);
       break;
+      case "invalidLength":
+        let messageInvalidLength: FudgeNet.Message = {
+          idRoom: _message.idRoom, command: FudgeNet.COMMAND.ASSIGN_USERNAME, idTarget: _message.idSource, content: { message: "invalidLength"}
+        };
+        this.dispatch(messageInvalidLength);
+      break;
       case "valid":
         let client: Client = this.rooms[_message.idRoom!].clients[_message.idSource!];
         client.name = _message.content!.username;   
@@ -282,6 +289,10 @@ export class FudgeServer {
 
     if (!/^[A-Za-z0-9_]*$/.test(_username)) {
       return "invalidTokens";
+    }
+
+    if (_username.length < 3 || _username.length > 8) {
+      return "invalidLength"
     }
 
     return "valid";
@@ -453,15 +464,16 @@ export class FudgeServer {
   }
 
   private startGame(_message: FudgeNet.Message): void {
-    this.values = [];
-    this.indices = [];
-    this.names = [];
-
     let clients: Clients = this.rooms[_message.idRoom!].clients;
     Object.values(clients).map((client, index) => {
       if (index > 0) {
         client.ready = false;
       }
+    });
+    Object.values(clients).map(client => {
+      delete client.summary.name;
+      delete client.summary.index;
+      delete client.summary.value;
     });
     this.rooms[_message.idRoom!].ingame = true;
     let message: FudgeNet.Message = {
@@ -483,21 +495,37 @@ export class FudgeServer {
 
 
   private sendScore(_message: FudgeNet.Message): void {
-    console.log(_message);
     let clients: Clients = this.rooms[_message.idRoom!].clients;
 
-    this.values.push(_message.content!.value);
-    this.indices.push(_message.content!.index);
-    this.names.push(_message.content!.name);
+    Object.values(clients).map(client => {
+      if (client.name == _message.content!.name || client.id == _message.content!.name) {
+          client.summary.name! = _message.content!.name;
+          client.summary.index! = _message.content!.index;
+          client.summary.value! = _message.content!.value;
+      }
+    });
 
-    if (this.values.length == Object.keys(clients).length) {
+    if (Object.values(clients).map(client => { 
+      if (!client.summary.name) {
+        return false;
+      } else if (isNaN(client.summary.index!)) {
+        return false;
+      } else if (isNaN(client.summary.value!)) {
+        return false;
+      } else {
+        return true;
+      }
+    }).every(x => x)) {
       let message: FudgeNet.Message = {
-        idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_SCORE, content: { value: this.values, index: this.indices, name: this.names}
+        idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_SCORE, content: { value: Object.values(clients).map(client => client.summary.value), index: Object.values(clients).map(client => client.summary.index), name: Object.values(clients).map(client => client.summary.name)}
       };
       this.broadcast(message);
-      this.values = [];
-      this.indices = [];
-      this.names = [];
+
+      Object.values(clients).map(client => {
+        delete client.summary.name;
+        delete client.summary.index;
+        delete client.summary.value;
+      });
     }
   }
 

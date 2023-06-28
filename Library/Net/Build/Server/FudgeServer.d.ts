@@ -9,6 +9,11 @@ export interface Client {
     socket?: WebSocket;
     ready: boolean;
     peers: string[];
+    summary: {
+        name?: string;
+        index?: number;
+        value?: number;
+    };
 }
 interface Room {
     id: string;
@@ -38,9 +43,6 @@ export declare class FudgeServer {
     socket: WebSocket.Server;
     rooms: Rooms;
     private idLobby;
-    private values;
-    private indices;
-    private names;
     /**
      * Starts the server on the given port, installs the appropriate event-listeners and starts the heartbeat
      */
