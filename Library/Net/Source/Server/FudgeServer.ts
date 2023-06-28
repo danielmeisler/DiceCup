@@ -41,6 +41,10 @@ export class FudgeServer {
   public rooms: Rooms = {};
   private idLobby: string = "Lobby";
 
+  private values: number[] = [];
+  private indices: number[] = [];
+  private names: string[] = [];
+
   /**
    * Starts the server on the given port, installs the appropriate event-listeners and starts the heartbeat
    */
@@ -449,6 +453,10 @@ export class FudgeServer {
   }
 
   private startGame(_message: FudgeNet.Message): void {
+    this.values = [];
+    this.indices = [];
+    this.names = [];
+
     let clients: Clients = this.rooms[_message.idRoom!].clients;
     Object.values(clients).map((client, index) => {
       if (index > 0) {
@@ -457,7 +465,7 @@ export class FudgeServer {
     });
     this.rooms[_message.idRoom!].ingame = true;
     let message: FudgeNet.Message = {
-      idRoom: _message.idRoom, command: FudgeNet.COMMAND.START_GAME, content: {clients: clients}
+      idRoom: _message.idRoom, command: FudgeNet.COMMAND.START_GAME, content: {clients: clients, roundTimer: _message.content!.roundTimer}
     };
     this.broadcast(message);
   }
@@ -473,9 +481,6 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
-  private values: number[] = [];
-  private indices: number[] = [];
-  private names: string[] = [];
 
   private sendScore(_message: FudgeNet.Message): void {
     console.log(_message);

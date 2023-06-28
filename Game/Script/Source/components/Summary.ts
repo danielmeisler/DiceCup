@@ -108,6 +108,7 @@ namespace DiceCup {
                 content[row][0] = playerNames[row - 1];
             }
         }
+        console.log(content);
         return content;
     }
 
@@ -130,6 +131,7 @@ namespace DiceCup {
             }
         }
         
+        console.log(_name);
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).innerHTML = _points.toString();
         document.getElementById("summaryText_id_" + _name + "_" + ScoringCategory[_category]).classList.add("summaryHighlight");
         lastPoints.push("summaryText_id_" + _name + "_" + ScoringCategory[_category]);

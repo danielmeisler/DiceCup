@@ -2,9 +2,7 @@ namespace DiceCup {
     import ƒ = FudgeCore;
 
     export let dices: Dice[] = [];
-    export let firstRound: boolean = true;
-    export let highscore: number = 0;
-    export let roundTimer: number = 3;
+    export let roundTimer: number = localStorage.getItem("roundTimer") ?  parseInt(localStorage.getItem("roundTimer")) : 3;
     export let roundCounter: number = 1;
     export let maxRounds: number = 12;
     export let gameSettings_sp: SinglePlayerSettingsDao;
@@ -61,9 +59,8 @@ namespace DiceCup {
         nextTrack(2);
 
         if (playerMode == PlayerMode.singlelpayer) {
-            if (firstRound == true) {
+            if (roundCounter == 1) {
                 createBots(gameSettings_sp.bot);
-                firstRound = false;
             }
     
             for (let index = 0; index < bots.length; index++) {

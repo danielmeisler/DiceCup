@@ -4,7 +4,6 @@ namespace DiceCup {
     export function gameOver(_return: MenuPage): void {
         inGame = false;
         lastPoints = [];
-        firstRound = true;
         roundCounter = 1;
         playerNames = [];
         gameSettings_sp = {playerName: "", bot: []};

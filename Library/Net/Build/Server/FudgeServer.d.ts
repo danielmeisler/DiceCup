@@ -38,6 +38,9 @@ export declare class FudgeServer {
     socket: WebSocket.Server;
     rooms: Rooms;
     private idLobby;
+    private values;
+    private indices;
+    private names;
     /**
      * Starts the server on the given port, installs the appropriate event-listeners and starts the heartbeat
      */
@@ -78,9 +81,6 @@ export declare class FudgeServer {
     private startGame;
     private endGame;
     private sendDice;
-    private values;
-    private indices;
-    private names;
     private sendScore;
     private createMesh;
     private connectHost;

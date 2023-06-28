@@ -10,9 +10,6 @@ namespace DiceCup {
                         normal: string;
                         hard: string;
                     },
-                },
-                lobby_settings: {
-                    title: string;
                 }
             },
             multiplayer: {
@@ -68,13 +65,10 @@ namespace DiceCup {
             },
             gamesettings: {
                 title: string;
-                gameSettings: {
-
-                },
-                multiplayer: {
-                    password_switch: string;
-                    password: string;
-                }
+                password_switch: string;
+                password: string;
+                round_timer: string;
+                round_timer_unit: string;
             },
             player: string;
             alerts: {

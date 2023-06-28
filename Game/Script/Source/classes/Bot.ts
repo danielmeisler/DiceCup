@@ -1,5 +1,4 @@
 namespace DiceCup {
-    import ƒ = FudgeCore;
     export class Bot {
         
         public dices: Dice[];
@@ -63,7 +62,7 @@ namespace DiceCup {
         private botValuation(_category: number): void {
             let valuation: Valuation = new Valuation(_category, dices, false);
             let value: number = valuation.chooseScoringCategory();
-            ƒ.Time.game.setTimer(2000, 1, () => { updateSummary(value, _category, this.name)});
+            updateSummary(value, _category, this.name);
         }
 
     }

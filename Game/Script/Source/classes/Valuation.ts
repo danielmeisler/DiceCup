@@ -68,7 +68,6 @@ namespace DiceCup {
                 }
             }
 
-            highscore += value;
             return value;
         }
 
@@ -83,7 +82,6 @@ namespace DiceCup {
                 }
             }
 
-            highscore += value;
             return value;
         }
         
@@ -99,7 +97,6 @@ namespace DiceCup {
                 }
             }
 
-            highscore += value;
             return value;
         }
 
@@ -112,7 +109,6 @@ namespace DiceCup {
                 this.player && this.dices[i].validateDices();
             }
 
-            highscore += value;
             return value;
         }
 

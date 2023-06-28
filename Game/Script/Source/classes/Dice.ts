@@ -135,7 +135,7 @@ namespace DiceCup{
 
         private async translateDice(_node: ƒ.Node): Promise<void> {
             let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
-            if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.smallDice)) {
+            if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + 0.01)) {
                 this.translateDice(_node);
             } else {
                 usedTranslations.push(tempVec);

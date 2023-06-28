@@ -67,6 +67,7 @@
 .optionsLanguageMenu {
     display: none;
     position: absolute;
+    z-index: 1;
 }
 
 .optionsShowLanguages {
@@ -92,7 +93,7 @@
 /* Game Settings */
 
 
-#multiplayerGameOptionsContentContainer_id {
+.gameOptionsContentContainer {
     overflow: hidden;
     display: grid;
     text-align: start;
@@ -105,13 +106,25 @@
     color: var(--menu_options_color);
 }
 
-.multiplayerGameOptionsColumn_0 {
+.gameOptionsColumn_0 {
     margin-left: 25%;
     font-family: var(--main_font);
     text-shadow: var(--text_shadow);
 }
 
-.multiplayerGameOptionsColumn_1 {
+.gameOptionsColumn_1 {
     display: flex;
     justify-content: center;
+}
+
+.gameOptionsRoundTimerContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.gameOptionsRoundTimerControl {
+    display: flex;
+    justify-content: center;
+    width: 40%;
 }

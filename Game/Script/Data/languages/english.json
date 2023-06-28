@@ -9,9 +9,6 @@
                     "normal": "normal",
                     "hard": "hard"
                 }
-            },
-            "lobby_settings": {
-                "title": "Lobby Settings"
             }
         },
         "multiplayer": {
@@ -67,13 +64,10 @@
         },
         "gamesettings": {
             "title": "Game Settings",
-            "gameSettings": {
-
-            },
-            "multiplayer": {
-                "password_switch": "Private Lobby", 
-                "password": "Password"
-            }
+            "password_switch": "Private Lobby", 
+            "password": "Password",
+            "round_timer": "Round Timer",
+            "round_timer_unit": "sec."
         },
         "player": "Player",
         "alerts": {

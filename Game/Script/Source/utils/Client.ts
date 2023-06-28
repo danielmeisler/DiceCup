@@ -72,14 +72,14 @@ namespace DiceCup {
         break;
 
         case "multiplayerLobbyStartButton_id": 
-          client.dispatch({ command: FudgeNet.COMMAND.START_GAME, route: FudgeNet.ROUTE.SERVER });
+          client.dispatch({ command: FudgeNet.COMMAND.START_GAME, route: FudgeNet.ROUTE.SERVER, content: {roundTimer: roundTimer} });
         break;
       }
     }
   
     async function connectToServer(_event: Event): Promise<void> {
-      // let domServer: string = "ws://localhost:9001";
-      let domServer: string = "wss://dice-cup.onrender.com";
+      let domServer: string = "ws://localhost:9001";
+      // let domServer: string = "wss://dice-cup.onrender.com";
       try {
         // connect to a server with the given url
         client.connectToServer(domServer);
@@ -222,6 +222,7 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.SEND_SCORE:
+            console.log(message)
               for (let index = 0; index < message.content.value.length; index++) {
                 updateSummary(message.content.value[index], message.content.index[index], message.content.name[index]);
               }
@@ -243,6 +244,7 @@ namespace DiceCup {
     }
 
     async function setGameSettings(message: FudgeNet.Message): Promise<void> {
+      roundTimer = parseInt(message.content.roundTimer);
       gameSettings_mp = {playerNames: ["", "", "", "", "", ""]};
       let playerNumber: number = (<any>Object.keys(message.content.clients)).length;
 

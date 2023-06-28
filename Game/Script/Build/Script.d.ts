@@ -236,8 +236,6 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     import ƒ = FudgeCore;
     let dices: Dice[];
-    let firstRound: boolean;
-    let highscore: number;
     let roundTimer: number;
     let roundCounter: number;
     let maxRounds: number;
@@ -328,9 +326,6 @@ declare namespace DiceCup {
                         hard: string;
                     };
                 };
-                lobby_settings: {
-                    title: string;
-                };
             };
             multiplayer: {
                 list: {
@@ -385,11 +380,10 @@ declare namespace DiceCup {
             };
             gamesettings: {
                 title: string;
-                gameSettings: {};
-                multiplayer: {
-                    password_switch: string;
-                    password: string;
-                };
+                password_switch: string;
+                password: string;
+                round_timer: string;
+                round_timer_unit: string;
             };
             player: string;
             alerts: {
