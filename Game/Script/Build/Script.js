@@ -166,11 +166,12 @@ var DiceCup;
             this.diceRig = this.diceInst.getComponent(ƒ.ComponentRigidbody);
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
-            let corners = [];
-            for (let i = 1, j = 0; i <= 4; i++, j++) {
-                corners[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
-            }
-            corners.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.handleDiceCollision));
+            this.diceRig.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.handleDiceCollision);
+            // let corners: ƒ.Node[] = [];
+            // for (let i = 1, j = 0; i <=4 ; i++, j++) {
+            //     corners[j] = this.diceInst.getChildrenByName("Corner_" + i)[0];
+            // }
+            // corners.map(corner => corner.getComponent(ƒ.ComponentRigidbody).addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision));
             // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
             if (_rollDiceMode == 3) {
                 this.getDice.translation.x = _hostDice.translation.data[0];
