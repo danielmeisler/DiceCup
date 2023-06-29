@@ -50,7 +50,7 @@ var DiceCup;
         ƒ.Time.game.setTimer(2000, 1, load);
     }
     async function load() {
-        // await resizeScreenresolution();
+        await DiceCup.resizeScreenresolution();
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
@@ -1413,9 +1413,7 @@ var DiceCup;
     }
     DiceCup.activateCover = activateCover;
 })(DiceCup || (DiceCup = {}));
-/* eslint-disable @typescript-eslint/naming-convention */
 var DiceCup;
-/* eslint-disable @typescript-eslint/naming-convention */
 (function (DiceCup) {
     var ƒ = FudgeCore;
     DiceCup.dices = [];
@@ -1680,7 +1678,6 @@ var DiceCup;
         for (let i = 0, color = 0; i < DiceCup.dicesLength; i++, color += 0.5) {
             new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
-        DiceCup.playSFX("Audio|2023-05-15T14:59:11.270Z|83758");
     }
     async function transitionViewport() {
         // let response: Response = await fetch("Game/Script/Data/diceColors.json");
@@ -3189,8 +3186,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        // let domServer: string = "ws://localhost:9001";
-        let domServer = "wss://dice-cup.onrender.com";
+        let domServer = "ws://localhost:9001";
+        // let domServer: string = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);
