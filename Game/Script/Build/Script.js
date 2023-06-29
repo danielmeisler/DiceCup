@@ -1241,22 +1241,20 @@ var DiceCup;
     let counter = 0;
     let shortTime = 1000;
     // let longTime: number = 2000;
+    let text;
     function startTransition() {
         let container = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
         document.getElementById("DiceCup").appendChild(container);
+        text = document.createElement("span");
+        text.id = "startTransitionText_id";
+        document.getElementById("startTransitionContainer").appendChild(text);
         let phrase = [DiceCup.language.game.transition.phrase_1 + DiceCup.roundCounter, DiceCup.language.game.transition.phrase_2, DiceCup.language.game.transition.phrase_3];
         transition(phrase);
     }
     DiceCup.startTransition = startTransition;
     function transition(_phrase) {
-        if (document.getElementById("startTransitionText_id")) {
-            document.getElementById("startTransitionText_id").remove();
-        }
-        let text = document.createElement("span");
-        text.id = "startTransitionText_id";
-        document.getElementById("startTransitionContainer").appendChild(text);
         if (counter < _phrase.length) {
             text.innerHTML = _phrase[counter];
             counter++;

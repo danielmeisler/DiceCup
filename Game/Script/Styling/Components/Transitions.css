@@ -15,8 +15,6 @@
 }
   
 #startTransitionText_id {
-    position: relative;
-    display: inline-block;
     text-transform: uppercase;
     will-change: transform;
     transition: all 0.5s ease-in;

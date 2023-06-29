@@ -4,25 +4,23 @@ namespace DiceCup {
     let shortTime: number = 1000;
     // let longTime: number = 2000;
 
+    let text: HTMLSpanElement;
+
     export function startTransition(): void {
         let container: HTMLDivElement = document.createElement("div");
         container.classList.add("startTransitionContainer");
         container.id = "startTransitionContainer";
         document.getElementById("DiceCup").appendChild(container);
 
+        text = document.createElement("span");
+        text.id = "startTransitionText_id";
+        document.getElementById("startTransitionContainer").appendChild(text);
+
         let phrase: string[] = [language.game.transition.phrase_1 + roundCounter, language.game.transition.phrase_2, language.game.transition.phrase_3];
         transition(phrase);
     }
 
     function transition(_phrase: string[]): void {
-        if (document.getElementById("startTransitionText_id")) {
-            document.getElementById("startTransitionText_id").remove();
-        }
-
-        let text: HTMLSpanElement = document.createElement("span");
-        text.id = "startTransitionText_id";
-        document.getElementById("startTransitionContainer").appendChild(text);
-
         if (counter < _phrase.length) {
             text.innerHTML = _phrase[counter];
             counter++;
