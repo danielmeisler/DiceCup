@@ -28,6 +28,8 @@ namespace DiceCup {
         for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
             new Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
+
+        playSFX("Audio|2023-05-15T14:59:11.270Z|83758");
     }
 
     async function transitionViewport(): Promise<void> {
