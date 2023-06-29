@@ -15,43 +15,18 @@ namespace DiceCup {
     }
 
     function transition(_phrase: string[]): void {
-        if (document.getElementById("startTransitionText_id_0")) {
-            while (document.getElementById("startTransitionContainer").firstChild) {
-                document.getElementById("startTransitionContainer").removeChild(document.getElementById("startTransitionContainer").lastChild);
-              }
+        if (document.getElementById("startTransitionText_id")) {
+            document.getElementById("startTransitionText_id").remove();
         }
 
         if (counter < _phrase.length) {
-                for (let i = 0; i < _phrase[counter].length; i++) {
-                    let text: HTMLSpanElement = document.createElement("span");
-                    text.id = "startTransitionText_id_" + i;
-                    // text.animate(
-                    //     [
-                    //         { transform: "translateY(0)", offset: 0},
-                    //         { transform: "translateY(-20px)", offset: 0.2},
-                    //         { transform: "translateY(0)", offset: 0.4},
-                    //         { transform: "translateY(0)", offset: 1},
-                    //     ],{
-                    //         duration: 1000, 
-                    //         iterations: Infinity, 
-                    //         delay: 100 * i
-                    //     }
-                    // );
-                    if (_phrase[counter][i] == " ") {
-                        text.innerHTML = "&nbsp";
-                    } else {
-                        text.innerHTML = _phrase[counter][i];
-                    }
-                    document.getElementById("startTransitionContainer").appendChild(text);
-                }
-                counter++;
-                ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
-                // if (_phrase[counter - 1].length <= 3) {
-                //     ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
-                // } else {
-                //     ƒ.Time.game.setTimer(longTime, 1, () => { transition(_phrase) });
-                // }
-                playSFX("Audio|2023-05-17T13:53:32.977Z|22534");
+            let text: HTMLSpanElement = document.createElement("span");
+            text.id = "startTransitionText_id";
+            text.innerHTML = _phrase[counter];
+            document.getElementById("startTransitionContainer").appendChild(text);
+            counter++;
+            ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
+            playSFX("Audio|2023-05-17T13:53:32.977Z|22534");
         } else {
             playSFX("Audio|2023-05-17T13:53:59.644Z|31971");
             counter = 0;
