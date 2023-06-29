@@ -14,7 +14,7 @@
     font-family: var(--main_font);
 }
   
-.startTransitionContainer span {
+#startTransitionText_id {
     position: relative;
     display: inline-block;
     text-transform: uppercase;

@@ -1254,11 +1254,11 @@ var DiceCup;
         if (document.getElementById("startTransitionText_id")) {
             document.getElementById("startTransitionText_id").remove();
         }
+        let text = document.createElement("span");
+        text.id = "startTransitionText_id";
+        document.getElementById("startTransitionContainer").appendChild(text);
         if (counter < _phrase.length) {
-            let text = document.createElement("span");
-            text.id = "startTransitionText_id";
             text.innerHTML = _phrase[counter];
-            document.getElementById("startTransitionContainer").appendChild(text);
             counter++;
             ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase); });
             DiceCup.playSFX("Audio|2023-05-17T13:53:32.977Z|22534");
