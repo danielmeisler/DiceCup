@@ -453,8 +453,9 @@ export class FudgeServer {
     let idRoom: string = this.createID();
     this.rooms[idRoom] = { id: idRoom, clients: {}, idHost: undefined, name: client.name ? client.name + "'s Lobby" : client.id + "'s Lobby", gamemode: _message.content!.gamemode, private: _message.content!.privateRoom, ingame: false};
     client.ready = true;
-    if (_message.content.roomPassword) {
-      this.rooms[idRoom].password = _message.content.roomPassword;
+    console.log("sda")
+    if (_message.content!.roomPassword) {
+      this.rooms[idRoom].password = _message.content!.roomPassword;
     }
     let message: FudgeNet.Message = {
       idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_CREATE, idTarget: _message.idSource, content: { room: idRoom, host: true }
