@@ -414,10 +414,19 @@ export class FudgeServer {
     };
     this.broadcast(messageRoom);
 
-    let messageClient: FudgeNet.Message = {
-      idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content!.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0]}
-    };
-    this.dispatch(messageClient);
+
+
+    if (_message.content!.kicked == true) {
+      let messageClient: FudgeNet.Message = {
+        idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content!.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0], kicked: _message.content!.kicked}
+      };
+      this.dispatch(messageClient);
+    } else {
+      let messageClient: FudgeNet.Message = {
+        idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content!.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0]}
+      };
+      this.dispatch(messageClient);
+    }
 
     (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
   }

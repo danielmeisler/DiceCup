@@ -335,10 +335,18 @@ class FudgeServer {
             idRoom: _message.idRoom, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0] }
         };
         this.broadcast(messageRoom);
-        let messageClient = {
-            idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0] }
-        };
-        this.dispatch(messageClient);
+        if (_message.content.kicked == true) {
+            let messageClient = {
+                idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0], kicked: _message.content.kicked }
+            };
+            this.dispatch(messageClient);
+        }
+        else {
+            let messageClient = {
+                idRoom: this.idLobby, command: Message_js_1.FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0] }
+            };
+            this.dispatch(messageClient);
+        }
         (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
     }
     createRoom(_message) {

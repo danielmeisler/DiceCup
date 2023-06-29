@@ -7,6 +7,8 @@ namespace DiceCup {
 
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             playSFX(buttonClick);
+            switchMenu(MenuPage.multiplayer);
+            
         });
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
@@ -88,7 +90,7 @@ namespace DiceCup {
         playerRemove.classList.add("removeButton");
         playerDiv.appendChild(playerRemove);
         document.getElementById("playerRemove_id_0").style.display = "none";
-        playerRemove.addEventListener("click", () => client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: _client, host: false } }));
+        playerRemove.addEventListener("click", () => client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: _client, host: false, kicked: true } }));
 
         let botRemoveIcon: HTMLImageElement = document.createElement("img");
         botRemoveIcon.classList.add("removeButtonIcons");

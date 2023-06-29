@@ -929,7 +929,9 @@ var DiceCup;
         nextButton.appendChild(nextButtonImage);
         nextButton.addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
-            DiceCup.clientLeavesRoom();
+            if (DiceCup.playerMode = DiceCup.PlayerMode.multiplayer) {
+                DiceCup.clientLeavesRoom();
+            }
             DiceCup.gameOver(DiceCup.MenuPage.main);
         });
         visibility("hidden");
@@ -1923,6 +1925,7 @@ var DiceCup;
         new DiceCup.SubMenu(DiceCup.MenuPage.multiplayerLobby, "multiplayerLobby", document.getElementById("playerName_id").placeholder + "'s " + DiceCup.language.menu.multiplayer.lobby.title);
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             DiceCup.playSFX(DiceCup.buttonClick);
+            DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
         });
         let settingsButton = document.createElement("button");
         settingsButton.id = "multiplayerLobbySettingsButton_id";
@@ -1991,7 +1994,7 @@ var DiceCup;
         playerRemove.classList.add("removeButton");
         playerDiv.appendChild(playerRemove);
         document.getElementById("playerRemove_id_0").style.display = "none";
-        playerRemove.addEventListener("click", () => DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: _client, host: false } }));
+        playerRemove.addEventListener("click", () => DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LEAVE, route: FudgeNet.ROUTE.SERVER, content: { leaver_id: _client, host: false, kicked: true } }));
         let botRemoveIcon = document.createElement("img");
         botRemoveIcon.classList.add("removeButtonIcons");
         botRemoveIcon.src = "Game/Assets/images/menuButtons/minus.svg";
@@ -3194,17 +3197,18 @@ var DiceCup;
                     }
                     break;
                 case FudgeNet.COMMAND.ROOM_LEAVE:
-                    if (message.content.leaver == true) {
-                        DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
-                        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
-                    }
-                    else {
+                    console.log(message);
+                    if (message.content.leaver == false) {
                         if (!DiceCup.inGame) {
                             DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
                         }
                         else {
                             changeGameSettings();
                         }
+                    }
+                    if (message.content.kicked == true) {
+                        DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);
+                        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                     }
                     message.content.newHost == DiceCup.client.id ? DiceCup.host = true : DiceCup.host = false;
                     break;

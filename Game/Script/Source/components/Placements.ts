@@ -65,7 +65,9 @@ namespace DiceCup {
 
         nextButton.addEventListener("click", () => {
             playSFX(buttonClick);
-            clientLeavesRoom();
+            if (playerMode = PlayerMode.multiplayer) {
+                clientLeavesRoom();
+            }
             gameOver(MenuPage.main);
         });
 

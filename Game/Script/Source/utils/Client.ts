@@ -153,15 +153,17 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.ROOM_LEAVE:
-            if (message.content.leaver == true) {
-              switchMenu(MenuPage.multiplayer);
-              client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
-            } else {
+            console.log(message);
+            if (message.content.leaver == false) {
               if (!inGame) {
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
               } else {
                 changeGameSettings();
               }
+            }
+            if (message.content.kicked == true) {
+              switchMenu(MenuPage.multiplayer);
+              client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
             }
             message.content.newHost == client.id ? host = true : host = false;
             break;
