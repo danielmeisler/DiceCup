@@ -1,82 +1,83 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 namespace DiceCup {
-    import ƒ = FudgeCore;
+  import ƒ = FudgeCore;
 
-    export let dices: Dice[] = [];
-    export let roundTimer: number = localStorage.getItem("roundTimer") ?  parseInt(localStorage.getItem("roundTimer")) : 3;
-    export let roundCounter: number = 1;
-    export let maxRounds: number = 12;
-    export let gameSettings_sp: SinglePlayerSettingsDao;
-    export let gameSettings_mp: MultiPlayerSettingsDao;
-    export let usedTranslations: ƒ.Vector3[] = [];
-    export let usedRotations: ƒ.Vector3[] = [];
+  export let dices: Dice[] = [];
+  export let roundTimer: number = localStorage.getItem("roundTimer") ?  parseInt(localStorage.getItem("roundTimer")) : 3;
+  export let roundCounter: number = 1;
+  export let maxRounds: number = 12;
+  export let gameSettings_sp: SinglePlayerSettingsDao;
+  export let gameSettings_mp: MultiPlayerSettingsDao;
+  export let usedTranslations: ƒ.Vector3[] = [];
+  export let usedRotations: ƒ.Vector3[] = [];
     
-    let bots: Bot[] = [];
+  let bots: Bot[] = [];
 
-    function createBots(_bots: BotDao[]): Bot[] {
-        bots = [];
-        for (let index = 0; index < _bots.length; index++) {
-            bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
-        }
-        return bots;
+  function createBots(_bots: BotDao[]): Bot[] {
+    bots = [];
+    for (let index: number = 0; index < _bots.length; index++) {
+      bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
     }
+    return bots;
+  }
 
-    export async function loadDiceColors(): Promise<RgbaDao[]> {
-        let response: Response = await fetch("Game/Script/Data/diceColors.json");
-        let diceColors: RgbaDao[] = await response.json();
-        return diceColors;
-    }
+  export async function loadDiceColors(): Promise<RgbaDao[]> {
+    let response: Response = await fetch("Game/Script/Data/diceColors.json");
+    let diceColors: RgbaDao[] = await response.json();
+    return diceColors;
+  }
 
-    export async function rollDices(_message?: FudgeNet.Message): Promise<void> {
-        if (playerMode == PlayerMode.singlelpayer || (playerMode == PlayerMode.multiplayer && host == true)) {
-            let diceColors: RgbaDao[] = await loadDiceColors();
-            let graph: ƒ.Node = viewport.getBranch();
-            let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
-            diceNode.removeAllChildren();
+  export async function rollDices(_message?: FudgeNet.Message): Promise<void> {
+    if (playerMode == PlayerMode.singlelpayer || (playerMode == PlayerMode.multiplayer && host == true)) {
+      let diceColors: RgbaDao[] = await loadDiceColors();
+      let graph: ƒ.Node = viewport.getBranch();
+      let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
+      diceNode.removeAllChildren();
     
-            dices = [];
+      dices = [];
 
-            for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
-                dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
-            }
-        }
+      for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
+        dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 1));
+      }
     }
+  }
 
-    export async function getRolledDices(_message: FudgeNet.Message): Promise<void> {
-        let diceColors: RgbaDao[] = await loadDiceColors();
-        let graph: ƒ.Node = viewport.getBranch();
-        let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
-        diceNode.removeAllChildren();
+  export async function getRolledDices(_message: FudgeNet.Message): Promise<void> {
+    let diceColors: RgbaDao[] = await loadDiceColors();
+    let graph: ƒ.Node = viewport.getBranch();
+    let diceNode: ƒ.Node = graph.getChildrenByName("Dices")[0];
+    diceNode.removeAllChildren();
 
-        dices = [];
+    dices = [];
 
-        for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
-            dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 3, _message.content.dice[i]));
-        }
+    for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
+      dices.push(new Dice(diceColors[Math.floor(color)], Math.floor(color), 3, _message.content.dice[i]));
     }
+  }
 
-    export async function round(): Promise<void> {
-        console.clear();
-        nextTrack(2);
+  export async function round(): Promise<void> {
+    console.clear();
+    nextTrack(2);
 
-        if (playerMode == PlayerMode.singlelpayer) {
-            if (roundCounter == 1) {
-                createBots(gameSettings_sp.bot);
-            }
+    if (playerMode == PlayerMode.singlelpayer) {
+      if (roundCounter == 1) {
+        createBots(gameSettings_sp.bot);
+      }
     
-            for (let index = 0; index < bots.length; index++) {
-                bots[index].botsTurn();
-            }
-        }
-
-        new TimerBar("hudTimer_id", roundTimer);
-        ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing) });
+      for (let index = 0; index < bots.length; index++) {
+        bots[index].botsTurn();
+      }
     }
 
-    export function lastRound(): void {
-        if (roundCounter <= maxRounds) {
-            changeGameState(GameState.ready);
-        } else {
-            changeGameState(GameState.placement);
-        }
+    new TimerBar("hudTimer_id", roundTimer);
+    ƒ.Time.game.setTimer(roundTimer * 1000, 1, () => { changeGameState(GameState.choosing) });
+  }
+
+  export function lastRound(): void {
+    if (roundCounter <= maxRounds) {
+      changeGameState(GameState.ready);
+    } else {
+      changeGameState(GameState.placement);
     }
+  }
 }

@@ -50,7 +50,7 @@ var DiceCup;
         ƒ.Time.game.setTimer(2000, 1, load);
     }
     async function load() {
-        await DiceCup.resizeScreenresolution();
+        // await resizeScreenresolution();
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
@@ -1413,7 +1413,9 @@ var DiceCup;
     }
     DiceCup.activateCover = activateCover;
 })(DiceCup || (DiceCup = {}));
+/* eslint-disable @typescript-eslint/naming-convention */
 var DiceCup;
+/* eslint-disable @typescript-eslint/naming-convention */
 (function (DiceCup) {
     var ƒ = FudgeCore;
     DiceCup.dices = [];
@@ -1678,6 +1680,7 @@ var DiceCup;
         for (let i = 0, color = 0; i < DiceCup.dicesLength; i++, color += 0.5) {
             new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
+        DiceCup.playSFX("Audio|2023-05-15T14:59:11.270Z|83758");
     }
     async function transitionViewport() {
         // let response: Response = await fetch("Game/Script/Data/diceColors.json");
