@@ -18,6 +18,18 @@
     position: relative;
     display: inline-block;
     text-transform: uppercase;
-    animation: scale-animation 0.5s linear infinite;
+    transition: all 0.5s ease-in;
+    animation-name:             transition-animation; 
+    animation-duration:         1s; 
+    animation-iteration-count:  infinite;
+    animation-timing-function:  linear; 
 }
 
+@keyframes transition-animation {
+    0%, 100% {
+        transform: scale(100%);
+    }  
+    50% { 
+        transform: scale(90%);
+    }
+  }
