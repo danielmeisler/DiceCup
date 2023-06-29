@@ -19,17 +19,18 @@
     display: inline-block;
     text-transform: uppercase;
     will-change: transform;
+    transition: all 0.5s ease-in;
     animation-name:             transition-animation; 
     animation-duration:         1s; 
     animation-iteration-count:  infinite;
-    animation-timing-function:  ease-in-out; 
+    animation-timing-function:  linear; 
 }
 
 @keyframes transition-animation {
     0%, 100% {
         transform: scale(100%);
-    }
-    50% {
-        transform: scale(50%);
+    }  
+    50% { 
+        transform: scale(90%);
     }
   }
