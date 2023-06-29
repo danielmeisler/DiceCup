@@ -3189,8 +3189,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        let domServer = "ws://localhost:9001";
-        // let domServer: string = "wss://dice-cup.onrender.com";
+        // let domServer: string = "ws://localhost:9001";
+        let domServer = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);
