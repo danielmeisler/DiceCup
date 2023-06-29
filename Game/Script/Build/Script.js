@@ -2620,9 +2620,11 @@ var DiceCup;
         if (localStorage.getItem("helpCategoryHud")) {
             if (localStorage.getItem("helpCategoryHud") === "true") {
                 helpCategoryCheckbox.checked = true;
+                DiceCup.helpCategoryHud = true;
             }
             else if (localStorage.getItem("helpCategoryHud") === "false") {
                 helpCategoryCheckbox.checked = false;
+                DiceCup.helpCategoryHud = false;
             }
         }
         else {
