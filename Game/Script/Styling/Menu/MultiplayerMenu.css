@@ -167,3 +167,7 @@
     justify-content: center;
     height: 1%;
 }
+
+.multiplayerGamemode {
+    text-transform: uppercase;
+}

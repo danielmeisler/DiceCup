@@ -82,6 +82,11 @@ namespace DiceCup {
                 wrong_password: string;
                 not_ready: string;
                 min_player: string;
+            },
+            gamemodes: {
+                normal: string;
+                fast: string;
+                slow: string;
             }
         },
         game: {

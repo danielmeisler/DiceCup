@@ -25,6 +25,7 @@ interface Room {
     ingame: boolean;
     private: boolean;
     password?: string;
+    gamemode: number;
 }
 type Rooms = {
     [id: string]: Room;
@@ -77,6 +78,7 @@ export declare class FudgeServer {
     private leaveRoom;
     private createRoom;
     private renameRoom;
+    private changeGamemode;
     private getRoomList;
     private getRoomInfo;
     private clientReady;

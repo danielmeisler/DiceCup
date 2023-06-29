@@ -42,7 +42,11 @@ namespace DiceCup {
           client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
           break;
         case "multiplayerCreateButton_id":
-          client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
+          if (privateRoom) {
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER, content: { gamemode: gameMode, privateRoom: privateRoom, roomPassword: roomPassword} });
+          } else {
+            client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER, content: { gamemode: gameMode, privateRoom: privateRoom} });
+          }
           break;
         case "multiplayerJoinButton_id":
           currentRoom = focusedIdRoom;
@@ -125,7 +129,7 @@ namespace DiceCup {
             if (message.content.expired != true) {
 
               if (message.content.private == true) {
-                passwordInput();
+                  passwordInput();
               } else {
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
               }
@@ -136,7 +140,9 @@ namespace DiceCup {
                   ƒ.Time.game.setTimer(1000, 1, () => {alertPassword.innerHTML = ""});
                 }
               } else if (message.content.correctPassword == true) {
-                document.getElementById("passwordInputContainer_id").remove();
+                if (document.getElementById("passwordInputContainer_id")) {
+                  document.getElementById("passwordInputContainer_id").remove();
+                }
               }
 
               if (message.content.ingame == true) {
@@ -153,13 +159,14 @@ namespace DiceCup {
             break;
 
           case FudgeNet.COMMAND.ROOM_LEAVE:
-            console.log(message);
             if (message.content.leaver == false) {
               if (!inGame) {
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
               } else {
                 changeGameSettings();
               }
+            } else {
+              client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER});
             }
             if (message.content.kicked == true) {
               switchMenu(MenuPage.multiplayer);

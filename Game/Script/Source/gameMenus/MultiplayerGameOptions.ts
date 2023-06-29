@@ -1,6 +1,7 @@
 namespace DiceCup {
 
     export let roomPassword: string = "";
+    export let privateRoom: boolean;
 
     export function multiplayerGameOptions(): void {
         new SubMenu(MenuPage.multiplayerGameOptions, "multiplayerGameOptions", language.menu.gamesettings.title);
@@ -26,6 +27,16 @@ namespace DiceCup {
             }
         }
 
+        if (localStorage.getItem("privateRoom")) {
+            if (localStorage.getItem("privateRoom") == "true") {
+                privateRoom = true;
+            } else if (localStorage.getItem("privateRoom") == "false") {
+                privateRoom = false;
+            }
+        } else {
+            privateRoom = false;
+        }
+
         let roomPasswordTag: HTMLSpanElement = document.createElement("span");
         roomPasswordTag.id = "multiplayerGameOptionsRoomPasswordTag_id";
         roomPasswordTag.innerHTML = language.menu.gamesettings.password_switch;
@@ -37,6 +48,7 @@ namespace DiceCup {
 
         let passwordCheckbox: HTMLInputElement = document.createElement("input");
         passwordCheckbox.type = "checkbox";
+        passwordCheckbox.checked = privateRoom;
         roomPasswordContainer.appendChild(passwordCheckbox);
 
         let passwordTag: HTMLSpanElement = document.createElement("span");
@@ -53,8 +65,12 @@ namespace DiceCup {
         passwordCheckbox.addEventListener("change", function() {
             if (this.checked) {
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_PASSWORD, route: FudgeNet.ROUTE.SERVER, content: { private: true, password: roomPassword } });
+                privateRoom = true;
+                localStorage.setItem("privateRoom", privateRoom.toString());
             } else {
                 client.dispatch({ command: FudgeNet.COMMAND.ROOM_PASSWORD, route: FudgeNet.ROUTE.SERVER, content: { private: false } });
+                privateRoom = false;
+                localStorage.setItem("privateRoom", privateRoom.toString());
             }
         });
 
@@ -103,6 +119,10 @@ namespace DiceCup {
             if (roundTimer == 5) {
                 roundTimerButtonRight.disabled = true;
                 roundTimerButtonRightIcon.style.opacity = "0";
+                changeGamemode(2);
+            }
+            if (roundTimer == 3) {
+                changeGamemode(0);
             }
             localStorage.setItem("roundTimer", roundTimer.toString());
         });
@@ -117,6 +137,10 @@ namespace DiceCup {
             if (roundTimer == 1) {
                 roundTimerButtonLeft.disabled = true;
                 roundTimerButtonLeftIcon.style.opacity = "0";
+                changeGamemode(1);
+            }
+            if (roundTimer == 3) {
+                changeGamemode(0);
             }
             localStorage.setItem("roundTimer", roundTimer.toString());
         });
@@ -127,7 +151,15 @@ namespace DiceCup {
         } else if (roundTimer == 1) {
             roundTimerButtonLeft.disabled = true;
             roundTimerButtonLeftIcon.style.opacity = "0";
+        } else if (roundTimer == 3) {
+            changeGamemode(0);
         }
+    }
+
+    function changeGamemode(_gamemode: number): void {
+        gameMode = _gamemode;
+        localStorage.setItem("gamemode", gameMode.toString());
+        client.dispatch({ command: FudgeNet.COMMAND.CHANGE_GAMEMODE, route: FudgeNet.ROUTE.SERVER, content: {gamemode: _gamemode} });
     }
 
 }

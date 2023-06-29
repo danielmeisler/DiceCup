@@ -69,6 +69,12 @@ namespace DiceCup {
             if (roundTimer == 5) {
                 roundTimerButtonRight.disabled = true;
                 roundTimerButtonRightIcon.style.opacity = "0";
+                gameMode = GameMode.slow;
+                localStorage.setItem("gamemode", gameMode.toString());
+            }
+            if (roundTimer == 3) {
+                gameMode = GameMode.normal;
+                localStorage.setItem("gamemode", gameMode.toString());
             }
             localStorage.setItem("roundTimer", roundTimer.toString());
         });
@@ -83,6 +89,12 @@ namespace DiceCup {
             if (roundTimer == 1) {
                 roundTimerButtonLeft.disabled = true;
                 roundTimerButtonLeftIcon.style.opacity = "0";
+                gameMode = GameMode.fast;
+                localStorage.setItem("gamemode", gameMode.toString());
+            }
+            if (roundTimer == 3) {
+                gameMode = GameMode.normal;
+                localStorage.setItem("gamemode", gameMode.toString());
             }
             localStorage.setItem("roundTimer", roundTimer.toString());
         });
@@ -90,9 +102,16 @@ namespace DiceCup {
         if (roundTimer == 5) {
             roundTimerButtonRight.disabled = true;
             roundTimerButtonRightIcon.style.opacity = "0";
+            gameMode = GameMode.slow;
+            localStorage.setItem("gamemode", gameMode.toString());
         } else if (roundTimer == 1) {
             roundTimerButtonLeft.disabled = true;
             roundTimerButtonLeftIcon.style.opacity = "0";
+            gameMode = GameMode.fast;
+            localStorage.setItem("gamemode", gameMode.toString());
+        } else if (roundTimer == 3) {
+            gameMode = GameMode.normal;
+            localStorage.setItem("gamemode", gameMode.toString());
         }
     }
 

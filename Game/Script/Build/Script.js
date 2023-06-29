@@ -58,6 +58,7 @@ var DiceCup;
         ƒ.AudioManager.default.listenTo(graph);
         DiceCup.categoriesLength = Object.keys(DiceCup.ScoringCategory).length / 2;
         DiceCup.dicesLength = Object.keys(DiceCup.DiceColor).length;
+        DiceCup.gameMode = parseInt(localStorage.getItem("gamemode")) || DiceCup.GameMode.normal;
         DiceCup.currentLanguage = localStorage.getItem("language") || DiceCup.Languages.english;
         await DiceCup.initBackgroundMusic(0);
         await DiceCup.chooseLanguage(DiceCup.currentLanguage);
@@ -1315,6 +1316,15 @@ var DiceCup;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
+    let GameMode;
+    (function (GameMode) {
+        GameMode[GameMode["normal"] = 0] = "normal";
+        GameMode[GameMode["fast"] = 1] = "fast";
+        GameMode[GameMode["slow"] = 2] = "slow";
+    })(GameMode = DiceCup.GameMode || (DiceCup.GameMode = {}));
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
     let GameState;
     (function (GameState) {
         GameState[GameState["menu"] = 0] = "menu";
@@ -1474,6 +1484,22 @@ var DiceCup;
         }
     }
     DiceCup.lastRound = lastRound;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    function getGameModeTranslation(_gamemode) {
+        switch (_gamemode) {
+            case DiceCup.GameMode.normal:
+                return DiceCup.language.menu.gamemodes.normal;
+            case DiceCup.GameMode.fast:
+                return DiceCup.language.menu.gamemodes.fast;
+            case DiceCup.GameMode.slow:
+                return DiceCup.language.menu.gamemodes.slow;
+            default:
+                return DiceCup.language.menu.gamemodes.normal;
+        }
+    }
+    DiceCup.getGameModeTranslation = getGameModeTranslation;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -2062,6 +2088,7 @@ var DiceCup;
         }
     }
     function joinRoom(_message) {
+        console.log("WIEDER AD");
         DiceCup.switchMenu(DiceCup.MenuPage.multiplayerLobby);
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
         while (document.getElementById("multiplayerLobbyMenuContent_id").childNodes.length > 0) {
@@ -2274,7 +2301,8 @@ var DiceCup;
             nameContainer.appendChild(game);
             let gamemode = document.createElement("span");
             gamemode.id = "gamemode_id_" + i;
-            gamemode.innerHTML = "NORMAL";
+            gamemode.classList.add("multiplayerGamemode");
+            gamemode.innerHTML = DiceCup.getGameModeTranslation(_message.content.gamemode[i]);
             gamemodeContainer.appendChild(gamemode);
             let locked = document.createElement("img");
             locked.id = "locked_id_" + i;
@@ -2306,6 +2334,17 @@ var DiceCup;
                 contentContainer.appendChild(gridContainer);
             }
         }
+        if (localStorage.getItem("privateRoom")) {
+            if (localStorage.getItem("privateRoom") == "true") {
+                DiceCup.privateRoom = true;
+            }
+            else if (localStorage.getItem("privateRoom") == "false") {
+                DiceCup.privateRoom = false;
+            }
+        }
+        else {
+            DiceCup.privateRoom = false;
+        }
         let roomPasswordTag = document.createElement("span");
         roomPasswordTag.id = "multiplayerGameOptionsRoomPasswordTag_id";
         roomPasswordTag.innerHTML = DiceCup.language.menu.gamesettings.password_switch;
@@ -2315,6 +2354,7 @@ var DiceCup;
         document.getElementById("multiplayerGameOptionsGrid_id_0_1").appendChild(roomPasswordContainer);
         let passwordCheckbox = document.createElement("input");
         passwordCheckbox.type = "checkbox";
+        passwordCheckbox.checked = DiceCup.privateRoom;
         roomPasswordContainer.appendChild(passwordCheckbox);
         let passwordTag = document.createElement("span");
         passwordTag.id = "multiplayerGameOptionsPasswordTag2_id";
@@ -2328,9 +2368,13 @@ var DiceCup;
         passwordCheckbox.addEventListener("change", function () {
             if (this.checked) {
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_PASSWORD, route: FudgeNet.ROUTE.SERVER, content: { private: true, password: DiceCup.roomPassword } });
+                DiceCup.privateRoom = true;
+                localStorage.setItem("privateRoom", DiceCup.privateRoom.toString());
             }
             else {
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_PASSWORD, route: FudgeNet.ROUTE.SERVER, content: { private: false } });
+                DiceCup.privateRoom = false;
+                localStorage.setItem("privateRoom", DiceCup.privateRoom.toString());
             }
         });
         let roundTimerTag = document.createElement("span");
@@ -2371,6 +2415,10 @@ var DiceCup;
             if (DiceCup.roundTimer == 5) {
                 roundTimerButtonRight.disabled = true;
                 roundTimerButtonRightIcon.style.opacity = "0";
+                changeGamemode(2);
+            }
+            if (DiceCup.roundTimer == 3) {
+                changeGamemode(0);
             }
             localStorage.setItem("roundTimer", DiceCup.roundTimer.toString());
         });
@@ -2385,6 +2433,10 @@ var DiceCup;
             if (DiceCup.roundTimer == 1) {
                 roundTimerButtonLeft.disabled = true;
                 roundTimerButtonLeftIcon.style.opacity = "0";
+                changeGamemode(1);
+            }
+            if (DiceCup.roundTimer == 3) {
+                changeGamemode(0);
             }
             localStorage.setItem("roundTimer", DiceCup.roundTimer.toString());
         });
@@ -2396,8 +2448,16 @@ var DiceCup;
             roundTimerButtonLeft.disabled = true;
             roundTimerButtonLeftIcon.style.opacity = "0";
         }
+        else if (DiceCup.roundTimer == 3) {
+            changeGamemode(0);
+        }
     }
     DiceCup.multiplayerGameOptions = multiplayerGameOptions;
+    function changeGamemode(_gamemode) {
+        DiceCup.gameMode = _gamemode;
+        localStorage.setItem("gamemode", DiceCup.gameMode.toString());
+        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.CHANGE_GAMEMODE, route: FudgeNet.ROUTE.SERVER, content: { gamemode: _gamemode } });
+    }
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
@@ -3008,6 +3068,12 @@ var DiceCup;
             if (DiceCup.roundTimer == 5) {
                 roundTimerButtonRight.disabled = true;
                 roundTimerButtonRightIcon.style.opacity = "0";
+                DiceCup.gameMode = DiceCup.GameMode.slow;
+                localStorage.setItem("gamemode", DiceCup.gameMode.toString());
+            }
+            if (DiceCup.roundTimer == 3) {
+                DiceCup.gameMode = DiceCup.GameMode.normal;
+                localStorage.setItem("gamemode", DiceCup.gameMode.toString());
             }
             localStorage.setItem("roundTimer", DiceCup.roundTimer.toString());
         });
@@ -3022,16 +3088,30 @@ var DiceCup;
             if (DiceCup.roundTimer == 1) {
                 roundTimerButtonLeft.disabled = true;
                 roundTimerButtonLeftIcon.style.opacity = "0";
+                DiceCup.gameMode = DiceCup.GameMode.fast;
+                localStorage.setItem("gamemode", DiceCup.gameMode.toString());
+            }
+            if (DiceCup.roundTimer == 3) {
+                DiceCup.gameMode = DiceCup.GameMode.normal;
+                localStorage.setItem("gamemode", DiceCup.gameMode.toString());
             }
             localStorage.setItem("roundTimer", DiceCup.roundTimer.toString());
         });
         if (DiceCup.roundTimer == 5) {
             roundTimerButtonRight.disabled = true;
             roundTimerButtonRightIcon.style.opacity = "0";
+            DiceCup.gameMode = DiceCup.GameMode.slow;
+            localStorage.setItem("gamemode", DiceCup.gameMode.toString());
         }
         else if (DiceCup.roundTimer == 1) {
             roundTimerButtonLeft.disabled = true;
             roundTimerButtonLeftIcon.style.opacity = "0";
+            DiceCup.gameMode = DiceCup.GameMode.fast;
+            localStorage.setItem("gamemode", DiceCup.gameMode.toString());
+        }
+        else if (DiceCup.roundTimer == 3) {
+            DiceCup.gameMode = DiceCup.GameMode.normal;
+            localStorage.setItem("gamemode", DiceCup.gameMode.toString());
         }
     }
     DiceCup.singleplayerGameOptions = singleplayerGameOptions;
@@ -3074,7 +3154,12 @@ var DiceCup;
                 DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                 break;
             case "multiplayerCreateButton_id":
-                DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER });
+                if (DiceCup.privateRoom) {
+                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER, content: { gamemode: DiceCup.gameMode, privateRoom: DiceCup.privateRoom, roomPassword: DiceCup.roomPassword } });
+                }
+                else {
+                    DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_CREATE, route: FudgeNet.ROUTE.SERVER, content: { gamemode: DiceCup.gameMode, privateRoom: DiceCup.privateRoom } });
+                }
                 break;
             case "multiplayerJoinButton_id":
                 DiceCup.currentRoom = DiceCup.focusedIdRoom;
@@ -3158,7 +3243,9 @@ var DiceCup;
                             }
                         }
                         else if (message.content.correctPassword == true) {
-                            document.getElementById("passwordInputContainer_id").remove();
+                            if (document.getElementById("passwordInputContainer_id")) {
+                                document.getElementById("passwordInputContainer_id").remove();
+                            }
                         }
                         if (message.content.ingame == true) {
                             alertMessageList.innerHTML = DiceCup.language.menu.alerts.ingame;
@@ -3173,7 +3260,6 @@ var DiceCup;
                     }
                     break;
                 case FudgeNet.COMMAND.ROOM_LEAVE:
-                    console.log(message);
                     if (message.content.leaver == false) {
                         if (!DiceCup.inGame) {
                             DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_INFO, route: FudgeNet.ROUTE.SERVER, content: { room: message.content.room } });
@@ -3181,6 +3267,9 @@ var DiceCup;
                         else {
                             changeGameSettings();
                         }
+                    }
+                    else {
+                        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.ROOM_LIST, route: FudgeNet.ROUTE.SERVER });
                     }
                     if (message.content.kicked == true) {
                         DiceCup.switchMenu(DiceCup.MenuPage.multiplayer);

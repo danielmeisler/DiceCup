@@ -225,7 +225,8 @@ namespace DiceCup {
 
             let gamemode: HTMLSpanElement = document.createElement("span");
             gamemode.id = "gamemode_id_" + i;
-            gamemode.innerHTML = "NORMAL";
+            gamemode.classList.add("multiplayerGamemode");
+            gamemode.innerHTML = getGameModeTranslation(_message.content.gamemode[i]);
             gamemodeContainer.appendChild(gamemode);
 
             let locked: HTMLImageElement = document.createElement("img");

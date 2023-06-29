@@ -14,6 +14,7 @@ declare namespace DiceCup {
     let viewportState: ViewportState;
     let currentLanguage: Languages;
     let playerMode: PlayerMode;
+    let gameMode: GameMode;
     let inGame: boolean;
     let helpCategoryHud: boolean;
     let categoriesLength: number;
@@ -175,6 +176,13 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    enum GameMode {
+        normal = 0,
+        fast = 1,
+        slow = 2
+    }
+}
+declare namespace DiceCup {
     enum GameState {
         menu = 0,
         init = 1,
@@ -254,6 +262,9 @@ declare namespace DiceCup {
     function lastRound(): void;
 }
 declare namespace DiceCup {
+    function getGameModeTranslation(_gamemode: number): string;
+}
+declare namespace DiceCup {
     function gameOver(_return: MenuPage): void;
 }
 declare namespace DiceCup {
@@ -298,6 +309,7 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     let roomPassword: string;
+    let privateRoom: boolean;
     function multiplayerGameOptions(): void;
 }
 declare namespace DiceCup {
@@ -401,6 +413,11 @@ declare namespace DiceCup {
                 wrong_password: string;
                 not_ready: string;
                 min_player: string;
+            };
+            gamemodes: {
+                normal: string;
+                fast: string;
+                slow: string;
             };
         };
         game: {

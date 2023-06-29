@@ -6,6 +6,7 @@ namespace DiceCup {
   export let viewportState: ViewportState;
   export let currentLanguage: Languages;
   export let playerMode: PlayerMode;
+  export let gameMode: GameMode;
   export let inGame: boolean = false;
   export let helpCategoryHud: boolean = true;
   export let categoriesLength: number;
@@ -31,6 +32,7 @@ namespace DiceCup {
 
     categoriesLength = Object.keys(ScoringCategory).length / 2;
     dicesLength = Object.keys(DiceColor).length;
+    gameMode = parseInt(localStorage.getItem("gamemode")) || GameMode.normal;
     currentLanguage = <Languages>localStorage.getItem("language") || Languages.english;
     await initBackgroundMusic(0);
     await chooseLanguage(currentLanguage);

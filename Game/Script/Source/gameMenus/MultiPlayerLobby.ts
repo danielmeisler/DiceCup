@@ -8,7 +8,6 @@ namespace DiceCup {
         document.getElementById("multiplayerLobbyMenuReturnButton_id").addEventListener("click", () => {
             playSFX(buttonClick);
             switchMenu(MenuPage.multiplayer);
-            
         });
 
         let settingsButton: HTMLButtonElement = document.createElement("button");
@@ -193,6 +192,7 @@ namespace DiceCup {
     }
 
     export function joinRoom(_message: FudgeNet.Message): void {
+        console.log("WIEDER AD")
         switchMenu(MenuPage.multiplayerLobby);
         document.getElementById("multiplayerLobbyMenuTitle_id").innerHTML = _message.content.name;
 

@@ -81,6 +81,11 @@
             "wrong_password": "Wrong password",
             "not_ready": "Players not ready",
             "min_player": "Minimum two players"
+        },
+        "gamemodes": {
+            "normal": "Normal",
+            "fast": "Fast",
+            "slow": "Slow"
         }
     },
     "game": {
