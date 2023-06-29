@@ -1259,16 +1259,18 @@ var DiceCup;
             for (let i = 0; i < _phrase[counter].length; i++) {
                 let text = document.createElement("span");
                 text.id = "startTransitionText_id_" + i;
-                text.animate([
-                    { transform: "translateY(0)", offset: 0 },
-                    { transform: "translateY(-20px)", offset: 0.2 },
-                    { transform: "translateY(0)", offset: 0.4 },
-                    { transform: "translateY(0)", offset: 1 },
-                ], {
-                    duration: 1000,
-                    iterations: Infinity,
-                    // delay: 100 * i
-                });
+                // text.animate(
+                //     [
+                //         { transform: "translateY(0)", offset: 0},
+                //         { transform: "translateY(-20px)", offset: 0.2},
+                //         { transform: "translateY(0)", offset: 0.4},
+                //         { transform: "translateY(0)", offset: 1},
+                //     ],{
+                //         duration: 1000, 
+                //         iterations: Infinity, 
+                //         delay: 100 * i
+                //     }
+                // );
                 if (_phrase[counter][i] == " ") {
                     text.innerHTML = "&nbsp";
                 }
@@ -3125,8 +3127,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        // let domServer: string = "ws://localhost:9001";
-        let domServer = "wss://dice-cup.onrender.com";
+        let domServer = "ws://localhost:9001";
+        // let domServer: string = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);

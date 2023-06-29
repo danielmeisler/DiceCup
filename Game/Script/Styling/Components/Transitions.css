@@ -18,4 +18,6 @@
     position: relative;
     display: inline-block;
     text-transform: uppercase;
+    animation: scale-animation 0.5s linear infinite;
 }
+

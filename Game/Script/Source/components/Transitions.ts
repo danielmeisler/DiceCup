@@ -25,18 +25,18 @@ namespace DiceCup {
                 for (let i = 0; i < _phrase[counter].length; i++) {
                     let text: HTMLSpanElement = document.createElement("span");
                     text.id = "startTransitionText_id_" + i;
-                    text.animate(
-                        [
-                            { transform: "translateY(0)", offset: 0},
-                            { transform: "translateY(-20px)", offset: 0.2},
-                            { transform: "translateY(0)", offset: 0.4},
-                            { transform: "translateY(0)", offset: 1},
-                        ],{
-                            duration: 1000, 
-                            iterations: Infinity, 
-                            // delay: 100 * i
-                        }
-                    );
+                    // text.animate(
+                    //     [
+                    //         { transform: "translateY(0)", offset: 0},
+                    //         { transform: "translateY(-20px)", offset: 0.2},
+                    //         { transform: "translateY(0)", offset: 0.4},
+                    //         { transform: "translateY(0)", offset: 1},
+                    //     ],{
+                    //         duration: 1000, 
+                    //         iterations: Infinity, 
+                    //         delay: 100 * i
+                    //     }
+                    // );
                     if (_phrase[counter][i] == " ") {
                         text.innerHTML = "&nbsp";
                     } else {
