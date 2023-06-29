@@ -22,6 +22,8 @@ namespace DiceCup {
   }
 
   async function load(): Promise<void> {
+    await resizeScreenresolution();
+    
     let diceCup: HTMLDivElement = document.createElement("div");
     diceCup.id = "DiceCup";
     document.querySelector("body").appendChild(diceCup);
@@ -41,5 +43,4 @@ namespace DiceCup {
     startClient();
     document.getElementById("loadingScreen").remove();
   }
-
 }

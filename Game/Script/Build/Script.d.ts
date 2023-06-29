@@ -507,6 +507,9 @@ declare namespace DiceCup {
     function translateLanguages(_language: Languages): string;
 }
 declare namespace DiceCup {
+    function resizeScreenresolution(): Promise<void>;
+}
+declare namespace DiceCup {
     function enableWakeLock(): Promise<boolean>;
     function disableWakeLock(): void;
     function resetTimer(): void;

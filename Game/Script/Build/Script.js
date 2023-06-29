@@ -50,6 +50,7 @@ var DiceCup;
         ƒ.Time.game.setTimer(2000, 1, load);
     }
     async function load() {
+        await DiceCup.resizeScreenresolution();
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
@@ -3184,8 +3185,8 @@ var DiceCup;
     }
     DiceCup.hndEvent = hndEvent;
     async function connectToServer(_event) {
-        // let domServer: string = "ws://localhost:9001";
-        let domServer = "wss://dice-cup.onrender.com";
+        let domServer = "ws://localhost:9001";
+        // let domServer: string = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);
@@ -3398,6 +3399,17 @@ var DiceCup;
         }
     }
     DiceCup.translateLanguages = translateLanguages;
+})(DiceCup || (DiceCup = {}));
+var DiceCup;
+(function (DiceCup) {
+    async function resizeScreenresolution() {
+        let width = document.documentElement.clientWidth * window.devicePixelRatio;
+        let testviewport = document.querySelector("meta[name=viewport]");
+        testviewport.setAttribute('content', 'width=' + width + ', minimum-scale: 1');
+        document.documentElement.style.transform = 'scale( 1 / window.devicePixelRatio )';
+        document.documentElement.style.transformOrigin = 'top left';
+    }
+    DiceCup.resizeScreenresolution = resizeScreenresolution;
 })(DiceCup || (DiceCup = {}));
 var DiceCup;
 (function (DiceCup) {
