@@ -82,6 +82,8 @@ namespace DiceCup {
             addPointsToButton(freePlayerCategories[0]);
             if (playerMode == PlayerMode.multiplayer) {
                 changeGameState(GameState.validating);
+            } else {
+                botTurn();
             }
         } else {
             document.getElementById("categoryContainer_id").classList.add("categoriesShown");
@@ -121,7 +123,12 @@ namespace DiceCup {
         let tempArray: number[] = freePlayerCategories.filter((element) => element !== index);
         freePlayerCategories = tempArray;
         hideCategories();
-        waitForPlayerValidation();
+        if (playerMode == PlayerMode.multiplayer) {
+            waitForPlayerValidation();
+        } else if (playerMode == PlayerMode.singlelpayer) {
+            lastPickedCategorie = index;
+            botTurn();
+        }
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index) });
     }
 

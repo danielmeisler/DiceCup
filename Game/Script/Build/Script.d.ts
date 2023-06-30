@@ -27,8 +27,9 @@ declare namespace DiceCup {
         private categoryCounter;
         private difficulty;
         private name;
-        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[]);
-        botsTurn(): void;
+        private mode;
+        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[], _mode: number);
+        botsTurn(): Promise<void>;
         private chooseDifficulty;
         private botEasy;
         private botMedium;
@@ -52,6 +53,7 @@ declare namespace DiceCup {
         private arenaRotation;
         private bigDice;
         private smallDice;
+        private diceDistance;
         color: DiceColor;
         value: number;
         constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message);
@@ -78,7 +80,7 @@ declare namespace DiceCup {
         private allProbs;
         private diceCupProbs;
         constructor(_dices: Dice[], _values: number[][], _freeCategories: number[]);
-        fillProbabilities(): ProbabilitiesDao[];
+        fillProbabilities(): Promise<ProbabilitiesDao[]>;
         private chooseProbabilities;
         private numberProbabilities;
         private colorProbabilities;
@@ -255,6 +257,8 @@ declare namespace DiceCup {
     let gameSettings_mp: MultiPlayerSettingsDao;
     let usedTranslations: ƒ.Vector3[];
     let usedRotations: ƒ.Vector3[];
+    let lastPickedCategorie: number;
+    function botTurn(): void;
     function loadDiceColors(): Promise<RgbaDao[]>;
     function rollDices(_message?: FudgeNet.Message): Promise<void>;
     function getRolledDices(_message: FudgeNet.Message): Promise<void>;
@@ -321,6 +325,7 @@ declare namespace DiceCup {
     function singleplayerMenu(): void;
 }
 declare namespace DiceCup {
+    let botMode: number;
     function singleplayerGameOptions(): void;
 }
 declare namespace DiceCup {
@@ -400,6 +405,7 @@ declare namespace DiceCup {
                 password: string;
                 round_timer: string;
                 round_timer_unit: string;
+                bot_pick_same_cat: string;
             };
             player: string;
             alerts: {

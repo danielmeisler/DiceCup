@@ -17,6 +17,7 @@ namespace DiceCup{
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
         private bigDice: number = 0.3;
         private smallDice: number = 0.265;
+        private diceDistance: number = 0.2;
 
         public color: DiceColor;
         public value: number;
@@ -136,8 +137,8 @@ namespace DiceCup{
         }
 
         private async translateDice(_node: ƒ.Node): Promise<void> {
-            let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
-            if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + 0.05)) {
+            let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.1, (Math.random() * 4) - 1.5);
+            if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + this.diceDistance)) {
                 this.translateDice(_node);
             } else {
                 usedTranslations.push(tempVec);
@@ -208,7 +209,6 @@ namespace DiceCup{
         }
 
         private handleDiceCollision(_event: ƒ.EventPhysics): void {
-            // let collisionNode: ƒ.Node = _event.cmpRigidbody.node;
             let soundArray: string[] = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
             playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
         }

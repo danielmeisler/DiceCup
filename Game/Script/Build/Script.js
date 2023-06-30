@@ -50,7 +50,7 @@ var DiceCup;
         ƒ.Time.game.setTimer(2000, 1, load);
     }
     async function load() {
-        await DiceCup.resizeScreenresolution();
+        // await resizeScreenresolution();
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";
         document.querySelector("body").appendChild(diceCup);
@@ -77,12 +77,14 @@ var DiceCup;
         categoryCounter = 12;
         difficulty;
         name;
-        constructor(_name, _difficulty, _dices) {
+        mode;
+        constructor(_name, _difficulty, _dices, _mode) {
             this.name = _name;
             this.dices = _dices;
             this.difficulty = _difficulty;
+            this.mode = _mode;
         }
-        botsTurn() {
+        async botsTurn() {
             let pickedCategory = 0;
             let values = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
@@ -92,7 +94,7 @@ var DiceCup;
                 values[i][1] = valuation.chooseScoringCategory();
             }
             let prob = new DiceCup.Probabilities(DiceCup.dices, values, this.freeCategories);
-            let allProb = prob.fillProbabilities();
+            let allProb = await prob.fillProbabilities();
             pickedCategory = this.chooseDifficulty(allProb);
             this.botValuation(pickedCategory);
             let tempArray = this.freeCategories.filter((element) => element !== pickedCategory);
@@ -115,13 +117,31 @@ var DiceCup;
             return pickedCategory;
         }
         botEasy(_categories) {
-            return (_categories[(Math.floor((Math.random() * this.categoryCounter)))].category);
+            let cat = _categories[(Math.floor((Math.random() * this.categoryCounter)))].category;
+            if (this.mode == 1) {
+                while (cat == DiceCup.lastPickedCategorie && DiceCup.roundCounter < 12) {
+                    cat = _categories[(Math.floor((Math.random() * this.categoryCounter)))].category;
+                }
+            }
+            return cat;
         }
         botMedium(_categories) {
-            return (_categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category);
+            let cat = _categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category;
+            if (this.mode == 1) {
+                while (cat == DiceCup.lastPickedCategorie && DiceCup.roundCounter < 12) {
+                    cat = _categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category;
+                }
+            }
+            return cat;
         }
         botHard(_categories) {
-            return (_categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category);
+            let cat = _categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category;
+            if (this.mode == 1) {
+                while (cat == DiceCup.lastPickedCategorie && DiceCup.roundCounter < 12) {
+                    cat = _categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category;
+                }
+            }
+            return cat;
         }
         botValuation(_category) {
             let valuation = new DiceCup.Valuation(_category, DiceCup.dices, false);
@@ -149,6 +169,7 @@ var DiceCup;
         arenaRotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
         bigDice = 0.3;
         smallDice = 0.265;
+        diceDistance = 0.2;
         color;
         value;
         constructor(_colorRGBA, _color, _rollDiceMode, _hostDice) {
@@ -251,8 +272,8 @@ var DiceCup;
             this.diceRig.activate(true);
         }
         async translateDice(_node) {
-            let tempVec = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.01, (Math.random() * 4) - 1.5);
-            if (DiceCup.usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + 0.05)) {
+            let tempVec = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.1, (Math.random() * 4) - 1.5);
+            if (DiceCup.usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + this.diceDistance)) {
                 this.translateDice(_node);
             }
             else {
@@ -318,7 +339,6 @@ var DiceCup;
             return value;
         }
         handleDiceCollision(_event) {
-            // let collisionNode: ƒ.Node = _event.cmpRigidbody.node;
             let soundArray = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
             DiceCup.playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
         }
@@ -345,7 +365,7 @@ var DiceCup;
             this.values = _values;
             this.freeCategories = _freeCategories;
         }
-        fillProbabilities() {
+        async fillProbabilities() {
             for (let i = 0; i < this.freeCategories.length; i++) {
                 this.allProbs.push({ name: null, category: null, points: null, probability: null, value: null });
                 this.allProbs[i].points = this.values[i][1];
@@ -353,7 +373,7 @@ var DiceCup;
                 this.allProbs[i].category = this.freeCategories[i];
                 this.allProbs[i].probability = this.values[i][1] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
-            this.sortProbabilities();
+            await this.sortProbabilities();
             console.log(DiceCup.dices);
             console.log(this.allProbs);
             return this.allProbs;
@@ -440,7 +460,7 @@ var DiceCup;
         }
         async sortProbabilities() {
             await this.balanceCategories();
-            this.allProbs.sort(function (a, b) {
+            this.allProbs = this.allProbs.sort(function (a, b) {
                 if (a.value < b.value)
                     return 1;
                 if (a.value > b.value)
@@ -771,6 +791,9 @@ var DiceCup;
             if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
                 DiceCup.changeGameState(DiceCup.GameState.validating);
             }
+            else {
+                DiceCup.botTurn();
+            }
         }
         else {
             document.getElementById("categoryContainer_id").classList.add("categoriesShown");
@@ -807,7 +830,13 @@ var DiceCup;
         let tempArray = DiceCup.freePlayerCategories.filter((element) => element !== index);
         DiceCup.freePlayerCategories = tempArray;
         hideCategories();
-        DiceCup.waitForPlayerValidation();
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            DiceCup.waitForPlayerValidation();
+        }
+        else if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
+            DiceCup.lastPickedCategorie = index;
+            DiceCup.botTurn();
+        }
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index); });
     }
     function addPointsToButton(_index) {
@@ -1211,14 +1240,6 @@ var DiceCup;
         }
     }
     DiceCup.showSummary = showSummary;
-    function skip(_event) {
-        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
-        document.getElementById("summaryBackground_id").removeEventListener("click", skip);
-    }
-    function resetSkip() {
-        skipCounter = 0;
-        document.getElementById("summaryText_skipCounter_id").innerHTML = DiceCup.language.game.summary.skip;
-    }
     function hideSummary() {
         document.getElementById("summaryContainer_id").classList.remove("summaryShown");
         document.getElementById("summaryContainer_id").classList.add("summaryHidden");
@@ -1233,6 +1254,14 @@ var DiceCup;
         DiceCup.lastRound();
     }
     DiceCup.hideSummary = hideSummary;
+    function skip(_event) {
+        DiceCup.client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
+        document.getElementById("summaryBackground_id").removeEventListener("click", skip);
+    }
+    function resetSkip() {
+        skipCounter = 0;
+        document.getElementById("summaryText_skipCounter_id").innerHTML = DiceCup.language.game.summary.skip;
+    }
     function visibility(_visibility) {
         document.getElementById("summaryBackground_id").style.visibility = _visibility;
     }
@@ -1426,10 +1455,16 @@ var DiceCup;
     function createBots(_bots) {
         bots = [];
         for (let index = 0; index < _bots.length; index++) {
-            bots[index] = new DiceCup.Bot(_bots[index].botName, _bots[index].difficulty, DiceCup.dices);
+            bots[index] = new DiceCup.Bot(_bots[index].botName, _bots[index].difficulty, DiceCup.dices, DiceCup.botMode);
         }
         return bots;
     }
+    function botTurn() {
+        for (let index = 0; index < bots.length; index++) {
+            bots[index].botsTurn();
+        }
+    }
+    DiceCup.botTurn = botTurn;
     async function loadDiceColors() {
         let response = await fetch("Game/Script/Data/diceColors.json");
         let diceColors = await response.json();
@@ -1466,9 +1501,6 @@ var DiceCup;
         if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
             if (DiceCup.roundCounter == 1) {
                 createBots(DiceCup.gameSettings_sp.bot);
-            }
-            for (let index = 0; index < bots.length; index++) {
-                bots[index].botsTurn();
             }
         }
         new DiceCup.TimerBar("hudTimer_id", DiceCup.roundTimer);
@@ -3021,7 +3053,7 @@ var DiceCup;
         contentContainer.classList.add("gameOptionsContentContainer");
         contentContainer.classList.add("lobbyContainer");
         document.getElementById("singleplayerGameOptionsMenuContent_id").appendChild(contentContainer);
-        for (let row = 0; row < 1; row++) {
+        for (let row = 0; row < 2; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer = document.createElement("div");
                 gridContainer.id = "singleplayerGameOptionsGrid_id_" + row + "_" + col;
@@ -3113,6 +3145,33 @@ var DiceCup;
             DiceCup.gameMode = DiceCup.GameMode.normal;
             localStorage.setItem("gamemode", DiceCup.gameMode.toString());
         }
+        if (localStorage.getItem("botMode")) {
+            DiceCup.botMode = parseInt(localStorage.getItem("botMode"));
+        }
+        else {
+            DiceCup.botMode = 0;
+        }
+        let botCatTag = document.createElement("span");
+        botCatTag.id = "singleplayerGameOptionsBotCatTag_id";
+        botCatTag.innerHTML = DiceCup.language.menu.gamesettings.bot_pick_same_cat;
+        document.getElementById("singleplayerGameOptionsGrid_id_1_0").appendChild(botCatTag);
+        let botCatContainer = document.createElement("div");
+        botCatContainer.id = "singleplayerGameOptionsBotCatContainer_id";
+        document.getElementById("singleplayerGameOptionsGrid_id_1_1").appendChild(botCatContainer);
+        let botCatCheckbox = document.createElement("input");
+        botCatCheckbox.type = "checkbox";
+        botCatCheckbox.checked = DiceCup.botMode == 0 ? true : false;
+        botCatContainer.appendChild(botCatCheckbox);
+        botCatCheckbox.addEventListener("change", function () {
+            if (this.checked) {
+                DiceCup.botMode = 0;
+                localStorage.setItem("botMode", DiceCup.botMode.toString());
+            }
+            else {
+                DiceCup.botMode = 1;
+                localStorage.setItem("botMode", DiceCup.botMode.toString());
+            }
+        });
     }
     DiceCup.singleplayerGameOptions = singleplayerGameOptions;
 })(DiceCup || (DiceCup = {}));

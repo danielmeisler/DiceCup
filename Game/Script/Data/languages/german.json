@@ -67,7 +67,8 @@
             "password_switch": "Private Lobby", 
             "password": "Passwort",
             "round_timer": "Rundenzeit",
-            "round_timer_unit": "Sek."
+            "round_timer_unit": "Sek.",
+            "bot_pick_same_cat": "Bots wählen frei"
         },
         "player": "Spieler",
         "alerts": {

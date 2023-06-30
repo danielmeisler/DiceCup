@@ -174,16 +174,6 @@ namespace DiceCup {
         }
     }
 
-    function skip(_event: Event): void {
-        client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
-        document.getElementById("summaryBackground_id").removeEventListener("click", skip);
-    }
-
-    function resetSkip(): void {
-        skipCounter = 0;
-        document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
-    }
-
     export function hideSummary() {
         document.getElementById("summaryContainer_id").classList.remove("summaryShown");
         document.getElementById("summaryContainer_id").classList.add("summaryHidden");
@@ -196,6 +186,16 @@ namespace DiceCup {
         }
         resetSkip();
         lastRound();
+    }
+    
+    function skip(_event: Event): void {
+        client.dispatch({ command: FudgeNet.COMMAND.SKIP_SUMMARY, route: FudgeNet.ROUTE.SERVER });
+        document.getElementById("summaryBackground_id").removeEventListener("click", skip);
+    }
+
+    function resetSkip(): void {
+        skipCounter = 0;
+        document.getElementById("summaryText_skipCounter_id").innerHTML = language.game.summary.skip;
     }
 
     function visibility(_visibility: string) {

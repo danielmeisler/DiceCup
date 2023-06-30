@@ -69,6 +69,7 @@ namespace DiceCup {
                 password: string;
                 round_timer: string;
                 round_timer_unit: string;
+                bot_pick_same_cat: string;
             },
             player: string;
             alerts: {

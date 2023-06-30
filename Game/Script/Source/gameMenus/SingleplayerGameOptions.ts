@@ -1,5 +1,7 @@
 namespace DiceCup {
 
+    export let botMode: number;
+
     export function singleplayerGameOptions(): void {
         new SubMenu(MenuPage.singleplayerGameOptions, "singleplayerGameOptions", language.menu.gamesettings.title);
 
@@ -14,7 +16,7 @@ namespace DiceCup {
         contentContainer.classList.add("lobbyContainer");
         document.getElementById("singleplayerGameOptionsMenuContent_id").appendChild(contentContainer);
 
-        for (let row = 0; row < 1; row++) {
+        for (let row = 0; row < 2; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer: HTMLDivElement = document.createElement("div");
                 gridContainer.id = "singleplayerGameOptionsGrid_id_" + row + "_" + col;
@@ -113,6 +115,36 @@ namespace DiceCup {
             gameMode = GameMode.normal;
             localStorage.setItem("gamemode", gameMode.toString());
         }
+
+        if (localStorage.getItem("botMode")) {
+            botMode = parseInt(localStorage.getItem("botMode"));
+        } else {
+            botMode = 0;
+        }
+
+        let botCatTag: HTMLSpanElement = document.createElement("span");
+        botCatTag.id = "singleplayerGameOptionsBotCatTag_id";
+        botCatTag.innerHTML = language.menu.gamesettings.bot_pick_same_cat;
+        document.getElementById("singleplayerGameOptionsGrid_id_1_0").appendChild(botCatTag);
+    
+        let botCatContainer: HTMLDivElement = document.createElement("div");
+        botCatContainer.id = "singleplayerGameOptionsBotCatContainer_id";
+        document.getElementById("singleplayerGameOptionsGrid_id_1_1").appendChild(botCatContainer);
+
+        let botCatCheckbox: HTMLInputElement = document.createElement("input");
+        botCatCheckbox.type = "checkbox";
+        botCatCheckbox.checked = botMode == 0 ? true : false;
+        botCatContainer.appendChild(botCatCheckbox);
+
+        botCatCheckbox.addEventListener("change", function() {
+            if (this.checked) {
+                botMode = 0;
+                localStorage.setItem("botMode", botMode.toString());
+            } else {
+                botMode = 1;
+                localStorage.setItem("botMode", botMode.toString());
+            }
+        });
     }
 
 }

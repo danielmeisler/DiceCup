@@ -6,14 +6,16 @@ namespace DiceCup {
         private categoryCounter: number = 12;
         private difficulty: BotDifficulty;
         private name: string;
+        private mode: number;
 
-        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[]) {
+        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[], _mode: number) {
             this.name = _name;
             this.dices = _dices;
             this.difficulty = _difficulty;
+            this.mode = _mode;
         }
 
-        public botsTurn(): void {
+        public async botsTurn(): Promise<void> {
             let pickedCategory: number = 0;
             let values: number[][] = [];
             for (let i = 0; i < this.freeCategories.length; i++) {
@@ -23,7 +25,7 @@ namespace DiceCup {
                 values[i][1] = valuation.chooseScoringCategory();
             }
             let prob = new Probabilities(dices, values, this.freeCategories);
-            let allProb: ProbabilitiesDao[] = prob.fillProbabilities();
+            let allProb: ProbabilitiesDao[] = await prob.fillProbabilities();
             pickedCategory = this.chooseDifficulty(allProb);
             this.botValuation(pickedCategory);
             let tempArray: number[] = this.freeCategories.filter((element) => element !== pickedCategory);
@@ -48,15 +50,33 @@ namespace DiceCup {
         }
 
         private botEasy(_categories: ProbabilitiesDao[]): number{
-            return (_categories[(Math.floor((Math.random() * this.categoryCounter)))].category);
+            let cat: number = _categories[(Math.floor((Math.random() * this.categoryCounter)))].category;
+            if (this.mode == 1) {
+                while (cat == lastPickedCategorie && roundCounter < 12) {
+                    cat = _categories[(Math.floor((Math.random() * this.categoryCounter)))].category;
+                }
+            }
+            return cat;
         }
 
         private botMedium(_categories: ProbabilitiesDao[]): number{
-            return (_categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category);
+            let cat: number = _categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category;
+            if (this.mode == 1) {
+                while (cat == lastPickedCategorie && roundCounter < 12) {
+                    cat = _categories[Math.floor((Math.random() * this.categoryCounter) / 2)].category;
+                }
+            }
+            return cat;
         }
 
-        private botHard(_categories: ProbabilitiesDao[]): number{
-            return (_categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category);
+        private botHard(_categories: ProbabilitiesDao[]): number {
+            let cat: number = _categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category;
+            if (this.mode == 1) {
+                while (cat == lastPickedCategorie && roundCounter < 12) {
+                    cat = _categories[Math.floor((Math.random() * this.categoryCounter) / 4)].category;
+                }
+            }
+            return cat;
         }
 
         private botValuation(_category: number): void {

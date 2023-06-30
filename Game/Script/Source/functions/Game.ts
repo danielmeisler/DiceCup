@@ -9,15 +9,22 @@ namespace DiceCup {
     export let gameSettings_mp: MultiPlayerSettingsDao;
     export let usedTranslations: ƒ.Vector3[] = [];
     export let usedRotations: ƒ.Vector3[] = [];
-    
+    export let lastPickedCategorie: number;
+
     let bots: Bot[] = [];
 
     function createBots(_bots: BotDao[]): Bot[] {
         bots = [];
         for (let index = 0; index < _bots.length; index++) {
-            bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices);
+            bots[index] = new Bot(_bots[index].botName, _bots[index].difficulty, dices, botMode);
         }
         return bots;
+    }
+
+    export function botTurn(): void {
+        for (let index = 0; index < bots.length; index++) {
+            bots[index].botsTurn();
+        }
     }
 
     export async function loadDiceColors(): Promise<RgbaDao[]> {
@@ -61,10 +68,6 @@ namespace DiceCup {
         if (playerMode == PlayerMode.singlelpayer) {
             if (roundCounter == 1) {
                 createBots(gameSettings_sp.bot);
-            }
-    
-            for (let index = 0; index < bots.length; index++) {
-                bots[index].botsTurn();
             }
         }
 

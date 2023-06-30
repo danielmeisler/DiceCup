@@ -13,7 +13,7 @@ namespace DiceCup {
             this.freeCategories = _freeCategories;
         }
 
-        public fillProbabilities(): ProbabilitiesDao[] {
+        public async fillProbabilities(): Promise<ProbabilitiesDao[]> {
             for (let i = 0; i < this.freeCategories.length; i++) {
                 this.allProbs.push({name: null, category: null, points: null, probability: null, value: null});
                 this.allProbs[i].points = this.values[i][1];
@@ -21,7 +21,7 @@ namespace DiceCup {
                 this.allProbs[i].category = this.freeCategories[i];
                 this.allProbs[i].probability = this.values[i][1] == 0 ? null : this.chooseProbabilities(this.freeCategories[i]);
             }
-            this.sortProbabilities();
+            await this.sortProbabilities();
             console.log(dices);
             console.log(this.allProbs);
             return this.allProbs;
@@ -118,7 +118,7 @@ namespace DiceCup {
 
         private async sortProbabilities(): Promise<void> {
             await this.balanceCategories();
-            this.allProbs.sort( function(a,b){
+            this.allProbs = this.allProbs.sort( function(a,b){
                 if(a.value < b.value) return 1;
                 if(a.value > b.value) return -1;
                 if(a.value == b.value) {
