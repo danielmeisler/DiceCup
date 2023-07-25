@@ -1,7 +1,11 @@
 namespace DiceCup {
+    
+    // -- Variable declaration --
 
+    // Determines which botmode is active (means if the bot can pick the players category in the same round or not)
     export let botMode: number;
 
+    // Creates a Submenu with setting options for the current multiplayer game
     export function singleplayerGameOptions(): void {
         new SubMenu(MenuPage.singleplayerGameOptions, "singleplayerGameOptions", language.menu.gamesettings.title);
 
@@ -26,6 +30,7 @@ namespace DiceCup {
             }
         }
 
+        // Creates the control of the round time
         let roundTimerTag: HTMLSpanElement = document.createElement("span");
         roundTimerTag.id = "singleplayerGameOptionsRoundTimer_id";
         roundTimerTag.innerHTML = language.menu.gamesettings.round_timer;
@@ -122,6 +127,7 @@ namespace DiceCup {
             botMode = 0;
         }
 
+        // Creates the control of the botmode
         let botCatTag: HTMLSpanElement = document.createElement("span");
         botCatTag.id = "singleplayerGameOptionsBotCatTag_id";
         botCatTag.innerHTML = language.menu.gamesettings.bot_pick_same_cat;

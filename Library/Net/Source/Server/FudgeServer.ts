@@ -254,6 +254,8 @@ export class FudgeServer {
     });
   }
 
+  // Checks the new username if its already taken, has invalid tokens or is too long or too short
+  // If all requirements are valid the new username gets accepted
   private assignUsername(_message: FudgeNet.Message): void {
 
     switch (this.checkUsername(_message.content!.username)) {
@@ -289,6 +291,7 @@ export class FudgeServer {
     }
   }
 
+  // Checks the username by length, invalid tokens and if its already taken
   private checkUsername(_username: string): string {
     let existingUsername: boolean = false;
     Object.values(this.rooms).map(room => {Object.values(room.clients).map(client => {if (client.id == _username || client.name == _username) {existingUsername = true;}})});
@@ -307,6 +310,7 @@ export class FudgeServer {
     return "valid";
   }
 
+  // Checks the room the client just left to see if its empty now to delete it from the list
   private checkLeavedRoom(_room: string): void {
     if (_room != this.idLobby) {
       if (Object.keys(this.rooms[_room].clients).length == 0) {
@@ -321,6 +325,7 @@ export class FudgeServer {
     }
   }
 
+  // Sets the privacy of a room and the associated password
   private setRoomPassword(_message: FudgeNet.Message): void {
     if (_message.content!.private) {
       this.rooms[_message.idRoom!].private = true;
@@ -331,21 +336,16 @@ export class FudgeServer {
     }
   }
 
+  // If a client enters a room it checks if the room is existing, ingame, secured with a password and who the host is
   private enterRoom(_message: FudgeNet.Message): void {
     if (!_message.idRoom || !_message.idSource || !_message.content)
       throw (new Error("Message lacks idSource, idRoom or content."));
     if (!this.rooms[_message.idRoom])
       throw (new Error(`Room unavailable ${_message.idRoom}`));
 
-
-
     if (this.rooms[_message.content.room]) {  
-
-
       if (this.rooms[_message.content.room].private) {
-
         if (_message.content.password) {
-        
           if (_message.content.password == this.rooms[_message.content.room].password) {
             let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
             let room: Room = this.rooms[_message.content.room];
@@ -387,7 +387,6 @@ export class FudgeServer {
         };
         this.dispatch(messageClient);
       } else {
-
         let client: Client = this.rooms[_message.idRoom].clients[_message.idSource];
         let room: Room = this.rooms[_message.content.room];
         delete this.rooms[_message.idRoom].clients[_message.idSource];
@@ -397,23 +396,17 @@ export class FudgeServer {
           idRoom: _message.content.room, command: FudgeNet.COMMAND.ROOM_ENTER, content: { client: _message.idSource, host: _message.content?.host, correctPassword: false }
         };
         this.broadcast(message);
-
-
       }
-
-
     } else {
-
-
       let messageClient: FudgeNet.Message = {
         idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_ENTER, idTarget: _message.idSource, content: { expired: true }
       };
       this.dispatch(messageClient);
-
-
     }
   }
 
+  // When the client leaves a room on purpose or gets kicked update the list and broadcast it to everyone in the left room and the left client
+  // If a client disconnects not on purpose because of internet connection or closed the application midgame the server responses as he left the room on purpose
   private leaveRoom(_message: FudgeNet.Message): void {
     if (!_message.idRoom || !_message.content!.leaver_id)
       throw (new Error("Message lacks idSource, idRoom or content"));
@@ -430,9 +423,6 @@ export class FudgeServer {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0]}
     };
     this.broadcast(messageRoom);
-
-
-
     if (_message.content!.kicked == true) {
       let messageClient: FudgeNet.Message = {
         idRoom: this.idLobby, command: FudgeNet.COMMAND.ROOM_LEAVE, idTarget: _message.content!.leaver_id, content: { leaver: true, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0], kicked: _message.content!.kicked}
@@ -448,6 +438,7 @@ export class FudgeServer {
     (Object.keys(this.rooms[_message.idRoom].clients).length == 0) && delete this.rooms[_message.idRoom];
   }
 
+  // Creates a room with given attributes like name, privacy and password and gamemode
   private createRoom(_message: FudgeNet.Message): void {
     let client: Client = this.rooms[_message.idRoom!].clients[_message.idSource!];
     let idRoom: string = this.createID();
@@ -463,6 +454,7 @@ export class FudgeServer {
 
   }
 
+  // Renames an existing room when the client changes his name as example
   private renameRoom(_message: FudgeNet.Message): void {
     let client: Client = this.rooms[_message.idRoom!].clients[_message.idSource!];
     this.rooms[_message.idRoom!].name = client.name + "'s Lobby";
@@ -472,10 +464,12 @@ export class FudgeServer {
     this.dispatch(message);
   }
 
+  // Changes the gamemode of the room when the lobby settings get changed
   private changeGamemode(_message: FudgeNet.Message): void {
     this.rooms[_message.idRoom!].gamemode = _message.content!.gamemode;
   }
 
+  // Returns a list with all available rooms to create the serverlist on the client
   private getRoomList(_message: FudgeNet.Message): void {
     let message: FudgeNet.Message = {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LIST, idTarget: _message.idSource, content: { rooms: Object.keys(this.rooms), roomNames: Object.values(this.rooms).map(room => room.name), clients: Object.values(this.rooms).map(room => Object.keys(room.clients).toString()), private: Object.values(this.rooms).map(room => room.private), gamemode: Object.values(this.rooms).map(room => room.gamemode), ingame: Object.values(this.rooms).map(room => room.ingame)}
@@ -483,6 +477,7 @@ export class FudgeServer {
     this.dispatch(message);
   }
 
+  // Returns all needed informations of a specific room to create the multiplayer lobby
   private getRoomInfo(_message: FudgeNet.Message): void {
     let clients: Clients = this.rooms[_message.idRoom!].clients;
     let message: FudgeNet.Message = {
@@ -491,6 +486,7 @@ export class FudgeServer {
     this.dispatch(message);
   }
 
+  // Sets the client on ready so it updates for everybody and the host knows when he can start the game
   private clientReady(_message: FudgeNet.Message): void {
     let client: Client = this.rooms[_message.idRoom!].clients[_message.idSource!];
     client.ready = client.ready ? client.ready = false : client.ready = true;
@@ -501,6 +497,9 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
+  // Starts the game and sets the ready state for every guest on unready again so the host can't force a new round after the game is completed
+  // Sets the lobby state on ingame so no new client can join while ingame
+  // Clears all ingame summary content
   private startGame(_message: FudgeNet.Message): void {
     let clients: Clients = this.rooms[_message.idRoom!].clients;
     Object.values(clients).map((client, index) => {
@@ -520,10 +519,12 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
+  // Resets the room state to not ingame so new clients can join again
   private endGame(_message: FudgeNet.Message): void {
     this.rooms[_message.idRoom!].ingame = false;
   }
 
+  // Sends the current dice to everyone in the room
   private sendDice(_message: FudgeNet.Message): void {
     let message: FudgeNet.Message = {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_DICE, content: {dice: _message.content!.dice }
@@ -531,9 +532,11 @@ export class FudgeServer {
     this.broadcast(message);
   }
 
+  // Sends the current score to everyone in the room as soon as everyone sent an score so everybody gets the score simultaneously
   private sendScore(_message: FudgeNet.Message): void {
     let clients: Clients = this.rooms[_message.idRoom!].clients;
 
+    // Stores the current message content into the right client attributes
     Object.values(clients).map(client => {
       if (client.name == _message.content!.name || client.id == _message.content!.name) {
           client.summary.name! = _message.content!.name;
@@ -542,6 +545,7 @@ export class FudgeServer {
       }
     });
 
+    // Checks if the clients values are all right and if all values are true and every client got its values the message gets broadcasted and the attributes resetted
     if (Object.values(clients).map(client => { 
       if (!client.summary.name) {
         return false;
@@ -553,11 +557,13 @@ export class FudgeServer {
         return true;
       }
     }).every(x => x)) {
+      // Broadcasts current scores for every client
       let message: FudgeNet.Message = {
         idRoom: _message.idRoom, command: FudgeNet.COMMAND.SEND_SCORE, content: { value: Object.values(clients).map(client => client.summary.value), index: Object.values(clients).map(client => client.summary.index), name: Object.values(clients).map(client => client.summary.name)}
       };
       this.broadcast(message);
 
+      // Reset client attributes
       Object.values(clients).map(client => {
         delete client.summary.name;
         delete client.summary.index;
@@ -566,12 +572,17 @@ export class FudgeServer {
     }
   }
 
+  // Skips the summary if all clients voted for it
   private skipSummary(_message: FudgeNet.Message): void {
     let message: FudgeNet.Message = {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.SKIP_SUMMARY, content: { name: _message.idSource, ready: true }
     };
     this.broadcast(message);
   }
+
+
+
+  // Pre functions: not created for the game 
 
   private async createMesh(_message: FudgeNet.Message): Promise<void> {
     let room: Room = this.rooms[_message.idRoom!];

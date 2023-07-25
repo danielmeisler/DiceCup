@@ -1,10 +1,16 @@
 namespace DiceCup{
     export class SubMenu {
 
+        // -- Variable declaration --
+
+        // Stores the menu page
         private menu: MenuPage;
+        // Stores the menu page id
         private id: string;
+        // Stores the wanted title for this submenu
         private title: string;
     
+        // Constructor for creating an empty submenu template
         constructor(_menu: MenuPage, _id: string, _title: string) {
           this.menu = _menu;
           this.id = _id;
@@ -12,7 +18,9 @@ namespace DiceCup{
           this.createSubMenu();
         }
 
+        // Creates an empty submenu with given attributes to fill in its own function (gameMenus folder)
         public createSubMenu(): void {
+            // Creates simple construct with background and title, content and button area (top to bottom)
             let background: HTMLDivElement = document.createElement("div");
             background.id = this.menu;
             background.classList.add("gameMenus");
@@ -31,6 +39,7 @@ namespace DiceCup{
             content.classList.add("gameMenuContent");
             background.appendChild(content);
     
+            // Creates simple button area with important standard buttons like a back button to get to the main menu
             let buttonArea: HTMLDivElement = document.createElement("div");
             buttonArea.id = this.id + "MenuButtons_id";
             buttonArea.classList.add("gameMenuButtonArea");

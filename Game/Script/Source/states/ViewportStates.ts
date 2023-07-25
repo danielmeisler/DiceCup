@@ -1,6 +1,7 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    // Changes the viewport state for the different camera angles and perspectives
     export async function changeViewportState(_viewportState: ViewportState): Promise<void> {
         switch (_viewportState) {
             case ViewportState.menu: 
@@ -18,6 +19,8 @@ namespace DiceCup {
         ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 30);
     }
 
+    // Changes the camera and arena for the main menu background
+    // Rotates the camera in the update function
     async function menuViewport(): Promise<void> {   
         let diceColors: RgbaDao[] = await loadDiceColors();
         changeFloor(false);
@@ -30,6 +33,7 @@ namespace DiceCup {
         }
     }
 
+    // For possible transition animations with tracking shots
     async function transitionViewport(): Promise<void> {
         // let response: Response = await fetch("Game/Script/Data/diceColors.json");
         // let diceColors: RgbaDao[] = await response.json();
@@ -44,6 +48,7 @@ namespace DiceCup {
 
     }
     
+    // Changes the arena and camera perspective for ingame situations
     async function gameViewport(): Promise<void> {  
         viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
         viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);

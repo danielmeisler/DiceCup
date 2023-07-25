@@ -1,18 +1,27 @@
 namespace DiceCup {
     export class Probabilities {
 
+        // -- Variable declaration --
+
+        // Stores all values of current round
         private values: number[][] = [];
+        // Stores the left categories so already used categories doesn't get calculated
         private freeCategories: number[] = []
+        // Dice of current round
         private dices: Dice[];
+        // Stores the whole table with all needed attributes for calculation and visibility
         private allProbs: ProbabilitiesDao[] = [];
+        // Stores already calculated calculation so that it doesn't need to calculate everytime from new (for perfomance reasons)
         private diceCupProbs = new Map();
 
+        // Constructor for initializing a new probability calculation for the current round
         constructor(_dices: Dice[], _values: number[][], _freeCategories: number[]) {
             this.dices = _dices;
             this.values = _values;
             this.freeCategories = _freeCategories;
         }
 
+        // Fills and sorts the allProbs table with all needed attributes for each bots valuation
         public async fillProbabilities(): Promise<ProbabilitiesDao[]> {
             for (let i = 0; i < this.freeCategories.length; i++) {
                 this.allProbs.push({name: null, category: null, points: null, probability: null, value: null});
@@ -27,6 +36,7 @@ namespace DiceCup {
             return this.allProbs;
         }
 
+        // Chooses the calculation type for each different category
         private chooseProbabilities(_category: ScoringCategory): number {
             let prob: number = 0;
             switch (_category) {
@@ -56,6 +66,7 @@ namespace DiceCup {
             return prob;
         }
 
+        // Calculates the probabilities for Fours, Fives and Sixes
         private numberProbabilities(_category: number): number {
             let diceValues: number[] = this.dices.map((element) => element.value);
             let results: number[] = [];
@@ -65,6 +76,7 @@ namespace DiceCup {
             return ((1/6) ** power) * ((5/6) ** opposite) * this.binomial(12, power) * 100; 
         }
 
+        // Calculates the sum probabilities for all color categories
         private colorProbabilities(_category: number): number {
             let dice_numbers: number[] = [1, 2, 3, 4, 5, 6];
             let category = this.values.map((cat) => cat[0]);
@@ -72,6 +84,7 @@ namespace DiceCup {
             return this.sumProbabilities(2, this.values[counter][1], dice_numbers) * 100;
         }
 
+        // Calculates the probability for doubles in the same color
         private doublesProbabilities(_category: number): number {
             let category = this.values.map((cat) => cat[0]);
             let counter = category.indexOf(_category);
@@ -80,6 +93,7 @@ namespace DiceCup {
             return ((1/6) ** power) * ((5/6) ** opposite) * this.binomial(6, power) * 100;
         }
 
+        // Calculates the sum probability for 1,2,3-Category
         private oneToThreeProbabilities(_category: number): number {
             let dice_numbers: number[] = [1, 2, 3];   
             let category = this.values.map((cat) => cat[0]);
@@ -94,6 +108,7 @@ namespace DiceCup {
             return ((1/2) ** power) * ((1/2) ** opposite) * this.binomial(12, power) * this.sumProbabilities(power, this.values[counter][1], dice_numbers) * 100;
         }
 
+        // Calculates the sum probabilities for Dice Cup (all 12 dice)
         private diceCupProbabilities(_category: number): number {
             let dice_numbers: number[] = [1, 2, 3, 4, 5, 6];
             let category = this.values.map((cat) => cat[0]);
@@ -101,21 +116,23 @@ namespace DiceCup {
             return this.sumProbabilities(10, this.values[counter][1], dice_numbers) * 100;
         }
 
-        private sumProbabilities(nDices: number, sum: number, dice_numbers: number[]): number{
+        // Calculates the sum probabilites for a specific sum with n dices and used dice numbers (specific for 1,2,3)
+        private sumProbabilities(_nDices: number, _sum: number, _diceNumbers: number[]): number {
             const calculate = (nDices: number, sum: number, dice_numbers: number[]): number => {
               if (nDices == 1) {
                 return dice_numbers.includes(sum) ? 1 / 6 : 0;
               }
                 return dice_numbers.reduce((acc, i) => acc + this.sumProbabilities(nDices - 1, sum - i, dice_numbers) * this.sumProbabilities(1, i, dice_numbers), 0);
             }
-            let key = JSON.stringify([nDices, sum, dice_numbers]);
+            let key = JSON.stringify([_nDices, _sum, _diceNumbers]);
 
             if (!this.diceCupProbs.has(key))
-            this.diceCupProbs.set(key, calculate(nDices, sum, dice_numbers));
+            this.diceCupProbs.set(key, calculate(_nDices, _sum, _diceNumbers));
     
             return this.diceCupProbs.get(key);
         }
 
+        // Sorts the table primary for the value and secondary the points 
         private async sortProbabilities(): Promise<void> {
             await this.balanceCategories();
             this.allProbs = this.allProbs.sort( function(a,b){
@@ -129,7 +146,9 @@ namespace DiceCup {
             });
         }
 
+        // Balances the categories with their expected values and a multiplier
         private async balanceCategories(): Promise<void> {
+            // All calculated expected values for each category
             let expectedValue_Fours: number = 8;
             let expectedValue_Fives: number = 10;
             let expectedValue_Sixes: number = 12;
@@ -138,6 +157,7 @@ namespace DiceCup {
             let expectedValue_OneToThree: number = 18;
             let expectedValue_DiceCup: number = 42;
 
+            // Used Multiplier for each category
             let multiplier_Fours: number = 0.6;
             let multiplier_Fives: number = 0.6;
             let multiplier_Sixes: number = 0.6;
@@ -146,6 +166,8 @@ namespace DiceCup {
             let multiplier_OneToThree: number = 0.4;
             let multiplier_DiceCup: number = 0.1;
             
+            // Value calculation
+            // Value = (Multiplier * Expected Value) + (Points - Expected Value)
             this.allProbs.map(function(elem) {
                 if (elem.category == ScoringCategory.fours) {
                     elem.value = (multiplier_Fours * expectedValue_Fours) + (elem.points - expectedValue_Fours);
@@ -169,11 +191,12 @@ namespace DiceCup {
             })
         }
 
-        private binomial(n: number, k: number): number {
+        // Calculates the binomial coefficient for the probability calculation
+        private binomial(_n: number, _k: number): number {
            var coeff = 1;
-           for (var x = n-k+1; x <= n; x++) coeff *= x;
-           for (x = 1; x <= k; x++) coeff /= x;
+           for (var x = _n-_k+1; x <= _n; x++) coeff *= x;
+           for (x = 1; x <= _k; x++) coeff /= x;
            return coeff;
-       }
+        }
     }
 }

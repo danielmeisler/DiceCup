@@ -2,6 +2,14 @@ namespace DiceCup{
     import ƒ = FudgeCore;
     export class Dice {
 
+        // -- Variable declaration --
+
+        // Color of this dice
+        public color: DiceColor;
+        // Value of this dice
+        public value: number;
+
+        // Nodes, Graphs and Components of the seperate parts of the dice model
         private graph: ƒ.Node = viewport.getBranch();
         private diceNode: ƒ.Node = this.graph.getChildrenByName("Dices")[0];
         private diceGraph: ƒ.Graph;
@@ -10,28 +18,35 @@ namespace DiceCup{
         private diceRig: ƒ.ComponentRigidbody;
         private dots: ƒ.Node[];
         private dotsMat: ƒ.ComponentMaterial[];
+
+        // Multiplayer: Host sends dice and Guests get dice
         private sendDice: SendDiceDao[] = [];
         private getDice: SendDiceDao = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)};
         
+        // Random translation and rotation to throw in the background of the main menu
         private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
+
+        // Dice sizes
         private bigDice: number = 0.3;
         private smallDice: number = 0.265;
-        private diceDistance: number = 0.2;
 
-        public color: DiceColor;
-        public value: number;
+        // Distance between multiple dice so that they can't be inside each other and flicker or glitch
+        private diceDistance: number = 0.2;
     
+        // Constructor to initialize a new dice
         constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message) {
             this.color = _color;
             this.initDice(_colorRGBA, _rollDiceMode, _hostDice);
         }
 
+        // Rolls a random dice number between 1 to 6
         public roll(): number {
             this.value = Math.floor((Math.random() * 6) + 1);
             return this.value;
         }
 
+        // Initialize Dice and its components
         private async initDice(_colorRGBA: RgbaDao, _rollDiceMode?: number, _hostDice?: FudgeNet.Message): Promise<void> {
             this.diceGraph = <ƒ.Graph>ƒ.Project.resources["Graph|2023-05-10T12:08:54.682Z|33820"];
             this.diceInst = await ƒ.Project.createGraphInstance(this.diceGraph);
@@ -40,6 +55,7 @@ namespace DiceCup{
             this.dots = this.diceInst.getChildren();
             this.dotsMat = this.dots.map(dot => dot.getComponent(ƒ.ComponentMaterial));
 
+            // Handles sound collision detection
             this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
 
             // let corners: ƒ.Node[] = [];
@@ -50,6 +66,8 @@ namespace DiceCup{
 
             // this.diceRig.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.handleDiceCollision);
 
+            // Singleplayer: Rolls the dice
+            // Multiplayer: Gets the dice translation, rotation and value from the host
             if (_rollDiceMode == 3) {
                 this.getDice.translation.x = (<any>(<any>_hostDice).translation).data[0];
                 this.getDice.translation.y = (<any>(<any>_hostDice).translation).data[1];
@@ -65,26 +83,18 @@ namespace DiceCup{
                 this.value = this.roll();
             }
 
-            this.scaleDices(_colorRGBA);
-            this.rollDices(_rollDiceMode);
-            this.colorDices(_colorRGBA);
+            // Scales, rolls and gives the dice the right color
+            this.scaleDice(_colorRGBA);
+            this.rollDice(_rollDiceMode);
+            this.colorDice(_colorRGBA);
 
             this.diceNode.addChild(this.diceInst);
         }
-
-        private async sendDiceToServer(): Promise<void> {
-            if (playerMode == PlayerMode.multiplayer && host == true) {
-                for (let index = 0; index < dices.length; index++) {
-                    this.sendDice[index] = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)}
-                    this.sendDice[index].value = dices[index].value;
-                    this.sendDice[index].translation = usedTranslations[index];
-                    this.sendDice[index].rotation = usedRotations[index];
-                }
-                client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
-            }
-        }
         
-        public async validateDices(): Promise<void> {
+        // Validates the dice in different modes.
+        // Mode 0: The dice get a gold color with black dots
+        // Mode 1: Nothing changes, the dice keeps its own colors
+        public async validateDice(): Promise<void> {
             let validateMode: number = 1;
             switch (validateMode) {
                 case 0:
@@ -101,7 +111,9 @@ namespace DiceCup{
             }
         }
 
-        public transparentDices(): void {
+        // All dice get transparent to not interfere with the visible validation 
+        // Because they were not used in the validation they stay transparent and the used ones will get color in validateDice()
+        public transparentDice(): void {
             let tempDices: ƒ.Node[] = this.diceNode.getChildren();
             let tempMat: ƒ.ComponentMaterial[] = tempDices.map(dice => dice.getComponent(ƒ.ComponentMaterial));
             let tempDots: ƒ.Node[][] = tempDices.map(dice => dice.getChildren());
@@ -111,7 +123,9 @@ namespace DiceCup{
             tempDotsMat.map(dot => dot.map(dot => dot.clrPrimary.a = 0.2));
         }
 
-        private async rollDices(_mode: number): Promise<void> {
+        // Rolls the physical 3d model dice
+        // Sets the translation and rotation in every used mode
+        private async rollDice(_mode: number): Promise<void> {
             this.diceRig.activate(false);
             switch (_mode) {
                 case 0:
@@ -136,6 +150,7 @@ namespace DiceCup{
             this.diceRig.activate(true);
         }
 
+        // Places the dice and checks if there is already a dice placed or not
         private async translateDice(_node: ƒ.Node): Promise<void> {
             let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.1, (Math.random() * 4) - 1.5);
             if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + this.diceDistance)) {
@@ -148,6 +163,9 @@ namespace DiceCup{
             this.clearUsedArrays()
         }
 
+        // Rotates the dice model in 90 degrees in specific axes to get the rolled value visible on the dice model too
+        // In order for this to always work, each dice model must look in the same direction with its dice numbers
+        // The Y Axis rotates random to get different angles
         private async rotateDice(_node: ƒ.Node): Promise<void> {
             let randomRotate: number = Math.random() * 360;
             switch (this.value) {
@@ -182,7 +200,8 @@ namespace DiceCup{
             this.clearUsedArrays();
         }
 
-        private async scaleDices(_colorRGBA: RgbaDao): Promise<void> {
+        // Scales the dice into small and big dices like in the original game depending which color the dice have
+        private async scaleDice(_colorRGBA: RgbaDao): Promise<void> {
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
             if (_colorRGBA.id == DiceColor.white || _colorRGBA.id == DiceColor.green || _colorRGBA.id == DiceColor.yellow) {
                 this.diceInst.mtxLocal.scaling = new ƒ.Vector3(this.smallDice, this.smallDice, this.smallDice);
@@ -191,7 +210,8 @@ namespace DiceCup{
             }
         }
 
-        private async colorDices(_colorRGBA: RgbaDao): Promise<void> {
+        // Gives the Dice the correct color for its body and dots
+        private async colorDice(_colorRGBA: RgbaDao): Promise<void> {
             let diceColors: RgbaDao[] = await loadDiceColors();
             
             this.diceMat.clrPrimary = new ƒ.Color(this.convertDiceColor(_colorRGBA.r), this.convertDiceColor(_colorRGBA.g), this.convertDiceColor(_colorRGBA.b), _colorRGBA.a);
@@ -202,17 +222,33 @@ namespace DiceCup{
             }
         }
         
+        // Converts rgb colors (0-255) into Fudge color format (0-1)
         private convertDiceColor(_value: number): number {
             let value: number;
             value = (_value / 2.55) / 100;
             return value;
         }
 
+        // Host sends the value, translation and rotation of each dice to the server so all players see the same constellation
+        private async sendDiceToServer(): Promise<void> {
+            if (playerMode == PlayerMode.multiplayer && host == true) {
+                for (let index = 0; index < dices.length; index++) {
+                    this.sendDice[index] = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)}
+                    this.sendDice[index].value = dices[index].value;
+                    this.sendDice[index].translation = usedTranslations[index];
+                    this.sendDice[index].rotation = usedRotations[index];
+                }
+                client.dispatch({ command: FudgeNet.COMMAND.SEND_DICE, route: FudgeNet.ROUTE.SERVER, content: { dice: this.sendDice } });
+            }
+        }
+
+        // Handles the collision sound when a dice hits another object
         private handleDiceCollision(_event: ƒ.EventPhysics): void {
             let soundArray: string[] = ["Audio|2023-05-15T13:12:43.528Z|46162", "Audio|2023-05-15T14:58:38.658Z|39413", "Audio|2023-05-15T14:58:49.349Z|84065", "Audio|2023-05-15T14:59:11.270Z|83758", "Audio|2023-05-15T14:59:11.270Z|83758"];
             playSFX(soundArray[Math.floor(Math.random() * soundArray.length)]);
         }
 
+        // Clears all used Arrays afters every round
         private async clearUsedArrays(): Promise<void> {
             if (usedTranslations.length == dices.length && usedRotations.length == dices.length) {
                 await this.sendDiceToServer();

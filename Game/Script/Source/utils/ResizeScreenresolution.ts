@@ -2,6 +2,7 @@
 
 namespace DiceCup {
 
+    // Resizes the mobile screen so the small virutal browser viewport creates a bad resolution
     export async function resizeScreenresolution(): Promise<void> {
         let width = document.documentElement.clientWidth * window.devicePixelRatio;
         let testviewport = document.querySelector("meta[name=viewport]");

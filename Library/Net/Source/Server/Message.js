@@ -47,15 +47,21 @@ export var FudgeNet;
         COMMAND["ROOM_INFO"] = "roomInfo";
         /** sent to the server to set or remove a room password */
         COMMAND["ROOM_PASSWORD"] = "roomPassword";
+        /** sent to the server to change the gamemode of the current game */
         COMMAND["CHANGE_GAMEMODE"] = "changeGamemode";
+        /** sent to the server to set the client on ready so the host can start the game if all clients are ready*/
         COMMAND["CLIENT_READY"] = "clientReady";
         /** sent to the server to set a temporary username besides the client id and check if its available */
         COMMAND["ASSIGN_USERNAME"] = "assignUsername";
         /** sent to the server to start the game with the connected clients */
         COMMAND["START_GAME"] = "startGame";
+        /** sent to the server to end the game with the connected clients and reset states and variables*/
         COMMAND["END_GAME"] = "endGame";
+        /** sent to the server as host to share the dice with the other clients */
         COMMAND["SEND_DICE"] = "sendDice";
+        /** sent to the server to share the score so everyone has a full summary table */
         COMMAND["SEND_SCORE"] = "sendScore";
+        /** sent to the server to determine how many clients want to skip the summary phase */
         COMMAND["SKIP_SUMMARY"] = "skipSummary";
     })(COMMAND = FudgeNet.COMMAND || (FudgeNet.COMMAND = {}));
     /**

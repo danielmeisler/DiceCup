@@ -1,13 +1,21 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    // -- Variable declaration --
+
+    // Categories the player picks will be removed from this array
     export let freePlayerCategories: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    // The time for picking a category
     let categoryTime: number = 10;
+    // Boolean to check if the timer is over
     let timerOver: boolean = false;
+    // Timer ID of the category timer so we can delete it etc.
     let timerID: number;
+    // TimerBar object to visualize the time and reset it
     let timerBar: TimerBar;
 
-    export async function initCategories() {
+    //  Initialize the category panel with the buttons etc. at the beginning
+    export async function initCategories(): Promise<void> {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();
 
@@ -37,6 +45,8 @@ namespace DiceCup {
         content.id = "categoryContent_id";
         container.appendChild(content);
 
+        // Creates every category button with adds event listener
+        // Deletes timer if player picked a category right in time
         for (let i = 0; i < categoriesLength; i++) {
             let button: HTMLButtonElement = document.createElement("button");
             button.classList.add("categoryButtons");
@@ -65,21 +75,13 @@ namespace DiceCup {
         visibility("hidden");
     }
 
-    function blockClicks(): void {
-        for (let i = 0; i < categoriesLength; i++) {
-            (<HTMLButtonElement>document.getElementById("categoryButtons_id_" + i)).disabled = true;
-        }
-    }
-
-    function unblockClicks(): void {
-        for (let i = 0; i < freePlayerCategories.length; i++) {
-            (<HTMLButtonElement>document.getElementById("categoryButtons_id_" + freePlayerCategories[i])).disabled = false;
-        }
-    }
-
-    export async function showCategories() {
+    // Shows the category panel every round in the category phase
+    export async function showCategories(): Promise<void> {
+        // If the player has only one category left it means it's the last round and it can be picked automatically without player input.
         if (freePlayerCategories.length == 1) {
             addPointsToButton(freePlayerCategories[0]);
+            // Singleplayer: Bots play their final round
+            // Multiplayer: Switching to th last validating state 
             if (playerMode == PlayerMode.multiplayer) {
                 changeGameState(GameState.validating);
             } else {
@@ -92,6 +94,7 @@ namespace DiceCup {
             document.getElementById("categoryBackground_id").style.zIndex = "10";
             ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible") });
 
+            // The timer is only available in the multiplayer
             if (playerMode == PlayerMode.multiplayer) {
                 timerBar = new TimerBar("categoryTimer_id", categoryTime);
                 timerOver = false;
@@ -104,7 +107,8 @@ namespace DiceCup {
         }
     }
 
-    export function hideCategories() {
+    // Hides the panel once timer expires or category has been picked
+    export function hideCategories(): void {
         document.getElementById("categoryContainer_id").classList.remove("categoriesShown");
         document.getElementById("categoryContainer_id").classList.add("categoriesHidden");
         document.getElementById("categoryBackground_id").classList.remove("emptyBackground");
@@ -112,10 +116,12 @@ namespace DiceCup {
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
     }
 
-    function visibility(_visibility: string) {
+    // Toggles the visibility of the panel
+    function visibility(_visibility: string): void {
         document.getElementById("categoryBackground_id").style.visibility = _visibility;
     }
 
+    // Handles the picked category and changes the panel every round
     async function handleCategory(_event: Event): Promise<void> {
         let index: number = parseInt((<HTMLDivElement>_event.currentTarget).getAttribute("index"));
         document.getElementById("categoryImage_i_" + (<HTMLDivElement>_event.currentTarget).getAttribute("index")).classList.add("categoryImagesTransparent");
@@ -123,15 +129,18 @@ namespace DiceCup {
         let tempArray: number[] = freePlayerCategories.filter((element) => element !== index);
         freePlayerCategories = tempArray;
         hideCategories();
+        // Singleplayer: The bots pick their categories now
+        // Multiplayer: Everyone waits until everyone has chosen a category 
         if (playerMode == PlayerMode.multiplayer) {
             waitForPlayerValidation();
         } else if (playerMode == PlayerMode.singlelpayer) {
-            lastPickedCategorie = index;
+            lastPickedCategory = index;
             botTurn();
         }
         ƒ.Time.game.setTimer(2000, 1, () => { addPointsToButton(index) });
     }
 
+    // Adds the gotten points for the picked category on the buttons after a little delay so it's only visible next round
     function addPointsToButton(_index: number): void {
         let valuation: Valuation = new Valuation(_index, dices, true);
         let value: number = valuation.chooseScoringCategory();
@@ -148,5 +157,18 @@ namespace DiceCup {
         unblockClicks();
         changeGameState(GameState.validating);
     }
-    
+
+    // Blocks clicks/taps of all buttons so the player can't pick more than one category
+    function blockClicks(): void {
+        for (let i = 0; i < categoriesLength; i++) {
+            (<HTMLButtonElement>document.getElementById("categoryButtons_id_" + i)).disabled = true;
+        }
+    }
+
+    // Unblocks the clicks/taps so the player can pick a category again in the next round
+    function unblockClicks(): void {
+        for (let i = 0; i < freePlayerCategories.length; i++) {
+            (<HTMLButtonElement>document.getElementById("categoryButtons_id_" + freePlayerCategories[i])).disabled = false;
+        }
+    }
 }

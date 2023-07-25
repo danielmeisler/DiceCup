@@ -1,8 +1,12 @@
 namespace DiceCup {
 
+    // -- Variable declaration --
+
+    // Variables for music and sound effect volumes
     export let sfxVolume: number = localStorage.getItem("volume") ? parseInt(localStorage.getItem("volume")) : 50;
     export let musicVolume: number = localStorage.getItem("musicVolume") ? parseInt(localStorage.getItem("musicVolume")) : 50;
 
+    // Creates a submenu for the options screen where the player can change settings related to the whole application like volume, language or game settings
     export function optionsMenu(): void {
         new SubMenu(MenuPage.options, "options", language.menu.settings.title);
 
@@ -11,6 +15,7 @@ namespace DiceCup {
         contentContainer.classList.add("lobbyContainer");
         document.getElementById("optionsMenuContent_id").appendChild(contentContainer);
 
+        // Creates a reset button to return to default factory settings
         let resetButton: HTMLButtonElement = document.createElement("button");
         resetButton.id = "optionsStartButton_id";
         resetButton.classList.add("gameMenuStartButtons");
@@ -26,6 +31,7 @@ namespace DiceCup {
             location.reload();
         });
 
+        // Creates the gridlayout for the content
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 2; col++) {
                 let gridContainer: HTMLDivElement = document.createElement("div");
@@ -36,6 +42,7 @@ namespace DiceCup {
             }
         }
     
+        // Creates the music volume controls
         let musicControlTag: HTMLSpanElement = document.createElement("span");
         musicControlTag.id = "optionsSoundControlTag_id";
         musicControlTag.innerHTML = language.menu.settings.volume.music;
@@ -107,6 +114,7 @@ namespace DiceCup {
             musicSwitchButtonLeftIcon.style.opacity = "0";
         }
 
+        // Creates the sfx volume controls
         let soundControlTag: HTMLSpanElement = document.createElement("span");
         soundControlTag.id = "optionsSoundControlTag_id";
         soundControlTag.innerHTML = language.menu.settings.volume.sfx;
@@ -178,6 +186,7 @@ namespace DiceCup {
             switchButtonLeftIcon.style.opacity = "0";
         }
 
+        // Creates the language switch controls
         let languageTag: HTMLSpanElement = document.createElement("span");
         languageTag.id = "optionsLanguageTag_id";
         languageTag.innerHTML = language.menu.settings.language.title;
@@ -189,7 +198,7 @@ namespace DiceCup {
 
         let languageControlButton: HTMLButtonElement = document.createElement("button");
         languageControlButton.id = "optionsLanguageButton_id";
-        languageControlButton.innerHTML = translateLanguages(currentLanguage) + " ▾";
+        languageControlButton.innerHTML = languageTranslation(currentLanguage) + " ▾";
         languageControlContainer.appendChild(languageControlButton);
 
         let languageControlMenu: HTMLDivElement = document.createElement("div");
@@ -199,7 +208,7 @@ namespace DiceCup {
         for (let i = 0; i < Object.values(Languages).length; i++) {
             let languageControlButton: HTMLButtonElement = document.createElement("button");
             languageControlButton.classList.add("optionsLanguageMenuContent");
-            languageControlButton.innerHTML = translateLanguages(Object.values(Languages)[i]);
+            languageControlButton.innerHTML = languageTranslation(Object.values(Languages)[i]);
             languageControlMenu.appendChild(languageControlButton);
             languageControlButton.addEventListener("click", () => {                 
                 playSFX(buttonClick);
@@ -214,6 +223,7 @@ namespace DiceCup {
             languageControlMenu.classList.contains("optionsShowLanguages") ? languageControlMenu.classList.remove("optionsShowLanguages") : languageControlMenu.classList.add("optionsShowLanguages") 
         } );
 
+        // Creates the controls for the hud visibility
         let helpCategory: HTMLSpanElement = document.createElement("span");
         helpCategory.id = "optionsHelpCategory_id";
         helpCategory.innerHTML = language.menu.settings.help_category_hud.title;

@@ -1,7 +1,11 @@
 namespace DiceCup {
-    // import ƒ = FudgeCore;
+
+    // -- Variable declaration --
+
+    // Stores the last clicked/tapped room to join
     export let focusedIdRoom: string = "";
 
+    // Creates a submenu for the server list with empty containers and content
     export function multiplayerServers(): void {
         new SubMenu(MenuPage.multiplayer, "multiplayer", language.menu.multiplayer.list.title);
 
@@ -64,6 +68,7 @@ namespace DiceCup {
         initList();
     }
 
+    // Creates the gridlayout for the rows and cols of the serverlist content
     function initList(): void {
         let serverList: HTMLElement = document.getElementById("serverListRow_id_header");
 
@@ -117,6 +122,7 @@ namespace DiceCup {
         lockedContainer.appendChild(locked);
     }
 
+    // Shows the password input field if the room is private and password secured
     export function passwordInput(): void {
         let passwordInputContainer: HTMLDivElement = document.createElement("div");
         passwordInputContainer.id = "passwordInputContainer_id";
@@ -173,6 +179,7 @@ namespace DiceCup {
         passwordInputContainer.appendChild(passwordAlert);
     }
 
+    // Fills the serverlist with all available rooms
     export async function getRooms(_message: FudgeNet.Message): Promise<void> {
         while (document.getElementById("multiplayerContentContainer_id").childNodes.length > 1) {
             document.getElementById("multiplayerContentContainer_id").removeChild(document.getElementById("multiplayerContentContainer_id").lastChild);
@@ -226,7 +233,7 @@ namespace DiceCup {
             let gamemode: HTMLSpanElement = document.createElement("span");
             gamemode.id = "gamemode_id_" + i;
             gamemode.classList.add("multiplayerGamemode");
-            gamemode.innerHTML = getGameModeTranslation(_message.content.gamemode[i]);
+            gamemode.innerHTML = gamemodeTranslation(_message.content.gamemode[i]);
             gamemodeContainer.appendChild(gamemode);
 
             let locked: HTMLImageElement = document.createElement("img");

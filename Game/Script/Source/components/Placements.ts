@@ -1,8 +1,12 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
 
+    // -- Variable declaration --
+
+    // Variable to store the players place in rank
     let place: number = 0;
 
+    // Initialize the placements screen with empty containers and content
     export function initPlacements(): void {
         let background: HTMLDivElement = document.createElement("div");
         background.id = "placementsBackground_id";
@@ -74,6 +78,7 @@ namespace DiceCup {
         visibility("hidden");
     }
 
+    // Creates a placements container for one player with empty content
     function createPlacements(): void {
         for (let i = 0; i < 6; i++) {
             let placementsContainer: HTMLDivElement = document.createElement("div");
@@ -110,21 +115,26 @@ namespace DiceCup {
         }
     }
 
+    // Updates the content after final round with names, points and place in the right order
     export function updatePlacements(): void {
         let name: string[] = [];
         let points: number[] = [];
         let bots: BotDao[] = [];
+        // Singleplayer: Gets the names from the singleplayer gamesetting object
+        // Multiplayer: Gets the names from all multiplayer player
         if (playerMode == PlayerMode.singlelpayer) {
             bots = gameSettings_sp.bot;
         } else if (playerMode == PlayerMode.multiplayer) {
             playerNames = playerNames.filter(name => name != "");
         }
 
+        // Gets names and points from the summary table
         for (let i = 0; i < playerNames.length; i++) {
             name[i] = document.querySelector("#summaryText_id_" + playerNames[i] + "_playerNames").innerHTML;
             points[i] = parseInt(document.querySelector("#summaryText_id_" + playerNames[i] + "_sum").innerHTML);
         }
 
+        // Sorts the placements with bubble sort
         for (let i = 0; i < points.length; i++) {
             for (let j = 0; j < points.length; j++) {
                 if (points[j] < points[j+1]) {
@@ -134,6 +144,7 @@ namespace DiceCup {
             }
         }
 
+        // Hides the unused containers if less then max players
         for (let i = 0; i < 6; i++) {
             if (i >= playerNames.length) {
                 document.getElementById("placementsContainer_id_" + i).style.display = "none";
@@ -142,6 +153,7 @@ namespace DiceCup {
 
         for (let i = 0; i < points.length; i++) {
             for (let j = 0; j < bots.length; j++) {
+                // Chooses icon if the player is a real human or a bot
                 if (name[i] == bots[j].botName) {
                     (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/bot.svg";
                     break;
@@ -149,10 +161,13 @@ namespace DiceCup {
                     (<HTMLImageElement>document.getElementById("placementsPlayerIcons_id_" + i)).src = "Game/Assets/images/menuButtons/player.svg";
                 }
             }
+            // Fills the container 
             document.getElementById("playerName_id_" + i).innerHTML = name[i];
             document.getElementById("placementsPoints_id_" + i).innerHTML = points[i].toString();
             document.getElementById("placementsOrder_id_" + i).innerHTML = (i + 1).toString();
 
+            // Singleplayer: Shows placement phrase for player
+            // Multiplayer: Shows individual placement phrase for each player and send message to server that the game has ended
             if (playerMode == PlayerMode.singlelpayer) {
                 if (name[i] == gameSettings_sp.playerName) {
                     place = i + 1;
@@ -163,13 +178,14 @@ namespace DiceCup {
                     place = i + 1;
                     document.getElementById("placementsPhrase_id").innerHTML = language.game.placements.placement.part_1 + " " + place + ". " +  language.game.placements.placement.part_2;
                 }
-                client.dispatch({ command: FudgeNet.COMMAND.END_GAME, route: FudgeNet.ROUTE.SERVER });
+                host ?? client.dispatch({ command: FudgeNet.COMMAND.END_GAME, route: FudgeNet.ROUTE.SERVER });
             }
 
         }
     }
 
-    export function showPlacements() {
+    // Shows placement screen at the end of the game
+    export function showPlacements(): void {
         document.getElementById("placementsContainer_id").classList.add("placementsShown");
         document.getElementById("placementsContainer_id").classList.remove("placementsHidden");
         document.getElementById("placementsBackground_id").classList.add("emptyBackground");
@@ -177,19 +193,21 @@ namespace DiceCup {
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("visible"), placementsSounds() });
     }
 
-    export function hidePlacements() {
+    // Hides placement screen after leaving it
+    export function hidePlacements(): void {
         document.getElementById("placementsContainer_id").classList.remove("placementsShown");
         document.getElementById("placementsContainer_id").classList.add("placementsHidden");
         document.getElementById("placementsBackground_id").classList.remove("emptyBackground");
         document.getElementById("placementsBackground_id").style.zIndex = "0";
-        // hideHud
         ƒ.Time.game.setTimer(1000, 1, () => { visibility("hidden") });
     }
 
-    function visibility(_visibility: string) {
+    // Toggles visibility of the placement screen
+    function visibility(_visibility: string): void {
         document.getElementById("placementsBackground_id").style.visibility = _visibility;
     }   
 
+    // Plays sounds after arriving at the end of the game
     function placementsSounds(): void {
         playSFX("Audio|2023-05-18T21:20:15.907Z|47241");
     }

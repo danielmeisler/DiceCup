@@ -21,112 +21,6 @@ declare namespace DiceCup {
     let dicesLength: number;
 }
 declare namespace DiceCup {
-    class Bot {
-        dices: Dice[];
-        private freeCategories;
-        private categoryCounter;
-        private difficulty;
-        private name;
-        private mode;
-        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[], _mode: number);
-        botsTurn(): Promise<void>;
-        private chooseDifficulty;
-        private botEasy;
-        private botMedium;
-        private botHard;
-        private botValuation;
-    }
-}
-declare namespace DiceCup {
-    class Dice {
-        private graph;
-        private diceNode;
-        private diceGraph;
-        private diceInst;
-        private diceMat;
-        private diceRig;
-        private dots;
-        private dotsMat;
-        private sendDice;
-        private getDice;
-        private arenaTranslation;
-        private arenaRotation;
-        private bigDice;
-        private smallDice;
-        private diceDistance;
-        color: DiceColor;
-        value: number;
-        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message);
-        roll(): number;
-        private initDice;
-        private sendDiceToServer;
-        validateDices(): Promise<void>;
-        transparentDices(): void;
-        private rollDices;
-        private translateDice;
-        private rotateDice;
-        private scaleDices;
-        private colorDices;
-        private convertDiceColor;
-        private handleDiceCollision;
-        private clearUsedArrays;
-    }
-}
-declare namespace DiceCup {
-    class Probabilities {
-        private values;
-        private freeCategories;
-        private dices;
-        private allProbs;
-        private diceCupProbs;
-        constructor(_dices: Dice[], _values: number[][], _freeCategories: number[]);
-        fillProbabilities(): Promise<ProbabilitiesDao[]>;
-        private chooseProbabilities;
-        private numberProbabilities;
-        private colorProbabilities;
-        private doublesProbabilities;
-        private oneToThreeProbabilities;
-        private diceCupProbabilities;
-        private sumProbabilities;
-        private sortProbabilities;
-        private balanceCategories;
-        private binomial;
-    }
-}
-declare namespace DiceCup {
-    class SubMenu {
-        private menu;
-        private id;
-        private title;
-        constructor(_menu: MenuPage, _id: string, _title: string);
-        createSubMenu(): void;
-    }
-}
-declare namespace DiceCup {
-    class TimerBar {
-        private time;
-        private percentage;
-        private id;
-        private timerID;
-        constructor(_id: string, _time: number);
-        resetTimer(): void;
-        private getTimerPercentage;
-    }
-}
-declare namespace DiceCup {
-    class Valuation {
-        private scoringCategory;
-        private dices;
-        private player;
-        constructor(_category: ScoringCategory, _dices: Dice[], _player: boolean);
-        chooseScoringCategory(): number;
-        private calculateNumber;
-        private calculateColor;
-        private calculateDoubles;
-        private calculateDiceCup;
-    }
-}
-declare namespace DiceCup {
     let freePlayerCategories: number[];
     function initCategories(): Promise<void>;
     function showCategories(): Promise<void>;
@@ -257,7 +151,7 @@ declare namespace DiceCup {
     let gameSettings_mp: MultiPlayerSettingsDao;
     let usedTranslations: ƒ.Vector3[];
     let usedRotations: ƒ.Vector3[];
-    let lastPickedCategorie: number;
+    let lastPickedCategory: number;
     function botTurn(): void;
     function loadDiceColors(): Promise<RgbaDao[]>;
     function rollDices(_message?: FudgeNet.Message): Promise<void>;
@@ -266,13 +160,7 @@ declare namespace DiceCup {
     function lastRound(): void;
 }
 declare namespace DiceCup {
-    function getGameModeTranslation(_gamemode: number): string;
-}
-declare namespace DiceCup {
     function gameOver(_return: MenuPage): void;
-}
-declare namespace DiceCup {
-    function changeGameState(_gameState: GameState): Promise<void>;
 }
 declare namespace DiceCup {
     let buttonClick: string;
@@ -285,9 +173,6 @@ declare namespace DiceCup {
 }
 declare namespace DiceCup {
     function update(_event: Event): void;
-}
-declare namespace DiceCup {
-    function changeViewportState(_viewportState: ViewportState): Promise<void>;
 }
 declare namespace DiceCup {
     function initMenu(): Promise<void>;
@@ -497,6 +382,118 @@ declare namespace DiceCup {
     }
 }
 declare namespace DiceCup {
+    class Bot {
+        dices: Dice[];
+        private freeCategories;
+        private categoryCounter;
+        private difficulty;
+        private name;
+        private mode;
+        constructor(_name: string, _difficulty: BotDifficulty, _dices: Dice[], _mode: number);
+        botsTurn(): Promise<void>;
+        private chooseDifficulty;
+        private botEasy;
+        private botMedium;
+        private botHard;
+        private botValuation;
+    }
+}
+declare namespace DiceCup {
+    class Dice {
+        color: DiceColor;
+        value: number;
+        private graph;
+        private diceNode;
+        private diceGraph;
+        private diceInst;
+        private diceMat;
+        private diceRig;
+        private dots;
+        private dotsMat;
+        private sendDice;
+        private getDice;
+        private arenaTranslation;
+        private arenaRotation;
+        private bigDice;
+        private smallDice;
+        private diceDistance;
+        constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message);
+        roll(): number;
+        private initDice;
+        validateDice(): Promise<void>;
+        transparentDice(): void;
+        private rollDice;
+        private translateDice;
+        private rotateDice;
+        private scaleDice;
+        private colorDice;
+        private convertDiceColor;
+        private sendDiceToServer;
+        private handleDiceCollision;
+        private clearUsedArrays;
+    }
+}
+declare namespace DiceCup {
+    class Probabilities {
+        private values;
+        private freeCategories;
+        private dices;
+        private allProbs;
+        private diceCupProbs;
+        constructor(_dices: Dice[], _values: number[][], _freeCategories: number[]);
+        fillProbabilities(): Promise<ProbabilitiesDao[]>;
+        private chooseProbabilities;
+        private numberProbabilities;
+        private colorProbabilities;
+        private doublesProbabilities;
+        private oneToThreeProbabilities;
+        private diceCupProbabilities;
+        private sumProbabilities;
+        private sortProbabilities;
+        private balanceCategories;
+        private binomial;
+    }
+}
+declare namespace DiceCup {
+    class SubMenu {
+        private menu;
+        private id;
+        private title;
+        constructor(_menu: MenuPage, _id: string, _title: string);
+        createSubMenu(): void;
+    }
+}
+declare namespace DiceCup {
+    class TimerBar {
+        private time;
+        private percentage;
+        private elementID;
+        private timerID;
+        constructor(_id: string, _time: number);
+        resetTimer(): void;
+        private getTimerPercentage;
+    }
+}
+declare namespace DiceCup {
+    class Valuation {
+        private scoringCategory;
+        private dices;
+        private player;
+        constructor(_category: ScoringCategory, _dices: Dice[], _player: boolean);
+        chooseScoringCategory(): number;
+        private calculateNumber;
+        private calculateColor;
+        private calculateDoubles;
+        private calculateDiceCup;
+    }
+}
+declare namespace DiceCup {
+    function changeGameState(_gameState: GameState): Promise<void>;
+}
+declare namespace DiceCup {
+    function changeViewportState(_viewportState: ViewportState): Promise<void>;
+}
+declare namespace DiceCup {
     import ƒClient = FudgeNet.FudgeClient;
     let client: ƒClient;
     let host: boolean;
@@ -510,7 +507,9 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     let language: LanguageDao;
     function chooseLanguage(_language: Languages): Promise<void>;
-    function translateLanguages(_language: Languages): string;
+    function languageTranslation(_language: Languages): string;
+    function difficultyTranslation(_difficulty: string): string;
+    function gamemodeTranslation(_gamemode: number): string;
 }
 declare namespace DiceCup {
     function resizeScreenresolution(): Promise<void>;
@@ -518,5 +517,5 @@ declare namespace DiceCup {
 declare namespace DiceCup {
     function enableWakeLock(): Promise<boolean>;
     function disableWakeLock(): void;
-    function resetTimer(): void;
+    function resetWakeLock(): void;
 }

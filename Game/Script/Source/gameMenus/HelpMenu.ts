@@ -1,9 +1,15 @@
 namespace DiceCup {
 
+    // -- Variable declaration --
+
+    // Determines the start page 
     let helpPages: number = 1;
+    // Determines how many pages the instruction has
     let helpPagesMax: number = 4;
+    // Splits the content into list points or seperate parts of an instruction
     let splitContent: string[]
 
+    // Creates a SubMenu and fills content with game instructions seperated in multiple pages
     export function helpMenu(): void {
         new SubMenu(MenuPage.help, "help", language.menu.help.title);
 
@@ -42,9 +48,11 @@ namespace DiceCup {
         for (let i = 1; i <= helpPagesMax; i++) {
             loadContent(i);
         }
+        // Start the menu with page 1
         changePage(helpPages);
     }
 
+    // Changes the page of the instructions
     async function changePage(_page: number): Promise<void> {
         document.getElementById("helpAlert_id").innerHTML = language.menu.help.page + " " + _page + "/" + helpPagesMax;
         
@@ -55,8 +63,8 @@ namespace DiceCup {
         document.getElementById("helpPage_" + _page).hidden = false;
     }
 
+    // Loads the content for every page
     async function loadContent(_page: number): Promise<void> {
-
         let containerDiv: HTMLDivElement = document.createElement("div");
         containerDiv.id = "helpPage_" + _page;
         containerDiv.hidden = true;
@@ -142,6 +150,7 @@ namespace DiceCup {
         }
     }
 
+    // Loads the category icons for the needed example situtation
     async function loadIcon(_icon: number): Promise<string> {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();

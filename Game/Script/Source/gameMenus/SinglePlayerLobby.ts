@@ -1,16 +1,26 @@
 namespace DiceCup {
     import ƒ = FudgeCore;
+
+    // -- Variable declaration --
+
+    // Object for the bot settings (names and difficulties)
     let botSettings: BotDao[];
+    // Determines the first bot so it can't be removed, because the game needs min one bot
     let firstBot: number = 0;
+    // Determines how many bots are added or removed from the lobby
     let botCount: number = 0;
+    // Determines the chosen difficulty for each bot
     let chosenDifficulty: number = 1;
+    // Stores all names for the game settings
     let allNames: string[] = [];
 
+    // Creates a submenu for the singleplayer lobby with localstorage saved settings or min one bot and random names
     export function singleplayerMenu(): void {
         new SubMenu(MenuPage.singleplayer, "singleplayer", language.menu.singleplayer.lobby.title);
         let localCount: number[] = JSON.parse(localStorage.getItem("difficulties")) ?? [1];
         let botCounter: number = localCount.length ?? localCount[0];
 
+        // Creates Player, Bot and Add Containers
         createPlayerPortrait();
         for (let index = 0; index < botCounter; index++) {
             createBotPortrait();
@@ -50,11 +60,12 @@ namespace DiceCup {
         });
     }
 
+    // Creates and checks the gamesettings if the player wants to start the game
     function createGameSettings(): void {
-        // let bots: number = document.querySelectorAll(".botContainer").length;
         botSettings = [];
         let ids: string[] = [];
 
+        // Gets the bot placeholders at names at first
         for (let i = 0, idCounter = 0; i < 5; i++) {
             if ((<HTMLInputElement>document.getElementById("botName_id_" + i))) {
                 ids[idCounter] = (<HTMLInputElement>document.getElementById("botName_id_" + i)).placeholder;  
@@ -62,16 +73,20 @@ namespace DiceCup {
             }
         }
 
+        // Pushes them into the bot settings object with preset settings
         for (let i = 0; i < ids.length; i++) {
             botSettings.push({botName: ids[i], difficulty: BotDifficulty.easy});
         }
 
+        // Initialize the game settings object with the playername and botsettings
         gameSettings_sp = {playerName: (<HTMLInputElement>document.getElementById("playerName_id")).placeholder, bot: botSettings};
 
+        // Gets the playername from the input field
         if ((<HTMLInputElement>document.getElementById("playerName_id")).value) {
             gameSettings_sp.playerName = (<HTMLInputElement>document.getElementById("playerName_id")).value;
         }
 
+        // Gets the new bot names and set difficulties from the input fields
         ids = [];
         for (let i = 0, idCounter = 0; i < 5; i++) {
             if ((<HTMLInputElement>document.getElementById("botName_id_" + i))) {
@@ -89,11 +104,14 @@ namespace DiceCup {
             }
         }
 
+        // Pushes all names in a seperated array
         let playerNames: string[] = [gameSettings_sp.playerName];
         for (let index = 0; index < gameSettings_sp.bot.length; index++) {
             playerNames.push(gameSettings_sp.bot[index].botName);
         }
 
+        // Checks the playername and if the check returns true all game settings are saved in localstorage for next game creation
+        // Some enums and booleans get changed and the game starts with gamestate change
         if (checkPlayernames(playerNames)) {
             hideMenu();
             localStorage.setItem("playernames",JSON.stringify(playerNames));
@@ -104,6 +122,7 @@ namespace DiceCup {
         }
     }
 
+    // Checks the playernames with regular expressions for invalid tokens and identical names 
     function checkPlayernames(_names: string[]): boolean {
         let doubles: string[] = _names.filter((item, index) => _names.indexOf(item) !== index);
         for (let i = 0; i < _names.length; i++) {
@@ -121,6 +140,7 @@ namespace DiceCup {
         return true;
     }
 
+    // Collects all names and checks them directly with the input of the player
     function collectNames(): void {
         allNames = [];
 
@@ -145,6 +165,7 @@ namespace DiceCup {
         checkPlayernames(allNames);
     }
 
+    // Creates a player container with localstorage savefiles or factory settings
     function createPlayerPortrait(): void {
         let playerContainer: HTMLDivElement = document.createElement("div");
         playerContainer.id = "playerContainer_id";
@@ -197,6 +218,7 @@ namespace DiceCup {
         playerContainer.appendChild(difficultySwitchHidden);
     }
 
+    // Creates a bot container with localstorage savefiles or factory settings
     function createBotPortrait(): void {
         let botContainer: HTMLDivElement = document.createElement("div");
         botContainer.id = "botContainer_id_" + botCount;
@@ -213,6 +235,7 @@ namespace DiceCup {
         botDiv.disabled = true;
         botContainer.appendChild(botDiv);
 
+        // Creates the remove bot button on every container except the first bot
         if (firstBot > 0) {
             let botRemove: HTMLButtonElement = document.createElement("button");
             botRemove.id = "botRemove_id_" + botCount;
@@ -245,6 +268,7 @@ namespace DiceCup {
         botName.classList.add("nameInputs");
         nameInputContainer.appendChild(botName);
 
+        // Creates the input field with random generated bot names or selfmade names
         let nameInputButton: HTMLButtonElement = document.createElement("button");
         nameInputButton.id = "nameInputButton_id_" + botCount;
         nameInputButton.classList.add("nameInputsButtons");
@@ -260,6 +284,7 @@ namespace DiceCup {
             collectNames();
         });
 
+        // Creates the difficulty switch to change the difficulty for each bot
         let difficultySwitch: HTMLDivElement = document.createElement("div");
         difficultySwitch.classList.add("difficultySwitch");
         botContainer.appendChild(difficultySwitch);
@@ -283,7 +308,7 @@ namespace DiceCup {
         difficultyText.id = "switchDifficultyText_id_" + botCount;
 
         let difficulties: string[] = JSON.parse(localStorage.getItem("difficulties")) ?? [];
-        difficultyText.innerHTML = difficultyLanguage(BotDifficulty[parseInt(difficulties[botCount])]) ?? difficultyLanguage(BotDifficulty[chosenDifficulty]);
+        difficultyText.innerHTML = difficultyTranslation(BotDifficulty[parseInt(difficulties[botCount])]) ?? difficultyTranslation(BotDifficulty[chosenDifficulty]);
         difficultySwitchText.appendChild(difficultyText);
 
         let switchButtonRight: HTMLButtonElement = document.createElement("button");
@@ -302,7 +327,7 @@ namespace DiceCup {
             } else {
                 chosenDifficulty = 0;
             }
-            difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
+            difficultyText.innerHTML = difficultyTranslation(BotDifficulty[chosenDifficulty]);
         });
         switchButtonLeft.addEventListener("click", () => {
             playSFX(buttonClick);
@@ -311,12 +336,13 @@ namespace DiceCup {
             } else {
                 chosenDifficulty = 2;
             }
-            difficultyText.innerHTML = difficultyLanguage(BotDifficulty[chosenDifficulty]);
+            difficultyText.innerHTML = difficultyTranslation(BotDifficulty[chosenDifficulty]);
         });
         botCount++;
         firstBot++;
     }
 
+    // Creates an add button to add more bots
     function createAddPortrait(): void {
         let addContainer: HTMLDivElement = document.createElement("div");
         addContainer.classList.add("addContainer");
@@ -339,34 +365,18 @@ namespace DiceCup {
         addPlayerDiv.addEventListener("click", () => playSFX(buttonClick));
     }
 
+    // Adds a bot to the game and visualizes it with a new bot container
     function handleAddBot(_event: Event): void {
         firstBot++;
         this.parentElement.remove();
         createBotPortrait();
     }
 
+    // Removes a bot to the game and visualizes it with a new add button
     function handleRemoveBot(_event: Event): void {
         firstBot--;
         botCount--;
         this.parentElement.parentElement.remove();
         createAddPortrait();
-    }
-
-    function difficultyLanguage(_difficulty: string): string {
-        let diff_lang: string;
-        switch (_difficulty) {
-            case BotDifficulty[BotDifficulty.easy]:
-                diff_lang = language.menu.singleplayer.lobby.difficulties.easy;
-                break;
-            case BotDifficulty[BotDifficulty.normal]:
-                diff_lang = language.menu.singleplayer.lobby.difficulties.normal;
-                break;
-            case BotDifficulty[BotDifficulty.hard]:
-                diff_lang = language.menu.singleplayer.lobby.difficulties.hard;
-                break;
-            default:
-                break;
-        }
-        return diff_lang;
     }
 }

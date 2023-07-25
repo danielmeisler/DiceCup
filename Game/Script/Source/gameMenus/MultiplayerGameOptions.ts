@@ -1,8 +1,13 @@
 namespace DiceCup {
 
+    // -- Variable declaration --
+
+    // Stores the password for the multiplayer room
     export let roomPassword: string = "";
+    // Determines if the room is private and password secured or public for everyone else
     export let privateRoom: boolean;
 
+    // Creates a Submenu with setting options for the current singleplayer game
     export function multiplayerGameOptions(): void {
         new SubMenu(MenuPage.multiplayerGameOptions, "multiplayerGameOptions", language.menu.gamesettings.title);
 
@@ -37,6 +42,7 @@ namespace DiceCup {
             privateRoom = false;
         }
 
+        // Creates the controls for the room privacy (public or private and password secured)
         let roomPasswordTag: HTMLSpanElement = document.createElement("span");
         roomPasswordTag.id = "multiplayerGameOptionsRoomPasswordTag_id";
         roomPasswordTag.innerHTML = language.menu.gamesettings.password_switch;
@@ -51,6 +57,7 @@ namespace DiceCup {
         passwordCheckbox.checked = privateRoom;
         roomPasswordContainer.appendChild(passwordCheckbox);
 
+        // Generates a random 4 digit number as the password for the room
         let passwordTag: HTMLSpanElement = document.createElement("span");
         passwordTag.id = "multiplayerGameOptionsPasswordTag2_id";
         passwordTag.innerHTML = language.menu.gamesettings.password;
@@ -74,6 +81,7 @@ namespace DiceCup {
             }
         });
 
+        // Creates the control for the round time
         let roundTimerTag: HTMLSpanElement = document.createElement("span");
         roundTimerTag.id = "multiplayerGameOptionsRoundTimer_id";
         roundTimerTag.innerHTML = "Round Timer";
@@ -156,6 +164,7 @@ namespace DiceCup {
         }
     }
 
+    // Sends the changed option to every other connected client in this room
     function changeGamemode(_gamemode: number): void {
         gameMode = _gamemode;
         localStorage.setItem("gamemode", gameMode.toString());

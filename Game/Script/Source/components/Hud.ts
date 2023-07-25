@@ -1,5 +1,6 @@
 namespace DiceCup {
 
+    // Initialize the Hud in beginners state
     export async function initHud(): Promise<void> {
         let response: Response = await fetch("Game/Script/Data/scoringCategories.json");
         let categories: ScoringCategoryDao[] = await response.json();
@@ -45,6 +46,7 @@ namespace DiceCup {
 
     }
 
+    // Shows the hud every round
     export function showHud(): void {
         for (let i: number = 0; i < categoriesLength; i++) {
         document.getElementById("valuation_id_" + i).classList.remove("valuationHidden");
@@ -52,6 +54,7 @@ namespace DiceCup {
         }
     }
 
+    // Hides single categories after getting picked from players
     export function hideHudCategory(_id: number): void {
         document.getElementById("valuation_id_" + _id).classList.remove("valuationShow");
         document.getElementById("valuation_id_" + _id).classList.add("valuationHidden");

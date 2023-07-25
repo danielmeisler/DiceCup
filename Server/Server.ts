@@ -4,8 +4,10 @@
  * @author Jirka Dell'Oro-Friedl, HFU, 2021
  */
 
+// Imports the FudgeServer
 import { FudgeServer } from "../Library/Net/Build/Server/FudgeServer.js";
 
+// Defines the port
 let port: number | string | undefined = process.env.PORT;
 if (port == undefined)
   port = parseInt(process.argv[2]);
@@ -15,6 +17,7 @@ if (!port) {
   process.exit();
 }
 
+// Starts the Fudge Server with given port
 let server: FudgeServer = new FudgeServer();
 server.startUp(<number>port);
 console.log(server);

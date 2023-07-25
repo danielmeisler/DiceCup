@@ -1,5 +1,6 @@
 namespace DiceCup {
 
+    // Initialize the main menu with all containers and buttons for every submenu
     export function mainMenu(): void {
         let gameMenuDiv: HTMLDivElement = document.createElement("div");
         gameMenuDiv.id = "gameMenu_id";
@@ -26,9 +27,11 @@ namespace DiceCup {
         buttonDiv.id = "buttonContainer_id";
         menuDiv.appendChild(buttonDiv);
 
+        // Determines the main menu button ids and their icon paths
         let menuButtonIds: string[] = ["play_id", "multiplayer_id", "help_id", "options_id"];
         let menuButtonIconPaths: string[] = ["Game/Assets/images/menuButtons/play.svg", "Game/Assets/images/menuButtons/multiplayer.svg", "Game/Assets/images/menuButtons/help.svg", "Game/Assets/images/menuButtons/settings.svg"];
 
+        // Creates the main menu buttons
         for (let i = 0; i < 4; i++) {
             let menuButtons: HTMLButtonElement = document.createElement("button");
             menuButtons.classList.add("menuButtons");
@@ -41,6 +44,8 @@ namespace DiceCup {
             menuIcons.src = menuButtonIconPaths[i];
             menuButtons.appendChild(menuIcons);
         }
+
+        // Adds the event listener for each button
 
         document.getElementById("play_id").addEventListener("click", () => {
             playSFX(buttonClick);
@@ -62,6 +67,9 @@ namespace DiceCup {
             playSFX(buttonClick);
             switchMenu(MenuPage.options);
         });
+
+
+        // Creates the online container in the corner of the main menu to see directly if the client is connected and his id
 
         let onlineContainer: HTMLDivElement = document.createElement("div");
         onlineContainer.id = "onlineContainer_id";
