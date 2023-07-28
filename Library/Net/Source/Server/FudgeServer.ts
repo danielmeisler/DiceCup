@@ -419,6 +419,9 @@ export class FudgeServer {
     room.clients[_message.content!.leaver_id] = client;
     client.ready = false;
 
+    let newHost: Client = this.rooms[_message.idRoom].clients[Object.keys(this.rooms[_message.idRoom].clients)[0]];
+    newHost.ready = true;
+
     let messageRoom: FudgeNet.Message = {
       idRoom: _message.idRoom, command: FudgeNet.COMMAND.ROOM_LEAVE, content: { leaver: false, newHost: Object.keys(this.rooms[_message.idRoom].clients)[0]}
     };

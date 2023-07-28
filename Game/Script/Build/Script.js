@@ -448,8 +448,10 @@ var DiceCup;
                     place = i + 1;
                     document.getElementById("placementsPhrase_id").innerHTML = DiceCup.language.game.placements.placement.part_1 + " " + place + ". " + DiceCup.language.game.placements.placement.part_2;
                 }
-                DiceCup.host ?? DiceCup.client.dispatch({ command: FudgeNet.COMMAND.END_GAME, route: FudgeNet.ROUTE.SERVER });
             }
+        }
+        if (DiceCup.playerMode == DiceCup.PlayerMode.multiplayer) {
+            DiceCup.client.dispatch({ command: FudgeNet.COMMAND.END_GAME, route: FudgeNet.ROUTE.SERVER });
         }
     }
     DiceCup.updatePlacements = updatePlacements;
@@ -952,7 +954,8 @@ var DiceCup;
     DiceCup.getRolledDices = getRolledDices;
     // Handles the round where you can see the dice for normally 3 seconds and visualizes the timer
     async function round() {
-        console.clear();
+        // console.clear();
+        console.log("NEXT ROUND: " + DiceCup.roundCounter);
         DiceCup.nextTrack(2);
         if (DiceCup.playerMode == DiceCup.PlayerMode.singlelpayer) {
             if (DiceCup.roundCounter == 1) {
@@ -3541,8 +3544,8 @@ var DiceCup;
     DiceCup.hndEvent = hndEvent;
     // Connects to the server with the given url (local: localhost; online: render)
     async function connectToServer(_event) {
-        let domServer = "ws://localhost:9001";
-        // let domServer: string = "wss://dice-cup.onrender.com";
+        // let domServer: string = "ws://localhost:9001";
+        let domServer = "wss://dice-cup.onrender.com";
         try {
             // connect to a server with the given url
             DiceCup.client.connectToServer(domServer);

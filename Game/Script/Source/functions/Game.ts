@@ -79,7 +79,8 @@ namespace DiceCup {
 
     // Handles the round where you can see the dice for normally 3 seconds and visualizes the timer
     export async function round(): Promise<void> {
-        console.clear();
+        // console.clear();
+        console.log("NEXT ROUND: " + roundCounter);
         nextTrack(2);
 
         if (playerMode == PlayerMode.singlelpayer) {
