@@ -54,7 +54,7 @@ var DiceCup;
     // Loads all required resources for the game while showing the loading screen
     async function load() {
         // Resizes the resolution
-        // await resizeScreenresolution();
+        await DiceCup.resizeScreenresolution();
         // Creates a DiceCup div so all divs are hidden and well-ordered
         let diceCup = document.createElement("div");
         diceCup.id = "DiceCup";

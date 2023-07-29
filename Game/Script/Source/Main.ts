@@ -29,7 +29,7 @@ namespace DiceCup {
   // Loads all required resources for the game while showing the loading screen
   async function load(): Promise<void> {
     // Resizes the resolution
-    // await resizeScreenresolution();
+    await resizeScreenresolution();
     
     // Creates a DiceCup div so all divs are hidden and well-ordered
     let diceCup: HTMLDivElement = document.createElement("div");
