@@ -18,7 +18,7 @@ namespace DiceCup {
         // Changes the camera position and behaviour depending in which viewport state the game is in
         switch (viewportState) {
             case ViewportState.menu:
-                viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.75, 0))
+                viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.4, 0));
                 viewport.camera.mtxPivot.translateX(0.02);
                 break;
         

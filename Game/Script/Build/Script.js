@@ -1094,7 +1094,7 @@ var DiceCup;
         // Changes the camera position and behaviour depending in which viewport state the game is in
         switch (DiceCup.viewportState) {
             case DiceCup.ViewportState.menu:
-                DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.75, 0));
+                DiceCup.viewport.camera.mtxPivot.lookAt(new ƒ.Vector3(0, 0.4, 0));
                 DiceCup.viewport.camera.mtxPivot.translateX(0.02);
                 break;
             default:
@@ -2745,13 +2745,15 @@ var DiceCup;
         sendDice = [];
         getDice = { value: 0, rotation: new ƒ.Vector3(0, 0, 0), translation: new ƒ.Vector3(0, 0, 0) };
         // Random translation and rotation to throw in the background of the main menu
-        arenaTranslation = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
+        arenaWidth = 3;
+        arenaHeigth = 2;
+        arenaTranslation = new ƒ.Vector3((Math.random() * this.arenaWidth) - this.arenaWidth / 2, Math.random() * 5 + 3, (Math.random() * this.arenaHeigth) - this.arenaHeigth / 2);
         arenaRotation = new ƒ.Vector3(Math.random() * 360, (Math.random() * 360), (Math.random() * 360));
         // Dice sizes
-        bigDice = 0.3;
-        smallDice = 0.265;
+        bigDice = 0.12;
+        smallDice = 0.1;
         // Distance between multiple dice so that they can't be inside each other and flicker or glitch
-        diceDistance = 0.2;
+        diceDistance = 0.1;
         // Constructor to initialize a new dice
         constructor(_colorRGBA, _color, _rollDiceMode, _hostDice) {
             this.color = _color;
@@ -2856,7 +2858,7 @@ var DiceCup;
         }
         // Places the dice and checks if there is already a dice placed or not
         async translateDice(_node) {
-            let tempVec = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.1, (Math.random() * 4) - 1.5);
+            let tempVec = new ƒ.Vector3((Math.random() * this.arenaWidth) - this.arenaWidth / 2, _node.mtxLocal.scaling.x + 0.1, (Math.random() * this.arenaHeigth) - this.arenaHeigth / 2);
             if (DiceCup.usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + this.diceDistance)) {
                 this.translateDice(_node);
             }
@@ -3446,7 +3448,7 @@ var DiceCup;
         let diceColors = await DiceCup.loadDiceColors();
         DiceCup.changeFloor(false);
         DiceCup.activateCover(false);
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.75, -5);
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.4, -3);
         for (let i = 0, color = 0; i < DiceCup.dicesLength; i++, color += 0.5) {
             new DiceCup.Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
         }
@@ -3464,7 +3466,7 @@ var DiceCup;
     }
     // Changes the arena and camera perspective for ingame situations
     async function gameViewport() {
-        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
+        DiceCup.viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 4, -2.5);
         DiceCup.viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
         DiceCup.changeFloor(true);
         DiceCup.activateCover(true);

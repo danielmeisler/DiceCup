@@ -412,6 +412,8 @@ declare namespace DiceCup {
         private dotsMat;
         private sendDice;
         private getDice;
+        private arenaWidth;
+        private arenaHeigth;
         private arenaTranslation;
         private arenaRotation;
         private bigDice;

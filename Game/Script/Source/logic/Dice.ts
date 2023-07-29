@@ -24,15 +24,17 @@ namespace DiceCup{
         private getDice: SendDiceDao = {value: 0, rotation: new ƒ.Vector3(0,0,0), translation: new ƒ.Vector3(0,0,0)};
         
         // Random translation and rotation to throw in the background of the main menu
-        private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, Math.random() * 5 + 3, (Math.random() * 4) - 1.5);
+        private arenaWidth: number = 3;
+        private arenaHeigth: number = 2;
+        private arenaTranslation: ƒ.Vector3 = new ƒ.Vector3((Math.random() * this.arenaWidth) - this.arenaWidth / 2, Math.random() * 5 + 3, (Math.random() * this.arenaHeigth) - this.arenaHeigth / 2);
         private arenaRotation: ƒ.Vector3 = new ƒ.Vector3(Math.random() * 360,(Math.random() * 360),(Math.random() * 360));
 
         // Dice sizes
-        private bigDice: number = 0.3;
-        private smallDice: number = 0.265;
+        private bigDice: number = 0.12;
+        private smallDice: number = 0.1;
 
         // Distance between multiple dice so that they can't be inside each other and flicker or glitch
-        private diceDistance: number = 0.2;
+        private diceDistance: number = 0.1;
     
         // Constructor to initialize a new dice
         constructor(_colorRGBA: RgbaDao, _color: DiceColor, _rollDiceMode?: number, _hostDice?: FudgeNet.Message) {
@@ -152,7 +154,7 @@ namespace DiceCup{
 
         // Places the dice and checks if there is already a dice placed or not
         private async translateDice(_node: ƒ.Node): Promise<void> {
-            let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * 6) - 3, _node.mtxLocal.scaling.x + 0.1, (Math.random() * 4) - 1.5);
+            let tempVec: ƒ.Vector3 = new ƒ.Vector3((Math.random() * this.arenaWidth) - this.arenaWidth / 2, _node.mtxLocal.scaling.x + 0.1, (Math.random() * this.arenaHeigth) - this.arenaHeigth / 2);
             if (usedTranslations.map(vec => ƒ.Vector3.DIFFERENCE(vec, tempVec).magnitude).some(diff => diff < this.bigDice + this.diceDistance)) {
                 this.translateDice(_node);
             } else {

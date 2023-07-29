@@ -26,7 +26,7 @@ namespace DiceCup {
         changeFloor(false);
         activateCover(false);
         
-        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.75, -5);
+        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 0.4, -3);
 
         for (let i = 0, color = 0; i < dicesLength; i++, color+=0.5) {
             new Dice(diceColors[Math.floor(color)], Math.floor(color), 2);
@@ -50,7 +50,7 @@ namespace DiceCup {
     
     // Changes the arena and camera perspective for ingame situations
     async function gameViewport(): Promise<void> {  
-        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 8, -4);
+        viewport.camera.mtxPivot.translation = new ƒ.Vector3(0, 4, -2.5);
         viewport.camera.mtxPivot.rotation = new ƒ.Vector3(60, 0, 0);
 
         changeFloor(true);
