@@ -30,7 +30,7 @@ namespace DiceCup {
     // Resets the counter, removes the container and changes the gamestate in the last loop
     function transition(_phrase: string[]): void {
         if (counter < _phrase.length) {
-            text.innerHTML = _phrase[0];
+            text.innerHTML = _phrase[counter];
             counter++;
             ƒ.Time.game.setTimer(shortTime, 1, () => { transition(_phrase) });
             playSFX("Audio|2023-05-17T13:53:32.977Z|22534");
