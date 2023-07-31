@@ -3546,11 +3546,10 @@ var DiceCup;
     DiceCup.hndEvent = hndEvent;
     // Connects to the server with the given url (local: localhost; online: render)
     async function connectToServer(_event) {
-        // let domServer: string = "ws://localhost:9001";
-        let domServer = "wss://dice-cup.onrender.com";
+        let domServer = ["ws://localhost:9001", "wss://dice-cup.onrender.com"];
         try {
             // connect to a server with the given url
-            DiceCup.client.connectToServer(domServer);
+            DiceCup.client.connectToServer(domServer[1]);
             await delay(1000);
             DiceCup.client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage);
         }

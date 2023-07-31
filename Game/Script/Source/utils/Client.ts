@@ -78,11 +78,10 @@ namespace DiceCup {
   
     // Connects to the server with the given url (local: localhost; online: render)
     async function connectToServer(_event: Event): Promise<void> {
-      // let domServer: string = "ws://localhost:9001";
-      let domServer: string = "wss://dice-cup.onrender.com";
+      let domServer: string[] = ["ws://localhost:9001", "wss://dice-cup.onrender.com"];      
       try {
         // connect to a server with the given url
-        client.connectToServer(domServer);
+        client.connectToServer(domServer[1]);
         await delay(1000);
 
         client.addEventListener(FudgeNet.EVENT.MESSAGE_RECEIVED, receiveMessage as unknown as EventListener);

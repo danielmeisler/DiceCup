@@ -17,6 +17,12 @@ To install the PWA (Progressive Web App) on your mobile phone or desktop pc you 
 ## ⚃ How to use
 To continue development you need to clone or download this reposotiry and open it in a code editor like Visual Studio Code. Make sure to have Node.js installed and "npm install" all from the package.json. If you want to model or change something about the arena etc. you need to open the FUDGE Editor program named "FUDGE.bat". If you want to rewrite or extend the server code you need to change FUDGE Net directly.
 
+If you want to start the local server you need to change the number in the Client (Game/Script/Source/utils/Client.ts) at Line 84. If you want to user another server just change or add another url.
+
+0 = ws://localhost:9001
+1 = wss://dice-cup.onrender.com
+...
+
 ## ⚄ Copyright
 All assets and files are selfmade or copyright free. 
 
