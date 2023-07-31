@@ -16,12 +16,12 @@
   
 #startTransitionText_id {
     text-transform: uppercase;
-    will-change: transform;
+    /* will-change: transform;
     transition: all 0.5s ease-in;
     animation-name:             transition-animation; 
     animation-duration:         1s; 
     animation-iteration-count:  infinite;
-    animation-timing-function:  linear; 
+    animation-timing-function:  linear;  */
 }
 
 @keyframes transition-animation {
