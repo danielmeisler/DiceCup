@@ -23,7 +23,7 @@ If you want to start the local server you need to change the number in the Clien
 1 = wss://dice-cup.onrender.com
 ...
 
-The render server is a free but limited server. It shuts itself down, if no new client gets connected within 15min. If a new client connects than the server needs few minutes to start automatically and you need to restart the page so the client is connected.
+If you want to start the local server you need to write "node Server/Server.js 9001" into the console. The render server is a free but limited server. It shuts itself down, if no new client gets connected within 15min. If a new client connects than the server needs few minutes to start automatically and you need to restart the page so the client is connected.
 
 ## ⚄ Copyright
 All assets and files are selfmade or copyright free. 
